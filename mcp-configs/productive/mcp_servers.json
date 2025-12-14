@@ -1,0 +1,51 @@
+{
+  "$schema": "https://github.com/modelcontextprotocol/servers/blob/main/schema.json",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@joshuarileydev/mcp-server-basic-memory"],
+      "env": {
+        "MEMORY_PROJECT": "main",
+        "MEMORY_PATH": "${HOME}/.basic-memory"
+      }
+    },
+    "postgres-dev": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB_DEV}"
+      ]
+    },
+    "postgres-staging": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB_STAGING}"
+      ]
+    },
+    "postgres-production": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD_PROD}@${POSTGRES_HOST_PROD}:${POSTGRES_PORT}/${POSTGRES_DB_PROD}"
+      ]
+    },
+    "perplexity": {
+      "command": "npx",
+      "args": ["-y", "@joshuarileydev/mcp-server-perplexity"],
+      "env": {
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+      }
+    }
+  }
+}

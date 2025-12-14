@@ -1,0 +1,46 @@
+{
+  "$schema": "https://github.com/modelcontextprotocol/servers/blob/main/schema.json",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  },
+  "_comment_memory": "Uncomment below to enable Memory Bank MCP for session persistence",
+  "_memory": {
+    "command": "npx",
+    "args": ["-y", "@joshuarileydev/mcp-server-basic-memory"],
+    "env": {
+      "MEMORY_PROJECT": "${PROJECT_NAME}",
+      "MEMORY_PATH": "${HOME}/.basic-memory"
+    }
+  },
+  "_comment_postgres": "Uncomment below to enable PostgreSQL MCP for database access",
+  "_postgres-dev": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-postgres",
+      "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB_DEV}"
+    ]
+  },
+  "_postgres-production": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-postgres",
+      "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB_PROD}"
+    ]
+  },
+  "_comment_perplexity": "Uncomment below to enable Perplexity MCP for AI search ($5/month)",
+  "_perplexity": {
+    "command": "npx",
+    "args": ["-y", "@joshuarileydev/mcp-server-perplexity"],
+    "env": {
+      "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+    }
+  }
+}

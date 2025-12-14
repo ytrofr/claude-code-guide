@@ -1,0 +1,20 @@
+{
+  "$schema": "https://github.com/modelcontextprotocol/servers/blob/main/schema.json",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@joshuarileydev/mcp-server-basic-memory"],
+      "env": {
+        "MEMORY_PROJECT": "main",
+        "MEMORY_PATH": "${HOME}/.basic-memory"
+      }
+    }
+  }
+}

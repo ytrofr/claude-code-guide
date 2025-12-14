@@ -1,0 +1,83 @@
+{
+  "last_updated": "[DATE]",
+  "current_sprint": "[Sprint or phase description]",
+  "branch": "main",
+  "system_health": {
+    "production": {
+      "status": "operational",
+      "url": "https://your-app.com"
+    },
+    "staging": {
+      "status": "operational",
+      "url": "https://staging.your-app.com"
+    },
+    "localhost": {
+      "status": "operational",
+      "port": 3000
+    }
+  },
+  "features": [
+    {
+      "name": "Example_Feature",
+      "status": "implementing",
+      "passes": false,
+      "description": "Description of what this feature does",
+      "entry": null
+    },
+    {
+      "name": "Authentication",
+      "status": "working",
+      "passes": true,
+      "tests": "10/10",
+      "entry": 1
+    }
+  ],
+  "api_integrations": {
+    "example_api": {
+      "status": "operational",
+      "endpoint": "https://api.example.com"
+    }
+  },
+  "recent_fixes": [
+    {
+      "issue": "Example fix description",
+      "status": "complete",
+      "date": "2025-12-14",
+      "entry": null,
+      "note": "Detailed explanation of fix and evidence"
+    }
+  ],
+  "active_blockers": [],
+  "future_features": [
+    {
+      "name": "Planned_Feature",
+      "desc": "What this feature will do",
+      "priority": "P1",
+      "time": "2 hours",
+      "entry": null
+    }
+  ],
+  "deployment": {
+    "method": "describe your deployment process",
+    "last_staging": "YYYY-MM-DD",
+    "last_production": "YYYY-MM-DD"
+  },
+  "session_protocol": {
+    "on_start": [
+      "git status",
+      "read system-status.json",
+      "git log --oneline -10",
+      "select priority task from incomplete features"
+    ],
+    "on_end": [
+      "update system-status.json with progress",
+      "create descriptive git commit",
+      "never stop mid-feature"
+    ],
+    "context_compaction": "Your context window will be automatically compacted. Leverage filesystem discovery on fresh context."
+  },
+  "reference_paths": {
+    "core_patterns": "memory-bank/always/CORE-PATTERNS.md",
+    "context_router": "memory-bank/always/CONTEXT-ROUTER.md"
+  }
+}

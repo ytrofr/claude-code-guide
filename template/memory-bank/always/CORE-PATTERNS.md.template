@@ -1,0 +1,186 @@
+# CORE-PATTERNS - Single Source of Truth
+
+**Purpose**: Authoritative source for ALL core patterns used across ALL domains
+**Project**: [YOUR_PROJECT_NAME]
+**Created**: [DATE]
+**Authority**: All other files REFERENCE this, never duplicate
+
+---
+
+## 🚨 YOUR PROJECT PATTERNS (Customize This Section)
+
+### Pattern 1: [Your First Core Pattern]
+```yaml
+RULE: "[Describe the mandatory rule or pattern]"
+PATTERN: "[Show the correct implementation]"
+VALIDATION: "[How to verify compliance]"
+ENFORCEMENT: "[How it's enforced - hooks, tests, reviews]"
+
+EXAMPLES:
+  ✅ CORRECT: "[Good example code or command]"
+  ❌ WRONG: "[Bad example to avoid]"
+```
+
+### Pattern 2: Database Safety (Example)
+```yaml
+DATABASE_SAFETY:
+  Rule: "Always verify database environment before operations"
+  Pattern: "SELECT current_database() before operations"
+
+  Environments:
+    Development: "[your_dev_db_name]"
+    Staging: "[your_staging_db_name]"
+    Production: "[your_production_db_name]"
+
+  Validation: |
+    -- Run before any database operation
+    SELECT current_database();
+
+  Examples:
+    ✅ CORRECT: |
+      const result = await client.query('SELECT current_database()');
+      if (result.rows[0].current_database !== 'my_prod_db') {
+        throw new Error('Wrong database!');
+      }
+
+    ❌ WRONG: |
+      // No database verification - dangerous!
+      await client.query('DELETE FROM users');
+```
+
+### Pattern 3: API Integration (Example)
+```yaml
+API_INTEGRATION:
+  Rule: "Use environment-specific API endpoints"
+
+  Endpoints:
+    Development: "[dev_api_url]"
+    Staging: "[staging_api_url]"
+    Production: "[production_api_url]"
+
+  Auth: "[OAuth2 / API Key / JWT]"
+  Rate_Limits: "[Requests per minute/hour]"
+
+  Pattern: |
+    const API_URL = process.env.API_URL || 'http://localhost:3000/api';
+    const headers = {
+      'Authorization': `Bearer ${process.env.API_TOKEN}`,
+      'Content-Type': 'application/json'
+    };
+```
+
+### Pattern 4: Testing Standards (Example)
+```yaml
+TESTING_STANDARDS:
+  Rule: "Write tests before implementing features"
+
+  Naming: "test-{feature}-{scenario}.js"
+  Coverage: "> 80% for critical paths"
+
+  Pattern: |
+    describe('Feature Name', () => {
+      it('should handle success case', () => {
+        // Test success path
+      });
+
+      it('should handle error case', () => {
+        // Test error path
+      });
+    });
+```
+
+---
+
+## ⚡ UNIVERSAL PATTERNS (Optional - Add Your Own)
+
+### Port Standards
+```yaml
+PORT_CONFIGURATION:
+  Default: "3000"
+  Server: "const port = process.env.PORT || 3000"
+  Frontend: "window.location.port || 3000"
+```
+
+### Error Handling
+```yaml
+ERROR_HANDLING:
+  Pattern: "Consistent error response format"
+
+  API_Response: |
+    {
+      "success": false,
+      "error": {
+        "code": "ERROR_CODE",
+        "message": "User-friendly message",
+        "details": {} // Optional debug info
+      }
+    }
+```
+
+---
+
+## 🔍 QUICK VALIDATION COMMANDS
+
+### Compliance Checks
+```bash
+# Check pattern 1
+[your validation command]
+
+# Check pattern 2 (database)
+psql -c "SELECT current_database();"
+
+# Check pattern 3 (API)
+curl -H "Authorization: Bearer $TOKEN" $API_URL/health
+
+# Check pattern 4 (testing)
+npm test
+```
+
+---
+
+## 📋 CUSTOMIZATION INSTRUCTIONS
+
+**To customize this template**:
+
+1. **Replace placeholders**:
+   - `[YOUR_PROJECT_NAME]` → Your project name
+   - `[DATE]` → Current date (YYYY-MM-DD)
+   - `[your_*]` → Your specific values
+
+2. **Add your patterns**:
+   - Each pattern should have: Rule, Pattern, Validation, Examples
+   - Use ✅ CORRECT and ❌ WRONG examples
+   - Include validation commands
+
+3. **Keep it focused**:
+   - Only core patterns that affect ALL domains
+   - Detailed patterns go in memory-bank/learned/
+   - This file should be scannable in < 2 minutes
+
+4. **Maintain single source of truth**:
+   - Other files REFERENCE this: "→ See CORE-PATTERNS.md Pattern X"
+   - Never duplicate patterns across files
+   - Update here, changes propagate everywhere
+
+---
+
+## 📚 PATTERN HIERARCHY
+
+```yaml
+PATTERN_USAGE:
+  1. Check CORE-PATTERNS.md (this file) - Authoritative source
+  2. Domain-specific files reference these patterns
+  3. All agents and tools use these as foundation
+
+UPDATING_PATTERNS:
+  - Update CORE-PATTERNS.md ONLY
+  - All other files reference via "→ See CORE-PATTERNS.md"
+  - Never duplicate patterns across files
+  - Single source of truth maintained
+```
+
+---
+
+**Core Patterns Authority**: Essential patterns for immediate access by all agents and tools
+**Usage**: Always available for immediate work, reference for complex scenarios
+**Maintenance**: Update this file only, other files reference it
