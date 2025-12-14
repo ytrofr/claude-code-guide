@@ -1,0 +1,160 @@
+# CONTEXT-ROUTER - Agent Decision Matrix
+
+**Purpose**: Clear routing rules for optimal context loading
+**Project**: [YOUR_PROJECT_NAME]
+**Created**: [DATE]
+
+---
+
+## 📚 THE 4-TIER HIERARCHY
+
+**Pattern**: Load minimum needed context for maximum efficiency
+
+| Tier | What | When | Token Cost |
+|------|------|------|------------|
+| **1 - INSTANT** | CORE-PATTERNS + Auto-loaded files | 90% of questions | 0 |
+| **2 - LEARNED** | memory-bank/learned/ entries | Pattern lookup | 5-10k |
+| **3 - SURGICAL** | Detailed documentation sections | Complex tasks | 15-25k |
+| **4 - REFERENCE** | Complete guides, archives | Recreation | 20-60k |
+
+**Quick Decision**: Fast answer → Tier 1 | Pattern → Tier 2 | Implementation → Tier 3 | Full rebuild → Tier 4
+
+---
+
+## 🚨 ROUTING PRECEDENCE (Always Check in This Order)
+
+```yaml
+TIER_1_INSTANT (0 additional tokens):
+  Files: Always loaded in Claude Code
+    - CORE-PATTERNS.md (your project patterns)
+    - system-status.json (feature tracking)
+    - [Add other always-loaded files here]
+
+  Check: "Is the answer in these auto-loaded files?"
+  If YES: Return immediately (0 tokens)
+  If NO: Proceed to Tier 2
+
+TIER_2_LEARNED (5-10k tokens):
+  Files: memory-bank/learned/ (patterns you've documented)
+    - Pattern files organized by domain
+    - Entry #X numbered for stability
+    - Created when you solve problems
+
+  Check: "Have we solved this before?"
+  Search: grep -r "keyword" memory-bank/learned/
+  If YES: Load relevant entry (5-10k tokens)
+  If NO: Proceed to Tier 3
+
+TIER_3_SURGICAL (15-25k tokens):
+  Files: Detailed documentation sections
+    - Load specific sections only (use offset:limit)
+    - Domain-specific authorities
+    - Technical deep-dives
+
+  Check: "Need implementation details?"
+  Load: Read(file_path, offset: X, limit: Y)
+  If YES: Surgical section load (15-25k tokens)
+  If NO: Proceed to Tier 4
+
+TIER_4_REFERENCE (20-60k tokens):
+  Files: Complete guides, blueprints, archives
+    - Full system recreation guides
+    - Complete API documentation
+    - Historical context
+
+  Check: "Need to rebuild from scratch?"
+  Load: Complete reference files
+  If YES: Full file load (20-60k tokens)
+```
+
+---
+
+## 🎯 AGENT DECISION MATRIX (Customize for Your Project)
+
+### Query Complexity Scoring
+
+```yaml
+COMPLEXITY_CALCULATION:
+  Domains_Count: +5 per domain involved
+  Lines_of_Code: +1 per 10 lines estimated
+  Integration_Points: +10 per external API/service
+  Critical_Patterns: +2 per core pattern involved
+
+COMPLEXITY_THRESHOLDS:
+  SIMPLE: Score < 10
+  STANDARD: Score 10-30
+  COMPLEX: Score > 30
+```
+
+### Routing Rules by Complexity
+
+#### SIMPLE Queries (Score < 10)
+```yaml
+EXAMPLES:
+  - "What's our API endpoint?"
+  - "What's the database name?"
+  - "What port do we use?"
+
+ROUTING:
+  Check: TIER_1 only (CORE-PATTERNS + system-status)
+  Tokens: 0 additional
+  Time: Instant
+```
+
+#### STANDARD Queries (Score 10-30)
+```yaml
+EXAMPLES:
+  - "How do I authenticate with our API?"
+  - "Show me database schema for users table"
+  - "What's our deployment workflow?"
+
+ROUTING:
+  Check: TIER_1 + TIER_2 entries
+  Tokens: 5-10k additional
+  Time: < 5s
+```
+
+#### COMPLEX Queries (Score > 30)
+```yaml
+EXAMPLES:
+  - "Implement new authentication system"
+  - "Migrate database to new structure"
+  - "Deploy multi-region setup"
+
+ROUTING:
+  Check: TIER_1 + TIER_2 + surgical TIER_3 sections
+  Tokens: 15-60k additional
+  Time: 10-30s
+  Agents: May require multiple specialized agents
+```
+
+---
+
+## 📋 CUSTOMIZATION INSTRUCTIONS
+
+**To customize this router**:
+
+1. **Define your complexity scoring**:
+   - What makes a query complex in YOUR project?
+   - Adjust weights based on your stack
+
+2. **Map your tiers**:
+   - What files go in always/?
+   - How do you organize learned/?
+   - When do you need full references?
+
+3. **Document your patterns**:
+   - Add examples specific to your domain
+   - Include token budgets
+   - Track what works
+
+4. **Keep it updated**:
+   - As your memory bank grows, update routing
+   - Measure and optimize token usage
+   - Balance speed vs completeness
+
+---
+
+**Context Router Authority**: Routing rules for optimal context loading
+**Usage**: Guides agents to find information efficiently
+**Maintenance**: Update as memory bank structure evolves

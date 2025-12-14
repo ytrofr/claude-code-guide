@@ -1,0 +1,56 @@
+# Claude Code Implementation Guide - .gitignore
+
+# Credentials and secrets
+.claude/mcp_servers.json
+*.env
+*.key
+*.pem
+*password*
+*secret*
+*token*
+
+# User-specific configurations
+.claude/hooks/settings.local.json
+.claude/settings.local.json
+
+# Personal workspace
+workspace/
+scratch/
+temp/
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Dependencies (if adding tooling)
+node_modules/
+__pycache__/
+*.pyc
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Testing
+.coverage
+coverage/
+.pytest_cache/
+
+# Personal notes (optional - team can decide)
+NOTES.md
+TODO.personal.md
