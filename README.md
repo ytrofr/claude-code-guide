@@ -6,6 +6,15 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ---
 
+## 🆕 Latest Additions (December 2025)
+
+| Guide | Description | Time to Implement |
+|-------|-------------|-------------------|
+| [Task Tracking System](docs/guide/04-task-tracking-system.md) | Lightweight roadmap tracking - only open items in context | 10 min |
+| [Developer Mode UI Feedback](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual debugging with element selection & screenshots | 30 min |
+
+---
+
 ## Quick Navigation
 
 ### 🚀 Getting Started (Choose Your Path)
@@ -16,7 +25,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 - [Clone Template](template/) - Pre-configured starter project
 
 **Experienced User?**:
-- [Complete Guide](docs/guide/) - In-depth documentation (10 chapters)
+- [Complete Guide](docs/guide/) - In-depth documentation
 - [Skills Library](skills-library/) - 20+ proven workflow patterns
 - [MCP Configurations](mcp-configs/) - Ready-to-use MCP setups
 
@@ -29,10 +38,15 @@ This guide uses **4 coordinated formats** that work together:
 ### 1. Living Markdown Guide 📚
 **Location**: [docs/guide/](docs/guide/)
 
-Complete reference documentation with 10 chapters covering core concepts, setup phases, skills framework, MCP integration, and troubleshooting.
+Complete reference documentation covering setup, patterns, and advanced topics.
+
+| Guide | Purpose |
+|-------|---------|
+| [02-minimal-setup.md](docs/guide/02-minimal-setup.md) | Core setup (START HERE) |
+| [04-task-tracking-system.md](docs/guide/04-task-tracking-system.md) | Roadmap/task management |
+| [05-developer-mode-ui-feedback-system.md](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual UI debugging |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
-**Start With**: [02-minimal-setup.md](docs/guide/02-minimal-setup.md)
 
 ### 2. Skills Library 🎯
 **Location**: [skills-library/](skills-library/)
@@ -165,18 +179,10 @@ claude-code-implementation-guide/
 ├── docs/
 │   ├── quick-start.md          # 30-minute minimal path
 │   ├── setup-checklist.md      # Text-based checklist
-│   └── guide/                  # 10-chapter living guide
-│       ├── 00-introduction.md
-│       ├── 01-core-concepts.md
-│       ├── 02-minimal-setup.md  ⭐ START HERE
-│       ├── 03-phase-1-essential.md
-│       ├── 04-phase-2-productive.md
-│       ├── 05-phase-3-advanced.md
-│       ├── 06-skills-framework.md
-│       ├── 07-mcp-integration.md
-│       ├── 08-memory-bank-hierarchy.md
-│       ├── 09-hooks-automation.md
-│       └── 10-troubleshooting.md
+│   └── guide/                  # Living documentation
+│       ├── 02-minimal-setup.md          ⭐ START HERE
+│       ├── 04-task-tracking-system.md   🆕 Task/roadmap management
+│       └── 05-developer-mode-ui-feedback-system.md  🆕 Visual debugging
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md
@@ -271,6 +277,7 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
+- [Task Tracking System](docs/guide/04-task-tracking-system.md) 🆕
+- [Developer Mode UI Feedback](docs/guide/05-developer-mode-ui-feedback-system.md) 🆕
 - [Template Repository](template/)
 - [Skills Library](skills-library/)
-- [Troubleshooting](docs/guide/10-troubleshooting.md)
