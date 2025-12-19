@@ -8,6 +8,20 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (December 2025)
 
+### Anthropic Blog Integration ⭐ NEW
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) | 8 hook types for workflow automation | 96% validation, 6-8h/year ROI |
+| [Progressive Disclosure](docs/guide/15-progressive-disclosure.md) | Skills with references/ for token efficiency | 53% savings confirmed |
+| [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) | Clear distinction guide | Prevent confusion |
+| [MCP Integration](docs/guide/06-mcp-integration.md) | Essential MCPs (PostgreSQL, GitHub, Memory) | Zero-token validation |
+| [Memory Bank Hierarchy](docs/guide/12-memory-bank-hierarchy.md) | 4-tier knowledge organization | 34% token reduction |
+
+**Source**: [Anthropic hooks blog](https://claude.com/blog/how-to-configure-hooks) + [Building skills blog](https://claude.com/blog/building-skills-for-claude-code)
+
+**Templates**: `template/.claude/hooks/` (3 scripts) | **Example**: `examples/limor-ai-claude-hooks/`
+
+### LIMOR AI Patterns
 | Guide | Description | Time to Implement |
 |-------|-------------|-------------------|
 | [Task Tracking System](docs/guide/04-task-tracking-system.md) | Lightweight roadmap tracking - only open items in context | 10 min |
