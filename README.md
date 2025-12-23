@@ -11,6 +11,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 ### Anthropic Blog Integration ⭐ NEW
 | Guide | Description | Evidence |
 |-------|-------------|----------|
+| [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) | 4-phase synonym/stem/multi-word matching | 310→700/700 (100%) 🏆 |
 | [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) | 8 hook types for workflow automation | 96% validation, 6-8h/year ROI |
 | [Progressive Disclosure](docs/guide/15-progressive-disclosure.md) | Skills with references/ for token efficiency | 53% savings confirmed |
 | [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) | Clear distinction guide | Prevent confusion |
@@ -19,7 +20,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 **Source**: [Anthropic hooks blog](https://claude.com/blog/how-to-configure-hooks) + [Building skills blog](https://claude.com/blog/building-skills-for-claude-code)
 
-**Templates**: `template/.claude/hooks/` (3 scripts) | **Example**: `examples/limor-ai-claude-hooks/`
+**Templates**: `template/.claude/hooks/` (4 scripts) | **Example**: `examples/limor-ai-claude-hooks/`
 
 ### LIMOR AI Patterns
 | Guide | Description | Time to Implement |
@@ -59,6 +60,7 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [02-minimal-setup.md](docs/guide/02-minimal-setup.md) | Core setup (START HERE) |
 | [04-task-tracking-system.md](docs/guide/04-task-tracking-system.md) | Roadmap/task management |
 | [05-developer-mode-ui-feedback-system.md](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual UI debugging |
+| [17-skill-detection-enhancement.md](docs/guide/17-skill-detection-enhancement.md) | Advanced skill detection (100% accuracy) |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -81,7 +83,7 @@ Clone-and-go starter kit with pre-configured:
 - `.claude/CLAUDE.md` - Project context
 - `.claude/mcp_servers.json.template` - MCP configuration
 - `memory-bank/always/` - Core files (CORE-PATTERNS, system-status)
-- `.claude/hooks/` - Automation hooks
+- `.claude/hooks/` - Automation hooks (4 scripts including pre-prompt.sh)
 - `.claude/skills/starter/` - 3 essential skills
 
 **Best For**: Starting new projects, team standardization
@@ -107,6 +109,7 @@ Web-based progress tracker with:
 - **CLAUDE.md Power** - Auto-loaded project context
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
+- **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
 - **MCP Integration** - GitHub, Memory Bank, PostgreSQL, and more
 - **Entry Numbering** - Stable cross-referencing across sessions
 
@@ -161,10 +164,10 @@ claude-code
 ### Phase 1: Essential (Week 1, 2-3 hours)
 - ➕ Memory Bank MCP (session persistence)
 - ➕ 5 troubleshooting skills
-- ➕ Pre-prompt hook (84% activation)
+- ➕ Pre-prompt hook (84% activation + 4-phase detection)
 - ➕ TIER-2-REGISTRY setup
 
-**Value**: 3x faster debugging, institutional knowledge capture
+**Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection
 
 ### Phase 2: Productive (Week 2-3, 4-6 hours)
 - ➕ PostgreSQL MCP (3 databases)
@@ -196,13 +199,18 @@ claude-code-implementation-guide/
 │   └── guide/                  # Living documentation
 │       ├── 02-minimal-setup.md          ⭐ START HERE
 │       ├── 04-task-tracking-system.md   🆕 Task/roadmap management
-│       └── 05-developer-mode-ui-feedback-system.md  🆕 Visual debugging
+│       ├── 05-developer-mode-ui-feedback-system.md  🆕 Visual debugging
+│       └── 17-skill-detection-enhancement.md  🏆 100% skill detection
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md
 │   │   ├── mcp_servers.json.template
 │   │   ├── skills/starter/
 │   │   └── hooks/
+│   │       ├── session-start.sh
+│   │       ├── pre-compact.sh
+│   │       ├── stop-hook.sh
+│   │       └── pre-prompt.sh   🏆 4-phase skill detection
 │   └── memory-bank/
 │       └── always/
 ├── skills-library/              # Complete skills reference
@@ -257,6 +265,7 @@ claude-code-implementation-guide/
 - ⏱️ Setup time: 8-12 hours total
 - ✅ Components: 20+ skills, 4 MCPs, complete memory bank
 - 🎯 ROI: 50-500+ hours/year saved (scales with usage)
+- 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
 
 ---
 
@@ -268,6 +277,7 @@ claude-code-implementation-guide/
 **Team-Ready**: Clear separation of personal vs shared configurations
 **Phased Approach**: Value in 30 minutes, full power over time
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
+**100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 
 ---
 
@@ -291,7 +301,8 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Task Tracking System](docs/guide/04-task-tracking-system.md) 🆕
-- [Developer Mode UI Feedback](docs/guide/05-developer-mode-ui-feedback-system.md) 🆕
+- [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) 🏆 NEW
+- [Task Tracking System](docs/guide/04-task-tracking-system.md)
+- [Developer Mode UI Feedback](docs/guide/05-developer-mode-ui-feedback-system.md)
 - [Template Repository](template/)
 - [Skills Library](skills-library/)
