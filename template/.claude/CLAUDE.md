@@ -27,6 +27,18 @@ PATTERN: "[Required behavior or standard]"
 REASON: "[Why this matters]"
 ```
 
+### Rule 3: Perplexity Cache-First Rule (Recommended)
+```yaml
+PATTERN: "ALWAYS check Memory MCP before Perplexity searches"
+BEFORE_SEARCH: "mcp__basic-memory__search_notes('topic')"
+IF_FOUND: "Use cached result (FREE!) - skip Perplexity entirely"
+IF_NOT_FOUND: "Use Perplexity, then IMMEDIATELY cache results"
+CACHE_LOCATION: "research-cache/ folder (global, all branches)"
+MANDATORY_CACHING: "After EVERY Perplexity search → mcp__basic-memory__write_note(folder='research-cache')"
+COST_SAVINGS: "$0.005 per cached query, 80%+ budget savings on repeat topics"
+ROI: "Prevents $4+/month waste on duplicate searches"
+```
+
 ---
 
 ## 📚 Auto-Load Context (Memory Bank)

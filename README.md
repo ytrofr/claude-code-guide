@@ -11,6 +11,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 ### Anthropic Blog Integration ⭐ NEW
 | Guide | Description | Evidence |
 |-------|-------------|----------|
+| [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) | Cache-first pattern for 80%+ savings | 10+ cached results, $4+/mo saved 🆕 |
 | [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) | 4-phase synonym/stem/multi-word matching | 310→700/700 (100%) 🏆 |
 | [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) | 8 hook types for workflow automation | 96% validation, 6-8h/year ROI |
 | [Progressive Disclosure](docs/guide/15-progressive-disclosure.md) | Skills with references/ for token efficiency | 53% savings confirmed |
@@ -61,6 +62,7 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [04-task-tracking-system.md](docs/guide/04-task-tracking-system.md) | Roadmap/task management |
 | [05-developer-mode-ui-feedback-system.md](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual UI debugging |
 | [17-skill-detection-enhancement.md](docs/guide/17-skill-detection-enhancement.md) | Advanced skill detection (100% accuracy) |
+| [18-perplexity-cost-optimization.md](docs/guide/18-perplexity-cost-optimization.md) | Perplexity caching (80%+ savings) 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -71,6 +73,7 @@ Executable workflow patterns organized by phase:
 - **starter/** - 3 essential skills (Day 1)
 - **troubleshooting/** - 5-10 debugging skills (Week 1)
 - **workflows/** - 8-12 procedure skills (Week 2-3)
+  - **perplexity-cache-skill/** - Cache-first pattern for cost optimization 🆕
 - **specialized/** - Domain-specific skills (Month 2+)
 
 **Best For**: Active troubleshooting, instant workflow access
@@ -80,7 +83,7 @@ Executable workflow patterns organized by phase:
 **Location**: [template/](template/)
 
 Clone-and-go starter kit with pre-configured:
-- `.claude/CLAUDE.md` - Project context
+- `.claude/CLAUDE.md` - Project context (includes Perplexity cache-first rule)
 - `.claude/mcp_servers.json.template` - MCP configuration
 - `memory-bank/always/` - Core files (CORE-PATTERNS, system-status)
 - `.claude/hooks/` - Automation hooks (4 scripts including pre-prompt.sh)
@@ -110,8 +113,9 @@ Web-based progress tracker with:
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
-- **MCP Integration** - GitHub, Memory Bank, PostgreSQL, and more
+- **MCP Integration** - GitHub, Memory Bank, PostgreSQL, Perplexity (with caching)
 - **Entry Numbering** - Stable cross-referencing across sessions
+- **Perplexity Cost Optimization** - 80%+ savings with cache-first pattern 🆕
 
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
@@ -119,6 +123,7 @@ Web-based progress tracker with:
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
 - **Validation First** - Scripts prevent 90% of common setup errors
 - **Team Collaboration** - Shared vs personal configuration patterns
+- **Research Caching** - Never pay twice for the same Perplexity query 🆕
 
 ---
 
@@ -166,8 +171,9 @@ claude-code
 - ➕ 5 troubleshooting skills
 - ➕ Pre-prompt hook (84% activation + 4-phase detection)
 - ➕ TIER-2-REGISTRY setup
+- ➕ Perplexity MCP with cache-first rule 🆕
 
-**Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection
+**Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection, 80%+ research cost savings
 
 ### Phase 2: Productive (Week 2-3, 4-6 hours)
 - ➕ PostgreSQL MCP (3 databases)
@@ -200,10 +206,11 @@ claude-code-implementation-guide/
 │       ├── 02-minimal-setup.md          ⭐ START HERE
 │       ├── 04-task-tracking-system.md   🆕 Task/roadmap management
 │       ├── 05-developer-mode-ui-feedback-system.md  🆕 Visual debugging
-│       └── 17-skill-detection-enhancement.md  🏆 100% skill detection
+│       ├── 17-skill-detection-enhancement.md  🏆 100% skill detection
+│       └── 18-perplexity-cost-optimization.md  🆕 80%+ cost savings
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
-│   │   ├── CLAUDE.md
+│   │   ├── CLAUDE.md           # Includes cache-first rule
 │   │   ├── mcp_servers.json.template
 │   │   ├── skills/starter/
 │   │   └── hooks/
@@ -217,11 +224,12 @@ claude-code-implementation-guide/
 │   ├── starter/                 # 3 essential (Phase 0)
 │   ├── troubleshooting/         # 5-10 skills (Phase 1)
 │   ├── workflows/               # 8-12 skills (Phase 2)
+│   │   └── perplexity-cache-skill/  🆕 Cost optimization
 │   └── specialized/             # Domain-specific (Phase 3)
 ├── mcp-configs/                 # MCP server configurations
 │   ├── minimal/                 # GitHub only
 │   ├── essential/               # +Memory Bank
-│   ├── productive/              # +PostgreSQL
+│   ├── productive/              # +PostgreSQL, +Perplexity
 │   └── advanced/                # +Custom servers
 ├── scripts/                     # Validation & setup tools
 │   ├── validate-setup.sh        ⭐ Master validator
@@ -266,6 +274,7 @@ claude-code-implementation-guide/
 - ✅ Components: 20+ skills, 4 MCPs, complete memory bank
 - 🎯 ROI: 50-500+ hours/year saved (scales with usage)
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
+- 💰 Perplexity: 80%+ cost savings with cache-first pattern 🆕
 
 ---
 
@@ -278,6 +287,7 @@ claude-code-implementation-guide/
 **Phased Approach**: Value in 30 minutes, full power over time
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
+**Cost-Optimized**: Perplexity caching saves 80%+ on research costs (Chapter 18) 🆕
 
 ---
 
@@ -301,7 +311,8 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) 🏆 NEW
+- [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) 💰 NEW
+- [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) 🏆
 - [Task Tracking System](docs/guide/04-task-tracking-system.md)
 - [Developer Mode UI Feedback](docs/guide/05-developer-mode-ui-feedback-system.md)
 - [Template Repository](template/)
