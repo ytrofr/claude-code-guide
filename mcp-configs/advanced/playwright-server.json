@@ -1,0 +1,12 @@
+{
+  "$comment": "Playwright MCP - Browser automation via accessibility tree",
+  "playwright": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@playwright/mcp@latest"
+    ],
+    "env": {}
+  }
+}
