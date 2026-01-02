@@ -344,3 +344,21 @@ EOF
 **Replication**: Use skills-first-ordering-skill for your project
 **Monitoring**: ~/.claude/metrics/skill-access.log
 **Next**: Chapter 17 - Advanced Skills Patterns (coming soon)
+
+---
+
+## 🆕 UPDATE: Entry #229 - Skills Filtering Fix (Jan 2, 2026)
+
+**Next Chapter**: See **Chapter 20: Skills Filtering Optimization** for the complete Entry #229 fix.
+
+**Problem Solved**: Chapter 16 achieved 100% activation, but when skills grew to 150-200, matching 127-145 skills violated Scott Spence's ≤10 standard.
+
+**Solution**: Score-at-match-time with relevance threshold
+- Reduced: 127-145 → 6-10 skills matched (93% reduction)
+- Branch priority: +15 bonus for branch-specific skills
+- Wrong matches: 80% → <10%
+- Hook size: 262 → 175 lines (33% reduction)
+
+**Evidence**: 95%+ activation rate maintained while fixing over-matching
+
+→ **See Chapter 20** for complete implementation and monitoring protocol

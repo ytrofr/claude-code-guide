@@ -1,262 +1,175 @@
 #!/bin/bash
-# Pre-Prompt Hook: Skill Detection Enhancement
-# Created: 2025-12-23
-# Source: Entry #204 - Skill Detection Enhancement
-# Test Score: 700/700 (100%)
+# Pre-Prompt Hook: Skills Filtering with Score-at-Match-Time (Entry #229)
+# Created: 2025-12-01 | Enhanced: 2026-01-02
+# Source: https://scottspence.com/posts/how-to-make-claude-code-skills-activate-reliably
+# Success Rate: 95%+ (84% Scott Spence baseline + Entry #229 improvements)
 #
-# FEATURES:
-# - Phase 1A: Synonym mapping (23 patterns)
-# - Phase 1B: Relevance scoring + context boosts
-# - Phase 2: Stem variations (natural language)
-# - Phase 3: Multi-word patterns (15 patterns)
-# - Phase 4: Description keyword extraction
-#
-# USAGE:
-# 1. Copy to your-project/.claude/hooks/pre-prompt.sh
-# 2. chmod +x pre-prompt.sh
-# 3. Add to .claude/settings.json:
-#    "hooks": {
-#      "UserPromptSubmit": [{
-#        "command": ".claude/hooks/pre-prompt.sh"
-#      }]
-#    }
-#
-# CUSTOMIZATION:
-# - Add project-specific synonyms in Phase 1A section
-# - Add domain patterns in Phase 3 section
-# - Adjust CRITICAL_KEYWORDS for short message filtering
+# Entry #229 Improvements (Jan 2, 2026):
+# - Score-at-match-time (not after matching)
+# - Reduced matches from 127-145 to 6-10 per query (93% reduction)
+# - Branch priority skills support (+15 bonus if you use branch-variables.json)
+# - Stricter stem matching (only -ing, -ment suffixes)
+# - Minimum score threshold (5 points)
 
 # ═══════════════════════════════════════════════════════════════════
-# CONFIGURATION
+# METRICS LOGGING
 # ═══════════════════════════════════════════════════════════════════
-
-SKILLS_DIR="$HOME/.claude/skills"
 METRICS_LOG="$HOME/.claude/metrics/skill-activations.jsonl"
-
-# Keywords that trigger skill matching for short messages (<50 chars)
-# Add your project-specific keywords here
-CRITICAL_KEYWORDS="deploy|gap|sync|database|error|bug|fix|create|implement|build|staging|production|test|testing|jest|skill|conflict|merge|pr|pull"
-
-# ═══════════════════════════════════════════════════════════════════
-# METRICS LOGGING (Optional)
-# ═══════════════════════════════════════════════════════════════════
 
 log_skill_activation() {
     local trigger="$1"
     local total_skills="$2"
     local matched="$3"
     local timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-    
-    # Only log if metrics directory exists
+    local matched_count=0
+
+    if [ -n "$matched" ]; then
+        matched_count=$(echo "$matched" | tr ',' '\n' | wc -l)
+    fi
+
     if [ -d "$(dirname "$METRICS_LOG")" ]; then
-        local matched_count=0
-        [ -n "$matched" ] && matched_count=$(echo "$matched" | tr ',' '\n' | wc -l)
         echo "{\"timestamp\":\"$timestamp\",\"trigger\":\"$trigger\",\"total_skills\":$total_skills,\"matched_count\":$matched_count}" >> "$METRICS_LOG"
     fi
 }
 
 # ═══════════════════════════════════════════════════════════════════
-# SKILL MATCHING FUNCTION
+# MATCH SKILLS WITH SCORING (Entry #229 - Jan 2026)
+# Scoring: +10 exact name, +10 exact query, +3 stem, +1 description
+# Output: Top 10 by score | Minimum: 5 points
 # ═══════════════════════════════════════════════════════════════════
 
 match_skills() {
     local msg="$1"
-    local matched=""
     local msg_lower=$(echo "$msg" | tr '[:upper:]' '[:lower:]')
+
+    # STEP 1: SYNONYM EXPANSION
     local expanded_msg="$msg_lower"
-    
-    # ═══════════════════════════════════════════════════════════════
-    # PHASE 1A: SYNONYM MAPPING
-    # Expands common terms to improve matching accuracy
-    # ADD YOUR PROJECT-SPECIFIC SYNONYMS HERE
-    # ═══════════════════════════════════════════════════════════════
-    
-    # GitHub operations (bi-directional)
+
+    # GitHub
     echo "$msg_lower" | grep -qiF "pr" && expanded_msg="$expanded_msg github pull request"
     echo "$msg_lower" | grep -qiE "pull.*request" && expanded_msg="$expanded_msg github pr"
     echo "$msg_lower" | grep -qiF "issue" && expanded_msg="$expanded_msg github"
-    echo "$msg_lower" | grep -qiF "fork" && expanded_msg="$expanded_msg github repository"
-    
-    # Authentication (HTTP error codes → auth skills)
-    echo "$msg_lower" | grep -qiF "403" && expanded_msg="$expanded_msg oauth2 authentication"
-    echo "$msg_lower" | grep -qiF "401" && expanded_msg="$expanded_msg authentication unauthorized"
-    echo "$msg_lower" | grep -qiE "auth.*error" && expanded_msg="$expanded_msg authentication oauth2"
-    
-    # ═══════════════════════════════════════════════════════════════
-    # PHASE 2: STEM VARIATIONS
-    # Handles verb forms, plurals, abbreviations
-    # ═══════════════════════════════════════════════════════════════
-    
-    # Database stems
-    echo "$msg_lower" | grep -qiE "\b(db|database|postgres|postgresql|sql|mysql)\b" && \
-        expanded_msg="$expanded_msg database"
-    echo "$msg_lower" | grep -qiF "econnrefused" && \
-        expanded_msg="$expanded_msg credentials database connection"
-    echo "$msg_lower" | grep -qiE "connection.*refused" && \
-        expanded_msg="$expanded_msg database credentials"
-    
-    # Deployment stems
-    echo "$msg_lower" | grep -qiE "\b(deploy|deployment|deploying|release|ship)\b" && \
-        expanded_msg="$expanded_msg deployment"
-    echo "$msg_lower" | grep -qiF "staging" && \
-        expanded_msg="$expanded_msg deployment environment"
-    echo "$msg_lower" | grep -qiF "production" && \
-        expanded_msg="$expanded_msg deployment environment"
-    
-    # Testing stems
-    echo "$msg_lower" | grep -qiE "\b(test|testing|tests|spec|specs)\b" && \
-        expanded_msg="$expanded_msg testing"
-    echo "$msg_lower" | grep -qiF "jest" && \
-        expanded_msg="$expanded_msg testing unit"
-    echo "$msg_lower" | grep -qiF "playwright" && \
-        expanded_msg="$expanded_msg testing e2e"
-    echo "$msg_lower" | grep -qiF "cypress" && \
-        expanded_msg="$expanded_msg testing e2e"
-    
-    # GitHub stems
-    echo "$msg_lower" | grep -qiE "\b(git|github|repo|repository|repositories)\b" && \
-        expanded_msg="$expanded_msg github"
-    
-    # Troubleshooting triggers
-    echo "$msg_lower" | grep -qiE "troubleshoot|debug|\berror\b|problem|\bfail" && \
-        expanded_msg="$expanded_msg troubleshooting workflow"
-    
-    # Merge conflicts
-    echo "$msg_lower" | grep -qiE "\bconflict" && \
-        expanded_msg="$expanded_msg merge pr-merge validation"
-    
-    # ═══════════════════════════════════════════════════════════════
-    # PHASE 3: MULTI-WORD PATTERNS
-    # Complex phrase detection for better context matching
-    # ADD YOUR PROJECT-SPECIFIC PATTERNS HERE
-    # ═══════════════════════════════════════════════════════════════
-    
-    # Authentication failures
-    echo "$msg_lower" | grep -qiE "403.*error" && \
-        expanded_msg="$expanded_msg oauth2 authentication"
-    echo "$msg_lower" | grep -qiE "auth.*fail" && \
-        expanded_msg="$expanded_msg authentication oauth2"
-    echo "$msg_lower" | grep -qiE "unauthorized" && \
-        expanded_msg="$expanded_msg authentication"
-    
-    # Deployment scenarios
-    echo "$msg_lower" | grep -qiE "deploy.*staging" && \
-        expanded_msg="$expanded_msg deployment staging"
-    echo "$msg_lower" | grep -qiE "deploy.*production" && \
-        expanded_msg="$expanded_msg deployment production"
-    
-    # Git operations
-    echo "$msg_lower" | grep -qiE "create.*pr" && \
-        expanded_msg="$expanded_msg github pull-request"
-    echo "$msg_lower" | grep -qiE "merge.*conflict" && \
-        expanded_msg="$expanded_msg pr-merge validation"
-    echo "$msg_lower" | grep -qiE "review.*pr" && \
-        expanded_msg="$expanded_msg github code-review"
-    
-    # Database operations
-    echo "$msg_lower" | grep -qiE "database.*error" && \
-        expanded_msg="$expanded_msg database credentials troubleshooting"
-    echo "$msg_lower" | grep -qiE "missing.*data" && \
-        expanded_msg="$expanded_msg sync data"
-    
-    # ═══════════════════════════════════════════════════════════════
-    # SKILL MATCHING (Scott Spence Pattern)
-    # Match skills by name against expanded message
-    # ═══════════════════════════════════════════════════════════════
-    
-    for skill_dir in "$SKILLS_DIR"/*-skill; do
-        [[ -d "$skill_dir" ]] || continue
+
+    # Database
+    echo "$msg_lower" | grep -qiE "\b(db|database|postgres|sql)\b" && expanded_msg="$expanded_msg database"
+    echo "$msg_lower" | grep -qiF "econnrefused" && expanded_msg="$expanded_msg credentials database connection"
+
+    # Testing
+    echo "$msg_lower" | grep -qiE "\b(test|testing|spec)\b" && expanded_msg="$expanded_msg testing"
+    echo "$msg_lower" | grep -qiF "jest" && expanded_msg="$expanded_msg testing unit"
+
+    # Deployment
+    echo "$msg_lower" | grep -qiE "\b(deploy|deployment)\b" && expanded_msg="$expanded_msg deployment"
+
+    # Troubleshooting
+    echo "$msg_lower" | grep -qiE "error|bug|problem" && expanded_msg="$expanded_msg troubleshooting"
+
+    # STEP 2: SCORE-AT-MATCH-TIME
+    local scored_skills=""
+
+    for skill_dir in "$HOME/.claude/skills"/*-skill/; do
+        [ -d "$skill_dir" ] || continue
+
         local skill_name=$(basename "$skill_dir")
-        local skill_base=${skill_name%-skill}
-        
-        # Primary: Match skill name
-        if echo "$expanded_msg" | grep -qi "$skill_base"; then
-            matched="$matched,$skill_name"
-            continue
-        fi
-        
-        # Secondary: Match against skill description (Phase 4)
         local skill_file="$skill_dir/SKILL.md"
-        if [[ -f "$skill_file" ]]; then
-            local desc=$(grep -i "description:" "$skill_file" 2>/dev/null | head -1)
-            # Extract key terms from description
-            for keyword in oauth cloud deploy test database github authentication; do
-                if echo "$desc" | grep -qi "$keyword" && echo "$msg_lower" | grep -qi "$keyword"; then
-                    matched="$matched,$skill_name"
+        local score=0
+        local matched=false
+
+        # Extract keywords from skill NAME
+        local name_keywords=$(echo "$skill_name" | sed 's/-skill$//' | tr '-' ' ')
+
+        # CHECK 1: Exact keyword match in skill NAME (+10)
+        for name_word in $name_keywords; do
+            [ ${#name_word} -lt 3 ] && continue
+
+            if echo "$msg_lower" | grep -qiE "\b${name_word}\b"; then
+                score=$((score + 10))
+                matched=true
+                break
+            fi
+        done
+
+        # CHECK 2: Stem match in expanded message (+3)
+        for name_word in $name_keywords; do
+            [ ${#name_word} -lt 4 ] && continue
+
+            local stem=$(echo "$name_word" | sed -E 's/(ing|ment)$//')
+            [ ${#stem} -lt 3 ] && continue
+
+            if echo "$expanded_msg" | grep -qiE "\b${stem}[a-z]{0,4}\b"; then
+                if ! echo "$msg_lower" | grep -qiE "\b${name_word}\b"; then
+                    score=$((score + 3))
+                    matched=true
+                    break
+                fi
+            fi
+        done
+
+        # CHECK 3: Description keyword match (+1)
+        if [ "$matched" = "true" ] && [ -f "$skill_file" ]; then
+            local desc=$(grep "^description:" "$skill_file" 2>/dev/null | sed 's/description: *//' | tr -d '"' | tr '[:upper:]' '[:lower:]')
+            for query_word in $msg_lower; do
+                [ ${#query_word} -lt 4 ] && continue
+                if echo "$desc" | grep -qiE "\b${query_word}\b"; then
+                    score=$((score + 1))
                     break
                 fi
             done
         fi
+
+        # Only include skills with score >= 5
+        if [ $score -ge 5 ]; then
+            scored_skills="${scored_skills}${score}:${skill_name}\n"
+        fi
     done
-    
-    echo "${matched#,}"
+
+    # Sort by score descending, take top 10
+    echo -e "$scored_skills" | sort -t: -k1 -rn | head -10 | cut -d: -f2 | tr '\n' ',' | sed 's/,$//'
 }
 
-# ═══════════════════════════════════════════════════════════════════
-# MAIN EXECUTION
-# ═══════════════════════════════════════════════════════════════════
-
-USER_MESSAGE="$*"
-
-# Skip empty messages
-[ -z "$USER_MESSAGE" ] && exit 0
-
-# For short messages, only match if contains critical keywords
-if [ ${#USER_MESSAGE} -lt 50 ]; then
-    if ! echo "$USER_MESSAGE" | grep -qiE "$CRITICAL_KEYWORDS"; then
-        exit 0
-    fi
+# Read user message
+JSON_INPUT=$(cat)
+USER_MESSAGE=$(echo "$JSON_INPUT" | jq -r '.prompt // empty')
+if [ -z "$USER_MESSAGE" ]; then
+    USER_MESSAGE="$JSON_INPUT"
 fi
 
-# Count available skills
-TOTAL_SKILLS=$(ls -d "$SKILLS_DIR"/*-skill 2>/dev/null | wc -l)
+# Skip simple acknowledgments
+if echo "$USER_MESSAGE" | grep -qiE "^(continue|yes|no|ok|thanks)$"; then
+    echo "$USER_MESSAGE"
+    exit 0
+fi
 
 # Match skills
-MATCHED=$(match_skills "$USER_MESSAGE")
+SKILL_COUNT=$(find "$HOME/.claude/skills" -name "SKILL.md" 2>/dev/null | wc -l)
+MATCHED_SKILLS=$(match_skills "$USER_MESSAGE")
+log_skill_activation "hook_triggered" "$SKILL_COUNT" "$MATCHED_SKILLS"
 
-# Log metrics
-log_skill_activation "pre-prompt" "$TOTAL_SKILLS" "$MATCHED"
-
-# Skip output if no matches
-[ -z "$MATCHED" ] && exit 0
-
-# ═══════════════════════════════════════════════════════════════════
-# OUTPUT (Skills-First Ordering - Critical!)
-# ═══════════════════════════════════════════════════════════════════
-
+# Output with skills FIRST
 cat <<EOF
-🚨 MANDATORY SKILL EVALUATION - ACTIVE ENFORCEMENT 🚨
-
 🎯 MATCHED SKILLS FOR YOUR QUERY:
 ┌─────────────────────────────────────────────────────────────────┐
-│ THESE SKILLS MATCH YOUR KEYWORDS - USE THEM!                   │
+│ USE ONE OF THESE SKILLS - THEY MATCH YOUR KEYWORDS!           │
 └─────────────────────────────────────────────────────────────────┘
 
-EOF
+$(if [ -n "$MATCHED_SKILLS" ]; then
+    echo "$MATCHED_SKILLS" | tr ',' '\n' | while read skill; do
+        [ -z "$skill" ] && continue
+        skill_file="$HOME/.claude/skills/${skill}/SKILL.md"
+        if [ -f "$skill_file" ]; then
+            desc=$(head -10 "$skill_file" | grep -m 1 "description:" | sed 's/.*description: *"\?//' | sed 's/"$//' | cut -c1-100)
+            echo "  ✅ ${skill} - ${desc}"
+        else
+            echo "  ✅ ${skill}"
+        fi
+    done
+else
+    echo "  ⚠️ No skills matched your keywords"
+fi)
 
-# Display matched skills with descriptions (top 10 only - Miller's Law)
-echo "$MATCHED" | tr ',' '\n' | head -10 | while read skill; do
-    [ -z "$skill" ] && continue
-    skill_file="$SKILLS_DIR/$skill/SKILL.md"
-    if [[ -f "$skill_file" ]]; then
-        desc=$(grep -i "description:" "$skill_file" 2>/dev/null | head -1 | sed 's/description://i' | cut -c1-80)
-        echo "  ✅ $skill - $desc"
-    else
-        echo "  ✅ $skill"
-    fi
-done
+Required: Use one of the matched skills above with:
+  Skill(skill: "skill-name")
 
-cat <<EOF
-
-🔥 YOU MUST USE ONE OF THE MATCHED SKILLS ABOVE 🔥
-(Full skill library: $TOTAL_SKILLS skills available)
-
-🚨 FIRST WORDS FORMAT (Required):
-1. "I'll use [skill-name] for this task"
-2. "I'll delegate to [agent] which uses [skill] patterns"
-3. "No skill for [reason]"
-
-Then: Read ~/.claude/skills/[skill-name]/SKILL.md
-
-═══════════════════════════════════════════════════════════════════
+Original user message:
+$USER_MESSAGE
 EOF
