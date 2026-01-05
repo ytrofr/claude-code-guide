@@ -1,9 +1,14 @@
 # Chapter 17: Skill Detection Enhancement
 
 **Created**: 2025-12-23
+**Updated**: 2026-01-05
 **Source**: LIMOR AI Entry #204
 **Pattern**: 4-phase skill detection (synonym + relevance + stem + multi-word)
 **Evidence**: 310/400 → 700/700 test score (100%)
+
+---
+
+> **📖 Advanced Methodology**: For synonym expansion patterns, "Use when" scoring, CRITICAL_KEYWORDS gate, and monthly maintenance protocol, see **[Chapter 24: Skill Keyword Enhancement Methodology](24-skill-keyword-enhancement-methodology.md)** (Entry #244).
 
 ---
 
@@ -398,6 +403,8 @@ fi
 - **Chapter 16**: Skills Activation Breakthrough (Scott Spence + ordering)
 - **Chapter 13**: Claude Code Hooks (hook configuration)
 - **Chapter 15**: Progressive Disclosure (token efficiency)
+- **[Chapter 24](24-skill-keyword-enhancement-methodology.md)**: Skill Keyword Enhancement Methodology (advanced patterns) ⭐ NEW
+- **[Chapter 25](25-best-practices-reference.md)**: Best Practices Reference (Anthropic research)
 
 ---
 
