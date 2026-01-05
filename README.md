@@ -8,7 +8,14 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Pre-prompt Optimization ⭐ NEW
+### Skill Enhancement & Best Practices ⭐ NEW (Jan 5, 2026)
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) | 20+ synonym patterns, "Use when" scoring, monthly maintenance | Entry #244 🏆 |
+| [Best Practices Reference](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed, extraction workflow | Entry #189 |
+| [skill-maintenance-skill](skills-library/workflows/skill-maintenance-skill/) | Monthly audit templates, gap detection scripts | 100% coverage |
+
+### Pre-prompt Optimization
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) | 68% reduction (28k→9k chars), skills-first ordering | Entry #228 🏆 |
@@ -64,13 +71,15 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [02-minimal-setup.md](docs/guide/02-minimal-setup.md) | Core setup (START HERE) |
 | [04-task-tracking-system.md](docs/guide/04-task-tracking-system.md) | Roadmap/task management |
 | [05-developer-mode-ui-feedback-system.md](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual UI debugging |
-| [17-skill-detection-enhancement.md](docs/guide/17-skill-detection-enhancement.md) | Advanced skill detection (100% accuracy) |
+| [17-skill-detection-enhancement.md](docs/guide/17-skill-detection-enhancement.md) | 4-phase skill detection (100% accuracy) |
 | [18-perplexity-cost-optimization.md](docs/guide/18-perplexity-cost-optimization.md) | Perplexity caching (80%+ savings) |
 | [19-playwright-e2e-testing.md](docs/guide/19-playwright-e2e-testing.md) | Browser automation & E2E testing |
 | [20-skills-filtering-optimization.md](docs/guide/20-skills-filtering-optimization.md) | Score-at-match-time (93% reduction) |
-| [21-pre-prompt-optimization.md](docs/guide/21-pre-prompt-optimization.md) | 68% pre-prompt reduction 🆕 |
-| [22-wshobson-marketplace-integration.md](docs/guide/22-wshobson-marketplace-integration.md) | Agent marketplace 🆕 |
-| [23-session-documentation-skill.md](docs/guide/23-session-documentation-skill.md) | Automated documentation 🆕 |
+| [21-pre-prompt-optimization.md](docs/guide/21-pre-prompt-optimization.md) | 68% pre-prompt reduction |
+| [22-wshobson-marketplace-integration.md](docs/guide/22-wshobson-marketplace-integration.md) | Agent marketplace |
+| [23-session-documentation-skill.md](docs/guide/23-session-documentation-skill.md) | Automated documentation |
+| [24-skill-keyword-enhancement-methodology.md](docs/guide/24-skill-keyword-enhancement-methodology.md) | Synonym expansion + maintenance 🆕 |
+| [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -83,7 +92,8 @@ Executable workflow patterns organized by phase:
 - **workflows/** - 8-12 procedure skills (Week 2-3)
   - **perplexity-cache-skill/** - Cache-first pattern for cost optimization
   - **playwright-e2e-skill/** - Browser automation & E2E testing
-  - **session-documentation-skill/** - Automated session docs 🆕
+  - **session-documentation-skill/** - Automated session docs
+  - **skill-maintenance-skill/** - Monthly audit templates 🆕
 - **specialized/** - Domain-specific skills (Month 2+)
 
 **Best For**: Active troubleshooting, instant workflow access
@@ -123,13 +133,15 @@ Web-based progress tracker with:
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
-- **Pre-prompt Optimization** - 68% reduction with skills-first ordering 🆕
+- **Skill Keyword Enhancement** - 20+ synonym patterns, "Use when" scoring 🆕
+- **Pre-prompt Optimization** - 68% reduction with skills-first ordering
 - **MCP Integration** - GitHub, Memory Bank, PostgreSQL, Perplexity, Playwright
-- **wshobson Marketplace** - 273 pre-built components 🆕
+- **wshobson Marketplace** - 273 pre-built components
 - **Entry Numbering** - Stable cross-referencing across sessions
 - **Perplexity Cost Optimization** - 80%+ savings with cache-first pattern
 - **Playwright E2E Testing** - Browser automation with 100% test success
-- **Session Documentation** - Automated Entry + roadmap + status 🆕
+- **Session Documentation** - Automated Entry + roadmap + status
+- **Best Practices Reference** - 33 Anthropic articles indexed 🆕
 
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
@@ -139,6 +151,7 @@ Web-based progress tracker with:
 - **Team Collaboration** - Shared vs personal configuration patterns
 - **Research Caching** - Never pay twice for the same Perplexity query
 - **E2E Testing** - Automated browser testing with Playwright
+- **Monthly Maintenance** - 30 min/month keeps 100% skill coverage 🆕
 
 ---
 
@@ -193,7 +206,7 @@ claude-code
 ### Phase 2: Productive (Week 2-3, 4-6 hours)
 - ➕ PostgreSQL MCP (3 databases)
 - ➕ Playwright MCP (browser automation)
-- ➕ wshobson marketplace (273 components) 🆕
+- ➕ wshobson marketplace (273 components)
 - ➕ 8 workflow skills
 - ➕ Feature blueprints
 - ➕ Domain authorities
@@ -205,7 +218,8 @@ claude-code
 - ➕ 20-30 skill library
 - ➕ Full agent ecosystem
 - ➕ Complete 4-tier memory bank
-- ➕ Session documentation skill 🆕
+- ➕ Session documentation skill
+- ➕ Monthly skill maintenance 🆕
 
 **Value**: 561-709 hours/year ROI, enterprise automation
 
@@ -228,9 +242,11 @@ claude-code-implementation-guide/
 │       ├── 18-perplexity-cost-optimization.md  80%+ cost savings
 │       ├── 19-playwright-e2e-testing.md  Browser automation & E2E
 │       ├── 20-skills-filtering-optimization.md  93% noise reduction
-│       ├── 21-pre-prompt-optimization.md  🆕 68% reduction
-│       ├── 22-wshobson-marketplace-integration.md  🆕 273 components
-│       └── 23-session-documentation-skill.md  🆕 Automated docs
+│       ├── 21-pre-prompt-optimization.md  68% reduction
+│       ├── 22-wshobson-marketplace-integration.md  273 components
+│       ├── 23-session-documentation-skill.md  Automated docs
+│       ├── 24-skill-keyword-enhancement-methodology.md  🆕 Synonym expansion
+│       └── 25-best-practices-reference.md  🆕 33 Anthropic articles
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -249,7 +265,8 @@ claude-code-implementation-guide/
 │   ├── workflows/               # 8-12 skills (Phase 2)
 │   │   ├── perplexity-cache-skill/  Cost optimization
 │   │   ├── playwright-e2e-skill/    Browser automation
-│   │   └── session-documentation-skill/  🆕 Automated docs
+│   │   ├── session-documentation-skill/  Automated docs
+│   │   └── skill-maintenance-skill/  🆕 Monthly audits
 │   └── specialized/             # Domain-specific (Phase 3)
 ├── mcp-configs/                 # MCP server configurations
 │   ├── minimal/                 # GitHub only
@@ -301,8 +318,9 @@ claude-code-implementation-guide/
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
 - 💰 Perplexity: 80%+ cost savings with cache-first pattern
 - 🧪 E2E Testing: 100% pass rate with Playwright
-- 📦 Marketplace: 273 pre-built components available 🆕
-- 📝 Documentation: 67% faster with session skill 🆕
+- 📦 Marketplace: 273 pre-built components available
+- 📝 Documentation: 67% faster with session skill
+- 🔄 Maintenance: 30 min/month for 100% skill coverage 🆕
 
 ---
 
@@ -316,11 +334,14 @@ claude-code-implementation-guide/
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 **93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
-**68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21) 🆕
+**68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
+**20+ Synonym Patterns**: Natural language skill activation (Chapter 24) 🆕
+**33 Articles Indexed**: Anthropic best practices reference (Chapter 25) 🆕
 **Cost-Optimized**: Perplexity caching saves 80%+ on research costs (Chapter 18)
 **E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19)
-**Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22) 🆕
-**Automated Documentation**: 67% faster session docs (Chapter 23) 🆕
+**Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22)
+**Automated Documentation**: 67% faster session docs (Chapter 23)
+**Monthly Maintenance**: 30 min/month keeps skills at 100% coverage 🆕
 
 ---
 
@@ -346,9 +367,11 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) 🆕 68% reduction
-- [wshobson Marketplace](docs/guide/22-wshobson-marketplace-integration.md) 🆕 273 components
-- [Session Documentation](docs/guide/23-session-documentation-skill.md) 🆕 67% faster
+- [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) 🆕 20+ patterns
+- [Best Practices Reference](docs/guide/25-best-practices-reference.md) 🆕 33 articles
+- [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) 68% reduction
+- [wshobson Marketplace](docs/guide/22-wshobson-marketplace-integration.md) 273 components
+- [Session Documentation](docs/guide/23-session-documentation-skill.md) 67% faster
 - [Skills Filtering](docs/guide/20-skills-filtering-optimization.md) 93% reduction
 - [Playwright E2E Testing](docs/guide/19-playwright-e2e-testing.md) 🧪
 - [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) 💰
