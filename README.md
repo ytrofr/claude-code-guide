@@ -6,16 +6,20 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ---
 
-## 🆕 Latest Additions (December 2025)
+## 🆕 Latest Additions (January 2026)
 
-### Playwright E2E Testing ⭐ NEW
+### Pre-prompt Optimization ⭐ NEW
 | Guide | Description | Evidence |
 |-------|-------------|----------|
-| [Playwright MCP & E2E Testing](docs/guide/19-playwright-e2e-testing.md) | Browser automation + E2E test patterns | 176/176 tests passing 🏆 |
+| [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) | 68% reduction (28k→9k chars), skills-first ordering | Entry #228 🏆 |
+| [wshobson Marketplace](docs/guide/22-wshobson-marketplace-integration.md) | 67 plugins, 99 agents, 107 skills integration | Entry #227 |
+| [Session Documentation](docs/guide/23-session-documentation-skill.md) | Automates Entry + roadmap + status (67% faster) | NEW |
 
-### Anthropic Blog Integration
+### December 2025
 | Guide | Description | Evidence |
 |-------|-------------|----------|
+| [Skills Filtering Optimization](docs/guide/20-skills-filtering-optimization.md) | Score-at-match-time, 93% noise reduction | Entry #229 🏆 |
+| [Playwright E2E Testing](docs/guide/19-playwright-e2e-testing.md) | Browser automation + E2E test patterns | 176/176 tests passing 🏆 |
 | [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) | Cache-first pattern for 80%+ savings | 10+ cached results, $4+/mo saved |
 | [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) | 4-phase synonym/stem/multi-word matching | 310→700/700 (100%) 🏆 |
 | [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) | 8 hook types for workflow automation | 96% validation, 6-8h/year ROI |
@@ -27,12 +31,6 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 **Source**: [Anthropic hooks blog](https://claude.com/blog/how-to-configure-hooks) + [Building skills blog](https://claude.com/blog/building-skills-for-claude-code)
 
 **Templates**: `template/.claude/hooks/` (4 scripts) | **Example**: `examples/limor-ai-claude-hooks/`
-
-### LIMOR AI Patterns
-| Guide | Description | Time to Implement |
-|-------|-------------|-------------------|
-| [Task Tracking System](docs/guide/04-task-tracking-system.md) | Lightweight roadmap tracking - only open items in context | 10 min |
-| [Developer Mode UI Feedback](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual debugging with element selection & screenshots | 30 min |
 
 ---
 
@@ -68,7 +66,11 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [05-developer-mode-ui-feedback-system.md](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual UI debugging |
 | [17-skill-detection-enhancement.md](docs/guide/17-skill-detection-enhancement.md) | Advanced skill detection (100% accuracy) |
 | [18-perplexity-cost-optimization.md](docs/guide/18-perplexity-cost-optimization.md) | Perplexity caching (80%+ savings) |
-| [19-playwright-e2e-testing.md](docs/guide/19-playwright-e2e-testing.md) | Browser automation & E2E testing 🆕 |
+| [19-playwright-e2e-testing.md](docs/guide/19-playwright-e2e-testing.md) | Browser automation & E2E testing |
+| [20-skills-filtering-optimization.md](docs/guide/20-skills-filtering-optimization.md) | Score-at-match-time (93% reduction) |
+| [21-pre-prompt-optimization.md](docs/guide/21-pre-prompt-optimization.md) | 68% pre-prompt reduction 🆕 |
+| [22-wshobson-marketplace-integration.md](docs/guide/22-wshobson-marketplace-integration.md) | Agent marketplace 🆕 |
+| [23-session-documentation-skill.md](docs/guide/23-session-documentation-skill.md) | Automated documentation 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -80,7 +82,8 @@ Executable workflow patterns organized by phase:
 - **troubleshooting/** - 5-10 debugging skills (Week 1)
 - **workflows/** - 8-12 procedure skills (Week 2-3)
   - **perplexity-cache-skill/** - Cache-first pattern for cost optimization
-  - **playwright-e2e-skill/** - Browser automation & E2E testing 🆕
+  - **playwright-e2e-skill/** - Browser automation & E2E testing
+  - **session-documentation-skill/** - Automated session docs 🆕
 - **specialized/** - Domain-specific skills (Month 2+)
 
 **Best For**: Active troubleshooting, instant workflow access
@@ -120,10 +123,13 @@ Web-based progress tracker with:
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
+- **Pre-prompt Optimization** - 68% reduction with skills-first ordering 🆕
 - **MCP Integration** - GitHub, Memory Bank, PostgreSQL, Perplexity, Playwright
+- **wshobson Marketplace** - 273 pre-built components 🆕
 - **Entry Numbering** - Stable cross-referencing across sessions
 - **Perplexity Cost Optimization** - 80%+ savings with cache-first pattern
-- **Playwright E2E Testing** - Browser automation with 100% test success 🆕
+- **Playwright E2E Testing** - Browser automation with 100% test success
+- **Session Documentation** - Automated Entry + roadmap + status 🆕
 
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
@@ -132,7 +138,7 @@ Web-based progress tracker with:
 - **Validation First** - Scripts prevent 90% of common setup errors
 - **Team Collaboration** - Shared vs personal configuration patterns
 - **Research Caching** - Never pay twice for the same Perplexity query
-- **E2E Testing** - Automated browser testing with Playwright 🆕
+- **E2E Testing** - Automated browser testing with Playwright
 
 ---
 
@@ -178,7 +184,7 @@ claude-code
 ### Phase 1: Essential (Week 1, 2-3 hours)
 - ➕ Memory Bank MCP (session persistence)
 - ➕ 5 troubleshooting skills
-- ➕ Pre-prompt hook (84% activation + 4-phase detection)
+- ➕ Pre-prompt hook (84% activation + 4-phase detection + 68% reduction)
 - ➕ TIER-2-REGISTRY setup
 - ➕ Perplexity MCP with cache-first rule
 
@@ -186,18 +192,20 @@ claude-code
 
 ### Phase 2: Productive (Week 2-3, 4-6 hours)
 - ➕ PostgreSQL MCP (3 databases)
-- ➕ Playwright MCP (browser automation) 🆕
+- ➕ Playwright MCP (browser automation)
+- ➕ wshobson marketplace (273 components) 🆕
 - ➕ 8 workflow skills
 - ➕ Feature blueprints
 - ➕ Domain authorities
 
-**Value**: Database visibility, E2E testing, system recreation, 50%+ time savings
+**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings
 
 ### Phase 3: Advanced (Month 2+, organic)
 - ➕ Custom MCP servers
 - ➕ 20-30 skill library
 - ➕ Full agent ecosystem
 - ➕ Complete 4-tier memory bank
+- ➕ Session documentation skill 🆕
 
 **Value**: 561-709 hours/year ROI, enterprise automation
 
@@ -218,7 +226,11 @@ claude-code-implementation-guide/
 │       ├── 05-developer-mode-ui-feedback-system.md  Visual debugging
 │       ├── 17-skill-detection-enhancement.md  🏆 100% skill detection
 │       ├── 18-perplexity-cost-optimization.md  80%+ cost savings
-│       └── 19-playwright-e2e-testing.md  🆕 Browser automation & E2E
+│       ├── 19-playwright-e2e-testing.md  Browser automation & E2E
+│       ├── 20-skills-filtering-optimization.md  93% noise reduction
+│       ├── 21-pre-prompt-optimization.md  🆕 68% reduction
+│       ├── 22-wshobson-marketplace-integration.md  🆕 273 components
+│       └── 23-session-documentation-skill.md  🆕 Automated docs
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -228,7 +240,7 @@ claude-code-implementation-guide/
 │   │       ├── session-start.sh
 │   │       ├── pre-compact.sh
 │   │       ├── stop-hook.sh
-│   │       └── pre-prompt.sh   🏆 4-phase skill detection
+│   │       └── pre-prompt.sh   🏆 4-phase skill detection + 68% reduction
 │   └── memory-bank/
 │       └── always/
 ├── skills-library/              # Complete skills reference
@@ -236,7 +248,8 @@ claude-code-implementation-guide/
 │   ├── troubleshooting/         # 5-10 skills (Phase 1)
 │   ├── workflows/               # 8-12 skills (Phase 2)
 │   │   ├── perplexity-cache-skill/  Cost optimization
-│   │   └── playwright-e2e-skill/    🆕 Browser automation
+│   │   ├── playwright-e2e-skill/    Browser automation
+│   │   └── session-documentation-skill/  🆕 Automated docs
 │   └── specialized/             # Domain-specific (Phase 3)
 ├── mcp-configs/                 # MCP server configurations
 │   ├── minimal/                 # GitHub only
@@ -287,7 +300,9 @@ claude-code-implementation-guide/
 - 🎯 ROI: 50-500+ hours/year saved (scales with usage)
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
 - 💰 Perplexity: 80%+ cost savings with cache-first pattern
-- 🧪 E2E Testing: 100% pass rate with Playwright 🆕
+- 🧪 E2E Testing: 100% pass rate with Playwright
+- 📦 Marketplace: 273 pre-built components available 🆕
+- 📝 Documentation: 67% faster with session skill 🆕
 
 ---
 
@@ -300,17 +315,23 @@ claude-code-implementation-guide/
 **Phased Approach**: Value in 30 minutes, full power over time
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
+**93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
+**68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21) 🆕
 **Cost-Optimized**: Perplexity caching saves 80%+ on research costs (Chapter 18)
-**E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19) 🆕
+**E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19)
+**Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22) 🆕
+**Automated Documentation**: 67% faster session docs (Chapter 23) 🆕
 
 ---
 
 ## Credits
 
 **Source Project**: LimorAI - Hebrew business intelligence system
-**Patterns**: 97 components (22 skills, 39 agents, 30 MCP tools, 6 plugins)
+**Patterns**: 97+ components (22 skills, 39 agents, 30 MCP tools, 6 plugins)
 **Research**: Anthropic Claude 4 Best Practices + Sionic AI Skills Framework
+**Marketplace**: [wshobson/agents](https://github.com/wshobson/agents) - 273 components
 **Created**: December 2025
+**Updated**: January 2026
 
 ---
 
@@ -325,7 +346,11 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Playwright E2E Testing](docs/guide/19-playwright-e2e-testing.md) 🧪 NEW
+- [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) 🆕 68% reduction
+- [wshobson Marketplace](docs/guide/22-wshobson-marketplace-integration.md) 🆕 273 components
+- [Session Documentation](docs/guide/23-session-documentation-skill.md) 🆕 67% faster
+- [Skills Filtering](docs/guide/20-skills-filtering-optimization.md) 93% reduction
+- [Playwright E2E Testing](docs/guide/19-playwright-e2e-testing.md) 🧪
 - [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) 💰
 - [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) 🏆
 - [Task Tracking System](docs/guide/04-task-tracking-system.md)
