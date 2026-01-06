@@ -8,7 +8,15 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Skill Enhancement & Best Practices ⭐ NEW (Jan 5, 2026)
+### Claude Code Rules System ⭐ NEW (Jan 6, 2026)
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy, path-specific rules, context optimization | Entry #245, #247 🏆 |
+| [Rules Template](template/.claude/rules/) | Ready-to-use rules directory with examples | Official docs ✅ |
+
+**Official Docs**: https://code.claude.com/docs/en/memory
+
+### Skill Enhancement & Best Practices (Jan 5, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) | 20+ synonym patterns, "Use when" scoring, monthly maintenance | Entry #244 🏆 |
@@ -78,8 +86,9 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [21-pre-prompt-optimization.md](docs/guide/21-pre-prompt-optimization.md) | 68% pre-prompt reduction |
 | [22-wshobson-marketplace-integration.md](docs/guide/22-wshobson-marketplace-integration.md) | Agent marketplace |
 | [23-session-documentation-skill.md](docs/guide/23-session-documentation-skill.md) | Automated documentation |
-| [24-skill-keyword-enhancement-methodology.md](docs/guide/24-skill-keyword-enhancement-methodology.md) | Synonym expansion + maintenance 🆕 |
-| [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed 🆕 |
+| [24-skill-keyword-enhancement-methodology.md](docs/guide/24-skill-keyword-enhancement-methodology.md) | Synonym expansion + maintenance |
+| [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed |
+| [26-claude-code-rules-system.md](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -105,6 +114,7 @@ Executable workflow patterns organized by phase:
 Clone-and-go starter kit with pre-configured:
 - `.claude/CLAUDE.md` - Project context (includes Perplexity cache-first rule)
 - `.claude/mcp_servers.json.template` - MCP configuration
+- `.claude/rules/` - Auto-discovered rules (path-specific patterns) 🆕
 - `memory-bank/always/` - Core files (CORE-PATTERNS, system-status)
 - `.claude/hooks/` - Automation hooks (4 scripts including pre-prompt.sh)
 - `.claude/skills/starter/` - 3 essential skills
@@ -130,10 +140,11 @@ Web-based progress tracker with:
 
 ### Core Concepts
 - **CLAUDE.md Power** - Auto-loaded project context
+- **Rules System** - `.claude/rules/` for path-specific patterns 🆕
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
-- **Skill Keyword Enhancement** - 20+ synonym patterns, "Use when" scoring 🆕
+- **Skill Keyword Enhancement** - 20+ synonym patterns, "Use when" scoring
 - **Pre-prompt Optimization** - 68% reduction with skills-first ordering
 - **MCP Integration** - GitHub, Memory Bank, PostgreSQL, Perplexity, Playwright
 - **wshobson Marketplace** - 273 pre-built components
@@ -141,17 +152,19 @@ Web-based progress tracker with:
 - **Perplexity Cost Optimization** - 80%+ savings with cache-first pattern
 - **Playwright E2E Testing** - Browser automation with 100% test success
 - **Session Documentation** - Automated Entry + roadmap + status
-- **Best Practices Reference** - 33 Anthropic articles indexed 🆕
+- **Best Practices Reference** - 33 Anthropic articles indexed
+- **Context Optimization** - 75% threshold, cross-reference patterns 🆕
 
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
+- **Rules Hierarchy** - User → Project rules priority, path-specific targeting 🆕
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
 - **Validation First** - Scripts prevent 90% of common setup errors
 - **Team Collaboration** - Shared vs personal configuration patterns
 - **Research Caching** - Never pay twice for the same Perplexity query
 - **E2E Testing** - Automated browser testing with Playwright
-- **Monthly Maintenance** - 30 min/month keeps 100% skill coverage 🆕
+- **Monthly Maintenance** - 30 min/month keeps 100% skill coverage
 
 ---
 
@@ -200,6 +213,7 @@ claude-code
 - ➕ Pre-prompt hook (84% activation + 4-phase detection + 68% reduction)
 - ➕ TIER-2-REGISTRY setup
 - ➕ Perplexity MCP with cache-first rule
+- ➕ `.claude/rules/` directory 🆕
 
 **Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection, 80%+ research cost savings
 
@@ -219,7 +233,7 @@ claude-code
 - ➕ Full agent ecosystem
 - ➕ Complete 4-tier memory bank
 - ➕ Session documentation skill
-- ➕ Monthly skill maintenance 🆕
+- ➕ Monthly skill maintenance
 
 **Value**: 561-709 hours/year ROI, enterprise automation
 
@@ -245,12 +259,19 @@ claude-code-implementation-guide/
 │       ├── 21-pre-prompt-optimization.md  68% reduction
 │       ├── 22-wshobson-marketplace-integration.md  273 components
 │       ├── 23-session-documentation-skill.md  Automated docs
-│       ├── 24-skill-keyword-enhancement-methodology.md  🆕 Synonym expansion
-│       └── 25-best-practices-reference.md  🆕 33 Anthropic articles
+│       ├── 24-skill-keyword-enhancement-methodology.md  Synonym expansion
+│       ├── 25-best-practices-reference.md  33 Anthropic articles
+│       └── 26-claude-code-rules-system.md  🆕 Rules hierarchy
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
 │   │   ├── mcp_servers.json.template
+│   │   ├── rules/              🆕 Auto-discovered rules
+│   │   │   ├── README.md
+│   │   │   ├── src-code.md     # Path-specific
+│   │   │   ├── tests.md        # Path-specific
+│   │   │   └── domain/
+│   │   │       └── patterns.md
 │   │   ├── skills/starter/
 │   │   └── hooks/
 │   │       ├── session-start.sh
@@ -266,7 +287,7 @@ claude-code-implementation-guide/
 │   │   ├── perplexity-cache-skill/  Cost optimization
 │   │   ├── playwright-e2e-skill/    Browser automation
 │   │   ├── session-documentation-skill/  Automated docs
-│   │   └── skill-maintenance-skill/  🆕 Monthly audits
+│   │   └── skill-maintenance-skill/  Monthly audits
 │   └── specialized/             # Domain-specific (Phase 3)
 ├── mcp-configs/                 # MCP server configurations
 │   ├── minimal/                 # GitHub only
@@ -320,7 +341,8 @@ claude-code-implementation-guide/
 - 🧪 E2E Testing: 100% pass rate with Playwright
 - 📦 Marketplace: 273 pre-built components available
 - 📝 Documentation: 67% faster with session skill
-- 🔄 Maintenance: 30 min/month for 100% skill coverage 🆕
+- 🔄 Maintenance: 30 min/month for 100% skill coverage
+- 📏 Rules: Path-specific patterns for context efficiency 🆕
 
 ---
 
@@ -335,13 +357,14 @@ claude-code-implementation-guide/
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 **93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
 **68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
-**20+ Synonym Patterns**: Natural language skill activation (Chapter 24) 🆕
-**33 Articles Indexed**: Anthropic best practices reference (Chapter 25) 🆕
+**20+ Synonym Patterns**: Natural language skill activation (Chapter 24)
+**33 Articles Indexed**: Anthropic best practices reference (Chapter 25)
+**Rules Hierarchy**: Path-specific patterns with user/project priority (Chapter 26) 🆕
 **Cost-Optimized**: Perplexity caching saves 80%+ on research costs (Chapter 18)
 **E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19)
 **Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22)
 **Automated Documentation**: 67% faster session docs (Chapter 23)
-**Monthly Maintenance**: 30 min/month keeps skills at 100% coverage 🆕
+**Monthly Maintenance**: 30 min/month keeps skills at 100% coverage
 
 ---
 
@@ -351,6 +374,7 @@ claude-code-implementation-guide/
 **Patterns**: 97+ components (22 skills, 39 agents, 30 MCP tools, 6 plugins)
 **Research**: Anthropic Claude 4 Best Practices + Sionic AI Skills Framework
 **Marketplace**: [wshobson/agents](https://github.com/wshobson/agents) - 273 components
+**Official Docs**: https://code.claude.com/docs/en/memory
 **Created**: December 2025
 **Updated**: January 2026
 
@@ -367,8 +391,9 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) 🆕 20+ patterns
-- [Best Practices Reference](docs/guide/25-best-practices-reference.md) 🆕 33 articles
+- [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) 🆕 Path-specific patterns
+- [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) 20+ patterns
+- [Best Practices Reference](docs/guide/25-best-practices-reference.md) 33 articles
 - [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) 68% reduction
 - [wshobson Marketplace](docs/guide/22-wshobson-marketplace-integration.md) 273 components
 - [Session Documentation](docs/guide/23-session-documentation-skill.md) 67% faster
