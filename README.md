@@ -8,7 +8,14 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Claude Code Rules System ⭐ NEW (Jan 6, 2026)
+### Fast Cloud Run Deployment ⭐ NEW (Jan 7, 2026)
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) | Pre-built image deployment, 78% faster (3-5 min → ~1 min) | Entry #248, #251 🏆 |
+
+**Key Features**: Skip Cloud Build entirely, Dockerfile caching optimization, critical traffic routing patterns
+
+### Claude Code Rules System (Jan 6, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy, path-specific rules, context optimization | Entry #245, #247 🏆 |
@@ -88,7 +95,8 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [23-session-documentation-skill.md](docs/guide/23-session-documentation-skill.md) | Automated documentation |
 | [24-skill-keyword-enhancement-methodology.md](docs/guide/24-skill-keyword-enhancement-methodology.md) | Synonym expansion + maintenance |
 | [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed |
-| [26-claude-code-rules-system.md](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy 🆕 |
+| [26-claude-code-rules-system.md](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy |
+| [27-fast-cloud-run-deployment.md](docs/guide/27-fast-cloud-run-deployment.md) | 78% faster deployments 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -140,7 +148,7 @@ Web-based progress tracker with:
 
 ### Core Concepts
 - **CLAUDE.md Power** - Auto-loaded project context
-- **Rules System** - `.claude/rules/` for path-specific patterns 🆕
+- **Rules System** - `.claude/rules/` for path-specific patterns
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
@@ -153,18 +161,20 @@ Web-based progress tracker with:
 - **Playwright E2E Testing** - Browser automation with 100% test success
 - **Session Documentation** - Automated Entry + roadmap + status
 - **Best Practices Reference** - 33 Anthropic articles indexed
-- **Context Optimization** - 75% threshold, cross-reference patterns 🆕
+- **Context Optimization** - 75% threshold, cross-reference patterns
+- **Fast Deployment** - 78% faster Cloud Run deploys with pre-built images 🆕
 
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
-- **Rules Hierarchy** - User → Project rules priority, path-specific targeting 🆕
+- **Rules Hierarchy** - User → Project rules priority, path-specific targeting
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
 - **Validation First** - Scripts prevent 90% of common setup errors
 - **Team Collaboration** - Shared vs personal configuration patterns
 - **Research Caching** - Never pay twice for the same Perplexity query
 - **E2E Testing** - Automated browser testing with Playwright
 - **Monthly Maintenance** - 30 min/month keeps 100% skill coverage
+- **Pre-built Images** - Skip Cloud Build for 78% faster deployments 🆕
 
 ---
 
@@ -213,7 +223,7 @@ claude-code
 - ➕ Pre-prompt hook (84% activation + 4-phase detection + 68% reduction)
 - ➕ TIER-2-REGISTRY setup
 - ➕ Perplexity MCP with cache-first rule
-- ➕ `.claude/rules/` directory 🆕
+- ➕ `.claude/rules/` directory
 
 **Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection, 80%+ research cost savings
 
@@ -224,8 +234,9 @@ claude-code
 - ➕ 8 workflow skills
 - ➕ Feature blueprints
 - ➕ Domain authorities
+- ➕ Fast deployment scripts 🆕
 
-**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings
+**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments
 
 ### Phase 3: Advanced (Month 2+, organic)
 - ➕ Custom MCP servers
@@ -261,12 +272,13 @@ claude-code-implementation-guide/
 │       ├── 23-session-documentation-skill.md  Automated docs
 │       ├── 24-skill-keyword-enhancement-methodology.md  Synonym expansion
 │       ├── 25-best-practices-reference.md  33 Anthropic articles
-│       └── 26-claude-code-rules-system.md  🆕 Rules hierarchy
+│       ├── 26-claude-code-rules-system.md  Rules hierarchy
+│       └── 27-fast-cloud-run-deployment.md  🆕 78% faster deploys
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
 │   │   ├── mcp_servers.json.template
-│   │   ├── rules/              🆕 Auto-discovered rules
+│   │   ├── rules/              Auto-discovered rules
 │   │   │   ├── README.md
 │   │   │   ├── src-code.md     # Path-specific
 │   │   │   ├── tests.md        # Path-specific
@@ -342,7 +354,8 @@ claude-code-implementation-guide/
 - 📦 Marketplace: 273 pre-built components available
 - 📝 Documentation: 67% faster with session skill
 - 🔄 Maintenance: 30 min/month for 100% skill coverage
-- 📏 Rules: Path-specific patterns for context efficiency 🆕
+- 📏 Rules: Path-specific patterns for context efficiency
+- 🚀 Deployment: 78% faster with pre-built images 🆕
 
 ---
 
@@ -359,12 +372,13 @@ claude-code-implementation-guide/
 **68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
 **20+ Synonym Patterns**: Natural language skill activation (Chapter 24)
 **33 Articles Indexed**: Anthropic best practices reference (Chapter 25)
-**Rules Hierarchy**: Path-specific patterns with user/project priority (Chapter 26) 🆕
+**Rules Hierarchy**: Path-specific patterns with user/project priority (Chapter 26)
 **Cost-Optimized**: Perplexity caching saves 80%+ on research costs (Chapter 18)
 **E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19)
 **Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22)
 **Automated Documentation**: 67% faster session docs (Chapter 23)
 **Monthly Maintenance**: 30 min/month keeps skills at 100% coverage
+**Fast Deployment**: 78% faster Cloud Run deploys with pre-built images (Chapter 27) 🆕
 
 ---
 
@@ -391,7 +405,8 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) 🆕 Path-specific patterns
+- [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) 🆕 78% faster deploys
+- [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) Path-specific patterns
 - [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) 20+ patterns
 - [Best Practices Reference](docs/guide/25-best-practices-reference.md) 33 articles
 - [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) 68% reduction
