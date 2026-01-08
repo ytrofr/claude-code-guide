@@ -35,7 +35,7 @@ Cloud Run deployments using `gcloud run deploy --source .` are slow because they
 
 ## Prerequisites (One-Time Setup)
 
-### 1. Configure Docker Authentication
+### Option 1: gcloud Credential Helper (Simple)
 
 ```bash
 # Authenticate Docker with Google Artifact Registry
@@ -44,7 +44,29 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 
 This creates `~/.docker/config.json` with credential helper.
 
-### 2. Verify Artifact Registry Exists
+### Option 2: Service Account (Required for WSL)
+
+**WSL + Docker Desktop** has issues with gcloud credential helper, causing 302/Unauthenticated errors. Use service account authentication instead:
+
+```bash
+# 1. Create service account key (one-time)
+gcloud iam service-accounts keys create ~/your-project-docker-key.json \
+    --iam-account=your-service-account@your-project.iam.gserviceaccount.com
+
+# 2. Remove Artifact Registry from credHelpers in ~/.docker/config.json
+# Find and REMOVE this line (so Docker uses direct auth, not gcloud):
+#   "us-central1-docker.pkg.dev": "gcloud"
+
+# 3. Authenticate Docker with service account
+cat ~/your-project-docker-key.json | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+```
+
+**Why service account for WSL?**
+- WSL + Docker Desktop + gcloud credential helper = 302/Unauthenticated errors
+- Service account auth works reliably
+- Key stored outside of repo (e.g., `~/your-project-docker-key.json`)
+
+### Verify Artifact Registry Exists
 
 ```bash
 # Check if repository exists
@@ -312,7 +334,7 @@ gcloud run revisions list --service=SERVICE --region=REGION --limit=3
 
 ## Troubleshooting
 
-### Docker Authentication Error
+### Docker Authentication Error (Standard)
 ```
 denied: Permission denied for "us-central1-docker.pkg.dev/..."
 ```
@@ -320,6 +342,31 @@ denied: Permission denied for "us-central1-docker.pkg.dev/..."
 ```bash
 gcloud auth configure-docker us-central1-docker.pkg.dev
 ```
+
+### WSL + Docker Desktop: 302/Unauthenticated Error
+```
+Error response from daemon: Head "https://us-central1-docker.pkg.dev/v2/.../manifests/latest":
+unexpected status: 302 Found
+```
+or
+```
+denied: Unauthenticated request. Unauthenticated requests do not have permission...
+```
+
+**Cause**: The gcloud credential helper doesn't work properly with WSL + Docker Desktop.
+
+**Fix**: Use service account authentication instead:
+
+```bash
+# 1. Remove gcloud credential helper for Artifact Registry
+# Edit ~/.docker/config.json and remove this line from credHelpers:
+#   "us-central1-docker.pkg.dev": "gcloud"
+
+# 2. Authenticate Docker with service account key
+cat ~/your-project-docker-key.json | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+```
+
+**Verified**: OGAS project (Jan 2026) - Build 6s, Push 9s, Deploy 113s
 
 ### Build Still Slow (>2 min)
 **Cause**: Docker layer cache invalidated by `chown -R` or file changes
@@ -370,9 +417,11 @@ gcloud run services update-traffic your-service --to-latest --region us-central1
 - **Traffic Routing Issue**: Cloud Run never auto-routes - always include update-traffic
 - **Dockerfile Caching**: Avoid `chown -R` after COPY
 - **Artifact Registry**: Configure once with `gcloud auth configure-docker`
+- **WSL Fix**: Use service account auth instead of gcloud credential helper
 
 ---
 
 **Evidence**: LimorAI Entry #248 (staging-deployment-speed-optimization.md)  
-**Validated**: January 7, 2026 - 78% faster deployments achieved  
+**Validated**: January 8, 2026 - 78% faster deployments achieved (OGAS project)  
+**WSL Fix Validated**: January 8, 2026 - Service account auth works in WSL + Docker Desktop  
 **Sacred Compliance**: 100% SHARP maintained (no functionality changes)
