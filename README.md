@@ -8,7 +8,14 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Fast Cloud Run Deployment ⭐ NEW (Jan 7, 2026)
+### Skill Optimization Patterns ⭐ NEW (Jan 8, 2026)
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) | context:fork, agent: routing, user-invocable:false, wildcard permissions | 171 skills optimized 🏆 |
+
+**Key Features**: Isolated execution, agent routing, menu visibility control, wildcard bash permissions
+
+### Fast Cloud Run Deployment (Jan 7, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) | Pre-built image deployment, 78% faster (3-5 min → ~1 min) | Entry #248, #251 🏆 |
@@ -87,16 +94,17 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [04-task-tracking-system.md](docs/guide/04-task-tracking-system.md) | Roadmap/task management |
 | [05-developer-mode-ui-feedback-system.md](docs/guide/05-developer-mode-ui-feedback-system.md) | Visual UI debugging |
 | [17-skill-detection-enhancement.md](docs/guide/17-skill-detection-enhancement.md) | 4-phase skill detection (100% accuracy) |
-| [18-perplexity-cost-optimization.md](docs/guide/18-perplexity-cost-optimization.md) | Perplexity caching (80%+ savings) |
-| [19-playwright-e2e-testing.md](docs/guide/19-playwright-e2e-testing.md) | Browser automation & E2E testing |
-| [20-skills-filtering-optimization.md](docs/guide/20-skills-filtering-optimization.md) | Score-at-match-time (93% reduction) |
+| [18-perplexity-cost-optimization.md](docs/guide/18-perplexity-cost-optimization.md) | 80%+ cost savings |
+| [19-playwright-e2e-testing.md](docs/guide/19-playwright-e2e-testing.md) | Browser automation & E2E |
+| [20-skills-filtering-optimization.md](docs/guide/20-skills-filtering-optimization.md) | 93% noise reduction |
 | [21-pre-prompt-optimization.md](docs/guide/21-pre-prompt-optimization.md) | 68% pre-prompt reduction |
 | [22-wshobson-marketplace-integration.md](docs/guide/22-wshobson-marketplace-integration.md) | Agent marketplace |
 | [23-session-documentation-skill.md](docs/guide/23-session-documentation-skill.md) | Automated documentation |
-| [24-skill-keyword-enhancement-methodology.md](docs/guide/24-skill-keyword-enhancement-methodology.md) | Synonym expansion + maintenance |
-| [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed |
+| [24-skill-keyword-enhancement-methodology.md](docs/guide/24-skill-keyword-enhancement-methodology.md) | Synonym expansion |
+| [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles |
 | [26-claude-code-rules-system.md](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy |
-| [27-fast-cloud-run-deployment.md](docs/guide/27-fast-cloud-run-deployment.md) | 78% faster deployments 🆕 |
+| [27-fast-cloud-run-deployment.md](docs/guide/27-fast-cloud-run-deployment.md) | 78% faster deployments |
+| [28-skill-optimization-patterns.md](docs/guide/28-skill-optimization-patterns.md) | context:fork, agent:, wildcards 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -153,6 +161,7 @@ Web-based progress tracker with:
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
 - **Skill Keyword Enhancement** - 20+ synonym patterns, "Use when" scoring
+- **Skill Optimization** - context:fork, agent:, user-invocable: patterns 🆕
 - **Pre-prompt Optimization** - 68% reduction with skills-first ordering
 - **MCP Integration** - GitHub, Memory Bank, PostgreSQL, Perplexity, Playwright
 - **wshobson Marketplace** - 273 pre-built components
@@ -162,11 +171,12 @@ Web-based progress tracker with:
 - **Session Documentation** - Automated Entry + roadmap + status
 - **Best Practices Reference** - 33 Anthropic articles indexed
 - **Context Optimization** - 75% threshold, cross-reference patterns
-- **Fast Deployment** - 78% faster Cloud Run deploys with pre-built images 🆕
+- **Fast Deployment** - 78% faster Cloud Run deploys with pre-built images
 
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
+- **Skill Frontmatter** - context:fork, agent:, user-invocable: for optimization 🆕
 - **Rules Hierarchy** - User → Project rules priority, path-specific targeting
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
 - **Validation First** - Scripts prevent 90% of common setup errors
@@ -174,7 +184,7 @@ Web-based progress tracker with:
 - **Research Caching** - Never pay twice for the same Perplexity query
 - **E2E Testing** - Automated browser testing with Playwright
 - **Monthly Maintenance** - 30 min/month keeps 100% skill coverage
-- **Pre-built Images** - Skip Cloud Build for 78% faster deployments 🆕
+- **Pre-built Images** - Skip Cloud Build for 78% faster deployments
 
 ---
 
@@ -234,7 +244,8 @@ claude-code
 - ➕ 8 workflow skills
 - ➕ Feature blueprints
 - ➕ Domain authorities
-- ➕ Fast deployment scripts 🆕
+- ➕ Fast deployment scripts
+- ➕ Skill optimization (context:fork, agent:) 🆕
 
 **Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments
 
@@ -273,7 +284,8 @@ claude-code-implementation-guide/
 │       ├── 24-skill-keyword-enhancement-methodology.md  Synonym expansion
 │       ├── 25-best-practices-reference.md  33 Anthropic articles
 │       ├── 26-claude-code-rules-system.md  Rules hierarchy
-│       └── 27-fast-cloud-run-deployment.md  🆕 78% faster deploys
+│       ├── 27-fast-cloud-run-deployment.md  78% faster deploys
+│       └── 28-skill-optimization-patterns.md  🆕 context:fork, agent:
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -355,7 +367,8 @@ claude-code-implementation-guide/
 - 📝 Documentation: 67% faster with session skill
 - 🔄 Maintenance: 30 min/month for 100% skill coverage
 - 📏 Rules: Path-specific patterns for context efficiency
-- 🚀 Deployment: 78% faster with pre-built images 🆕
+- 🚀 Deployment: 78% faster with pre-built images
+- ⚡ Skill Optimization: context:fork, agent:, wildcards 🆕
 
 ---
 
@@ -378,7 +391,8 @@ claude-code-implementation-guide/
 **Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22)
 **Automated Documentation**: 67% faster session docs (Chapter 23)
 **Monthly Maintenance**: 30 min/month keeps skills at 100% coverage
-**Fast Deployment**: 78% faster Cloud Run deploys with pre-built images (Chapter 27) 🆕
+**Fast Deployment**: 78% faster Cloud Run deploys with pre-built images (Chapter 27)
+**Skill Optimization**: context:fork, agent:, wildcards for advanced skills (Chapter 28) 🆕
 
 ---
 
@@ -405,7 +419,8 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) 🆕 78% faster deploys
+- [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) 🆕 context:fork, agent:, wildcards
+- [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) 78% faster deploys
 - [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) Path-specific patterns
 - [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) 20+ patterns
 - [Best Practices Reference](docs/guide/25-best-practices-reference.md) 33 articles
