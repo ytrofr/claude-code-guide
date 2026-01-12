@@ -1,6 +1,6 @@
 #!/bin/bash
 # Pre-Prompt Hook: Skills Filtering with Score-at-Match-Time (Entry #229)
-# Created: 2025-12-01 | Enhanced: 2026-01-02
+# Created: 2025-12-01 | Enhanced: 2026-01-12 (Entry #266 grep escaping)
 # Source: https://scottspence.com/posts/how-to-make-claude-code-skills-activate-reliably
 # Success Rate: 95%+ (84% Scott Spence baseline + Entry #229 improvements)
 #
@@ -10,6 +10,11 @@
 # - Branch priority skills support (+15 bonus if you use branch-variables.json)
 # - Stricter stem matching (only -ing, -ment suffixes)
 # - Minimum score threshold (5 points)
+#
+# Entry #266 Fix (Jan 12, 2026):
+# - Added `--` separator to ALL grep calls
+# - Prevents "unrecognized option" errors when messages contain --options
+# - Validated: 122/122 tests passing across 12 categories
 
 # ═══════════════════════════════════════════════════════════════════
 # METRICS LOGGING
@@ -43,26 +48,27 @@ match_skills() {
     local msg_lower=$(echo "$msg" | tr '[:upper:]' '[:lower:]')
 
     # STEP 1: SYNONYM EXPANSION
+    # NOTE: All grep calls use `--` to prevent --option interpretation (Entry #266)
     local expanded_msg="$msg_lower"
 
     # GitHub
-    echo "$msg_lower" | grep -qiF "pr" && expanded_msg="$expanded_msg github pull request"
-    echo "$msg_lower" | grep -qiE "pull.*request" && expanded_msg="$expanded_msg github pr"
-    echo "$msg_lower" | grep -qiF "issue" && expanded_msg="$expanded_msg github"
+    echo "$msg_lower" | grep -qiF -- "pr" && expanded_msg="$expanded_msg github pull request"
+    echo "$msg_lower" | grep -qiE -- "pull.*request" && expanded_msg="$expanded_msg github pr"
+    echo "$msg_lower" | grep -qiF -- "issue" && expanded_msg="$expanded_msg github"
 
     # Database
-    echo "$msg_lower" | grep -qiE "\b(db|database|postgres|sql)\b" && expanded_msg="$expanded_msg database"
-    echo "$msg_lower" | grep -qiF "econnrefused" && expanded_msg="$expanded_msg credentials database connection"
+    echo "$msg_lower" | grep -qiE -- "\b(db|database|postgres|sql)\b" && expanded_msg="$expanded_msg database"
+    echo "$msg_lower" | grep -qiF -- "econnrefused" && expanded_msg="$expanded_msg credentials database connection"
 
     # Testing
-    echo "$msg_lower" | grep -qiE "\b(test|testing|spec)\b" && expanded_msg="$expanded_msg testing"
-    echo "$msg_lower" | grep -qiF "jest" && expanded_msg="$expanded_msg testing unit"
+    echo "$msg_lower" | grep -qiE -- "\b(test|testing|spec)\b" && expanded_msg="$expanded_msg testing"
+    echo "$msg_lower" | grep -qiF -- "jest" && expanded_msg="$expanded_msg testing unit"
 
     # Deployment
-    echo "$msg_lower" | grep -qiE "\b(deploy|deployment)\b" && expanded_msg="$expanded_msg deployment"
+    echo "$msg_lower" | grep -qiE -- "\b(deploy|deployment)\b" && expanded_msg="$expanded_msg deployment"
 
     # Troubleshooting
-    echo "$msg_lower" | grep -qiE "error|bug|problem" && expanded_msg="$expanded_msg troubleshooting"
+    echo "$msg_lower" | grep -qiE -- "error|bug|problem" && expanded_msg="$expanded_msg troubleshooting"
 
     # STEP 2: SCORE-AT-MATCH-TIME
     local scored_skills=""
@@ -82,7 +88,7 @@ match_skills() {
         for name_word in $name_keywords; do
             [ ${#name_word} -lt 3 ] && continue
 
-            if echo "$msg_lower" | grep -qiE "\b${name_word}\b"; then
+            if echo "$msg_lower" | grep -qiE -- "\b${name_word}\b"; then
                 score=$((score + 10))
                 matched=true
                 break
@@ -96,8 +102,8 @@ match_skills() {
             local stem=$(echo "$name_word" | sed -E 's/(ing|ment)$//')
             [ ${#stem} -lt 3 ] && continue
 
-            if echo "$expanded_msg" | grep -qiE "\b${stem}[a-z]{0,4}\b"; then
-                if ! echo "$msg_lower" | grep -qiE "\b${name_word}\b"; then
+            if echo "$expanded_msg" | grep -qiE -- "\b${stem}[a-z]{0,4}\b"; then
+                if ! echo "$msg_lower" | grep -qiE -- "\b${name_word}\b"; then
                     score=$((score + 3))
                     matched=true
                     break
@@ -107,10 +113,10 @@ match_skills() {
 
         # CHECK 3: Description keyword match (+1)
         if [ "$matched" = "true" ] && [ -f "$skill_file" ]; then
-            local desc=$(grep "^description:" "$skill_file" 2>/dev/null | sed 's/description: *//' | tr -d '"' | tr '[:upper:]' '[:lower:]')
+            local desc=$(grep -- "^description:" "$skill_file" 2>/dev/null | sed 's/description: *//' | tr -d '"' | tr '[:upper:]' '[:lower:]')
             for query_word in $msg_lower; do
                 [ ${#query_word} -lt 4 ] && continue
-                if echo "$desc" | grep -qiE "\b${query_word}\b"; then
+                if echo "$desc" | grep -qiE -- "\b${query_word}\b"; then
                     score=$((score + 1))
                     break
                 fi
@@ -134,8 +140,8 @@ if [ -z "$USER_MESSAGE" ]; then
     USER_MESSAGE="$JSON_INPUT"
 fi
 
-# Skip simple acknowledgments
-if echo "$USER_MESSAGE" | grep -qiE "^(continue|yes|no|ok|thanks)$"; then
+# Skip simple acknowledgments (Entry #266: use -- for grep safety)
+if echo "$USER_MESSAGE" | grep -qiE -- "^(continue|yes|no|ok|thanks)$"; then
     echo "$USER_MESSAGE"
     exit 0
 fi
@@ -157,7 +163,7 @@ $(if [ -n "$MATCHED_SKILLS" ]; then
         [ -z "$skill" ] && continue
         skill_file="$HOME/.claude/skills/${skill}/SKILL.md"
         if [ -f "$skill_file" ]; then
-            desc=$(head -10 "$skill_file" | grep -m 1 "description:" | sed 's/.*description: *"\?//' | sed 's/"$//' | cut -c1-100)
+            desc=$(head -10 "$skill_file" | grep -m 1 -- "description:" | sed 's/.*description: *"\?//' | sed 's/"$//' | cut -c1-100)
             echo "  ✅ ${skill} - ${desc}"
         else
             echo "  ✅ ${skill}"
