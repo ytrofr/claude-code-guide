@@ -8,6 +8,29 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
+### Pre-Prompt Hook Complete Guide ⭐⭐⭐ NEW (Jan 15, 2026)
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) | **COMPLETE step-by-step implementation** - Architecture, setup, cache management, testing, monitoring, troubleshooting | **370x optimization** (50s → 136ms), **88.2% accuracy** (Entry #271 + #272) 🏆🏆🏆 |
+
+**🎯 USE THIS GUIDE** to implement the full pre-prompt hook system in your project!
+
+**Key Features**:
+- ✅ Complete architecture overview with diagrams
+- ✅ Step-by-step setup (6 steps from zero to working)
+- ✅ Critical cache management (solves 35% coverage issue)
+- ✅ Test priority system (P0-P3 explained)
+- ✅ Trigger optimization (5 core principles)
+- ✅ Weekly monitoring setup (85+ hours/year ROI)
+- ✅ Domain performance analysis
+- ✅ Troubleshooting guide (5 common issues solved)
+- ✅ Quick commands reference
+- ✅ Implementation checklist
+
+**Perfect For**: Any project wanting to implement automatic skill loading with proven 88.2% accuracy!
+
+---
+
 ### Skill Optimization Patterns ⭐ NEW (Jan 8, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
@@ -17,14 +40,14 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ### Fast Cloud Run Deployment (Jan 7, 2026)
 | Guide | Description | Evidence |
-|-------|-------------|----------|
+|-------|-------------|------------|
 | [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) | Pre-built image deployment, 78% faster (3-5 min → ~1 min) | Entry #248, #251 🏆 |
 
 **Key Features**: Skip Cloud Build entirely, Dockerfile caching optimization, critical traffic routing patterns
 
 ### Claude Code Rules System (Jan 6, 2026)
 | Guide | Description | Evidence |
-|-------|-------------|----------|
+|-------|-------------|------------|
 | [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy, path-specific rules, context optimization | Entry #245, #247 🏆 |
 | [Rules Template](template/.claude/rules/) | Ready-to-use rules directory with examples | Official docs ✅ |
 
@@ -32,21 +55,21 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ### Skill Enhancement & Best Practices (Jan 5, 2026)
 | Guide | Description | Evidence |
-|-------|-------------|----------|
+|-------|-------------|------------|
 | [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) | 20+ synonym patterns, "Use when" scoring, monthly maintenance | Entry #244 🏆 |
 | [Best Practices Reference](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles indexed, extraction workflow | Entry #189 |
 | [skill-maintenance-skill](skills-library/workflows/skill-maintenance-skill/) | Monthly audit templates, gap detection scripts | 100% coverage |
 
 ### Pre-prompt Optimization
 | Guide | Description | Evidence |
-|-------|-------------|----------|
+|-------|-------------|------------|
 | [Pre-prompt Optimization](docs/guide/21-pre-prompt-optimization.md) | 68% reduction (28k→9k chars), skills-first ordering | Entry #228 🏆 |
 | [wshobson Marketplace](docs/guide/22-wshobson-marketplace-integration.md) | 67 plugins, 99 agents, 107 skills integration | Entry #227 |
 | [Session Documentation](docs/guide/23-session-documentation-skill.md) | Automates Entry + roadmap + status (67% faster) | NEW |
 
 ### December 2025
 | Guide | Description | Evidence |
-|-------|-------------|----------|
+|-------|-------------|------------|
 | [Skills Filtering Optimization](docs/guide/20-skills-filtering-optimization.md) | Score-at-match-time, 93% noise reduction | Entry #229 🏆 |
 | [Playwright E2E Testing](docs/guide/19-playwright-e2e-testing.md) | Browser automation + E2E test patterns | 176/176 tests passing 🏆 |
 | [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) | Cache-first pattern for 80%+ savings | 10+ cached results, $4+/mo saved |
@@ -69,6 +92,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 **New User? Start Here**:
 - [30-Minute Quick Start](docs/quick-start.md) - Get productive immediately
+- [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) 🏆 - Implement skill activation system
 - [Interactive Checklist](web/index.html) - Track your setup progress
 - [Clone Template](template/) - Pre-configured starter project
 
@@ -159,6 +183,7 @@ Web-based progress tracker with:
 - **Rules System** - `.claude/rules/` for path-specific patterns
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
 - **Skills Activation** - 84% activation rate with numbered triggers
+- **Pre-Prompt Hook System** - 370x optimization + 88.2% accuracy (COMPLETE GUIDE!) 🏆
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
 - **Skill Keyword Enhancement** - 20+ synonym patterns, "Use when" scoring
 - **Skill Optimization** - context:fork, agent:, user-invocable: patterns 🆕
@@ -176,6 +201,7 @@ Web-based progress tracker with:
 ### Proven Patterns
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
+- **Pre-Prompt Hook Architecture** - Hybrid cache, scoring algorithm, proactive recommendations 🏆
 - **Skill Frontmatter** - context:fork, agent:, user-invocable: for optimization 🆕
 - **Rules Hierarchy** - User → Project rules priority, path-specific targeting
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
@@ -205,11 +231,16 @@ edit memory-bank/always/CORE-PATTERNS.md
 cp .claude/mcp_servers.json.template .claude/mcp_servers.json
 # Add your GitHub token
 
-# 5. Create first skill
+# 5. Set up pre-prompt hook (RECOMMENDED)
+# Follow: docs/pre-prompt-hook-complete-guide.md
+cp template/.claude/hooks/pre-prompt.sh .claude/hooks/
+chmod +x .claude/hooks/pre-prompt.sh
+
+# 6. Create first skill
 cp template/.claude/skills/starter/session-start-protocol-skill.md \
    ~/.claude/skills/
 
-# 6. Start Claude Code
+# 7. Start Claude Code
 claude-code
 ```
 
@@ -230,7 +261,7 @@ claude-code
 ### Phase 1: Essential (Week 1, 2-3 hours)
 - ➕ Memory Bank MCP (session persistence)
 - ➕ 5 troubleshooting skills
-- ➕ Pre-prompt hook (84% activation + 4-phase detection + 68% reduction)
+- ➕ **Pre-prompt hook** (84% activation + 4-phase detection + 68% reduction) 🏆
 - ➕ TIER-2-REGISTRY setup
 - ➕ Perplexity MCP with cache-first rule
 - ➕ `.claude/rules/` directory
@@ -270,6 +301,8 @@ claude-code-implementation-guide/
 ├── docs/
 │   ├── quick-start.md          # 30-minute minimal path
 │   ├── setup-checklist.md      # Text-based checklist
+│   ├── pre-prompt-hook-complete-guide.md  🏆🏆🏆 COMPLETE IMPLEMENTATION GUIDE
+│   ├── skill-activation-system.md  # Architecture overview
 │   └── guide/                  # Living documentation
 │       ├── 02-minimal-setup.md          ⭐ START HERE
 │       ├── 04-task-tracking-system.md   Task/roadmap management
@@ -338,9 +371,10 @@ claude-code-implementation-guide/
 
 **Setting Up Your First Project**:
 1. Read [Quick Start Guide](docs/quick-start.md) (10 min)
-2. Clone [Template](template/) to your project
-3. Run [Setup Wizard](scripts/setup-wizard.sh)
-4. Track progress with [Interactive Checklist](web/index.html)
+2. **Read [Pre-Prompt Hook Complete Guide](docs/pre-prompt-hook-complete-guide.md)** (20 min) 🏆
+3. Clone [Template](template/) to your project
+4. Run [Setup Wizard](scripts/setup-wizard.sh)
+5. Track progress with [Interactive Checklist](web/index.html)
 
 **Contributing to This Guide**:
 - See CONTRIBUTING.md (coming soon)
@@ -360,6 +394,7 @@ claude-code-implementation-guide/
 - ⏱️ Setup time: 8-12 hours total
 - ✅ Components: 20+ skills, 5 MCPs, complete memory bank
 - 🎯 ROI: 50-500+ hours/year saved (scales with usage)
+- 🏆 **Pre-Prompt Hook: 88.2% accuracy + 370x performance** (Entry #271 + #272)
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
 - 💰 Perplexity: 80%+ cost savings with cache-first pattern
 - 🧪 E2E Testing: 100% pass rate with Playwright
@@ -380,6 +415,7 @@ claude-code-implementation-guide/
 **Team-Ready**: Clear separation of personal vs shared configurations
 **Phased Approach**: Value in 30 minutes, full power over time
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
+**Pre-Prompt Hook System**: Complete implementation guide (370x faster, 88.2% accurate) 🏆
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 **93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
 **68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
@@ -417,6 +453,7 @@ MIT License - See [LICENSE.md](LICENSE.md)
 ## Quick Links
 
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
+- [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) 🏆🏆🏆 **FULL IMPLEMENTATION**
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
 - [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) 🆕 context:fork, agent:, wildcards
