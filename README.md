@@ -8,42 +8,42 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Pre-Prompt Hook Complete Guide ⭐⭐⭐ NEW (Jan 15, 2026)
+### Context Architecture System ⭐⭐⭐ NEW (Jan 19, 2026)
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [**Branch Context System**](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST.json + @ imports for per-branch context loading | **47-70% token savings** per branch 🏆🏆🏆 |
+| [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) | blueprint-registry.json for per-branch blueprint loading | Auto-load relevant blueprints |
+| [Branch-Aware Development](docs/guide/31-branch-aware-development.md) | branch-variables.json, skill weighting, templates | +20 skill ranking bonus |
+| [Document Automation](docs/guide/32-document-automation.md) | Pattern analysis engine with 5-type suggestions | 67% faster documentation |
+
+**🎯 USE THESE GUIDES** to implement proper context architecture for multi-branch projects!
+
+**Key Features**:
+- ✅ Per-branch context loading (only load what you need)
+- ✅ @ import enforcement via session-start hook
+- ✅ Blueprint auto-loading per branch
+- ✅ Skill weighting (+20 bonus for branch-specific skills)
+- ✅ /document with pattern analysis (skill/rule/blueprint suggestions)
+- ✅ Branch templates (Instructions, ROADMAP, CONTEXT-MANIFEST)
+
+**Evidence**: LIMOR AI MASTER-PLAN 100% complete (8 phases)
+
+---
+
+### Pre-Prompt Hook Complete Guide ⭐⭐⭐ (Jan 15, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) | **COMPLETE step-by-step implementation** - Architecture, setup, cache management, testing, monitoring, troubleshooting | **370x optimization** (50s → 136ms), **88.2% accuracy** (Entry #271 + #272) 🏆🏆🏆 |
 
-**🎯 USE THIS GUIDE** to implement the full pre-prompt hook system in your project!
-
-**Key Features**:
-- ✅ Complete architecture overview with diagrams
-- ✅ Step-by-step setup (6 steps from zero to working)
-- ✅ Critical cache management (solves 35% coverage issue)
-- ✅ Test priority system (P0-P3 explained)
-- ✅ Trigger optimization (5 core principles)
-- ✅ Weekly monitoring setup (85+ hours/year ROI)
-- ✅ Domain performance analysis
-- ✅ Troubleshooting guide (5 common issues solved)
-- ✅ Quick commands reference
-- ✅ Implementation checklist
-
-**Perfect For**: Any project wanting to implement automatic skill loading with proven 88.2% accuracy!
-
----
-
-### Skill Optimization Patterns ⭐ NEW (Jan 8, 2026)
+### Skill Optimization Patterns ⭐ (Jan 8, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) | context:fork, agent: routing, user-invocable:false, wildcard permissions | 171 skills optimized 🏆 |
-
-**Key Features**: Isolated execution, agent routing, menu visibility control, wildcard bash permissions
 
 ### Fast Cloud Run Deployment (Jan 7, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|------------|
 | [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) | Pre-built image deployment, 78% faster (3-5 min → ~1 min) | Entry #248, #251 🏆 |
-
-**Key Features**: Skip Cloud Build entirely, Dockerfile caching optimization, critical traffic routing patterns
 
 ### Claude Code Rules System (Jan 6, 2026)
 | Guide | Description | Evidence |
@@ -101,6 +101,11 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 - [Skills Library](skills-library/) - 20+ proven workflow patterns
 - [MCP Configurations](mcp-configs/) - Ready-to-use MCP setups
 
+**Multi-Branch Projects?**:
+- [**Branch Context System**](docs/guide/29-branch-context-system.md) 🏆 - Per-branch context loading
+- [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) - Per-branch blueprints
+- [Branch-Aware Development](docs/guide/31-branch-aware-development.md) - Skill weighting
+
 ---
 
 ## The 4-Format System
@@ -128,7 +133,11 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [25-best-practices-reference.md](docs/guide/25-best-practices-reference.md) | 33 Anthropic articles |
 | [26-claude-code-rules-system.md](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy |
 | [27-fast-cloud-run-deployment.md](docs/guide/27-fast-cloud-run-deployment.md) | 78% faster deployments |
-| [28-skill-optimization-patterns.md](docs/guide/28-skill-optimization-patterns.md) | context:fork, agent:, wildcards 🆕 |
+| [28-skill-optimization-patterns.md](docs/guide/28-skill-optimization-patterns.md) | context:fork, agent:, wildcards |
+| [29-branch-context-system.md](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST + @ imports 🆕 |
+| [30-blueprint-auto-loading.md](docs/guide/30-blueprint-auto-loading.md) | Per-branch blueprints 🆕 |
+| [31-branch-aware-development.md](docs/guide/31-branch-aware-development.md) | Skill weighting + templates 🆕 |
+| [32-document-automation.md](docs/guide/32-document-automation.md) | Pattern analysis engine 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -154,10 +163,12 @@ Executable workflow patterns organized by phase:
 Clone-and-go starter kit with pre-configured:
 - `.claude/CLAUDE.md` - Project context (includes Perplexity cache-first rule)
 - `.claude/mcp_servers.json.template` - MCP configuration
-- `.claude/rules/` - Auto-discovered rules (path-specific patterns) 🆕
+- `.claude/rules/` - Auto-discovered rules (path-specific patterns)
 - `memory-bank/always/` - Core files (CORE-PATTERNS, system-status)
+- `memory-bank/blueprints/blueprint-registry.json` - Blueprint auto-loading 🆕
 - `.claude/hooks/` - Automation hooks (4 scripts including pre-prompt.sh)
 - `.claude/skills/starter/` - 3 essential skills
+- `CURRENT/branch-template/` - Branch structure templates 🆕
 
 **Best For**: Starting new projects, team standardization
 **Setup Time**: 30 minutes to working system
@@ -182,11 +193,14 @@ Web-based progress tracker with:
 - **CLAUDE.md Power** - Auto-loaded project context
 - **Rules System** - `.claude/rules/` for path-specific patterns
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
+- **Branch Context System** - CONTEXT-MANIFEST.json + @ imports (47-70% savings) 🆕
+- **Blueprint Auto-Loading** - Per-branch blueprint loading via registry 🆕
+- **Branch-Aware Development** - Skill weighting, branch templates 🆕
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Pre-Prompt Hook System** - 370x optimization + 88.2% accuracy (COMPLETE GUIDE!) 🏆
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
 - **Skill Keyword Enhancement** - 20+ synonym patterns, "Use when" scoring
-- **Skill Optimization** - context:fork, agent:, user-invocable: patterns 🆕
+- **Skill Optimization** - context:fork, agent:, user-invocable: patterns
 - **Pre-prompt Optimization** - 68% reduction with skills-first ordering
 - **MCP Integration** - GitHub, Memory Bank, PostgreSQL, Perplexity, Playwright
 - **wshobson Marketplace** - 273 pre-built components
@@ -194,6 +208,7 @@ Web-based progress tracker with:
 - **Perplexity Cost Optimization** - 80%+ savings with cache-first pattern
 - **Playwright E2E Testing** - Browser automation with 100% test success
 - **Session Documentation** - Automated Entry + roadmap + status
+- **Document Automation** - Pattern analysis with 5-type suggestions 🆕
 - **Best Practices Reference** - 33 Anthropic articles indexed
 - **Context Optimization** - 75% threshold, cross-reference patterns
 - **Fast Deployment** - 78% faster Cloud Run deploys with pre-built images
@@ -202,7 +217,8 @@ Web-based progress tracker with:
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
 - **Pre-Prompt Hook Architecture** - Hybrid cache, scoring algorithm, proactive recommendations 🏆
-- **Skill Frontmatter** - context:fork, agent:, user-invocable: for optimization 🆕
+- **Branch Context Architecture** - Manifest-driven loading, @ imports, per-branch optimization 🆕
+- **Skill Frontmatter** - context:fork, agent:, user-invocable: for optimization
 - **Rules Hierarchy** - User → Project rules priority, path-specific targeting
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
 - **Validation First** - Scripts prevent 90% of common setup errors
@@ -240,7 +256,13 @@ chmod +x .claude/hooks/pre-prompt.sh
 cp template/.claude/skills/starter/session-start-protocol-skill.md \
    ~/.claude/skills/
 
-# 7. Start Claude Code
+# 7. Set up branch context (OPTIONAL - for multi-branch projects)
+# Follow: docs/guide/29-branch-context-system.md
+mkdir -p CURRENT/$(git branch --show-current)
+cp template/CURRENT/branch-template/CONTEXT-MANIFEST.json \
+   CURRENT/$(git branch --show-current)/
+
+# 8. Start Claude Code
 claude-code
 ```
 
@@ -276,9 +298,10 @@ claude-code
 - ➕ Feature blueprints
 - ➕ Domain authorities
 - ➕ Fast deployment scripts
-- ➕ Skill optimization (context:fork, agent:) 🆕
+- ➕ Skill optimization (context:fork, agent:)
+- ➕ **Branch context system** (CONTEXT-MANIFEST + @ imports) 🆕
 
-**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments
+**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments, **47-70% token savings per branch** 🆕
 
 ### Phase 3: Advanced (Month 2+, organic)
 - ➕ Custom MCP servers
@@ -287,6 +310,8 @@ claude-code
 - ➕ Complete 4-tier memory bank
 - ➕ Session documentation skill
 - ➕ Monthly skill maintenance
+- ➕ **Blueprint auto-loading** (per-branch blueprints) 🆕
+- ➕ **Document automation** (pattern analysis engine) 🆕
 
 **Value**: 561-709 hours/year ROI, enterprise automation
 
@@ -318,7 +343,11 @@ claude-code-implementation-guide/
 │       ├── 25-best-practices-reference.md  33 Anthropic articles
 │       ├── 26-claude-code-rules-system.md  Rules hierarchy
 │       ├── 27-fast-cloud-run-deployment.md  78% faster deploys
-│       └── 28-skill-optimization-patterns.md  🆕 context:fork, agent:
+│       ├── 28-skill-optimization-patterns.md  context:fork, agent:
+│       ├── 29-branch-context-system.md  🆕 CONTEXT-MANIFEST + @ imports
+│       ├── 30-blueprint-auto-loading.md  🆕 Per-branch blueprints
+│       ├── 31-branch-aware-development.md  🆕 Skill weighting
+│       └── 32-document-automation.md  🆕 Pattern analysis engine
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -335,8 +364,15 @@ claude-code-implementation-guide/
 │   │       ├── pre-compact.sh
 │   │       ├── stop-hook.sh
 │   │       └── pre-prompt.sh   🏆 4-phase skill detection + 68% reduction
-│   └── memory-bank/
-│       └── always/
+│   ├── memory-bank/
+│   │   ├── always/
+│   │   └── blueprints/
+│   │       └── blueprint-registry.json  🆕 Blueprint auto-loading
+│   └── CURRENT/
+│       └── branch-template/    🆕 Branch structure templates
+│           ├── CONTEXT-MANIFEST.json
+│           ├── branch-template-Instructions.md
+│           └── branch-template-ROADMAP.md
 ├── skills-library/              # Complete skills reference
 │   ├── starter/                 # 3 essential (Phase 0)
 │   ├── troubleshooting/         # 5-10 skills (Phase 1)
@@ -376,6 +412,11 @@ claude-code-implementation-guide/
 4. Run [Setup Wizard](scripts/setup-wizard.sh)
 5. Track progress with [Interactive Checklist](web/index.html)
 
+**For Multi-Branch Projects**:
+1. Read [Branch Context System](docs/guide/29-branch-context-system.md) (15 min) 🆕
+2. Create CONTEXT-MANIFEST.json per branch
+3. Set up branch-variables.json for skill weighting
+
 **Contributing to This Guide**:
 - See CONTRIBUTING.md (coming soon)
 - All improvements welcome
@@ -396,6 +437,7 @@ claude-code-implementation-guide/
 - 🎯 ROI: 50-500+ hours/year saved (scales with usage)
 - 🏆 **Pre-Prompt Hook: 88.2% accuracy + 370x performance** (Entry #271 + #272)
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
+- 🏆 **Branch Context: 47-70% token savings per branch** (Entry #282) 🆕
 - 💰 Perplexity: 80%+ cost savings with cache-first pattern
 - 🧪 E2E Testing: 100% pass rate with Playwright
 - 📦 Marketplace: 273 pre-built components available
@@ -403,7 +445,7 @@ claude-code-implementation-guide/
 - 🔄 Maintenance: 30 min/month for 100% skill coverage
 - 📏 Rules: Path-specific patterns for context efficiency
 - 🚀 Deployment: 78% faster with pre-built images
-- ⚡ Skill Optimization: context:fork, agent:, wildcards 🆕
+- ⚡ Skill Optimization: context:fork, agent:, wildcards
 
 ---
 
@@ -416,6 +458,7 @@ claude-code-implementation-guide/
 **Phased Approach**: Value in 30 minutes, full power over time
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
 **Pre-Prompt Hook System**: Complete implementation guide (370x faster, 88.2% accurate) 🏆
+**Branch Context System**: 47-70% token savings with CONTEXT-MANIFEST + @ imports 🆕
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 **93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
 **68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
@@ -426,9 +469,11 @@ claude-code-implementation-guide/
 **E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19)
 **Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22)
 **Automated Documentation**: 67% faster session docs (Chapter 23)
+**Document Automation**: Pattern analysis with 5-type suggestions (Chapter 32) 🆕
 **Monthly Maintenance**: 30 min/month keeps skills at 100% coverage
 **Fast Deployment**: 78% faster Cloud Run deploys with pre-built images (Chapter 27)
-**Skill Optimization**: context:fork, agent:, wildcards for advanced skills (Chapter 28) 🆕
+**Skill Optimization**: context:fork, agent:, wildcards for advanced skills (Chapter 28)
+**Blueprint Auto-Loading**: Per-branch blueprint registry (Chapter 30) 🆕
 
 ---
 
@@ -454,9 +499,13 @@ MIT License - See [LICENSE.md](LICENSE.md)
 
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) 🏆🏆🏆 **FULL IMPLEMENTATION**
+- [**Branch Context System**](docs/guide/29-branch-context-system.md) 🆕 47-70% token savings
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) 🆕 context:fork, agent:, wildcards
+- [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) 🆕 Per-branch blueprints
+- [Branch-Aware Development](docs/guide/31-branch-aware-development.md) 🆕 Skill weighting
+- [Document Automation](docs/guide/32-document-automation.md) 🆕 Pattern analysis
+- [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) context:fork, agent:, wildcards
 - [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) 78% faster deploys
 - [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) Path-specific patterns
 - [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) 20+ patterns
