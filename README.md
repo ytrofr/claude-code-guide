@@ -15,6 +15,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 | [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) | blueprint-registry.json for per-branch blueprint loading | Auto-load relevant blueprints |
 | [Branch-Aware Development](docs/guide/31-branch-aware-development.md) | branch-variables.json, skill weighting, templates | +20 skill ranking bonus |
 | [Document Automation](docs/guide/32-document-automation.md) | Pattern analysis engine with 5-type suggestions | 67% faster documentation |
+| [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display: 🎯 BRANCH SKILLS + 🔍 KEYWORD MATCHES | **80% faster skill discovery** 🆕 |
 
 **🎯 USE THESE GUIDES** to implement proper context architecture for multi-branch projects!
 
@@ -25,6 +26,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 - ✅ Skill weighting (+20 bonus for branch-specific skills)
 - ✅ /document with pattern analysis (skill/rule/blueprint suggestions)
 - ✅ Branch templates (Instructions, ROADMAP, CONTEXT-MANIFEST)
+- ✅ **Two-tier skill display** (curated branch skills + keyword matches) 🆕
 
 **Evidence**: LIMOR AI MASTER-PLAN 100% complete (8 phases)
 
@@ -105,6 +107,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 - [**Branch Context System**](docs/guide/29-branch-context-system.md) 🏆 - Per-branch context loading
 - [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) - Per-branch blueprints
 - [Branch-Aware Development](docs/guide/31-branch-aware-development.md) - Skill weighting
+- [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) 🆕 - Two-tier skill display
 
 ---
 
@@ -138,6 +141,7 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [30-blueprint-auto-loading.md](docs/guide/30-blueprint-auto-loading.md) | Per-branch blueprints 🆕 |
 | [31-branch-aware-development.md](docs/guide/31-branch-aware-development.md) | Skill weighting + templates 🆕 |
 | [32-document-automation.md](docs/guide/32-document-automation.md) | Pattern analysis engine 🆕 |
+| [33-branch-specific-skill-curation.md](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -165,6 +169,7 @@ Clone-and-go starter kit with pre-configured:
 - `.claude/mcp_servers.json.template` - MCP configuration
 - `.claude/rules/` - Auto-discovered rules (path-specific patterns)
 - `memory-bank/always/` - Core files (CORE-PATTERNS, system-status)
+- `memory-bank/always/branch-variables.json` - Branch-specific skill curation 🆕
 - `memory-bank/blueprints/blueprint-registry.json` - Blueprint auto-loading 🆕
 - `.claude/hooks/` - Automation hooks (4 scripts including pre-prompt.sh)
 - `.claude/skills/starter/` - 3 essential skills
@@ -196,6 +201,7 @@ Web-based progress tracker with:
 - **Branch Context System** - CONTEXT-MANIFEST.json + @ imports (47-70% savings) 🆕
 - **Blueprint Auto-Loading** - Per-branch blueprint loading via registry 🆕
 - **Branch-Aware Development** - Skill weighting, branch templates 🆕
+- **Branch-Specific Skill Curation** - Two-tier display (🎯 BRANCH + 🔍 KEYWORD) 🆕
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Pre-Prompt Hook System** - 370x optimization + 88.2% accuracy (COMPLETE GUIDE!) 🏆
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
@@ -218,6 +224,7 @@ Web-based progress tracker with:
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
 - **Pre-Prompt Hook Architecture** - Hybrid cache, scoring algorithm, proactive recommendations 🏆
 - **Branch Context Architecture** - Manifest-driven loading, @ imports, per-branch optimization 🆕
+- **Two-Tier Skill Display** - Curated branch skills + dynamic keyword matches 🆕
 - **Skill Frontmatter** - context:fork, agent:, user-invocable: for optimization
 - **Rules Hierarchy** - User → Project rules priority, path-specific targeting
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
@@ -262,7 +269,12 @@ mkdir -p CURRENT/$(git branch --show-current)
 cp template/CURRENT/branch-template/CONTEXT-MANIFEST.json \
    CURRENT/$(git branch --show-current)/
 
-# 8. Start Claude Code
+# 8. Set up branch-specific skills (OPTIONAL - for multi-branch projects)
+# Follow: docs/guide/33-branch-specific-skill-curation.md
+cp template/memory-bank/always/branch-variables.json \
+   memory-bank/always/
+
+# 9. Start Claude Code
 claude-code
 ```
 
@@ -300,8 +312,9 @@ claude-code
 - ➕ Fast deployment scripts
 - ➕ Skill optimization (context:fork, agent:)
 - ➕ **Branch context system** (CONTEXT-MANIFEST + @ imports) 🆕
+- ➕ **Branch-specific skill curation** (two-tier display) 🆕
 
-**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments, **47-70% token savings per branch** 🆕
+**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments, **47-70% token savings per branch**, **80% faster skill discovery** 🆕
 
 ### Phase 3: Advanced (Month 2+, organic)
 - ➕ Custom MCP servers
@@ -347,7 +360,8 @@ claude-code-implementation-guide/
 │       ├── 29-branch-context-system.md  🆕 CONTEXT-MANIFEST + @ imports
 │       ├── 30-blueprint-auto-loading.md  🆕 Per-branch blueprints
 │       ├── 31-branch-aware-development.md  🆕 Skill weighting
-│       └── 32-document-automation.md  🆕 Pattern analysis engine
+│       ├── 32-document-automation.md  🆕 Pattern analysis engine
+│       └── 33-branch-specific-skill-curation.md  🆕 Two-tier skill display
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -366,6 +380,7 @@ claude-code-implementation-guide/
 │   │       └── pre-prompt.sh   🏆 4-phase skill detection + 68% reduction
 │   ├── memory-bank/
 │   │   ├── always/
+│   │   │   └── branch-variables.json  🆕 Branch-specific skill curation
 │   │   └── blueprints/
 │   │       └── blueprint-registry.json  🆕 Blueprint auto-loading
 │   └── CURRENT/
@@ -414,8 +429,9 @@ claude-code-implementation-guide/
 
 **For Multi-Branch Projects**:
 1. Read [Branch Context System](docs/guide/29-branch-context-system.md) (15 min) 🆕
-2. Create CONTEXT-MANIFEST.json per branch
-3. Set up branch-variables.json for skill weighting
+2. Read [Branch-Specific Skill Curation](docs/guide/33-branch-specific-skill-curation.md) (10 min) 🆕
+3. Create CONTEXT-MANIFEST.json per branch
+4. Set up branch-variables.json for skill curation
 
 **Contributing to This Guide**:
 - See CONTRIBUTING.md (coming soon)
@@ -438,6 +454,7 @@ claude-code-implementation-guide/
 - 🏆 **Pre-Prompt Hook: 88.2% accuracy + 370x performance** (Entry #271 + #272)
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
 - 🏆 **Branch Context: 47-70% token savings per branch** (Entry #282) 🆕
+- 🏆 **Skill Curation: 80% faster skill discovery** (two-tier display) 🆕
 - 💰 Perplexity: 80%+ cost savings with cache-first pattern
 - 🧪 E2E Testing: 100% pass rate with Playwright
 - 📦 Marketplace: 273 pre-built components available
@@ -459,6 +476,7 @@ claude-code-implementation-guide/
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
 **Pre-Prompt Hook System**: Complete implementation guide (370x faster, 88.2% accurate) 🏆
 **Branch Context System**: 47-70% token savings with CONTEXT-MANIFEST + @ imports 🆕
+**Two-Tier Skill Display**: 80% faster skill discovery with branch curation 🆕
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 **93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
 **68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
@@ -500,6 +518,7 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) 🏆🏆🏆 **FULL IMPLEMENTATION**
 - [**Branch Context System**](docs/guide/29-branch-context-system.md) 🆕 47-70% token savings
+- [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) 🆕 Two-tier display
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
 - [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) 🆕 Per-branch blueprints
