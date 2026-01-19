@@ -40,6 +40,27 @@ memory-bank/
 
 ---
 
+## Multi-Branch Projects 🆕
+
+For projects with multiple branches, use **per-branch ROADMAPs**:
+
+```
+CURRENT/
+├── dev-Data/
+│   └── dev-Data-ROADMAP.md      # Data-specific tasks
+├── dev-UI/
+│   └── dev-UI-ROADMAP.md        # UI-specific tasks
+└── dev-Knowledge/
+    └── dev-Knowledge-ROADMAP.md  # Knowledge-specific tasks
+```
+
+→ **See [Chapter 31: Branch-Aware Development](31-branch-aware-development.md)** for:
+- ROADMAP template with standard format
+- Instructions template per branch
+- branch-variables.json for skill weighting
+
+---
+
 ## Quick Start (10 minutes)
 
 ### Step 1: Create system-status.json
@@ -257,14 +278,16 @@ Claude updates FUTURE-FEATURES.md:
 
 ---
 
-## Related Patterns
+## Related Chapters
 
-- **Session Protocol**: See `docs/guide/03-session-protocol.md` (if exists)
-- **Skills System**: See `template/.claude/skills/`
-- **Memory Bank**: See `template/memory-bank/`
+- **Chapter 12**: Memory Bank Hierarchy (4-tier structure)
+- **Chapter 23**: Session Documentation Skill (automated docs)
+- **Chapter 29**: Branch Context System (per-branch loading) 🆕
+- **Chapter 31**: Branch-Aware Development (ROADMAP templates) 🆕
 
 ---
 
 **Pattern Source**: LIMOR AI (Entry #163 - claude-code-implementation-guide-patterns.md)  
 **Status**: Production validated December 2025  
+**Last Updated**: 2026-01-19
 **License**: MIT

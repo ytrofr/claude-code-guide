@@ -33,6 +33,19 @@ A single `/document` command that:
 
 ---
 
+## Advanced: Pattern Analysis Engine 🆕
+
+For **automatic suggestions** about creating skills/rules/blueprints:
+
+→ **See [Chapter 32: Document Automation](32-document-automation.md)** for:
+- 13-step workflow with pattern analysis
+- 5-type suggestion engine (Skill, Rule, Blueprint, CORE-PATTERNS, Memory)
+- Decision matrix (when to create what)
+
+This chapter covers the **basic** /document workflow. Chapter 32 covers the **advanced** pattern analysis.
+
+---
+
 ## Setup (10 min)
 
 ### Step 1: Create Skill Directory
@@ -277,9 +290,11 @@ ls CURRENT/$(git branch --show-current)/*ROADMAP*.md
 - **Chapter 4**: Task Tracking System (roadmap basics)
 - **Chapter 12**: Memory Bank Hierarchy (Entry organization)
 - **Chapter 13**: Claude Code Hooks (automation)
+- **Chapter 31**: Branch-Aware Development (ROADMAP templates) 🆕
+- **Chapter 32**: Document Automation (pattern analysis) 🆕
 
 ---
 
 **Implementation Time**: 10 minutes
 **Evidence**: LimorAI production (Entry #228, #229 created with skill)
-**Last Updated**: 2026-01-05
+**Last Updated**: 2026-01-19

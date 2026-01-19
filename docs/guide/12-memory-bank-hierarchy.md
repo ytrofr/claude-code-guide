@@ -46,5 +46,16 @@ memory-bank/
 
 ---
 
+## Multi-Branch Projects 🆕
+
+For projects with multiple branches (dev-Data, dev-UI, etc.):
+
+→ **See [Chapter 29: Branch Context System](29-branch-context-system.md)** for:
+- CONTEXT-MANIFEST.json per branch
+- @ import enforcement
+- 47-70% token savings per branch
+
+---
+
 **Previous**: [11: Session Documentation](11-session-documentation.md)
 **Next**: [13: Claude Code Hooks](13-claude-code-hooks.md)
