@@ -1,0 +1,27 @@
+{
+  "_comment": "Central registry for blueprint auto-loading per branch",
+  "_docs": "See docs/guide/30-blueprint-auto-loading.md",
+  
+  "blueprints": {
+    "EXAMPLE-BLUEPRINT": {
+      "location": "core/EXAMPLE-BLUEPRINT.md",
+      "type": "core",
+      "branches": ["main", "develop"],
+      "auto_load": true,
+      "size_tokens": 2500,
+      "description": "Example blueprint - customize for your project"
+    }
+  },
+  
+  "branch_blueprints": {
+    "main": ["EXAMPLE-BLUEPRINT"],
+    "develop": ["EXAMPLE-BLUEPRINT"]
+  },
+  
+  "blueprint_types": {
+    "core": "System-wide, multiple branches need",
+    "feature": "Feature-specific, recreatable",
+    "domain": "Domain patterns (testing, deployment)",
+    "infrastructure": "DevOps/deployment patterns"
+  }
+}

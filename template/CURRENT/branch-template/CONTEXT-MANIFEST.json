@@ -1,0 +1,58 @@
+{
+  "manifest_version": "3.0",
+  "created": "YYYY-MM-DD",
+  "updated": "YYYY-MM-DD",
+  "branch": "{BRANCH-NAME}",
+  "mission": "{One sentence mission}",
+  "domain": "{domain-name}",
+  "priority": "P1",
+  "philosophy": "LEAN - Essential files only, Read tool for everything else",
+  
+  "ondemand_files": {
+    "branch_context": [
+      "CURRENT/{BRANCH-NAME}/{BRANCH-NAME}-ROADMAP.md"
+    ],
+    "domain": [
+      "{domain}/quick-reference.md"
+    ]
+  },
+  
+  "estimated_tokens": {
+    "global_always": 64000,
+    "global_always_description": "CORE-PATTERNS + SESSION-PROTOCOL + system-status.json + .claude/rules/",
+    "ondemand_domain": 10000,
+    "total_max": 74000,
+    "status": "TEMPLATE - customize for your branch"
+  },
+  
+  "skills_recommended": [
+    "skill-1",
+    "skill-2"
+  ],
+  
+  "read_on_demand": {
+    "description": "Load with Read tool when needed (not auto-loaded)",
+    "reference": [
+      "reference/large-file.md"
+    ]
+  },
+  
+  "should_NOT_load": {
+    "other-domain/file.md": "Not relevant for this branch (other-domain)"
+  },
+  
+  "coordinates_with": [
+    "main"
+  ],
+  
+  "loading_strategy": {
+    "auto_loaded": "ROADMAP + domain quick refs",
+    "load_on_mention": "Detailed docs when debugging",
+    "progressive": "Full references when deep dive needed"
+  },
+  
+  "notes": {
+    "anthropic_pattern": "Just-in-time tool provisioning",
+    "created_from": "template/CURRENT/branch-template/CONTEXT-MANIFEST.json"
+  }
+}
