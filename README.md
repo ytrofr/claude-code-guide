@@ -8,14 +8,15 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Context Architecture System ⭐⭐⭐ NEW (Jan 19, 2026)
+### Context Architecture System ⭐⭐⭐ NEW (Jan 19-20, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
 | [**Branch Context System**](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST.json + @ imports for per-branch context loading | **47-70% token savings** per branch 🏆🏆🏆 |
 | [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) | blueprint-registry.json for per-branch blueprint loading | Auto-load relevant blueprints |
 | [Branch-Aware Development](docs/guide/31-branch-aware-development.md) | branch-variables.json, skill weighting, templates | +20 skill ranking bonus |
 | [Document Automation](docs/guide/32-document-automation.md) | Pattern analysis engine with 5-type suggestions | 67% faster documentation |
-| [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display: 🎯 BRANCH SKILLS + 🔍 KEYWORD MATCHES | **80% faster skill discovery** 🆕 |
+| [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display: 🎯 BRANCH SKILLS + 🔍 KEYWORD MATCHES | **80% faster skill discovery** |
+| [**Basic Memory MCP Integration**](docs/guide/34-basic-memory-mcp-integration.md) | Semantic observations, relations, session-start hook, proactive triggers | **30-50h/year savings** 🆕 |
 
 **🎯 USE THESE GUIDES** to implement proper context architecture for multi-branch projects!
 
@@ -26,9 +27,10 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 - ✅ Skill weighting (+20 bonus for branch-specific skills)
 - ✅ /document with pattern analysis (skill/rule/blueprint suggestions)
 - ✅ Branch templates (Instructions, ROADMAP, CONTEXT-MANIFEST)
-- ✅ **Two-tier skill display** (curated branch skills + keyword matches) 🆕
+- ✅ **Two-tier skill display** (curated branch skills + keyword matches)
+- ✅ **Basic Memory MCP** with semantic patterns for knowledge retrieval 🆕
 
-**Evidence**: LIMOR AI MASTER-PLAN 100% complete (8 phases)
+**Evidence**: LIMOR AI MASTER-PLAN 100% complete (8 phases) + Entry #283
 
 ---
 
@@ -107,7 +109,8 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 - [**Branch Context System**](docs/guide/29-branch-context-system.md) 🏆 - Per-branch context loading
 - [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) - Per-branch blueprints
 - [Branch-Aware Development](docs/guide/31-branch-aware-development.md) - Skill weighting
-- [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) 🆕 - Two-tier skill display
+- [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) - Two-tier skill display
+- [**Basic Memory MCP Integration**](docs/guide/34-basic-memory-mcp-integration.md) 🆕 - Semantic knowledge retrieval
 
 ---
 
@@ -137,11 +140,12 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [26-claude-code-rules-system.md](docs/guide/26-claude-code-rules-system.md) | `.claude/rules/` hierarchy |
 | [27-fast-cloud-run-deployment.md](docs/guide/27-fast-cloud-run-deployment.md) | 78% faster deployments |
 | [28-skill-optimization-patterns.md](docs/guide/28-skill-optimization-patterns.md) | context:fork, agent:, wildcards |
-| [29-branch-context-system.md](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST + @ imports 🆕 |
-| [30-blueprint-auto-loading.md](docs/guide/30-blueprint-auto-loading.md) | Per-branch blueprints 🆕 |
-| [31-branch-aware-development.md](docs/guide/31-branch-aware-development.md) | Skill weighting + templates 🆕 |
-| [32-document-automation.md](docs/guide/32-document-automation.md) | Pattern analysis engine 🆕 |
-| [33-branch-specific-skill-curation.md](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display 🆕 |
+| [29-branch-context-system.md](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST + @ imports |
+| [30-blueprint-auto-loading.md](docs/guide/30-blueprint-auto-loading.md) | Per-branch blueprints |
+| [31-branch-aware-development.md](docs/guide/31-branch-aware-development.md) | Skill weighting + templates |
+| [32-document-automation.md](docs/guide/32-document-automation.md) | Pattern analysis engine |
+| [33-branch-specific-skill-curation.md](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display |
+| [34-basic-memory-mcp-integration.md](docs/guide/34-basic-memory-mcp-integration.md) | Semantic observations & relations 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -155,7 +159,8 @@ Executable workflow patterns organized by phase:
   - **perplexity-cache-skill/** - Cache-first pattern for cost optimization
   - **playwright-e2e-skill/** - Browser automation & E2E testing
   - **session-documentation-skill/** - Automated session docs
-  - **skill-maintenance-skill/** - Monthly audit templates 🆕
+  - **skill-maintenance-skill/** - Monthly audit templates
+  - **basic-memory-semantic-patterns-skill/** - Semantic observations & relations 🆕
 - **specialized/** - Domain-specific skills (Month 2+)
 
 **Best For**: Active troubleshooting, instant workflow access
@@ -168,12 +173,14 @@ Clone-and-go starter kit with pre-configured:
 - `.claude/CLAUDE.md` - Project context (includes Perplexity cache-first rule)
 - `.claude/mcp_servers.json.template` - MCP configuration
 - `.claude/rules/` - Auto-discovered rules (path-specific patterns)
+  - `mcp/memory-usage.md` - Basic Memory proactive triggers 🆕
 - `memory-bank/always/` - Core files (CORE-PATTERNS, system-status)
-- `memory-bank/always/branch-variables.json` - Branch-specific skill curation 🆕
-- `memory-bank/blueprints/blueprint-registry.json` - Blueprint auto-loading 🆕
+- `memory-bank/always/branch-variables.json` - Branch-specific skill curation
+- `memory-bank/blueprints/blueprint-registry.json` - Blueprint auto-loading
 - `.claude/hooks/` - Automation hooks (4 scripts including pre-prompt.sh)
 - `.claude/skills/starter/` - 3 essential skills
-- `CURRENT/branch-template/` - Branch structure templates 🆕
+  - `basic-memory-semantic-patterns-skill/` - Semantic patterns 🆕
+- `CURRENT/branch-template/` - Branch structure templates
 
 **Best For**: Starting new projects, team standardization
 **Setup Time**: 30 minutes to working system
@@ -198,10 +205,11 @@ Web-based progress tracker with:
 - **CLAUDE.md Power** - Auto-loaded project context
 - **Rules System** - `.claude/rules/` for path-specific patterns
 - **Memory Bank Hierarchy** - 4-tier knowledge organization (always → learned → ondemand → blueprints)
-- **Branch Context System** - CONTEXT-MANIFEST.json + @ imports (47-70% savings) 🆕
-- **Blueprint Auto-Loading** - Per-branch blueprint loading via registry 🆕
-- **Branch-Aware Development** - Skill weighting, branch templates 🆕
-- **Branch-Specific Skill Curation** - Two-tier display (🎯 BRANCH + 🔍 KEYWORD) 🆕
+- **Branch Context System** - CONTEXT-MANIFEST.json + @ imports (47-70% savings)
+- **Blueprint Auto-Loading** - Per-branch blueprint loading via registry
+- **Branch-Aware Development** - Skill weighting, branch templates
+- **Branch-Specific Skill Curation** - Two-tier display (🎯 BRANCH + 🔍 KEYWORD)
+- **Basic Memory MCP** - Semantic observations, relations, knowledge retrieval 🆕
 - **Skills Activation** - 84% activation rate with numbered triggers
 - **Pre-Prompt Hook System** - 370x optimization + 88.2% accuracy (COMPLETE GUIDE!) 🏆
 - **Skill Detection Enhancement** - 4-phase matching for 100% accuracy
@@ -214,7 +222,7 @@ Web-based progress tracker with:
 - **Perplexity Cost Optimization** - 80%+ savings with cache-first pattern
 - **Playwright E2E Testing** - Browser automation with 100% test success
 - **Session Documentation** - Automated Entry + roadmap + status
-- **Document Automation** - Pattern analysis with 5-type suggestions 🆕
+- **Document Automation** - Pattern analysis with 5-type suggestions
 - **Best Practices Reference** - 33 Anthropic articles indexed
 - **Context Optimization** - 75% threshold, cross-reference patterns
 - **Fast Deployment** - 78% faster Cloud Run deploys with pre-built images
@@ -223,8 +231,9 @@ Web-based progress tracker with:
 - **Anthropic Best Practices** - Session protocol, incremental progress, JSON feature tracking
 - **Skills Framework** - YAML frontmatter, Failed Attempts tables, evidence-based design
 - **Pre-Prompt Hook Architecture** - Hybrid cache, scoring algorithm, proactive recommendations 🏆
-- **Branch Context Architecture** - Manifest-driven loading, @ imports, per-branch optimization 🆕
-- **Two-Tier Skill Display** - Curated branch skills + dynamic keyword matches 🆕
+- **Branch Context Architecture** - Manifest-driven loading, @ imports, per-branch optimization
+- **Two-Tier Skill Display** - Curated branch skills + dynamic keyword matches
+- **Basic Memory Semantic Patterns** - [decision], [technique], [issue] observations 🆕
 - **Skill Frontmatter** - context:fork, agent:, user-invocable: for optimization
 - **Rules Hierarchy** - User → Project rules priority, path-specific targeting
 - **4-Tier Context** - 34-62% token reduction with zero functionality loss
@@ -274,7 +283,12 @@ cp template/CURRENT/branch-template/CONTEXT-MANIFEST.json \
 cp template/memory-bank/always/branch-variables.json \
    memory-bank/always/
 
-# 9. Start Claude Code
+# 9. Set up Basic Memory (OPTIONAL - for knowledge retrieval)
+# Follow: docs/guide/34-basic-memory-mcp-integration.md
+cp template/.claude/rules/mcp/memory-usage.md .claude/rules/mcp/
+mkdir -p ~/basic-memory/{patterns,fixes,decisions}
+
+# 10. Start Claude Code
 claude-code
 ```
 
@@ -294,13 +308,14 @@ claude-code
 
 ### Phase 1: Essential (Week 1, 2-3 hours)
 - ➕ Memory Bank MCP (session persistence)
+- ➕ **Basic Memory MCP** (semantic knowledge retrieval) 🆕
 - ➕ 5 troubleshooting skills
 - ➕ **Pre-prompt hook** (84% activation + 4-phase detection + 68% reduction) 🏆
 - ➕ TIER-2-REGISTRY setup
 - ➕ Perplexity MCP with cache-first rule
 - ➕ `.claude/rules/` directory
 
-**Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection, 80%+ research cost savings
+**Value**: 3x faster debugging, institutional knowledge capture, 100% skill detection, 80%+ research cost savings, **30-50h/year knowledge retrieval savings** 🆕
 
 ### Phase 2: Productive (Week 2-3, 4-6 hours)
 - ➕ PostgreSQL MCP (3 databases)
@@ -311,10 +326,10 @@ claude-code
 - ➕ Domain authorities
 - ➕ Fast deployment scripts
 - ➕ Skill optimization (context:fork, agent:)
-- ➕ **Branch context system** (CONTEXT-MANIFEST + @ imports) 🆕
-- ➕ **Branch-specific skill curation** (two-tier display) 🆕
+- ➕ **Branch context system** (CONTEXT-MANIFEST + @ imports)
+- ➕ **Branch-specific skill curation** (two-tier display)
 
-**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments, **47-70% token savings per branch**, **80% faster skill discovery** 🆕
+**Value**: Database visibility, E2E testing, agent marketplace, system recreation, 50%+ time savings, 78% faster deployments, **47-70% token savings per branch**, **80% faster skill discovery**
 
 ### Phase 3: Advanced (Month 2+, organic)
 - ➕ Custom MCP servers
@@ -323,8 +338,9 @@ claude-code
 - ➕ Complete 4-tier memory bank
 - ➕ Session documentation skill
 - ➕ Monthly skill maintenance
-- ➕ **Blueprint auto-loading** (per-branch blueprints) 🆕
-- ➕ **Document automation** (pattern analysis engine) 🆕
+- ➕ **Blueprint auto-loading** (per-branch blueprints)
+- ➕ **Document automation** (pattern analysis engine)
+- ➕ **Basic Memory semantic patterns** (knowledge graph) 🆕
 
 **Value**: 561-709 hours/year ROI, enterprise automation
 
@@ -357,11 +373,12 @@ claude-code-implementation-guide/
 │       ├── 26-claude-code-rules-system.md  Rules hierarchy
 │       ├── 27-fast-cloud-run-deployment.md  78% faster deploys
 │       ├── 28-skill-optimization-patterns.md  context:fork, agent:
-│       ├── 29-branch-context-system.md  🆕 CONTEXT-MANIFEST + @ imports
-│       ├── 30-blueprint-auto-loading.md  🆕 Per-branch blueprints
-│       ├── 31-branch-aware-development.md  🆕 Skill weighting
-│       ├── 32-document-automation.md  🆕 Pattern analysis engine
-│       └── 33-branch-specific-skill-curation.md  🆕 Two-tier skill display
+│       ├── 29-branch-context-system.md  CONTEXT-MANIFEST + @ imports
+│       ├── 30-blueprint-auto-loading.md  Per-branch blueprints
+│       ├── 31-branch-aware-development.md  Skill weighting
+│       ├── 32-document-automation.md  Pattern analysis engine
+│       ├── 33-branch-specific-skill-curation.md  Two-tier skill display
+│       └── 34-basic-memory-mcp-integration.md  🆕 Semantic knowledge retrieval
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -370,9 +387,12 @@ claude-code-implementation-guide/
 │   │   │   ├── README.md
 │   │   │   ├── src-code.md     # Path-specific
 │   │   │   ├── tests.md        # Path-specific
+│   │   │   ├── mcp/
+│   │   │   │   └── memory-usage.md  🆕 Basic Memory proactive triggers
 │   │   │   └── domain/
 │   │   │       └── patterns.md
 │   │   ├── skills/starter/
+│   │   │   └── basic-memory-semantic-patterns-skill/  🆕 Semantic patterns
 │   │   └── hooks/
 │   │       ├── session-start.sh
 │   │       ├── pre-compact.sh
@@ -380,11 +400,11 @@ claude-code-implementation-guide/
 │   │       └── pre-prompt.sh   🏆 4-phase skill detection + 68% reduction
 │   ├── memory-bank/
 │   │   ├── always/
-│   │   │   └── branch-variables.json  🆕 Branch-specific skill curation
+│   │   │   └── branch-variables.json  Branch-specific skill curation
 │   │   └── blueprints/
-│   │       └── blueprint-registry.json  🆕 Blueprint auto-loading
+│   │       └── blueprint-registry.json  Blueprint auto-loading
 │   └── CURRENT/
-│       └── branch-template/    🆕 Branch structure templates
+│       └── branch-template/    Branch structure templates
 │           ├── CONTEXT-MANIFEST.json
 │           ├── branch-template-Instructions.md
 │           └── branch-template-ROADMAP.md
@@ -395,7 +415,8 @@ claude-code-implementation-guide/
 │   │   ├── perplexity-cache-skill/  Cost optimization
 │   │   ├── playwright-e2e-skill/    Browser automation
 │   │   ├── session-documentation-skill/  Automated docs
-│   │   └── skill-maintenance-skill/  Monthly audits
+│   │   ├── skill-maintenance-skill/  Monthly audits
+│   │   └── basic-memory-semantic-patterns-skill/  🆕 Semantic knowledge
 │   └── specialized/             # Domain-specific (Phase 3)
 ├── mcp-configs/                 # MCP server configurations
 │   ├── minimal/                 # GitHub only
@@ -428,10 +449,12 @@ claude-code-implementation-guide/
 5. Track progress with [Interactive Checklist](web/index.html)
 
 **For Multi-Branch Projects**:
-1. Read [Branch Context System](docs/guide/29-branch-context-system.md) (15 min) 🆕
-2. Read [Branch-Specific Skill Curation](docs/guide/33-branch-specific-skill-curation.md) (10 min) 🆕
-3. Create CONTEXT-MANIFEST.json per branch
-4. Set up branch-variables.json for skill curation
+1. Read [Branch Context System](docs/guide/29-branch-context-system.md) (15 min)
+2. Read [Branch-Specific Skill Curation](docs/guide/33-branch-specific-skill-curation.md) (10 min)
+3. Read [Basic Memory MCP Integration](docs/guide/34-basic-memory-mcp-integration.md) (15 min) 🆕
+4. Create CONTEXT-MANIFEST.json per branch
+5. Set up branch-variables.json for skill curation
+6. Set up Basic Memory for knowledge retrieval 🆕
 
 **Contributing to This Guide**:
 - See CONTRIBUTING.md (coming soon)
@@ -453,8 +476,9 @@ claude-code-implementation-guide/
 - 🎯 ROI: 50-500+ hours/year saved (scales with usage)
 - 🏆 **Pre-Prompt Hook: 88.2% accuracy + 370x performance** (Entry #271 + #272)
 - 🏆 Skill Detection: 100% accuracy with 4-phase enhancement
-- 🏆 **Branch Context: 47-70% token savings per branch** (Entry #282) 🆕
-- 🏆 **Skill Curation: 80% faster skill discovery** (two-tier display) 🆕
+- 🏆 **Branch Context: 47-70% token savings per branch** (Entry #282)
+- 🏆 **Skill Curation: 80% faster skill discovery** (two-tier display)
+- 🏆 **Basic Memory: 30-50h/year knowledge retrieval** (Entry #283) 🆕
 - 💰 Perplexity: 80%+ cost savings with cache-first pattern
 - 🧪 E2E Testing: 100% pass rate with Playwright
 - 📦 Marketplace: 273 pre-built components available
@@ -475,8 +499,9 @@ claude-code-implementation-guide/
 **Phased Approach**: Value in 30 minutes, full power over time
 **Validation-First**: Scripts catch 90% of common mistakes before they happen
 **Pre-Prompt Hook System**: Complete implementation guide (370x faster, 88.2% accurate) 🏆
-**Branch Context System**: 47-70% token savings with CONTEXT-MANIFEST + @ imports 🆕
-**Two-Tier Skill Display**: 80% faster skill discovery with branch curation 🆕
+**Branch Context System**: 47-70% token savings with CONTEXT-MANIFEST + @ imports
+**Two-Tier Skill Display**: 80% faster skill discovery with branch curation
+**Basic Memory MCP**: 30-50h/year knowledge retrieval with semantic patterns 🆕
 **100% Skill Detection**: 4-phase enhancement achieves perfect matching (Chapter 17)
 **93% Noise Reduction**: Score-at-match-time filtering (Chapter 20)
 **68% Pre-prompt Reduction**: Skills-first ordering (Chapter 21)
@@ -487,11 +512,11 @@ claude-code-implementation-guide/
 **E2E Testing**: Playwright automation with 176/176 tests passing (Chapter 19)
 **Agent Marketplace**: 273 pre-built components from wshobson (Chapter 22)
 **Automated Documentation**: 67% faster session docs (Chapter 23)
-**Document Automation**: Pattern analysis with 5-type suggestions (Chapter 32) 🆕
+**Document Automation**: Pattern analysis with 5-type suggestions (Chapter 32)
 **Monthly Maintenance**: 30 min/month keeps skills at 100% coverage
 **Fast Deployment**: 78% faster Cloud Run deploys with pre-built images (Chapter 27)
 **Skill Optimization**: context:fork, agent:, wildcards for advanced skills (Chapter 28)
-**Blueprint Auto-Loading**: Per-branch blueprint registry (Chapter 30) 🆕
+**Blueprint Auto-Loading**: Per-branch blueprint registry (Chapter 30)
 
 ---
 
@@ -517,13 +542,14 @@ MIT License - See [LICENSE.md](LICENSE.md)
 
 - [30-Minute Quick Start](docs/quick-start.md) ⭐ START HERE
 - [**Pre-Prompt Hook Complete Guide**](docs/pre-prompt-hook-complete-guide.md) 🏆🏆🏆 **FULL IMPLEMENTATION**
-- [**Branch Context System**](docs/guide/29-branch-context-system.md) 🆕 47-70% token savings
-- [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) 🆕 Two-tier display
+- [**Branch Context System**](docs/guide/29-branch-context-system.md) 47-70% token savings
+- [**Branch-Specific Skill Curation**](docs/guide/33-branch-specific-skill-curation.md) Two-tier display
+- [**Basic Memory MCP Integration**](docs/guide/34-basic-memory-mcp-integration.md) 🆕 Semantic patterns
 - [Interactive Checklist](web/index.html)
 - [Complete Guide](docs/guide/02-minimal-setup.md)
-- [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) 🆕 Per-branch blueprints
-- [Branch-Aware Development](docs/guide/31-branch-aware-development.md) 🆕 Skill weighting
-- [Document Automation](docs/guide/32-document-automation.md) 🆕 Pattern analysis
+- [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) Per-branch blueprints
+- [Branch-Aware Development](docs/guide/31-branch-aware-development.md) Skill weighting
+- [Document Automation](docs/guide/32-document-automation.md) Pattern analysis
 - [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) context:fork, agent:, wildcards
 - [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) 78% faster deploys
 - [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) Path-specific patterns
