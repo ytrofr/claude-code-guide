@@ -1,6 +1,7 @@
 #!/bin/bash
 # Pre-Prompt Hook: Skills Filtering with Score-at-Match-Time (Entry #229)
 # Created: 2025-12-01 | Enhanced: 2026-01-12 (Entry #266 grep escaping)
+# Fixed: 2026-01-20 (Entry #284 - Special character handling)
 # Source: https://scottspence.com/posts/how-to-make-claude-code-skills-activate-reliably
 # Success Rate: 95%+ (84% Scott Spence baseline + Entry #229 improvements)
 #
@@ -15,6 +16,13 @@
 # - Added `--` separator to ALL grep calls
 # - Prevents "unrecognized option" errors when messages contain --options
 # - Validated: 122/122 tests passing across 12 categories
+#
+# Entry #284 Fix (Jan 20, 2026):
+# - Fixed "Invalid range end" errors from [brackets] in user input
+# - Fixed "unrecognized option" errors from --flags in code blocks
+# - Use grep -F (fixed strings) for user input matching
+# - Skip words starting with - or containing special characters
+# - Add set -f to prevent glob expansion of [ ] characters
 
 # ═══════════════════════════════════════════════════════════════════
 # METRICS LOGGING
@@ -49,26 +57,33 @@ match_skills() {
 
     # STEP 1: SYNONYM EXPANSION
     # NOTE: All grep calls use `--` to prevent --option interpretation (Entry #266)
+    # NOTE: Use grep -F for fixed strings where possible (Entry #284)
     local expanded_msg="$msg_lower"
 
-    # GitHub
+    # GitHub - use -F for fixed string matching
     echo "$msg_lower" | grep -qiF -- "pr" && expanded_msg="$expanded_msg github pull request"
-    echo "$msg_lower" | grep -qiE -- "pull.*request" && expanded_msg="$expanded_msg github pr"
+    echo "$msg_lower" | grep -qiF -- "pull request" && expanded_msg="$expanded_msg github pr"
     echo "$msg_lower" | grep -qiF -- "issue" && expanded_msg="$expanded_msg github"
 
-    # Database
-    echo "$msg_lower" | grep -qiE -- "\b(db|database|postgres|sql)\b" && expanded_msg="$expanded_msg database"
+    # Database - use -F for simple terms
+    echo "$msg_lower" | grep -qiF -- "database" && expanded_msg="$expanded_msg database"
+    echo "$msg_lower" | grep -qiF -- "postgres" && expanded_msg="$expanded_msg database"
+    echo "$msg_lower" | grep -qiF -- "sql" && expanded_msg="$expanded_msg database"
+    echo "$msg_lower" | grep -qiF -- "db" && expanded_msg="$expanded_msg database"
     echo "$msg_lower" | grep -qiF -- "econnrefused" && expanded_msg="$expanded_msg credentials database connection"
 
     # Testing
-    echo "$msg_lower" | grep -qiE -- "\b(test|testing|spec)\b" && expanded_msg="$expanded_msg testing"
+    echo "$msg_lower" | grep -qiF -- "test" && expanded_msg="$expanded_msg testing"
+    echo "$msg_lower" | grep -qiF -- "spec" && expanded_msg="$expanded_msg testing"
     echo "$msg_lower" | grep -qiF -- "jest" && expanded_msg="$expanded_msg testing unit"
 
     # Deployment
-    echo "$msg_lower" | grep -qiE -- "\b(deploy|deployment)\b" && expanded_msg="$expanded_msg deployment"
+    echo "$msg_lower" | grep -qiF -- "deploy" && expanded_msg="$expanded_msg deployment"
 
     # Troubleshooting
-    echo "$msg_lower" | grep -qiE -- "error|bug|problem" && expanded_msg="$expanded_msg troubleshooting"
+    echo "$msg_lower" | grep -qiF -- "error" && expanded_msg="$expanded_msg troubleshooting"
+    echo "$msg_lower" | grep -qiF -- "bug" && expanded_msg="$expanded_msg troubleshooting"
+    echo "$msg_lower" | grep -qiF -- "problem" && expanded_msg="$expanded_msg troubleshooting"
 
     # STEP 2: SCORE-AT-MATCH-TIME
     local scored_skills=""
@@ -81,14 +96,16 @@ match_skills() {
         local score=0
         local matched=false
 
-        # Extract keywords from skill NAME
+        # Extract keywords from skill NAME (safe - comes from filesystem)
         local name_keywords=$(echo "$skill_name" | sed 's/-skill$//' | tr '-' ' ')
 
         # CHECK 1: Exact keyword match in skill NAME (+10)
+        # Use grep -F for fixed string matching (Entry #284)
         for name_word in $name_keywords; do
             [ ${#name_word} -lt 3 ] && continue
 
-            if echo "$msg_lower" | grep -qiE -- "\b${name_word}\b"; then
+            # Use -F for fixed string, -w for word boundary
+            if echo "$msg_lower" | grep -qiwF -- "$name_word" 2>/dev/null; then
                 score=$((score + 10))
                 matched=true
                 break
@@ -102,8 +119,9 @@ match_skills() {
             local stem=$(echo "$name_word" | sed -E 's/(ing|ment)$//')
             [ ${#stem} -lt 3 ] && continue
 
-            if echo "$expanded_msg" | grep -qiE -- "\b${stem}[a-z]{0,4}\b"; then
-                if ! echo "$msg_lower" | grep -qiE -- "\b${name_word}\b"; then
+            # Use -F for fixed string matching
+            if echo "$expanded_msg" | grep -qiF -- "$stem" 2>/dev/null; then
+                if ! echo "$msg_lower" | grep -qiwF -- "$name_word" 2>/dev/null; then
                     score=$((score + 3))
                     matched=true
                     break
@@ -112,15 +130,28 @@ match_skills() {
         done
 
         # CHECK 3: Description keyword match (+1)
+        # Entry #284: Safely iterate user words, skip special characters
         if [ "$matched" = "true" ] && [ -f "$skill_file" ]; then
             local desc=$(grep -- "^description:" "$skill_file" 2>/dev/null | sed 's/description: *//' | tr -d '"' | tr '[:upper:]' '[:lower:]')
+            
+            # Disable glob expansion to prevent [ ] from being interpreted (Entry #284)
+            set -f
             for query_word in $msg_lower; do
                 [ ${#query_word} -lt 4 ] && continue
-                if echo "$desc" | grep -qiE -- "\b${query_word}\b"; then
+                
+                # Skip words with special characters that break grep (Entry #284)
+                # Skip: options (--foo, -v), brackets [foo], braces {foo}, parens (foo)
+                case "$query_word" in
+                    -* | *[\[\]\{\}\(\)\<\>\|\*\?\$\^\\\']* ) continue ;;
+                esac
+                
+                # Use -F for fixed string matching (no regex interpretation)
+                if echo "$desc" | grep -qiF -- "$query_word" 2>/dev/null; then
                     score=$((score + 1))
                     break
                 fi
             done
+            set +f
         fi
 
         # Only include skills with score >= 5
@@ -135,13 +166,13 @@ match_skills() {
 
 # Read user message
 JSON_INPUT=$(cat)
-USER_MESSAGE=$(echo "$JSON_INPUT" | jq -r '.prompt // empty')
+USER_MESSAGE=$(echo "$JSON_INPUT" | jq -r '.prompt // empty' 2>/dev/null)
 if [ -z "$USER_MESSAGE" ]; then
     USER_MESSAGE="$JSON_INPUT"
 fi
 
 # Skip simple acknowledgments (Entry #266: use -- for grep safety)
-if echo "$USER_MESSAGE" | grep -qiE -- "^(continue|yes|no|ok|thanks)$"; then
+if echo "$USER_MESSAGE" | grep -qiE -- "^(continue|yes|no|ok|thanks)$" 2>/dev/null; then
     echo "$USER_MESSAGE"
     exit 0
 fi
