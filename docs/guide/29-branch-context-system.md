@@ -76,6 +76,9 @@ The manifest powers automatic file loading via @ imports.
 
 ### Hook Logic (session-start.sh)
 
+**CRITICAL**: The hook must **WRITE** to CLAUDE.md, not just print to terminal!
+The `@` symbol only triggers file loading when it's **IN CLAUDE.md**.
+
 ```bash
 #!/bin/bash
 # .claude/hooks/session-start.sh
@@ -83,24 +86,53 @@ The manifest powers automatic file loading via @ imports.
 current_branch=$(git branch --show-current 2>/dev/null)
 manifest="CURRENT/$current_branch/CONTEXT-MANIFEST.json"
 
+# STEP 1: CLEANUP - Remove old sections to prevent accumulation
+if [ -f "CLAUDE.md" ]; then
+    if grep -q "AUTO-LOADED DOMAIN FILES" CLAUDE.md 2>/dev/null; then
+        sed -i '/^## 🔄 AUTO-LOADED DOMAIN FILES/,$d' CLAUDE.md
+    fi
+fi
+
+# STEP 2: WRITE @ imports to CLAUDE.md (NOT just display!)
 if [ -f "$manifest" ]; then
-    echo ""
-    echo "## 🔄 AUTO-LOADED DOMAIN FILES ($current_branch)"
-    echo ""
-    echo "**Auto-loaded from**: $manifest"
-    echo ""
-    
-    # Generate @ imports from manifest
+    # Write section header TO CLAUDE.md
+    cat >> CLAUDE.md << EOF
+
+---
+
+## 🔄 AUTO-LOADED DOMAIN FILES (Session-Specific)
+
+**Branch**: $current_branch
+**Source**: $manifest
+
+EOF
+
+    # Extract files and WRITE @ imports TO CLAUDE.md
     jq -r '.ondemand_files | to_entries[] | .value[]' "$manifest" 2>/dev/null | while read file; do
+        [ -z "$file" ] && continue
+
         # Handle absolute vs relative paths
         if [[ "$file" == CURRENT/* ]] || [[ "$file" == memory-bank/* ]]; then
-            echo "@$file"
+            FULL_PATH="$file"
         else
-            echo "@memory-bank/ondemand/$file"
+            FULL_PATH="memory-bank/ondemand/$file"
         fi
+
+        # Write @import if file exists
+        [ -f "$FULL_PATH" ] && echo "@$FULL_PATH" >> CLAUDE.md
     done
+
+    echo "" >> CLAUDE.md
+    echo "_Auto-generated @ imports from CONTEXT-MANIFEST.json_" >> CLAUDE.md
+
+    # Also display for user visibility
+    echo "═══ AUTO-LOADED: $(jq -r '[.ondemand_files | to_entries[] | .value[]] | length' "$manifest") files from $manifest ═══"
 fi
 ```
+
+**Key Difference**:
+- ❌ `echo "@$file"` - Prints to terminal (files NOT loaded)
+- ✅ `echo "@$file" >> CLAUDE.md` - Writes to file (files ARE loaded)
 
 ### Result in CLAUDE.md
 

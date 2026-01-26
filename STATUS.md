@@ -1,13 +1,27 @@
 # Claude Code Implementation Guide - Project Status
 
 **Created**: 2025-12-14
-**Updated**: 2026-01-02
-**Status**: Phase 1 Complete + Entry #229 Enhancement
-**Progress**: 65% of planned work complete
+**Updated**: 2026-01-26
+**Status**: Phase 1 Complete + Dynamic @ Import Fix
+**Progress**: 70% of planned work complete
 
 ---
 
-## 🆕 Recent Updates (Jan 2, 2026)
+## 🆕 Recent Updates (Jan 26, 2026)
+
+### Critical Fix: Dynamic @ Import Mechanism
+- **Chapter 29**: Fixed critical bug - hook now WRITES to CLAUDE.md (not just displays)
+- **Template session-start.sh**: Added dynamic @ import generation from CONTEXT-MANIFEST.json
+- **Root Cause**: Code showed `echo "@$file"` (prints to terminal) instead of `echo "@$file" >> CLAUDE.md` (writes to file)
+- **Impact**: Files listed in CONTEXT-MANIFEST.json now actually get loaded into Claude's context
+
+**The Critical Understanding**:
+- ❌ `echo "@$file"` → Prints to terminal (files NOT loaded)
+- ✅ `echo "@$file" >> CLAUDE.md` → Writes to file (files ARE loaded)
+
+---
+
+## 🆕 Previous Updates (Jan 2, 2026)
 
 ### Entry #229: Skills Filtering Optimization
 - **Pre-prompt.sh**: Updated with score-at-match-time filtering

@@ -8,10 +8,10 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ## 🆕 Latest Additions (January 2026)
 
-### Context Architecture System ⭐⭐⭐ NEW (Jan 19-20, 2026)
+### Context Architecture System ⭐⭐⭐ UPDATED (Jan 26, 2026)
 | Guide | Description | Evidence |
 |-------|-------------|----------|
-| [**Branch Context System**](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST.json + @ imports for per-branch context loading | **47-70% token savings** per branch 🏆🏆🏆 |
+| [**Branch Context System**](docs/guide/29-branch-context-system.md) | CONTEXT-MANIFEST.json + @ imports for per-branch context loading | **47-70% token savings** per branch 🏆🏆🏆 **FIXED: Dynamic @ import mechanism** |
 | [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) | blueprint-registry.json for per-branch blueprint loading | Auto-load relevant blueprints |
 | [Branch-Aware Development](docs/guide/31-branch-aware-development.md) | branch-variables.json, skill weighting, templates | +20 skill ranking bonus |
 | [Document Automation](docs/guide/32-document-automation.md) | Pattern analysis engine with 5-type suggestions | 67% faster documentation |
@@ -22,7 +22,7 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 **Key Features**:
 - ✅ Per-branch context loading (only load what you need)
-- ✅ @ import enforcement via session-start hook
+- ✅ @ import enforcement via session-start hook (**CRITICAL**: hook must WRITE to CLAUDE.md, not just display!)
 - ✅ Blueprint auto-loading per branch
 - ✅ Skill weighting (+20 bonus for branch-specific skills)
 - ✅ /document with pattern analysis (skill/rule/blueprint suggestions)
