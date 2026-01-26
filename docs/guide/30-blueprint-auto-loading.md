@@ -69,6 +69,9 @@ memory-bank/blueprints/blueprint-registry.json
 
 Add to `.claude/hooks/session-start.sh`:
 
+**CRITICAL**: The hook must **WRITE** to CLAUDE.md, not just print to terminal!
+The `@` symbol only triggers file loading when it's **IN CLAUDE.md**.
+
 ```bash
 load_branch_blueprints() {
     local current_branch=$(git branch --show-current 2>/dev/null)
@@ -84,21 +87,36 @@ load_branch_blueprints() {
         return 0
     fi
 
+    # WRITE section header TO CLAUDE.md (not just display!)
+    cat >> CLAUDE.md << EOF
+
+## 📘 AUTO-LOADED BLUEPRINTS ($current_branch)
+
+EOF
+
+    # Display for user visibility
     echo ""
-    echo "## 📘 AUTO-LOADED BLUEPRINTS ($current_branch)"
-    echo ""
+    echo "═══ AUTO-LOADED BLUEPRINTS ═══"
 
     while IFS= read -r bp_name; do
         local bp_path=$(jq -r ".blueprints[\"$bp_name\"].location" "$registry")
-        echo "@memory-bank/blueprints/$bp_path"
+        if [ -f "memory-bank/blueprints/$bp_path" ]; then
+            echo "@memory-bank/blueprints/$bp_path" >> CLAUDE.md  # WRITES TO FILE!
+            echo "   📘 $bp_name"  # Display for user
+        fi
     done <<< "$blueprints"
-    
-    echo ""
+
+    echo "" >> CLAUDE.md
+    echo "_Auto-generated from blueprint-registry.json_" >> CLAUDE.md
 }
 
-# Call in hook output
+# Call in hook (writes to CLAUDE.md AND displays)
 load_branch_blueprints
 ```
+
+**Key Difference**:
+- ❌ `echo "@$path"` - Prints to terminal (files NOT loaded)
+- ✅ `echo "@$path" >> CLAUDE.md` - Writes to file (files ARE loaded)
 
 ---
 

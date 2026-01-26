@@ -57,6 +57,11 @@ ROI: "Prevents $4+/month waste on duplicate searches"
 - Use CORE-PATTERNS.md for patterns, not this file
 - Link to detailed docs in memory-bank/learned/
 
+**Branch-Specific Files**:
+The `session-start.sh` hook automatically appends branch-specific @imports
+to this file at session start. Look for the `AUTO-LOADED DOMAIN FILES`
+section at the bottom (added dynamically from CONTEXT-MANIFEST.json).
+
 ---
 
 ## 🎯 Project Context
