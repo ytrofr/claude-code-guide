@@ -143,13 +143,14 @@ cp SKILL-TEMPLATE.md ~/.claude/skills/my-new-skill.md
 
 ### Skill Quality Checklist
 
-- [ ] YAML frontmatter with name and description
-- [ ] Description mentions specific triggers
-- [ ] Usage Scenarios use numbered format (1), (2), (3)
+- [ ] YAML frontmatter: `name`, `description` (with "Use when..."), `user-invocable`
+- [ ] Optional: `Triggers` field (for pre-prompt hook keyword matching)
+- [ ] Description is specific — includes keywords and scenarios (max 1024 chars)
 - [ ] Failed Attempts table with 2-3 entries
 - [ ] Quick Start section with concrete commands
 - [ ] Evidence section with numbers and dates
-- [ ] Integration section lists related skills
+- [ ] Under 300 lines total (optimal for token efficiency)
+- [ ] No non-standard frontmatter fields (`priority`, `agent` without `context: fork`)
 
 ---
 
@@ -184,9 +185,83 @@ cp SKILL-TEMPLATE.md ~/.claude/skills/my-new-skill.md
 
 ---
 
+---
+
+## Skill Maintenance & Optimization
+
+As your skill library grows (50+ skills), regular maintenance prevents token waste and broken references.
+
+### Monthly Maintenance
+
+```bash
+# Find oversized skills (>300 lines)
+find ~/.claude/skills -name "SKILL.md" \
+  -exec sh -c 'l=$(wc -l < "$1"); [ "$l" -gt 300 ] && echo "$l $1"' _ {} \; \
+  | sort -rn
+
+# Check for non-standard frontmatter
+grep -r "^priority:\|^agent:" ~/.claude/skills/*/SKILL.md 2>/dev/null
+
+# Count total skills
+find ~/.claude/skills -name "SKILL.md" | wc -l
+```
+
+### Trimming Strategy (Keep Under 300 Lines)
+
+| Remove | Why |
+|--------|-----|
+| Body "Triggers" section | Duplicates frontmatter Triggers field |
+| 5+ verbose examples | 1 complete example is enough |
+| Duplicate Evidence sections | Keep single Evidence table |
+
+| Condense | Technique |
+|----------|-----------|
+| Multi-paragraph prose | Convert to tables |
+| Full code blocks | Method signatures only |
+| Long explanations | YAML decision trees |
+
+**Never remove**: Quick Start, Failed Attempts, Evidence, Decision criteria.
+
+### Merging Overlapping Skills
+
+When two skills share >70% content, merge into one and delete the originals:
+
+```bash
+# Create new merged skill
+mkdir -p ~/.claude/skills/merged-skill-name/
+# ... write SKILL.md combining best content ...
+
+# DELETE originals (don't deprecate — stubs waste tokens)
+rm -rf ~/.claude/skills/old-skill-1/
+rm -rf ~/.claude/skills/old-skill-2/
+
+# Rebuild cache
+rm -f ~/.claude/cache/skill-index-hybrid.txt
+```
+
+**Full guide**: See [docs/guide/35-skill-optimization-maintenance.md](../../docs/guide/35-skill-optimization-maintenance.md)
+
+---
+
+## Anthropic Official Frontmatter Reference
+
+Per [code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills):
+
+| Field | Purpose |
+|-------|---------|
+| `name` | Skill identifier |
+| `description` | **THE triggering mechanism** — include "Use when..." |
+| `user-invocable` | Allow direct invocation |
+| `Triggers` | *Custom* — for pre-prompt hook keyword matching |
+
+**Key insight**: Claude Code uses the `description` field to decide when to activate a skill. Put all activation keywords there.
+
+---
+
 ## References
 
 - **Full Guide**: See [docs/guide/06-skills-framework.md](../../docs/guide/06-skills-framework.md)
+- **Optimization**: See [docs/guide/35-skill-optimization-maintenance.md](../../docs/guide/35-skill-optimization-maintenance.md)
 - **Skills Library**: See [skills-library/](../../skills-library/) for complete catalog
 - **Validation**: Run `./scripts/check-skills.sh` (if available)
 
@@ -194,4 +269,4 @@ cp SKILL-TEMPLATE.md ~/.claude/skills/my-new-skill.md
 
 **Starter Skills Pack**: Essential skills for Day 1 productivity
 **Installation**: User-level (~/.claude/skills/) for cross-project usage
-**Success**: 84% activation rate with numbered triggers pattern
+**Maintenance**: Monthly audit + trim oversized + merge overlapping
