@@ -1,13 +1,23 @@
 ---
 name: your-skill-name-here
-description: "Third-person description of what this skill does and when to use it. Use when: (1) specific scenario with numbers/errors, (2) another specific scenario, (3) third scenario. Include verification date and success metrics. Max 1024 characters."
+description: "What this skill does with action verbs. Use when [scenario 1], [scenario 2], or when user mentions [keywords]. Max 1024 chars. This IS the triggering mechanism."
+Triggers: keyword1, keyword2, keyword3, exact user phrase, natural language variant
+user-invocable: false
 ---
+
+<!-- FRONTMATTER NOTES (delete this comment block):
+  Official Anthropic fields: name, description, user-invocable, disable-model-invocation,
+    allowed-tools, model, context, agent, hooks, argument-hint
+  Custom fields: Triggers (for pre-prompt hook keyword matching only)
+  NON-official (remove if found): priority, agent (without context: fork)
+  Ref: https://code.claude.com/docs/en/skills
+-->
 
 # Skill Name Here
 
 **Purpose**: [One-sentence purpose]
-**Success Rate**: [X%] (if known)
-**Time Saved**: [X min/hours] per use
+**Created**: [YYYY-MM-DD]
+**ROI**: [X hours/year saved]
 
 ---
 

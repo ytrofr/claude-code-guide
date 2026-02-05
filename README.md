@@ -6,7 +6,18 @@ Based on proven patterns from LimorAI (97 components, 162+ documented patterns, 
 
 ---
 
-## 🆕 Latest Additions (January 2026)
+## 🆕 Latest Additions (February 2026)
+
+### Skill Optimization & Maintenance ⭐ NEW
+| Guide | Description | Evidence |
+|-------|-------------|----------|
+| [Skill Optimization & Maintenance](docs/guide/35-skill-optimization-maintenance.md) | 6-step workflow: audit, merge, trim, curate branch skills | 12.4k tokens saved, 57% reduction |
+
+**Source**: Entry #327 — Anthropic official frontmatter docs + LIMOR AI optimization patterns
+
+---
+
+## Latest Additions (January 2026)
 
 ### Context Architecture System ⭐⭐⭐ UPDATED (Jan 26, 2026)
 | Guide | Description | Evidence |
@@ -146,6 +157,7 @@ Complete reference documentation covering setup, patterns, and advanced topics.
 | [32-document-automation.md](docs/guide/32-document-automation.md) | Pattern analysis engine |
 | [33-branch-specific-skill-curation.md](docs/guide/33-branch-specific-skill-curation.md) | Two-tier skill display |
 | [34-basic-memory-mcp-integration.md](docs/guide/34-basic-memory-mcp-integration.md) | Semantic observations & relations 🆕 |
+| [35-skill-optimization-maintenance.md](docs/guide/35-skill-optimization-maintenance.md) | 6-step skill library maintenance 🆕 |
 
 **Best For**: Understanding concepts, deep dives, team onboarding
 
@@ -378,7 +390,8 @@ claude-code-implementation-guide/
 │       ├── 31-branch-aware-development.md  Skill weighting
 │       ├── 32-document-automation.md  Pattern analysis engine
 │       ├── 33-branch-specific-skill-curation.md  Two-tier skill display
-│       └── 34-basic-memory-mcp-integration.md  🆕 Semantic knowledge retrieval
+│       ├── 34-basic-memory-mcp-integration.md  🆕 Semantic knowledge retrieval
+│       └── 35-skill-optimization-maintenance.md  🆕 6-step skill maintenance
 ├── template/                    # Clone-and-go starter
 │   ├── .claude/
 │   │   ├── CLAUDE.md           # Includes cache-first rule
@@ -514,6 +527,7 @@ claude-code-implementation-guide/
 **Automated Documentation**: 67% faster session docs (Chapter 23)
 **Document Automation**: Pattern analysis with 5-type suggestions (Chapter 32)
 **Monthly Maintenance**: 30 min/month keeps skills at 100% coverage
+**Skill Library Maintenance**: 6-step audit workflow saves 12k+ tokens (Chapter 35)
 **Fast Deployment**: 78% faster Cloud Run deploys with pre-built images (Chapter 27)
 **Skill Optimization**: context:fork, agent:, wildcards for advanced skills (Chapter 28)
 **Blueprint Auto-Loading**: Per-branch blueprint registry (Chapter 30)
@@ -528,7 +542,7 @@ claude-code-implementation-guide/
 **Marketplace**: [wshobson/agents](https://github.com/wshobson/agents) - 273 components
 **Official Docs**: https://code.claude.com/docs/en/memory
 **Created**: December 2025
-**Updated**: January 2026
+**Updated**: February 2026
 
 ---
 
@@ -550,6 +564,7 @@ MIT License - See [LICENSE.md](LICENSE.md)
 - [Blueprint Auto-Loading](docs/guide/30-blueprint-auto-loading.md) Per-branch blueprints
 - [Branch-Aware Development](docs/guide/31-branch-aware-development.md) Skill weighting
 - [Document Automation](docs/guide/32-document-automation.md) Pattern analysis
+- [Skill Optimization & Maintenance](docs/guide/35-skill-optimization-maintenance.md) 6-step maintenance workflow
 - [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) context:fork, agent:, wildcards
 - [Fast Cloud Run Deployment](docs/guide/27-fast-cloud-run-deployment.md) 78% faster deploys
 - [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) Path-specific patterns
