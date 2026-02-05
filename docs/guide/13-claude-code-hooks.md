@@ -44,6 +44,42 @@ File: `.claude/settings.json`
 
 ---
 
+## Hook Safety: stdin Timeout (Critical)
+
+Hooks that read JSON from stdin **must** use `timeout` to prevent infinite hangs.
+
+**The problem**: Claude Code pipes JSON to hook scripts via stdin. Occasionally — especially under high context load or rapid sequential tool calls — the stdin pipe doesn't close properly. If your hook uses `$(cat)` to read stdin, it blocks forever waiting for EOF, causing Claude Code to appear "stuck."
+
+**The fix**: Always use `timeout` when reading stdin in hooks:
+
+```bash
+# WRONG — can hang forever if stdin pipe not closed
+JSON_INPUT=$(cat)
+
+# CORRECT — exits after 2 seconds max, hook continues safely
+JSON_INPUT=$(timeout 2 cat)
+```
+
+**Affected hook types**: Any hook that reads stdin — `PostToolUse`, `PreCompact`, `Stop`, `UserPromptSubmit`. The `SessionStart` hook typically doesn't read stdin so is unaffected.
+
+**How to test**:
+
+```bash
+# Simulate a never-closing stdin pipe
+mkfifo /tmp/test-fifo
+(sleep 100 > /tmp/test-fifo) &
+BG=$!
+
+# Should complete in ~2s (not hang forever)
+time bash .claude/hooks/your-hook.sh < /tmp/test-fifo
+
+kill $BG; rm /tmp/test-fifo
+```
+
+**Evidence**: Feb 2026 — LIMOR AI production. `PostToolUse:Read` hook hung during multi-file implementation session. Root cause: `$(cat)` in `skill-access-monitor.sh`. Fix: `$(timeout 2 cat)`. Verified: 2016ms completion vs infinite hang.
+
+---
+
 ## Real Example
 
 **LIMOR AI production**: 6 hooks, 6-8 hours/year ROI

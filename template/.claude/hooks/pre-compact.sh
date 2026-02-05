@@ -13,7 +13,7 @@ BACKUP_DIR="$HOME/.claude/session-backups"
 mkdir -p "$BACKUP_DIR"
 
 # Read JSON input from stdin (Claude Code provides session info)
-JSON_INPUT=$(cat)
+JSON_INPUT=$(timeout 2 cat)
 TRANSCRIPT_PATH=$(echo "$JSON_INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
 SESSION_ID=$(echo "$JSON_INPUT" | jq -r '.session_id // empty' 2>/dev/null)
 

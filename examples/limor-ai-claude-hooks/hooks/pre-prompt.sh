@@ -253,7 +253,7 @@ match_skills_hybrid() {
 # MAIN
 # ═══════════════════════════════════════════════════════════════════
 
-JSON_INPUT=$(cat)
+JSON_INPUT=$(timeout 2 cat)
 USER_MESSAGE=$(echo "$JSON_INPUT" | jq -r '.prompt // empty' 2>/dev/null)
 [ -z "$USER_MESSAGE" ] && USER_MESSAGE="$JSON_INPUT"
 

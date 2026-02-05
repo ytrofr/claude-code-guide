@@ -10,7 +10,7 @@
 # ═══════════════════════════════════════════════════════════════════
 
 # Read JSON input from stdin
-JSON_INPUT=$(cat)
+JSON_INPUT=$(timeout 2 cat)
 SESSION_ID=$(echo "$JSON_INPUT" | jq -r '.session_id // empty' 2>/dev/null)
 
 # Log session completion for metrics
