@@ -3,6 +3,7 @@
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
 **Evidence**: LIMOR AI 6 hooks, 96% test validation
+**Updated**: Feb 7, 2026 — Critical fix for PostToolUse hooks
 
 ---
 
@@ -35,12 +36,76 @@ File: `.claude/settings.json`
       "matcher": "Write|Edit",
       "hooks": [{
         "type": "command",
-        "command": "npx prettier --write \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true"
+        "command": ".claude/hooks/prettier-format.sh",
+        "statusMessage": "✨ Formatting file..."
       }]
     }]
   }
 }
 ```
+
+---
+
+## 🚨 CRITICAL: Accessing Tool Input Data (Feb 7, 2026)
+
+**Claude Code passes data via stdin as JSON, NOT via environment variables!**
+
+### Available Environment Variables (ONLY these exist!)
+
+| Variable | Description | Available In |
+|----------|-------------|--------------|
+| `$CLAUDE_PROJECT_DIR` | Absolute path to project root | All hooks |
+| `$CLAUDE_CODE_REMOTE` | "true" in web, not set in CLI | All hooks |
+| `$CLAUDE_ENV_FILE` | Path to persist env vars | SessionStart only |
+
+### ❌ WRONG Pattern (Causes Infinite Hang!)
+
+```json
+{
+  "command": "npx prettier --write \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true"
+}
+```
+
+**Why it fails**: `$CLAUDE_TOOL_INPUT_FILE_PATH` doesn't exist! It evaluates to empty string, so `npx prettier --write ""` formats ALL files in the project and hangs forever.
+
+### ✅ CORRECT Pattern (Use Shell Script)
+
+Create `.claude/hooks/prettier-format.sh`:
+
+```bash
+#!/bin/bash
+# Read JSON from stdin with timeout (prevents hang)
+JSON_INPUT=$(timeout 2 cat)
+
+# Extract file path from JSON (the CORRECT way!)
+FILE_PATH=$(echo "$JSON_INPUT" | jq -r '.tool_input.file_path // empty')
+
+# Validate and format
+if [ -n "$FILE_PATH" ] && [ -f "$FILE_PATH" ]; then
+    case "$FILE_PATH" in
+        *.js|*.ts|*.json|*.css|*.html|*.md|*.yaml)
+            timeout 10 npx prettier --write "$FILE_PATH" 2>/dev/null || true
+            ;;
+    esac
+fi
+exit 0
+```
+
+### JSON Input Structure for PostToolUse
+
+```json
+{
+  "session_id": "abc123",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/absolute/path/to/file.txt",
+    "content": "file content here"
+  },
+  "tool_response": { "success": true }
+}
+```
+
+**Evidence**: Feb 7, 2026 — LIMOR AI dev-Limor branch stuck on "✨ Formatting file..." during AI Training System implementation. Root cause: `$CLAUDE_TOOL_INPUT_FILE_PATH` was empty → prettier scanned 99+ files. Fix: stdin JSON parsing with jq.
 
 ---
 
