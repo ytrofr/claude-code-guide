@@ -18,6 +18,25 @@ chmod +x your-project/.claude/hooks/*.sh
 | **session-start.sh** | Session initialization, git status, context loading | [Chapter 13](../../docs/guide/13-claude-code-hooks.md) |
 | **pre-compact.sh** | Context backup before compaction | [Chapter 13](../../docs/guide/13-claude-code-hooks.md) |
 | **stop-hook.sh** | Session cleanup, checkpoint commits | [Chapter 13](../../docs/guide/13-claude-code-hooks.md) |
+| **prettier-format.sh** 🚨 CRITICAL | Auto-format after Write/Edit (CORRECT pattern) | [Chapter 13](../../docs/guide/13-claude-code-hooks.md) |
+
+## 🚨 CRITICAL: prettier-format.sh (Feb 2026)
+
+**Why this exists**: Many guides show `$CLAUDE_TOOL_INPUT_FILE_PATH` in PostToolUse hooks — **THIS DOESN'T WORK!**
+
+Claude Code passes data via **stdin as JSON**, not environment variables. Using `$CLAUDE_TOOL_INPUT_FILE_PATH` results in an empty string, causing prettier to format ALL files and hang forever.
+
+**Wrong** (causes infinite hang):
+```json
+"command": "npx prettier --write \"$CLAUDE_TOOL_INPUT_FILE_PATH\""
+```
+
+**Correct** (use the script):
+```json
+"command": ".claude/hooks/prettier-format.sh"
+```
+
+The script reads `file_path` from stdin JSON using `jq`.
 
 ## pre-prompt.sh (Skill Detection Enhancement)
 
