@@ -1,6 +1,6 @@
 # Skill Activation System - Complete Implementation Guide
 
-**Source**: LIMOR AI Project - Entries #271, #272
+**Source**: Production Project - Entries #271, #272
 **Achievement**: 61.1% → 88.2% accuracy in 170-query test suite
 **Created**: 2026-01-14
 
@@ -27,7 +27,7 @@
 
 A comprehensive framework for managing Claude Code skills with high activation accuracy (85%+), automated monitoring, and quality control.
 
-**Key Metrics from LIMOR AI**:
+**Key Metrics from Production**:
 - **Accuracy**: 61.1% → 88.2% (+27.1% improvement)
 - **Test Suite**: 170 comprehensive queries across 13 domains
 - **Perfect Domains**: 4 domains at 100% (Testing, Sacred, Hebrew, Git)
@@ -468,7 +468,7 @@ Triggers: cloud run deploy, safe deployment, gcloud run deploy, gcloud deploy
 
 ## Real-World Results
 
-### LIMOR AI Project (January 2026)
+### Production Project (January 2026)
 
 **Entry #271 (Option A)**:
 - Started: 61.1% accuracy (104/170)
@@ -529,8 +529,8 @@ node scripts/skill-activation-analytics.js
 
 ## References
 
-**Source Project**: LIMOR AI  
-**Repository**: https://github.com/ytrofr/LimorAI-Knowledge  
+**Source Project**: Production  
+**Repository**: https://github.com/ytrofr/production-Knowledge  
 **Entries**:
 - Entry #271: Option A Complete (P3 patterns + triggers + cache rebuild)
 - Entry #272: Skill System Sustainability Infrastructure

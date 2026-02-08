@@ -182,7 +182,7 @@ DEPLOYMENT_CHANGES_NOT_VISIBLE:
 ## Evidence
 
 **Created**: 2025-12-14
-**Source**: Based on LimorAI troubleshooting-workflow-skill
+**Source**: Based on production troubleshooting-workflow-skill
 **Success Rate**: 84% issue resolution with decision tree
 **Time Savings**: 10-30 min per debug session (vs random searching)
 **Usage Frequency**: Used in 90%+ of debugging sessions

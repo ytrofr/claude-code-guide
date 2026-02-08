@@ -2,7 +2,7 @@
 
 **3 Essential Skills for Day 1 Productivity**
 
-These skills provide immediate value when using Claude Code. They follow the proven pattern from LimorAI that achieves 84% activation rate.
+These skills provide immediate value when using Claude Code. They follow the proven pattern from production that achieves 84% activation rate.
 
 ---
 

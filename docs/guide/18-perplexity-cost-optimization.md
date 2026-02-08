@@ -198,7 +198,7 @@ Claude: [Checks same cache] → Same note → FREE!
 
 ## Evidence
 
-**Source Project**: LIMOR AI production system
+**Source Project**: Production production system
 **Validation**: `research-cache/` folder with 10+ cached results
 **Pattern**: Documented in CLAUDE.md as mandatory rule
 **Enforcement**: PostToolUse hook reminder after every Perplexity call

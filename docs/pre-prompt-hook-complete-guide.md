@@ -1,6 +1,6 @@
 # Pre-Prompt Hook System - Complete Implementation Guide
 
-**Author**: LIMOR AI dev-Knowledge Branch  
+**Author**: Production dev-Knowledge Branch  
 **Performance**: 370x optimization (50s → 136ms) - Entry #267  
 **Accuracy**: 88.2% (150/170 tests) - Entry #271  
 **ROI**: 85+ hours/year saved - Entry #272  
@@ -121,12 +121,12 @@ Entry #272 (Sustainability):
 
 **Location**: `.claude/hooks/pre-prompt.sh`
 
-**Option A: Copy from LIMOR AI** (Recommended)
+**Option A: Copy from Production** (Recommended)
 
 ```bash
-# If you have access to LIMOR AI repository:
+# If you have access to Production repository:
 curl -o .claude/hooks/pre-prompt.sh \
-  https://raw.githubusercontent.com/ytrofr/LimorAI/dev-Knowledge/.claude/hooks/pre-prompt.sh
+  https://raw.githubusercontent.com/ytrofr/production/dev-Knowledge/.claude/hooks/pre-prompt.sh
 
 chmod +x .claude/hooks/pre-prompt.sh
 ```
@@ -159,7 +159,7 @@ echo "✅ skill-name-2"
 echo "✅ skill-name-3"
 ```
 
-**Full Implementation**: See LIMOR AI repository for complete 500-line version with:
+**Full Implementation**: See Production repository for complete 500-line version with:
 - Hybrid cache system (370x faster)
 - Advanced scoring algorithm
 - P0-P3 priority handling
@@ -455,7 +455,7 @@ test_skill "sacred-commandments-skill" "golden rule" "sacred" "P0"
 test_skill "troubleshooting-workflow-skill" "production error" "troubleshooting" "P2"
 ```
 
-### LIMOR AI Results (170 tests)
+### Production Results (170 tests)
 
 ```yaml
 P0 Tests: 3 (2%) - All passing (100%)
@@ -700,7 +700,7 @@ TOTAL: 85+ hours/year automated
 
 ## 📊 Domain Performance
 
-### LIMOR AI Results (170 tests across 12 domains)
+### Production Results (170 tests across 12 domains)
 
 ```yaml
 Perfect (100%):
@@ -1004,9 +1004,9 @@ bash tests/skills/comprehensive-skill-activation-test.sh
 
 ## 📚 Additional Resources
 
-### LIMOR AI Implementation
+### Production Implementation
 
-- **Repository**: https://github.com/ytrofr/LimorAI
+- **Repository**: https://github.com/ytrofr/production
 - **Branch**: dev-Knowledge
 - **Entry #271**: Option A Complete (88.2% accuracy)
 - **Entry #272**: Sustainability Infrastructure (85+ hours/year ROI)
@@ -1131,7 +1131,7 @@ Use this checklist to track your implementation:
 **Questions?** 
 
 - Check [Troubleshooting](#troubleshooting) section
-- Review LIMOR AI implementation (dev-Knowledge branch)
+- Review Production implementation (dev-Knowledge branch)
 - Reference Entry #271 and #272 for detailed patterns
 
 **Ready to start?** Follow the [Step-by-Step Setup](#step-by-step-setup) and begin with your first 5 skills!
@@ -1139,7 +1139,7 @@ Use this checklist to track your implementation:
 ---
 
 **Last Updated**: 2026-01-15  
-**Author**: LIMOR AI dev-Knowledge Branch  
+**Author**: Production dev-Knowledge Branch  
 **Status**: Production-validated, battle-tested  
 **Accuracy**: 88.2% (150/170 tests)  
 **Performance**: 370x optimization (50s → 136ms)  

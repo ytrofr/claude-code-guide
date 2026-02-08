@@ -1,6 +1,6 @@
 # Claude Code Hook Templates
 
-Ready-to-use hook scripts based on Anthropic blog patterns and LIMOR AI research.
+Ready-to-use hook scripts based on Anthropic blog patterns and Production research.
 
 ## Quick Start
 
@@ -92,6 +92,6 @@ Add to `.claude/settings.json`:
 
 ## Source
 
-- **LIMOR AI**: Production config (96% validation)
+- **Production**: Production config (96% validation)
 - **Anthropic Blog**: [Hooks documentation](https://claude.com/blog/how-to-configure-hooks)
 - **Scott Spence**: [Skills activation research](https://scottspence.com/posts/how-to-make-claude-code-skills-activate-reliably)

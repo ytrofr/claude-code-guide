@@ -8,7 +8,7 @@ description: Browser automation and E2E testing with Playwright MCP. Use when au
 **Purpose**: Browser automation via accessibility tree + E2E test patterns
 **MCP Server**: `playwright` (user-level)
 **Created**: December 2025
-**Source**: LimorAI Entry #224 (176/176 tests passing)
+**Source**: production Entry #224 (176/176 tests passing)
 
 ---
 
@@ -171,7 +171,7 @@ page.on('response', (response) => {
 
 ## Evidence
 
-- **LimorAI**: 176/176 E2E tests passing (100%)
+- **production**: 176/176 E2E tests passing (100%)
 - **Coverage**: 5 test files, Chromium + Mobile Chrome
 - **Execution**: ~4 minutes full suite
 

@@ -37,7 +37,7 @@ Location: `memory-bank/always/branch-variables.json`
   "updated": "2026-01-19",
   "purpose": "Branch-specific configuration with curated TOP skills",
 
-  "dev-Limor": {
+  "dev-feature": {
     "mission": "AI Accuracy & Response Time Optimization",
     "type": "ai-quality-optimization",
     "top_skills": [
@@ -158,12 +158,12 @@ EOF
 
 ## Output Example
 
-When a developer on `dev-Limor` asks about AI issues:
+When a developer on `dev-feature` asks about AI issues:
 
 ```
 🚨 SKILL EVALUATION (Hybrid - Fast + Accurate)
 ═══════════════════════════════════════════════════════════════════
-🎯 BRANCH SKILLS (dev-Limor):
+🎯 BRANCH SKILLS (dev-feature):
   🎯 ai-quality-validation-skill - Validate AI responses against real API/DB data
   🎯 ai-behavioral-testing-skill - Test AI after schema changes
   🎯 ai-pipeline-debugging-skill - Debug Gemini LLM, tool calls, SQL
@@ -176,7 +176,7 @@ When a developer on `dev-Limor` asks about AI issues:
 🚨 FORMAT: "I'll use [skill-name]..." then Skill(skill: "[name]")
 ═══════════════════════════════════════════════════════════════════
 
-📋 BRANCH: dev-Limor | Mission: AI Accuracy & Response Time Optimization
+📋 BRANCH: dev-feature | Mission: AI Accuracy & Response Time Optimization
 ```
 
 ## Curation Guidelines
@@ -204,7 +204,7 @@ When selecting top skills for a branch:
 
 | Branch | Mission | Key Skills |
 |--------|---------|------------|
-| dev-Limor | AI Quality | ai-quality-validation, ai-behavioral-testing, gemini-latency |
+| dev-feature | AI Quality | ai-quality-validation, ai-behavioral-testing, gemini-latency |
 | dev-Data | Data Parity | api-first-validation, gap-detection, sync-master |
 | dev-MERGE | Deployment | deployment-workflow, traffic-routing, safe-deployment |
 | dev-Test | Testing | testing-workflow, comprehensive-testing, baseline-methodology |

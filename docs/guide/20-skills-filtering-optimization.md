@@ -12,12 +12,14 @@
 When skills library grows beyond 50-100 skills, the pre-prompt hook can match **too many skills** per query:
 
 **Symptoms**:
+
 - 127-145 skills matched for simple queries
 - Wrong skills matched (e.g., "optimize memory" matches `perplexity-cache-skill` instead of `context-optimization-skill`)
 - Skills buried in noise (correct skill at position #47)
 - Scott Spence standard violated (should be ≤10 skills)
 
 **Root Causes**:
+
 1. Matching ALL skills with ANY keyword presence (no scoring)
 2. Stem matching too aggressive (`test` matches `testimony`, `testify`)
 3. No relevance threshold (1-point match = included)
@@ -137,6 +139,7 @@ match_skills() {
 ## Evidence
 
 ### Before Fix (Dec 2025)
+
 ```bash
 Query: "optimize memory bank file"
 Matched: 127-145 skills
@@ -146,6 +149,7 @@ matched_count in metrics: 127, 133, 145
 ```
 
 ### After Fix (Jan 2, 2026)
+
 ```bash
 Query: "optimize memory bank file"
 Matched: 6 skills
@@ -156,11 +160,11 @@ matched_count in metrics: 6, 7, 8, 9, 10
 
 ### Test Results
 
-| Branch | Query | Skills Matched | Expected Skill Position | Status |
-|--------|-------|----------------|-------------------------|--------|
-| dev-Knowledge | "optimize memory 40k" | 6 | context-optimization-skill FIRST | ✅ PASS |
-| dev-Data | "check gaps localhost staging" | 10 | gap-detection-and-sync-skill top-3 | ✅ PASS |
-| dev-Test | "5Q or 60Q tests" | 8 | testing-workflow-skill appears | ✅ PASS |
+| Branch        | Query                          | Skills Matched | Expected Skill Position            | Status  |
+| ------------- | ------------------------------ | -------------- | ---------------------------------- | ------- |
+| dev-Knowledge | "optimize memory 40k"          | 6              | context-optimization-skill FIRST   | ✅ PASS |
+| dev-Data      | "check gaps localhost staging" | 10             | gap-detection-and-sync-skill top-3 | ✅ PASS |
+| dev-Test      | "5Q or 60Q tests"              | 8              | testing-workflow-skill appears     | ✅ PASS |
 
 ---
 
@@ -185,6 +189,7 @@ tail -100 ~/.claude/metrics/skill-activations.jsonl | jq 'select(.matched_count 
 ### Expected Results
 
 **Good metrics** (after fix):
+
 ```
 7
 8
@@ -194,6 +199,7 @@ tail -100 ~/.claude/metrics/skill-activations.jsonl | jq 'select(.matched_count 
 ```
 
 **Bad metrics** (before fix):
+
 ```
 127
 133
@@ -210,21 +216,25 @@ tail -100 ~/.claude/metrics/skill-activations.jsonl | jq 'select(.matched_count 
 Start new Claude Code session and run:
 
 **Test Query 1**:
+
 ```
 The memory-bank file is over 40k chars. How should I optimize it?
 ```
 
 **Expected**:
+
 - ✅ 6-10 skills matched (shown in hook output)
 - ✅ Relevant skills appear (context-optimization, archive-related)
 - ✅ Claude says "I'll use [skill-name]..."
 
 **Test Query 2**:
+
 ```
 Database connection error: ECONNREFUSED
 ```
 
 **Expected**:
+
 - ✅ 5-8 skills matched
 - ✅ database-credentials or connection-related skills appear
 - ✅ troubleshooting skills included
@@ -238,24 +248,20 @@ If you use `branch-variables.json` for branch-specific configurations, you can a
 ### Setup (5 min)
 
 1. Create `memory-bank/always/branch-variables.json`:
+
 ```json
 {
   "main": {
-    "skills_required": [
-      "deployment-workflow-skill",
-      "testing-workflow-skill"
-    ]
+    "skills_required": ["deployment-workflow-skill", "testing-workflow-skill"]
   },
   "dev": {
-    "skills_required": [
-      "context-optimization-skill",
-      "gap-detection-skill"
-    ]
+    "skills_required": ["context-optimization-skill", "gap-detection-skill"]
   }
 }
 ```
 
 2. Add function to pre-prompt.sh (after line 38):
+
 ```bash
 get_branch_priority_skills() {
     local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")
@@ -272,11 +278,13 @@ BRANCH_PRIORITY_SKILLS=$(get_branch_priority_skills)
 ```
 
 3. Update match_skills() call:
+
 ```bash
 MATCHED_SKILLS=$(match_skills "$USER_MESSAGE" "$BRANCH_PRIORITY_SKILLS")
 ```
 
 4. Add CHECK 0 in match_skills() (before CHECK 1):
+
 ```bash
 # CHECK 0: Branch priority skills (+15) - HIGHEST PRIORITY
 if [ -n "$2" ] && echo ",$2," | grep -q ",$skill_name,"; then
@@ -331,12 +339,14 @@ awk -v month="2026-01" '
 ### Issue: Still matching 100+ skills
 
 **Check hook version**:
+
 ```bash
 grep "Entry #229" .claude/hooks/pre-prompt.sh
 # Should see: "Entry #229 - Jan 2026"
 ```
 
 **If missing**: Copy from implementation guide:
+
 ```bash
 cp template/.claude/hooks/pre-prompt.sh .claude/hooks/pre-prompt.sh
 chmod +x .claude/hooks/pre-prompt.sh
@@ -345,6 +355,7 @@ chmod +x .claude/hooks/pre-prompt.sh
 ### Issue: Wrong skills still matched
 
 **Add more synonym expansions** for your domain:
+
 ```bash
 # In match_skills() STEP 1, add:
 echo "$msg_lower" | grep -qiF "your-keyword" && expanded_msg="$expanded_msg related terms"
@@ -353,6 +364,7 @@ echo "$msg_lower" | grep -qiF "your-keyword" && expanded_msg="$expanded_msg rela
 ### Issue: Branch priority not working
 
 **Verify**:
+
 1. `branch-variables.json` exists
 2. `jq` installed
 3. `get_branch_priority_skills()` function added
@@ -362,12 +374,12 @@ echo "$msg_lower" | grep -qiF "your-keyword" && expanded_msg="$expanded_msg rela
 
 ## Success Metrics
 
-| Metric | Target | How to Check |
-|--------|--------|--------------|
-| Skills matched | 6-10 | Count ✅ in hook output |
-| Wrong matches | <10% | Expected skill in top 3 |
-| Weekly average | <10 | Monthly report script |
-| Activation rate | >80% | Claude uses skills-first |
+| Metric          | Target | How to Check             |
+| --------------- | ------ | ------------------------ |
+| Skills matched  | 6-10   | Count ✅ in hook output  |
+| Wrong matches   | <10%   | Expected skill in top 3  |
+| Weekly average  | <10    | Monthly report script    |
+| Activation rate | >80%   | Claude uses skills-first |
 
 ---
 
@@ -375,13 +387,14 @@ echo "$msg_lower" | grep -qiF "your-keyword" && expanded_msg="$expanded_msg rela
 
 - **Chapter 16**: Skills Activation Breakthrough (foundation)
 - **Chapter 17**: Skill Detection Enhancement (synonym expansion)
-- **Entry #229**: Full LimorAI documentation
+- **Entry #229**: Full documentation
 
 ---
 
 ## Quick Reference
 
 **What Entry #229 Fixes**:
+
 - ❌ Before: 127-145 skills matched (information overload)
 - ✅ After: 6-10 skills matched (relevant only)
 - ❌ Before: `test` matches `testimony` (stem too broad)
@@ -396,5 +409,5 @@ echo "$msg_lower" | grep -qiF "your-keyword" && expanded_msg="$expanded_msg rela
 ---
 
 **Success Rate**: 95%+ (exceeds Scott Spence's 84% baseline)
-**Evidence**: LimorAI production validation (6 branches, 40+ tests)
+**Evidence**: Production validation (6 branches, 40+ tests)
 **Last Updated**: 2026-01-02

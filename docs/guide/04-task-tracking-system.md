@@ -3,7 +3,7 @@
 **Purpose**: Lightweight task/roadmap tracking that keeps Claude's context focused on ONLY open items  
 **Pattern**: Completed items archived so they don't waste tokens  
 **Created**: December 2025  
-**Source**: LIMOR AI implementation (Entry #163)
+**Source**: Production implementation (Entry #163)
 
 ---
 
@@ -302,7 +302,7 @@ Claude updates FUTURE-FEATURES.md:
 
 ---
 
-**Pattern Source**: LIMOR AI (Entry #163 - claude-code-guide-patterns.md)  
+**Pattern Source**: Production (Entry #163 - claude-code-guide-patterns.md)  
 **Status**: Production validated December 2025  
 **Last Updated**: 2026-01-19
 **License**: MIT

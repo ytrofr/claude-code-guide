@@ -2,7 +2,7 @@
 
 **Purpose**: Split large skills for token efficiency
 **Source**: Anthropic blog "Building Skills for Claude Code"
-**Evidence**: LIMOR AI 53% token savings (4k vs 8.5k), 24/25 tests (96%)
+**Evidence**: Production 53% token savings (4k vs 8.5k), 24/25 tests (96%)
 
 ---
 
@@ -44,7 +44,7 @@ skill-name/
 
 **ROI**: 10-20 hours/year (if frequently used)
 
-**Full guide**: LIMOR AI Entry #179 with test validation
+**Full guide**: Production Entry #179 with test validation
 
 ---
 

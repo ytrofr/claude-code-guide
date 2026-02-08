@@ -1,4 +1,4 @@
-# LIMOR AI Claude Code Hooks - Real-World Example
+# Production Claude Code Hooks - Real-World Example
 
 **Hooks**: 6 (SessionStart, UserPromptSubmit, PostToolUse x2, PreCompact, PermissionRequest, Stop)
 **Success**: 100% skill accuracy (44/44 scenarios validated)
@@ -33,4 +33,4 @@ Combines best of both worlds:
 time echo '{"prompt": "deploy to staging"}' | bash hooks/pre-prompt.sh > /dev/null
 ```
 
-**Source**: Entry #267 (LIMOR AI production validation - Jan 2026)
+**Source**: Entry #267 (Production production validation - Jan 2026)

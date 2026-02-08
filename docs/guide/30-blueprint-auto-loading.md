@@ -1,6 +1,6 @@
 # Chapter 30: Blueprint Auto-Loading
 
-**Evidence**: LIMOR AI MASTER-PLAN Phase 3
+**Evidence**: Production MASTER-PLAN Phase 3
 **Difficulty**: Intermediate
 **Time**: 20 minutes setup
 **ROI**: Auto-load relevant blueprints per branch
@@ -41,21 +41,21 @@ memory-bank/blueprints/blueprint-registry.json
     "TRUE-AI-SYSTEM": {
       "location": "system/TRUE-AI-SYSTEM-BLUEPRINT.md",
       "type": "core",
-      "branches": ["dev-Limor", "dev-MERGE"],
+      "branches": ["dev-feature", "dev-MERGE"],
       "auto_load": true,
       "size_tokens": 5400
     },
     "DATABASE-SCHEMA": {
       "location": "core/DATABASE-SCHEMA-BLUEPRINT.md",
       "type": "core",
-      "branches": ["dev-Data", "dev-Limor", "dev-MERGE"],
+      "branches": ["dev-Data", "dev-feature", "dev-MERGE"],
       "auto_load": true,
       "size_tokens": 3200
     }
   },
   "branch_blueprints": {
     "dev-Knowledge": ["CONTEXT-SYSTEM", "SKILLS-SYSTEM"],
-    "dev-Limor": ["TRUE-AI-SYSTEM", "DATABASE-SCHEMA"],
+    "dev-feature": ["TRUE-AI-SYSTEM", "DATABASE-SCHEMA"],
     "dev-Data": ["DATABASE-SCHEMA", "GAP-SYSTEM"],
     "dev-MERGE": ["DEPLOYMENT", "MULTI-BRANCH"],
     "dev-UI": ["UI-THEME", "DASHBOARD-PATTERNS"]

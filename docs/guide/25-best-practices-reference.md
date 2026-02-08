@@ -1,7 +1,7 @@
 # Chapter 25: Best Practices Reference
 
 **Created**: 2026-01-05
-**Source**: LIMOR AI Entry #189 (Best Practices Index)
+**Source**: Production Entry #189 (Best Practices Index)
 **Pattern**: Research-backed patterns from Anthropic + Claude documentation
 **Coverage**: 33 articles indexed, 15 fully extracted
 

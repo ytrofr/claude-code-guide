@@ -1,7 +1,7 @@
 # Chapter 35: Skill Optimization & Maintenance
 
 **Created**: 2026-02-05
-**Source**: LIMOR AI Entry #327 — 12.4k tokens saved via systematic optimization
+**Source**: Production Entry #327 — 12.4k tokens saved via systematic optimization
 **Pattern**: Audit → Merge → Fix → Trim → Curate → Verify
 
 ---
@@ -16,7 +16,7 @@ As projects grow, skill libraries accumulate problems:
 - **Overlap**: Multiple skills covering the same workflow
 - **Outdated frontmatter**: Non-standard fields Claude Code ignores
 
-**Evidence**: LIMOR AI found 3 broken refs, 1 stub, 5 oversized skills in a single branch's top 10.
+**Evidence**: Production found 3 broken refs, 1 stub, 5 oversized skills in a single branch's top 10.
 
 ---
 
@@ -84,7 +84,7 @@ description: "Deploy to Cloud Run with traffic routing and health checks. Use wh
 
 ```bash
 # Check branch config for broken references
-BRANCH="dev-Limor"  # Change per branch
+BRANCH="dev-feature"  # Change per branch
 for skill in $(python3 -c "
 import json
 d = json.load(open('memory-bank/always/branch-variables.json'))
@@ -183,7 +183,7 @@ If your project uses branch-specific skill loading (see Chapter 16), update the 
 
 ```json
 {
-  "dev-Limor": {
+  "dev-feature": {
     "mission": "AI Accuracy & Response Time",
     "top_skills": [
       "pure-gemini-architecture-skill",
@@ -286,7 +286,7 @@ wc -l ~/.claude/cache/skill-index-hybrid.txt
 
 - **Anthropic Docs**: [code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills)
 - **Chapter 16**: Skills Activation Breakthrough (activation patterns)
-- **Entry #327**: dev-Limor Skills Optimization (source for this guide)
+- **Entry #327**: dev-feature Skills Optimization (source for this guide)
 - **Entry #271**: Skill Creation Methodology (creation standards)
 
 ---

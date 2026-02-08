@@ -1,7 +1,7 @@
 # Chapter 30: Test Priority Best Practices
 
 **Created**: 2026-01-14
-**Source**: LimorAI Entry #271 - Test Priority Relaxation
+**Source**: Production Entry #271 - Test Priority Relaxation
 **Evidence**: 170-Query improved 38.2% → 61.7% (+23.5%)
 **Key Insight**: Multiple similar skills matching the same query is **expected behavior**, not a failure
 
@@ -373,7 +373,7 @@ done
 
 ## 📖 References
 
-**LimorAI Entries**:
+**Production Entries**:
 - Entry #271: Test Priority Relaxation (170-Query +23.5%)
 - Entry #270: 100% Accuracy Achievement (80/80 tests)
 

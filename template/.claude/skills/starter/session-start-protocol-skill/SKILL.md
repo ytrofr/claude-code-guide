@@ -129,7 +129,7 @@ cat memory-bank/always/system-status.json | jq '.active_blockers'
 ## Evidence
 
 **Source**: Anthropic's Claude 4 Engineering Blog + Best Practices
-**Used In**: LimorAI (162+ entries, multi-month project)
+**Used In**: production (162+ entries, multi-month project)
 **Success**: Multi-session continuity maintained across 100+ sessions
 **Time Cost**: 2 min per session start
 **Time Saved**: 10-30 min per session (vs getting oriented randomly)

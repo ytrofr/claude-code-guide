@@ -88,8 +88,8 @@ Snapshot waits for page load and returns structure.
 $ claude mcp list
 playwright: npx -y @playwright/mcp@latest - ✓ Connected
 
-# LIMOR AI test on limor.app
-browser_navigate("https://limor.app") ✓
+# Production test on example.com
+browser_navigate("https://example.com") ✓
 browser_snapshot() → Hebrew accessibility tree ✓
 browser_screenshot() → Image captured ✓
 ```

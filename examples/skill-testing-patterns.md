@@ -1,7 +1,7 @@
 # Skill Testing Patterns - Real-World Examples
 
 **Created**: 2026-01-14
-**Source**: LimorAI Entry #271
+**Source**: production Entry #271
 **Purpose**: Practical examples of P0/P1/P2 test priority usage
 
 ---

@@ -134,4 +134,4 @@ mcp__basic-memory__write_note(
 
 **Skill Authority**: Mandatory workflow for Perplexity cost optimization
 **Activation**: Before any web search / research request
-**Evidence**: LIMOR AI research-cache with 10+ validated cached results
+**Evidence**: Production research-cache with 10+ validated cached results

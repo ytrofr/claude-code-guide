@@ -1,7 +1,7 @@
 # Chapter 12: Memory Bank Hierarchy
 
 **Purpose**: 4-tier knowledge organization for optimal context
-**Source**: LIMOR AI (34% token reduction, zero functionality loss)
+**Source**: Production (34% token reduction, zero functionality loss)
 **Pattern**: always → learned → ondemand → blueprints
 
 ---
@@ -42,7 +42,7 @@ memory-bank/
 
 **File size limits** - Tier 1: <40k, Tier 2: <25k
 
-**Full guide**: See LIMOR AI CONTEXT-ROUTER.md
+**Full guide**: See Production CONTEXT-ROUTER.md
 
 ---
 

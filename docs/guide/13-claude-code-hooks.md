@@ -2,20 +2,20 @@
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: LIMOR AI 6 hooks, 96% test validation
+**Evidence**: 6 hooks in production, 96% test validation
 **Updated**: Feb 7, 2026 — Critical fix for PostToolUse hooks
 
 ---
 
 ## Hook Types (8 Available)
 
-| Hook | Trigger | Use For |
-|------|---------|---------|
-| **SessionStart** | Session begins | Inject git status, context |
-| **PostToolUse** | After tool runs | Auto-format, logging |
-| **PreCompact** | Before compaction | Backup transcripts |
+| Hook                  | Trigger           | Use For                    |
+| --------------------- | ----------------- | -------------------------- |
+| **SessionStart**      | Session begins    | Inject git status, context |
+| **PostToolUse**       | After tool runs   | Auto-format, logging       |
+| **PreCompact**        | Before compaction | Backup transcripts         |
 | **PermissionRequest** | Permission dialog | Auto-approve safe commands |
-| **Stop** | Response ends | Suggest skill creation |
+| **Stop**              | Response ends     | Suggest skill creation     |
 
 ---
 
@@ -26,20 +26,28 @@ File: `.claude/settings.json`
 ```json
 {
   "hooks": {
-    "SessionStart": [{
-      "hooks": [{
-        "type": "command",
-        "command": ".claude/hooks/session-start.sh"
-      }]
-    }],
-    "PostToolUse": [{
-      "matcher": "Write|Edit",
-      "hooks": [{
-        "type": "command",
-        "command": ".claude/hooks/prettier-format.sh",
-        "statusMessage": "✨ Formatting file..."
-      }]
-    }]
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/prettier-format.sh",
+            "statusMessage": "✨ Formatting file..."
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -52,11 +60,11 @@ File: `.claude/settings.json`
 
 ### Available Environment Variables (ONLY these exist!)
 
-| Variable | Description | Available In |
-|----------|-------------|--------------|
-| `$CLAUDE_PROJECT_DIR` | Absolute path to project root | All hooks |
-| `$CLAUDE_CODE_REMOTE` | "true" in web, not set in CLI | All hooks |
-| `$CLAUDE_ENV_FILE` | Path to persist env vars | SessionStart only |
+| Variable              | Description                   | Available In      |
+| --------------------- | ----------------------------- | ----------------- |
+| `$CLAUDE_PROJECT_DIR` | Absolute path to project root | All hooks         |
+| `$CLAUDE_CODE_REMOTE` | "true" in web, not set in CLI | All hooks         |
+| `$CLAUDE_ENV_FILE`    | Path to persist env vars      | SessionStart only |
 
 ### ❌ WRONG Pattern (Causes Infinite Hang!)
 
@@ -105,7 +113,7 @@ exit 0
 }
 ```
 
-**Evidence**: Feb 7, 2026 — LIMOR AI dev-Limor branch stuck on "✨ Formatting file..." during AI Training System implementation. Root cause: `$CLAUDE_TOOL_INPUT_FILE_PATH` was empty → prettier scanned 99+ files. Fix: stdin JSON parsing with jq.
+**Evidence**: Feb 7, 2026 — Production branch stuck on "✨ Formatting file..." during AI Training System implementation. Root cause: `$CLAUDE_TOOL_INPUT_FILE_PATH` was empty → prettier scanned 99+ files. Fix: stdin JSON parsing with jq.
 
 ---
 
@@ -141,15 +149,15 @@ time bash .claude/hooks/your-hook.sh < /tmp/test-fifo
 kill $BG; rm /tmp/test-fifo
 ```
 
-**Evidence**: Feb 2026 — LIMOR AI production. `PostToolUse:Read` hook hung during multi-file implementation session. Root cause: `$(cat)` in `skill-access-monitor.sh`. Fix: `$(timeout 2 cat)`. Verified: 2016ms completion vs infinite hang.
+**Evidence**: Feb 2026 — Production. `PostToolUse:Read` hook hung during multi-file implementation session. Root cause: `$(cat)` in `skill-access-monitor.sh`. Fix: `$(timeout 2 cat)`. Verified: 2016ms completion vs infinite hang.
 
 ---
 
 ## Real Example
 
-**LIMOR AI production**: 6 hooks, 6-8 hours/year ROI
+**Production**: 6 hooks, 6-8 hours/year ROI
 
-See: `examples/limor-ai-claude-hooks/`
+See: `examples/production-claude-hooks/`
 
 **Full guide**: Templates in `template/.claude/hooks/`
 

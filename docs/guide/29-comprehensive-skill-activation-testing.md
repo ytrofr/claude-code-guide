@@ -2,7 +2,7 @@
 
 **Created**: 2026-01-14
 **Updated**: 2026-01-14 (Entry #271 - Test Priority Results)
-**Source**: LimorAI Entry #270, #271
+**Source**: Production Entry #270, #271
 **Evidence**: 80/80 core tests (100%), 6 comprehensive test suites (19-100% baselines)
 **ROI**: 370x faster hook execution (50s→136ms), 100% core workflow accuracy
 
@@ -448,7 +448,7 @@ echo '{"prompt": "deploy to staging"}' | bash .claude/hooks/pre-prompt.sh 2>/dev
 
 ## 📦 Files to Copy
 
-From `LimorAI-Knowledge` repository:
+From `Production-Knowledge` repository:
 
 ### Test Infrastructure
 ```bash
@@ -623,7 +623,7 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 
 ## 📖 References
 
-**LimorAI Entries**:
+**Production Entries**:
 - Entry #267: Pre-Prompt Hook 370x Optimization
 - Entry #268: Skill Activation Phase 2/3 (80.4%→88%)
 - Entry #269: Skills Optimization Task 3 (88%→90%)

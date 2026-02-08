@@ -1,6 +1,6 @@
 # Chapter 31: Branch-Aware Development
 
-**Evidence**: LIMOR AI MASTER-PLAN Phase 4 + 6
+**Evidence**: Production MASTER-PLAN Phase 4 + 6
 **Difficulty**: Intermediate
 **Time**: 30 minutes setup
 **ROI**: Auto-recommend skills, enforce patterns per branch

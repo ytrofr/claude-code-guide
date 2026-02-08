@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns from LimorAI. 162+ documented patterns, 100+ hours saved per year.
+Production-tested Claude Code patterns. 162+ documented patterns, 100+ hours saved per year.
 
 ---
 
@@ -21,7 +21,7 @@ Production-tested Claude Code patterns from LimorAI. 162+ documented patterns, 1
 | Production Skills | **162+ documented**       |
 | MCP Integrations  | **13 servers, 70+ tools** |
 
-**Source**: 14+ months of production use at LimorAI with 97 components validated.
+**Source**: 14+ months of production use with 97 components validated.
 
 ---
 
@@ -79,7 +79,7 @@ The memory bank is a hierarchical knowledge system using a 4-tier structure: alw
 
 ### How much time does this save?
 
-Based on LimorAI production metrics: **100+ hours per year** in developer time. Key achievements include 370x hook optimization (38s→103ms), 47-70% token savings per branch, 88.2% skill activation accuracy, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
+Based on production metrics: **100+ hours per year** in developer time. Key achievements include 370x hook optimization (38s→103ms), 47-70% token savings per branch, 88.2% skill activation accuracy, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
 
 ---
 
@@ -212,7 +212,7 @@ claude-code-guide/
 
 ## Credits
 
-**Source Project**: LimorAI - Hebrew business intelligence (97 components)
+**Source Project**: Production system (97 components)
 **Research**: Anthropic Claude 4 Best Practices + Sionic AI Skills Framework
 **Marketplace**: [wshobson/agents](https://github.com/wshobson/agents) - 273 components
 **Official Docs**: [code.claude.com/docs](https://code.claude.com/docs/en/memory)

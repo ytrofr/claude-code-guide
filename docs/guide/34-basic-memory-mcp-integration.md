@@ -1,6 +1,6 @@
 # 34. Basic Memory MCP Integration
 
-**Evidence**: Entry #283 (LIMOR AI), 36/36 tests passing, 30-50h/year ROI
+**Evidence**: Entry #283 (Production), 36/36 tests passing, 30-50h/year ROI
 **Created**: January 20, 2026
 **Source**: Phase 9-10.5 Basic Memory optimization
 
@@ -472,7 +472,7 @@ grep -r "^\- \[decision\]" ~/basic-memory/
 
 ## Evidence
 
-**Source Project**: LIMOR AI
+**Source Project**: Production
 **Entry**: #283 (Basic Memory Integration Complete)
 **Tests**: 36/36 passing
 **ROI**: ~2 hours setup → 30-50 hours/year saved

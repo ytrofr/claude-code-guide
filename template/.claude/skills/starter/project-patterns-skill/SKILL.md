@@ -183,7 +183,7 @@ npm run lint --silent && echo "  ✅ Lint passed" || echo "  ❌ Lint failed"
 ## Evidence
 
 **Created**: 2025-12-14
-**Source**: Based on LimorAI sacred-commandments-skill (12 Sacred Commandments, 100% SHARP compliance)
+**Source**: Based on production sacred-commandments-skill (12 Sacred Commandments, 100% SHARP compliance)
 **Success Rate**: 99.997% pattern compliance when this skill is referenced
 **Usage**: Referenced in 100% of feature implementations
 **Time Saved**: 5-10 min per implementation (vs reading full CORE-PATTERNS.md each time)

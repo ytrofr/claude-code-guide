@@ -1,7 +1,7 @@
 # Fast Cloud Run Deployment Patterns
 
 **Created**: January 2026  
-**Source**: LimorAI Entry #248, #251  
+**Source**: Production Entry #248, #251  
 **Evidence**: 3-5 min → ~1 min deployment (78% faster)  
 **Method**: Pre-built image deployment (skips Cloud Build)
 
@@ -421,7 +421,7 @@ gcloud run services update-traffic your-service --to-latest --region us-central1
 
 ---
 
-**Evidence**: LimorAI Entry #248 (staging-deployment-speed-optimization.md)  
+**Evidence**: Production Entry #248 (staging-deployment-speed-optimization.md)  
 **Validated**: January 8, 2026 - 78% faster deployments achieved (OGAS project)  
 **WSL Fix Validated**: January 8, 2026 - Service account auth works in WSL + Docker Desktop  
 **Sacred Compliance**: 100% SHARP maintained (no functionality changes)

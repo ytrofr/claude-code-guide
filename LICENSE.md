@@ -24,7 +24,7 @@ SOFTWARE.
 
 ## Attribution
 
-This implementation guide is based on patterns and best practices developed in the LimorAI project, incorporating:
+This implementation guide is based on patterns and best practices developed in the production project, incorporating:
 
 - **Anthropic Best Practices**: Session protocol, context optimization, incremental progress patterns
 - **Sionic AI Research**: Skills framework with 84% activation rate

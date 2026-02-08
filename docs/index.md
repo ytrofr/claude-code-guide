@@ -1,14 +1,14 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: 100+ hours saved. 370x hook optimization. Production-tested patterns from LimorAI.
+description: 100+ hours saved. 370x hook optimization. Production-tested patterns.
 ---
 
 # Claude Code Guide
 
 **What is Claude Code?** Claude Code is Anthropic's official CLI for AI-powered coding assistance. It provides an interactive terminal experience where you can collaborate with Claude directly in your development environment.
 
-**What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 162+ proven patterns from production use at LimorAI.
+**What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 162+ proven patterns from production use.
 
 **How long to set up?** 30 minutes for basic setup, 2-4 hours for full optimization.
 
@@ -42,7 +42,7 @@ The memory bank is a hierarchical knowledge system that stores project context, 
 
 ### How much time does this save?
 
-Based on production metrics at LimorAI: **100+ hours per year** in developer time. Key achievements include 370x hook optimization, 47-70% token savings per branch, and 88.2% skill activation accuracy.
+Based on production metrics: **100+ hours per year** in developer time. Key achievements include 370x hook optimization, 47-70% token savings per branch, and 88.2% skill activation accuracy.
 
 ---
 
@@ -90,7 +90,7 @@ Based on production metrics at LimorAI: **100+ hours per year** in developer tim
 
 ## Why This Guide?
 
-This guide is built from 14+ months of production use at LimorAI. Every pattern, optimization, and best practice has been tested in real-world development scenarios. We share what works, what doesn't, and the evidence to prove it.
+This guide is built from 14+ months of production use. Every pattern, optimization, and best practice has been tested in real-world development scenarios. We share what works, what doesn't, and the evidence to prove it.
 
 ---
 
@@ -99,7 +99,7 @@ This guide is built from 14+ months of production use at LimorAI. Every pattern,
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "Claude Code Guide - Complete Implementation Guide",
-  "description": "100+ hours saved with Claude Code setup patterns. Production-tested from LimorAI.",
+  "description": "100+ hours saved with Claude Code setup patterns. Production-tested.",
   "author": {
     "@type": "Person",
     "name": "ytrofr"

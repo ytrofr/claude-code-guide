@@ -1,7 +1,7 @@
 # Chapter 24: Skill Keyword Enhancement Methodology
 
 **Created**: 2026-01-05
-**Source**: LIMOR AI Entry #244
+**Source**: Production Entry #244
 **Pattern**: Synonym expansion + "Use when" scoring + monthly maintenance
 **Evidence**: 5/5 fresh session tests (100%), 160/160 skills audited (100%)
 

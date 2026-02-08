@@ -21,7 +21,7 @@
 - ❌ `JSON_INPUT=$(cat)` → Can hang forever if stdin pipe not closed
 - ✅ `JSON_INPUT=$(timeout 2 cat)` → Exits after 2 seconds, hook continues safely
 
-**Evidence**: Feb 2026, LIMOR AI production — `PostToolUse:Read` hook hung during multi-file implementation. Reproduced with FIFO test (infinite hang → 2016ms with fix).
+**Evidence**: Feb 2026, production — `PostToolUse:Read` hook hung during multi-file implementation. Reproduced with FIFO test (infinite hang → 2016ms with fix).
 
 ---
 
@@ -152,7 +152,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 
 ### Medium Priority
 
-- [ ] Extract troubleshooting/workflow skills from LimorAI to skills-library/
+- [ ] Extract troubleshooting/workflow skills to skills-library/
 - [ ] Advanced MCP config examples (mcp-configs/advanced/)
 - [ ] Create guide-specific skills (claude-code-setup-guide-skill, mcp-tool-evaluation-skill)
 
@@ -253,7 +253,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 - **Problem**: `$(cat)` in hooks hangs forever when Claude Code doesn't close stdin pipe
 - **Fix**: `$(timeout 2 cat)` — exits after 2s max
 - **Result**: Zero hangs in production (was intermittent, especially under high context load)
-- **Evidence**: LIMOR AI PostToolUse:Read hook reproduced and fixed
+- **Evidence**: PostToolUse:Read hook reproduced and fixed
 - **Files Updated**: stop-hook.sh, pre-compact.sh, pre-prompt.sh, Chapter 13
 
 ### Jan 2, 2026 - Entry #229 Skills Filtering
@@ -268,7 +268,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 
 - **Added**: Chapter 19 with browser automation guide
 - **Added**: WSL-specific setup instructions
-- **Evidence**: Production-tested on limor.app
+- **Evidence**: Production-tested on example.com
 
 ### Dec 23, 2025 - Skills Activation Breakthrough
 
@@ -290,7 +290,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 
 - Write remaining guide chapters
 - Build interactive checklist
-- Extract more skills from LimorAI
+- Extract more skills from production
 
 ### Option C: Hybrid Approach (Recommended)
 
@@ -324,7 +324,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 **Time to use**: 30 minutes per new project
 **ROI**: Pays for itself after 6 new projects
 
-**Quality**: Based on 163+ proven LimorAI patterns, **95%+ activation rate**, Anthropic best practices, Scott Spence research
+**Quality**: Based on 163+ proven patterns, **95%+ activation rate**, Anthropic best practices, Scott Spence research
 
 **Ready**: Clone template, customize placeholders, start coding with skills that actually activate
 

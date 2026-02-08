@@ -3,8 +3,8 @@
 > Browser automation for Claude Code via accessibility tree (no vision model needed)
 
 **Source**: Microsoft Playwright MCP (https://github.com/microsoft/playwright-mcp)
-**LIMOR AI Entry**: #224 (Dec 31, 2025)
-**Evidence**: Tested on limor.app - navigation, snapshots, interactions working
+**Production Entry**: #224 (Dec 31, 2025)
+**Evidence**: Tested on example.com - navigation, snapshots, interactions working
 
 ---
 
@@ -89,7 +89,7 @@ browser_screenshot()  # Returns page image
 
 | Tool | Purpose | Example |
 |------|---------|---------|
-| `browser_navigate` | Go to URL | `browser_navigate(url="https://limor.app")` |
+| `browser_navigate` | Go to URL | `browser_navigate(url="https://example.com")` |
 | `browser_navigate_back` | Navigate back | `browser_navigate_back()` |
 | `browser_reload` | Refresh page | `browser_reload()` |
 
@@ -375,10 +375,10 @@ $ claude mcp list
 playwright: npx -y @playwright/mcp@latest --browser chromium --isolated - ✓ Connected
 ```
 
-### LIMOR AI Production Test
+### Production Production Test
 
 **Test Results**:
-- ✅ Navigation: `https://limor.app` loaded successfully
+- ✅ Navigation: `https://example.com` loaded successfully
 - ✅ Accessibility tree: Full Hebrew RTL dashboard structure captured
 - ✅ Interactions: Clicked chat button, typed Hebrew text
 - ✅ Screenshots: 3 screenshots captured successfully

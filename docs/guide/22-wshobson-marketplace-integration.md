@@ -148,7 +148,7 @@ Combine wshobson agents with your custom skills:
 ---
 name: llm-application-development-skill
 description: |
-  Hybrid skill combining wshobson ai-engineer patterns with LIMOR-specific
+  Hybrid skill combining wshobson ai-engineer patterns with project-specific
   PostgreSQL/pgvector implementation. Use for RAG, embeddings, semantic search.
 ---
 
@@ -169,7 +169,7 @@ Task(subagent_type: "ai-engineer")
 Task(subagent_type: "prompt-engineer")
 ```
 
-## LIMOR-Specific Patterns
+## Project-Specific Patterns
 
 - pgvector with HNSW indexes
 - Hebrew embeddings (text-multilingual-embedding-002)
@@ -285,5 +285,5 @@ your-keyword:
 
 **Implementation Time**: 15 minutes
 **Marketplace**: https://github.com/wshobson/agents
-**Evidence**: LimorAI production (4 plugins, 15+ agents active)
+**Evidence**: Production production (4 plugins, 15+ agents active)
 **Last Updated**: 2026-01-05

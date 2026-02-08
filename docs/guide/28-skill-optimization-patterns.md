@@ -1,7 +1,7 @@
 # 28. Skill Optimization Patterns
 
 **Created**: January 2026
-**Source**: Claude Code changelog (January 2026) + LimorAI implementation
+**Source**: Claude Code changelog (January 2026) + Production implementation
 **Evidence**: 171 skills optimized with new frontmatter features
 
 ---
@@ -275,7 +275,7 @@ done
 
 ---
 
-## 6. Results from LimorAI Implementation
+## 6. Results from Production Implementation
 
 ### Optimization Summary
 
@@ -325,7 +325,7 @@ done
 ## References
 
 - **Claude Code Changelog**: January 2026 release notes
-- **Source Implementation**: LimorAI (171 skills, 97 components)
+- **Source Implementation**: Production (171 skills, 97 components)
 - **Related Guide**: [17-skill-detection-enhancement.md](17-skill-detection-enhancement.md)
 - **Related Guide**: [24-skill-keyword-enhancement-methodology.md](24-skill-keyword-enhancement-methodology.md)
 

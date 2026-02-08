@@ -3,7 +3,7 @@
 **Purpose**: Visual debugging tool for capturing UI issues with element selection, screenshots, and feedback forms  
 **Access**: Super admin only (role_id = 1) in production, always enabled on localhost/dev  
 **Created**: December 2025  
-**Source**: LIMOR AI implementation (Entry #177)
+**Source**: Production implementation (Entry #177)
 
 ---
 
@@ -395,6 +395,6 @@ All are auto-captured except `title` and `category` which user must provide.
 
 ---
 
-**Pattern Source**: LIMOR AI (Entry #177 - developer-mode-debugging-patterns.md)  
+**Pattern Source**: Production (Entry #177 - developer-mode-debugging-patterns.md)  
 **Status**: Production validated December 2025  
 **License**: MIT

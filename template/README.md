@@ -221,4 +221,4 @@ claude-code
 
 **Template Version**: 1.0
 **Last Updated**: 2025-12-14
-**Source**: Based on LimorAI proven patterns
+**Source**: Based on proven production patterns

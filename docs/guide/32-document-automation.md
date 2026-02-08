@@ -1,6 +1,6 @@
 # Chapter 32: Document Automation with Pattern Analysis
 
-**Evidence**: LIMOR AI Entry #282 - 67% faster documentation
+**Evidence**: Production Entry #282 - 67% faster documentation
 **Difficulty**: Intermediate
 **Time**: 20 minutes setup
 **ROI**: 67% faster docs + automatic pattern detection

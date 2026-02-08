@@ -1,7 +1,7 @@
 # Chapter 6: MCP Integration
 
 **Purpose**: Connect Claude Code to databases and external tools
-**Source**: Anthropic MCP docs + LIMOR AI production (48/48 tests, 100%)
+**Source**: Anthropic MCP docs + Production production (48/48 tests, 100%)
 **ROI**: High (zero-token validation, real-time data)
 
 ---
@@ -46,7 +46,7 @@ File: `.claude/mcp_servers.json`
 2. **Environment vars** - Don't hardcode tokens
 3. **Cost optimize** - Use free WebSearch before Perplexity
 
-**Full guide**: See Chapter 04 details in LIMOR AI Entry #158-159
+**Full guide**: See Chapter 04 details in Production Entry #158-159
 
 ---
 

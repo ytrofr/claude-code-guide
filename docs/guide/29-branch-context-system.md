@@ -1,6 +1,6 @@
 # Chapter 29: Branch Context System
 
-**Evidence**: LIMOR AI MASTER-PLAN - 47-70% token savings per branch
+**Evidence**: Production MASTER-PLAN - 47-70% token savings per branch
 **Difficulty**: Intermediate
 **Time**: 30 minutes setup
 **ROI**: 30-50% context reduction per branch
@@ -156,7 +156,7 @@ fi
 | Branch | Before | After | Savings |
 |--------|--------|-------|--------|
 | dev-Knowledge | 116k | 79k | 32% |
-| dev-Limor | 126k | 79k | 37% |
+| dev-feature | 126k | 79k | 37% |
 | dev-UI | 100k | 53k | 47% |
 | dev-Data | 110k | 75k | 32% |
 | **Average** | **113k** | **72k** | **37%** |

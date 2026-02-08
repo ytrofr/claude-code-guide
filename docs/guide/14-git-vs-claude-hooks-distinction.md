@@ -24,7 +24,7 @@
 
 ---
 
-**Full guide**: Complete distinction with examples in LIMOR AI
+**Full guide**: Complete distinction with examples in Production
 
 **Previous**: [13: Claude Code Hooks](13-claude-code-hooks.md)
 **Next**: [15: Progressive Disclosure](15-progressive-disclosure.md)
