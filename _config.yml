@@ -1,30 +1,62 @@
 title: Claude Code Guide
-description: "The complete guide to Claude Code setup. 100+ hours saved. 370x optimization. Production-tested patterns."
+tagline: "Complete Setup & Best Practices for Claude Code"
+description: "The complete guide to Claude Code setup. 100+ hours saved. 370x optimization. Production-tested patterns for skills, hooks, and MCP integration."
 url: "https://ytrofr.github.io"
 baseurl: "/claude-code-guide"
 theme: jekyll-theme-minimal
+lang: en-US
 
+# Author
+author:
+  name: ytrofr
+  url: https://github.com/ytrofr
+
+# Repository
+repository: ytrofr/claude-code-guide
+
+# Plugins
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
-# SEO
+# SEO - Twitter
 twitter:
   username: ytrofr
   card: summary_large_image
 
+# SEO - Social Links
 social:
   name: Claude Code Guide
   links:
     - https://github.com/ytrofr/claude-code-guide
+
+# SEO - Keywords (for meta tags)
+keywords:
+  - claude code
+  - claude code tutorial
+  - claude code setup
+  - claude code hooks
+  - claude code skills
+  - claude code mcp
+  - anthropic cli
+  - ai coding assistant
+  - developer tools
+  - code automation
+  - mcp integration
+  - pre-prompt hook
+  - context optimization
+
+# Google verification (add your code if needed)
+# google_site_verification: YOUR_CODE_HERE
 
 # Default settings for all pages
 defaults:
   - scope:
       path: ""
     values:
-      image: /assets/og-image.png
+      image: /assets/og-image.svg
       layout: default
+      author: ytrofr
 
 # Markdown settings
 markdown: kramdown
@@ -33,3 +65,12 @@ kramdown:
   auto_ids: true
   hard_wrap: false
   syntax_highlighter: rouge
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .gitignore
