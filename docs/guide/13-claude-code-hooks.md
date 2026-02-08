@@ -2,20 +2,21 @@
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: 6 hooks in production, 96% test validation
-**Updated**: Feb 7, 2026 — Critical fix for PostToolUse hooks
+**Evidence**: 7 hooks in production, 96% test validation
+**Updated**: Feb 8, 2026 — Added SessionEnd pattern suggestion hook
 
 ---
 
 ## Hook Types (8 Available)
 
-| Hook                  | Trigger           | Use For                    |
-| --------------------- | ----------------- | -------------------------- |
-| **SessionStart**      | Session begins    | Inject git status, context |
-| **PostToolUse**       | After tool runs   | Auto-format, logging       |
-| **PreCompact**        | Before compaction | Backup transcripts         |
-| **PermissionRequest** | Permission dialog | Auto-approve safe commands |
-| **Stop**              | Response ends     | Suggest skill creation     |
+| Hook                  | Trigger           | Use For                     |
+| --------------------- | ----------------- | --------------------------- |
+| **SessionStart**      | Session begins    | Inject git status, context  |
+| **SessionEnd**        | Session ends      | Pattern suggestion, cleanup |
+| **PostToolUse**       | After tool runs   | Auto-format, logging        |
+| **PreCompact**        | Before compaction | Backup transcripts          |
+| **PermissionRequest** | Permission dialog | Auto-approve safe commands  |
+| **Stop**              | Response ends     | Suggest skill creation      |
 
 ---
 
@@ -32,6 +33,17 @@ File: `.claude/settings.json`
           {
             "type": "command",
             "command": ".claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/session-end.sh",
+            "statusMessage": "📋 Analyzing session patterns..."
           }
         ]
       }
@@ -153,9 +165,47 @@ kill $BG; rm /tmp/test-fifo
 
 ---
 
+## SessionEnd Hook (Pattern Suggestion)
+
+The SessionEnd hook analyzes your session for reusable patterns:
+
+```bash
+#!/bin/bash
+# session-end.sh - Pattern Suggestion + Cleanup
+
+JSON_INPUT=$(timeout 2 cat)
+TRANSCRIPT_PATH=$(echo "$JSON_INPUT" | jq -r '.transcript_path // empty')
+
+# Extract technical patterns mentioned 3+ times
+if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
+    PATTERNS=$(cat "$TRANSCRIPT_PATH" | \
+        jq -r 'select(.type=="assistant") | .message.content // empty' | \
+        grep -oE '[a-z][a-z0-9]*[_-][a-z0-9_-]+' | \
+        sort | uniq -c | sort -rn | \
+        awk '$1 >= 3 && length($2) > 8 {print $1 " " $2}' | head -5)
+
+    if [ -n "$PATTERNS" ]; then
+        echo "💡 PATTERN SUGGESTIONS (used 3+ times):"
+        echo "$PATTERNS"
+        echo "   Run /retrospective to create Entry files"
+    fi
+fi
+```
+
+**Output Example**:
+
+```
+💡 PATTERN SUGGESTIONS (used 3+ times):
+   → [132 mentions] claude-code-guide
+   → [55 mentions] session-end
+   📝 Run /retrospective to create Entry files
+```
+
+---
+
 ## Real Example
 
-**Production**: 6 hooks, 6-8 hours/year ROI
+**Production**: 7 hooks, 16-28 hours/year ROI
 
 See: `examples/production-claude-hooks/`
 
