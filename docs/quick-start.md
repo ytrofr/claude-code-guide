@@ -9,6 +9,7 @@ This quick-start guide gets you from zero to a working Claude Code setup in 30 m
 ## What is Claude Code?
 
 **Claude Code** is Claude's official CLI tool that provides:
+
 - **Persistent configuration** - Your patterns remembered across all sessions
 - **Tool integrations** - MCP servers for GitHub, databases, memory, and more
 - **Skills system** - Reusable workflows that activate automatically
@@ -48,26 +49,26 @@ jq --version            # Should show version (or install: brew install jq)
 
 ```bash
 # 1. Clone this guide
-git clone https://github.com/YOUR_USERNAME/claude-code-implementation-guide
-cd claude-code-implementation-guide
+git clone https://github.com/YOUR_USERNAME/claude-code-guide
+cd claude-code-guide
 
 # 2. Navigate to your project
 cd ~/my-project
 
 # 3. Run wizard
-bash ../claude-code-implementation-guide/scripts/setup-wizard.sh
+bash ../claude-code-guide/scripts/setup-wizard.sh
 # Follow prompts (10-15 min)
 
 # 4. Validate
-../claude-code-implementation-guide/scripts/validate-setup.sh
+../claude-code-guide/scripts/validate-setup.sh
 ```
 
 #### Path B: Manual Template Copy
 
 ```bash
 # 1. Copy template
-cp -r claude-code-implementation-guide/template/.claude ~/my-project/
-cp -r claude-code-implementation-guide/template/memory-bank ~/my-project/
+cp -r claude-code-guide/template/.claude ~/my-project/
+cp -r claude-code-guide/template/memory-bank ~/my-project/
 
 # 2. Customize (10 min)
 cd ~/my-project
@@ -79,7 +80,7 @@ cd ~/my-project
 cp .claude/skills/starter/*.md ~/.claude/skills/
 
 # 4. Validate (2 min)
-../claude-code-implementation-guide/scripts/validate-setup.sh
+../claude-code-guide/scripts/validate-setup.sh
 ```
 
 #### Path C: From Scratch (Learning Experience)
@@ -123,16 +124,19 @@ Ask Claude these questions:
 ## What You Just Created
 
 ### Configuration
+
 - `.claude/CLAUDE.md` - Project context (auto-loaded every session)
 - `.claude/mcp_servers.json` - MCP server configuration
 - `memory-bank/always/` - Core patterns and status tracking
 
 ### Skills (in ~/.claude/skills/)
+
 - `troubleshooting-decision-tree-skill` - Error routing (84% success)
 - `session-start-protocol-skill` - Session continuity (Anthropic pattern)
 - `project-patterns-skill` - Pattern reference
 
 ### Tools
+
 - `scripts/validate-setup.sh` - Setup validator
 - `scripts/check-mcp.sh` - MCP connection tester
 
@@ -141,6 +145,7 @@ Ask Claude these questions:
 ## Immediate Benefits
 
 **You can now**:
+
 - ✅ Have Claude reference your patterns automatically
 - ✅ Track feature completion with system-status.json
 - ✅ Review PRs and manage issues without leaving Claude

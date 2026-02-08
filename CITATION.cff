@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: Claude Code Guide
+message: "If you use this guide, please cite it as below."
+type: software
+authors:
+  - name: "ytrofr"
+url: "https://github.com/ytrofr/claude-code-guide"
+repository-code: "https://github.com/ytrofr/claude-code-guide"
+license: MIT
+date-released: "2024-12-14"
+keywords:
+  - claude-code
+  - ai-coding-assistant
+  - developer-tools
+  - mcp-integration
+  - hooks-system
+  - skills-library
+  - anthropic
+  - automation
+  - best-practices
+  - context-optimization
+abstract: "The complete guide to Claude Code setup, skills, hooks, and MCP integration. 100+ hours saved. 370x optimization. Production-tested patterns from LimorAI."

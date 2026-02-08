@@ -1,0 +1,35 @@
+title: Claude Code Guide
+description: "The complete guide to Claude Code setup. 100+ hours saved. 370x optimization. Production-tested patterns from LimorAI."
+url: "https://ytrofr.github.io"
+baseurl: "/claude-code-guide"
+theme: jekyll-theme-minimal
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# SEO
+twitter:
+  username: ytrofr
+  card: summary_large_image
+
+social:
+  name: Claude Code Guide
+  links:
+    - https://github.com/ytrofr/claude-code-guide
+
+# Default settings for all pages
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/og-image.png
+      layout: default
+
+# Markdown settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  auto_ids: true
+  hard_wrap: false
+  syntax_highlighter: rouge

@@ -85,7 +85,7 @@ echo "╚═══════════════════════�
 echo ""
 
 # Check if running from guide repo
-GUIDE_TEMPLATE="../claude-code-implementation-guide/template"
+GUIDE_TEMPLATE="../claude-code-guide/template"
 if [ ! -d "$GUIDE_TEMPLATE" ]; then
   GUIDE_TEMPLATE="./template"
 fi
@@ -316,8 +316,8 @@ echo "╚═══════════════════════�
 echo ""
 
 # Run validation script
-if [ -f "../claude-code-implementation-guide/scripts/validate-setup.sh" ]; then
-  bash ../claude-code-implementation-guide/scripts/validate-setup.sh "$PROJECT_PATH"
+if [ -f "../claude-code-guide/scripts/validate-setup.sh" ]; then
+  bash ../claude-code-guide/scripts/validate-setup.sh "$PROJECT_PATH"
 elif [ -f "./scripts/validate-setup.sh" ]; then
   bash ./scripts/validate-setup.sh "$PROJECT_PATH"
 else

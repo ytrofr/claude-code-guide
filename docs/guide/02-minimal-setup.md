@@ -28,15 +28,16 @@ After this 30-minute setup:
 ```bash
 # Option A: Use setup wizard (recommended)
 cd ~/my-new-project
-bash ../claude-code-implementation-guide/scripts/setup-wizard.sh
+bash ../claude-code-guide/scripts/setup-wizard.sh
 
 # Option B: Manual setup
 cd ~/my-new-project
-cp -r ../claude-code-implementation-guide/template/.claude .
-cp -r ../claude-code-implementation-guide/template/memory-bank .
+cp -r ../claude-code-guide/template/.claude .
+cp -r ../claude-code-guide/template/memory-bank .
 ```
 
 **Validation**:
+
 ```bash
 # Check structure was created
 ls -la .claude/
@@ -76,6 +77,7 @@ mv memory-bank/always/CONTEXT-ROUTER.md.template \
 ```
 
 **Validation**:
+
 ```bash
 # Check files exist
 ls memory-bank/always/
@@ -95,13 +97,14 @@ ls memory-bank/always/
 **Edit**: `memory-bank/always/CORE-PATTERNS.md`
 
 **Replace placeholders**:
+
 - `[YOUR_PROJECT_NAME]` → Your actual project name
 - `[DATE]` → Current date (YYYY-MM-DD)
 - `[your_dev_db_name]` → Your database names (if applicable)
 
 **Add your first pattern**:
 
-```yaml
+````yaml
 ### Pattern 1: Database Safety (Example)
 ```yaml
 DATABASE_SAFETY:
@@ -114,8 +117,9 @@ DATABASE_SAFETY:
 
   Validation: |
     SELECT current_database();
-```
-```
+````
+
+````
 
 **Validation**:
 ```bash
@@ -124,18 +128,19 @@ grep '\[YOUR_' memory-bank/always/CORE-PATTERNS.md
 
 # Should return nothing (no matches)
 # If matches found, replace them
-```
+````
 
 ✅ **Success**: No placeholders, patterns are customized
 
 **Edit**: `memory-bank/always/system-status.json`
 
 **Update**:
+
 ```json
 {
-  "last_updated": "2025-12-14",  // Today's date
+  "last_updated": "2025-12-14", // Today's date
   "current_sprint": "Initial setup",
-  "branch": "main",  // Your branch
+  "branch": "main", // Your branch
   "features": [
     {
       "name": "Core_Setup",
@@ -148,6 +153,7 @@ grep '\[YOUR_' memory-bank/always/CORE-PATTERNS.md
 ```
 
 **Validation**:
+
 ```bash
 # Validate JSON syntax
 jq empty memory-bank/always/system-status.json
@@ -163,6 +169,7 @@ jq empty memory-bank/always/system-status.json
 ### Step 4: Configure GitHub MCP (3 min)
 
 **Why GitHub MCP**:
+
 - PR reviews without leaving Claude
 - Issue management
 - Code search across repositories
@@ -187,6 +194,7 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_your_token_here"
 ```
 
 **Example MCP config (minimal)**:
+
 ```json
 {
   "mcpServers": {
@@ -202,6 +210,7 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_your_token_here"
 ```
 
 **Validation**:
+
 ```bash
 # Check JSON is valid
 jq empty .claude/mcp_servers.json
@@ -237,6 +246,7 @@ ls ~/.claude/skills/
 ```
 
 **Check skill structure**:
+
 ```bash
 # View first skill
 head -20 ~/.claude/skills/troubleshooting-decision-tree-skill.md
@@ -249,6 +259,7 @@ head -20 ~/.claude/skills/troubleshooting-decision-tree-skill.md
 ```
 
 **Validation**:
+
 ```bash
 # Count skills
 find ~/.claude/skills/ -name "*.md" | wc -l
@@ -265,14 +276,15 @@ find ~/.claude/skills/ -name "*.md" | wc -l
 **Run master validator**:
 
 ```bash
-# From claude-code-implementation-guide directory
+# From claude-code-guide directory
 ./scripts/validate-setup.sh ~/my-new-project
 
 # OR if in your project directory
-../claude-code-implementation-guide/scripts/validate-setup.sh .
+../claude-code-guide/scripts/validate-setup.sh .
 ```
 
 **Expected output**:
+
 ```
 🔍 Claude Code Setup Validation
 ================================
@@ -320,6 +332,7 @@ Validation Summary
 ### Step 7: Test in Claude Code (3 min)
 
 **Start Claude Code**:
+
 ```bash
 cd ~/my-new-project
 claude-code
@@ -352,6 +365,7 @@ claude-code
 ## Minimal Setup Complete! 🎉
 
 **You now have**:
+
 - ✅ Auto-loaded project patterns (CORE-PATTERNS.md)
 - ✅ Feature tracking (system-status.json)
 - ✅ GitHub integration (MCP)
@@ -368,6 +382,7 @@ claude-code
 ### Phase 1: Essential Setup (Week 1 - Optional)
 
 **Add these enhancements** (2-3 hours):
+
 - Memory Bank MCP (session persistence)
 - 5 more troubleshooting skills
 - Pre-prompt hook (84% skill activation)
@@ -378,6 +393,7 @@ claude-code
 ### Phase 2: Productive Setup (Week 2-3 - Optional)
 
 **Add specialized capabilities** (4-6 hours):
+
 - PostgreSQL MCP (database access)
 - 8 workflow skills
 - Feature blueprints
@@ -388,6 +404,7 @@ claude-code
 ### Phase 3: Advanced Setup (Month 2+ - Optional)
 
 **Build full ecosystem** (organic growth):
+
 - Custom MCP servers
 - 20-30 skill library
 - Full agent system
@@ -402,6 +419,7 @@ claude-code
 ### "Claude doesn't load CORE-PATTERNS.md"
 
 **Check**:
+
 ```bash
 # 1. File exists?
 ls memory-bank/always/CORE-PATTERNS.md
@@ -415,6 +433,7 @@ ls memory-bank/always/*.template
 ```
 
 **Fix**: Add to .claude/CLAUDE.md:
+
 ```markdown
 ## Auto-Load Context
 
@@ -425,6 +444,7 @@ ls memory-bank/always/*.template
 ### "MCP servers not connecting"
 
 **Check**:
+
 ```bash
 # 1. Run MCP validator
 ./scripts/check-mcp.sh
@@ -437,6 +457,7 @@ jq empty .claude/mcp_servers.json
 ```
 
 **Fix**:
+
 - Replace all `${VARIABLE}` with actual values
 - For GitHub: Use classic PAT (not fine-grained)
 - Verify token has `repo` scope
@@ -444,6 +465,7 @@ jq empty .claude/mcp_servers.json
 ### "Skills not activating"
 
 **Check**:
+
 ```bash
 # 1. Skills in correct location?
 ls ~/.claude/skills/
@@ -459,6 +481,7 @@ head -5 ~/.claude/skills/troubleshooting-decision-tree-skill.md
 ```
 
 **Fix**:
+
 - Copy skills to `~/.claude/skills/` (user-level, not project)
 - Verify YAML frontmatter format
 - Enable pre-prompt hook for automatic activation (Phase 1)
@@ -466,6 +489,7 @@ head -5 ~/.claude/skills/troubleshooting-decision-tree-skill.md
 ### "Validation script fails"
 
 **Check**:
+
 ```bash
 # 1. Script is executable?
 ls -l scripts/validate-setup.sh
@@ -478,6 +502,7 @@ bash scripts/validate-setup.sh
 ```
 
 **Fix**:
+
 - Make executable: `chmod +x scripts/validate-setup.sh`
 - Install jq: `brew install jq` or `apt-get install jq`
 
@@ -515,6 +540,7 @@ cat memory-bank/always/system-status.json | jq '.features[] | select(.passes == 
 ```
 
 **Before ending session**:
+
 ```bash
 # Update status
 # Edit memory-bank/always/system-status.json
@@ -529,6 +555,7 @@ git commit -m "checkpoint: [what you accomplished]"
 ## Success Metrics
 
 **Minimal setup succeeds when**:
+
 - ✅ Setup completed in ≤ 30 minutes
 - ✅ Validation passes with 0 errors
 - ✅ Claude references your patterns

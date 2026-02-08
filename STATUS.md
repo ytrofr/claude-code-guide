@@ -10,12 +10,14 @@
 ## 🆕 Recent Updates (Feb 5, 2026)
 
 ### Critical Fix: Hook stdin Timeout (Prevents Infinite Hangs)
+
 - **Chapter 13**: Added "Hook Safety: stdin Timeout" section
 - **3 template hooks fixed**: `$(cat)` → `$(timeout 2 cat)` in stop-hook.sh, pre-compact.sh, pre-prompt.sh
 - **Root Cause**: `$(cat)` blocks forever if Claude Code doesn't close stdin pipe (intermittent, more common under high context load)
 - **Impact**: Hooks that read stdin no longer hang — exit after 2s max
 
 **The Critical Fix**:
+
 - ❌ `JSON_INPUT=$(cat)` → Can hang forever if stdin pipe not closed
 - ✅ `JSON_INPUT=$(timeout 2 cat)` → Exits after 2 seconds, hook continues safely
 
@@ -26,6 +28,7 @@
 ## 🆕 Previous Updates (Jan 26, 2026)
 
 ### Critical Fix: Dynamic @ Import Mechanism
+
 - **Chapter 29**: Fixed critical bug - hook now WRITES to CLAUDE.md (not just displays)
 - **Template session-start.sh**: Added dynamic @ import generation from CONTEXT-MANIFEST.json
 - **Root Cause**: Code showed `echo "@$file"` (prints to terminal) instead of `echo "@$file" >> CLAUDE.md` (writes to file)
@@ -36,6 +39,7 @@
 ## 🆕 Previous Updates (Jan 2, 2026)
 
 ### Entry #229: Skills Filtering Optimization
+
 - **Pre-prompt.sh**: Updated with score-at-match-time filtering
 - **Chapter 20**: Added complete documentation
 - **Chapter 16**: Updated with Entry #229 reference
@@ -47,8 +51,9 @@
 ## ✅ What's Complete and Ready to Use
 
 ### 1. Repository Structure ✅
+
 ```
-claude-code-implementation-guide/
+claude-code-guide/
 ├── README.md                     ✅ Complete with 4-format navigation
 ├── LICENSE.md                    ✅ MIT license with attribution
 ├── .gitignore                    ✅ Protects credentials
@@ -75,6 +80,7 @@ claude-code-implementation-guide/
 **Location**: `template/`
 
 **Complete with**:
+
 - `.claude/CLAUDE.md` - Project context template
 - `.claude/hooks/pre-prompt.sh` - ⭐ **UPDATED with Entry #229 (175 lines, 93% reduction)**
 - `.claude/hooks/session-start.sh` - Anthropic session protocol
@@ -90,6 +96,7 @@ claude-code-implementation-guide/
 **Location**: `template/.claude/skills/starter/`
 
 **CORRECT Structure** (FIXED Dec 14):
+
 1. ✅ `troubleshooting-decision-tree-skill/SKILL.md` - Error routing (84% success)
 2. ✅ `session-start-protocol-skill/SKILL.md` - Anthropic best practice
 3. ✅ `project-patterns-skill/SKILL.md` - Pattern reference
@@ -139,15 +146,18 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ## 🚧 What's Pending (Optional Enhancements)
 
 ### High Priority
+
 - [ ] Interactive web checklist (web/index.html)
 - [ ] Audit remaining hooks in other projects for `$(cat)` without timeout
 
 ### Medium Priority
+
 - [ ] Extract troubleshooting/workflow skills from LimorAI to skills-library/
 - [ ] Advanced MCP config examples (mcp-configs/advanced/)
 - [ ] Create guide-specific skills (claude-code-setup-guide-skill, mcp-tool-evaluation-skill)
 
 ### Low Priority
+
 - [ ] Test with fresh user (validate 30-min setup path)
 - [ ] Video walkthrough
 - [ ] Migration guide for existing projects
@@ -160,6 +170,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ### What Works Right Now
 
 **A developer can**:
+
 1. Clone template to new project (< 5 min)
 2. Customize core patterns (10 min)
 3. Configure GitHub MCP (3 min)
@@ -174,6 +185,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ### What the Guide Provides
 
 ✅ **Immediate Value** (Phase 0 - 30 min):
+
 - Pattern-aware Claude (CORE-PATTERNS.md)
 - Session continuity (system-status.json)
 - GitHub integration (MCP)
@@ -182,6 +194,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 - **Entry #229 filtering** (6-10 matched skills, 95%+ activation)
 
 ✅ **Growth Path** (Phases 1-3):
+
 - Clear documentation for expansion
 - MCP configs for essential, productive, advanced
 - Skill creation framework
@@ -192,6 +205,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ## 🎯 Success Criteria Met
 
 ### Minimal Viable Guide
+
 - [x] 30-minute setup path documented
 - [x] Template repository complete and functional
 - [x] 3 starter skills with 84% → 95%+ activation pattern (**Entry #229**)
@@ -201,6 +215,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 - [x] **NEW**: Skills filtering optimization (Chapter 20)
 
 ### Quality Standards
+
 - [x] All scripts executable and tested
 - [x] All JSON files validated
 - [x] All templates have clear placeholders
@@ -209,6 +224,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 - [x] **Entry #229**: pre-prompt.sh optimized (175 lines, score-at-match-time)
 
 ### User Experience
+
 - [x] Can clone and use immediately
 - [x] Validation catches common errors
 - [x] Setup wizard provides guidance
@@ -220,6 +236,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ## Ready for Use
 
 **This guide is ready for**:
+
 1. ✅ Personal use (you can use it for new projects today)
 2. ✅ Team sharing (templates are team-ready)
 3. ✅ Testing (validation scripts ensure it works)
@@ -232,6 +249,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ## Recent Improvements
 
 ### Feb 5, 2026 - Hook stdin Timeout Fix
+
 - **Problem**: `$(cat)` in hooks hangs forever when Claude Code doesn't close stdin pipe
 - **Fix**: `$(timeout 2 cat)` — exits after 2s max
 - **Result**: Zero hangs in production (was intermittent, especially under high context load)
@@ -239,18 +257,21 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 - **Files Updated**: stop-hook.sh, pre-compact.sh, pre-prompt.sh, Chapter 13
 
 ### Jan 2, 2026 - Entry #229 Skills Filtering
+
 - **Problem**: When skills grew to 150-200, matched 127-145 per query
 - **Fix**: Score-at-match-time with relevance threshold
 - **Result**: 6-10 matched skills (93% reduction)
 - **Evidence**: 95%+ activation rate (exceeds Scott Spence 84%)
 - **Files Updated**: pre-prompt.sh, Chapter 16, Chapter 20 (NEW)
 
-### Dec 31, 2025 - Playwright MCP Integration  
+### Dec 31, 2025 - Playwright MCP Integration
+
 - **Added**: Chapter 19 with browser automation guide
 - **Added**: WSL-specific setup instructions
 - **Evidence**: Production-tested on limor.app
 
 ### Dec 23, 2025 - Skills Activation Breakthrough
+
 - **Added**: Chapter 16 (Scott Spence pattern)
 - **Added**: Chapter 17 (synonym expansion)
 - **Evidence**: 500/500 test score (100% activation)
@@ -260,16 +281,19 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ## Next Actions (Your Choice)
 
 ### Option A: Use It Now
+
 - Test with a fresh project
 - Get feedback
 - Iterate based on real usage
 
 ### Option B: Complete Remaining Docs (8-12 hours)
+
 - Write remaining guide chapters
 - Build interactive checklist
 - Extract more skills from LimorAI
 
 ### Option C: Hybrid Approach (Recommended)
+
 - Use minimal setup for next project (validate it works)
 - Add enhancements based on what you need
 - Grow guide organically
@@ -279,6 +303,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 ## Files Ready to Deploy
 
 **Immediately usable**:
+
 - `template/` - Complete, tested, validated (**Entry #229 enhanced**)
 - `scripts/` - All 3 scripts working
 - `mcp-configs/minimal/` - GitHub integration

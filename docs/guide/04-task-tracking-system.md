@@ -33,10 +33,10 @@ memory-bank/
 
 ### Why Two Files?
 
-| File | Loaded | Purpose | Size |
-|------|--------|---------|------|
-| `system-status.json` | Always | Quick summary, feature flags, references | ~2KB |
-| `FUTURE-FEATURES.md` | On-demand | Detailed task list with context | ~5-15KB |
+| File                 | Loaded    | Purpose                                  | Size    |
+| -------------------- | --------- | ---------------------------------------- | ------- |
+| `system-status.json` | Always    | Quick summary, feature flags, references | ~2KB    |
+| `FUTURE-FEATURES.md` | On-demand | Detailed task list with context          | ~5-15KB |
 
 ---
 
@@ -55,6 +55,7 @@ CURRENT/
 ```
 
 → **See [Chapter 31: Branch-Aware Development](31-branch-aware-development.md)** for:
+
 - ROADMAP template with standard format
 - Instructions template per branch
 - branch-variables.json for skill weighting
@@ -73,17 +74,17 @@ Add to `memory-bank/always/system-status.json`:
   "current_sprint": "Feature Development Sprint 1",
   "branch": "dev",
   "system_health": {
-    "production": {"status": "operational", "url": "https://yourapp.com"},
-    "staging": {"status": "operational"},
-    "localhost": {"status": "operational", "port": 8080}
+    "production": { "status": "operational", "url": "https://yourapp.com" },
+    "staging": { "status": "operational" },
+    "localhost": { "status": "operational", "port": 8080 }
   },
   "features": [
-    {"name": "User_Auth", "passes": true, "entry": 1},
-    {"name": "Dashboard", "passes": true, "entry": 2},
-    {"name": "API_Cache", "passes": false, "entry": 3}
+    { "name": "User_Auth", "passes": true, "entry": 1 },
+    { "name": "Dashboard", "passes": true, "entry": 2 },
+    { "name": "API_Cache", "passes": false, "entry": 3 }
   ],
   "recent_fixes": [
-    {"issue": "Login timeout bug", "date": "2025-12-17", "entry": 10}
+    { "issue": "Login timeout bug", "date": "2025-12-17", "entry": 10 }
   ],
   "active_blockers": [],
   "future_features_summary": "5 OPEN items (~4h) - P2: 3 items, P3: 2 items - See FUTURE-FEATURES.md",
@@ -109,44 +110,50 @@ Add to `memory-bank/ondemand/reference/FUTURE-FEATURES.md`:
 ## 📋 OPEN TASKS ONLY
 
 ### P1 - High Priority (0 items)
-| Task | Time | Details |
-|------|------|---------|
-| (none) | - | - |
+
+| Task   | Time | Details |
+| ------ | ---- | ------- |
+| (none) | -    | -       |
 
 ### P2 - Medium Priority (3 items, ~2.5h)
-| Task | Time | Details |
-|------|------|---------|
-| **Add_API_Cache** | 1h | Redis caching for /api/data endpoint |
-| **Fix_Mobile_Nav** | 30 min | Hamburger menu not closing on click |
-| **Update_Docs** | 1h | Add deployment section to README |
+
+| Task               | Time   | Details                              |
+| ------------------ | ------ | ------------------------------------ |
+| **Add_API_Cache**  | 1h     | Redis caching for /api/data endpoint |
+| **Fix_Mobile_Nav** | 30 min | Hamburger menu not closing on click  |
+| **Update_Docs**    | 1h     | Add deployment section to README     |
 
 ### P3 - Low Priority (2 items, ~1.5h)
-| Task | Time | Details |
-|------|------|---------|
-| **Refactor_Utils** | 1h | Split utils.js into modules |
-| **Add_Dark_Mode** | 30 min | CSS variables already prepared |
+
+| Task               | Time   | Details                        |
+| ------------------ | ------ | ------------------------------ |
+| **Refactor_Utils** | 1h     | Split utils.js into modules    |
+| **Add_Dark_Mode**  | 30 min | CSS variables already prepared |
 
 ---
 
 ## 🎯 QUICK WINS (Do First)
+
 1. **Fix_Mobile_Nav** - 30 min
 2. **Add_Dark_Mode** - 30 min
 
 ---
 
 ## 📅 RECURRING TASKS
-| Task | Frequency | Next Due |
-|------|-----------|----------|
-| Weekly_Backup | Weekly | Dec 25, 2025 |
-| Monthly_Audit | Monthly | Jan 1, 2026 |
+
+| Task          | Frequency | Next Due     |
+| ------------- | --------- | ------------ |
+| Weekly_Backup | Weekly    | Dec 25, 2025 |
+| Monthly_Audit | Monthly   | Jan 1, 2026  |
 
 ---
 
 ## ✅ COMPLETED (Archived)
-| Task | Completed | Notes |
-|------|-----------|-------|
-| Setup_CI_CD | Dec 15 | GitHub Actions working |
-| Add_Auth | Dec 10 | JWT implementation |
+
+| Task        | Completed | Notes                  |
+| ----------- | --------- | ---------------------- |
+| Setup_CI_CD | Dec 15    | GitHub Actions working |
+| Add_Auth    | Dec 10    | JWT implementation     |
 ```
 
 ---
@@ -194,6 +201,7 @@ Add to `memory-bank/ondemand/reference/FUTURE-FEATURES.md`:
 ## Integration with Claude Code
 
 ### Session Start
+
 ```bash
 # Check current status
 cat memory-bank/always/system-status.json | jq '.future_features_summary'
@@ -203,6 +211,7 @@ cat memory-bank/ondemand/reference/FUTURE-FEATURES.md
 ```
 
 ### After Completing Work
+
 ```bash
 # Update the files
 # 1. Move task to COMPLETED in FUTURE-FEATURES.md
@@ -214,6 +223,7 @@ git commit -m "docs(roadmap): Complete [task name]"
 ```
 
 ### Store in Memory MCP (Optional)
+
 ```javascript
 // Use mcp__basic-memory__write_note to store summary
 {
@@ -228,6 +238,7 @@ git commit -m "docs(roadmap): Complete [task name]"
 ## Best Practices
 
 ### DO
+
 - ✅ Keep system-status.json under 100 lines
 - ✅ Archive completed items (don't delete)
 - ✅ Update counts when moving tasks
@@ -235,6 +246,7 @@ git commit -m "docs(roadmap): Complete [task name]"
 - ✅ Mark quick wins for momentum
 
 ### DON'T
+
 - ❌ Load full task history into always/ directory
 - ❌ Delete completed tasks (archive them)
 - ❌ Skip updating the summary field
@@ -245,6 +257,7 @@ git commit -m "docs(roadmap): Complete [task name]"
 ## Example: Real Usage
 
 ### Before Session
+
 ```
 Claude sees in system-status.json:
 "future_features_summary": "5 OPEN items (~4h) - P2: 3, P3: 2"
@@ -253,13 +266,15 @@ Knows there's work to do, but doesn't load 50 completed items.
 ```
 
 ### During Session
+
 ```
 User: "What's left to do?"
-Claude: "You have 5 open items. Quick wins: Fix_Mobile_Nav (30 min), 
+Claude: "You have 5 open items. Quick wins: Fix_Mobile_Nav (30 min),
          Add_Dark_Mode (30 min). Want to tackle one?"
 ```
 
 ### After Completing Task
+
 ```
 Claude updates FUTURE-FEATURES.md:
 - Moves Fix_Mobile_Nav to COMPLETED
@@ -287,7 +302,7 @@ Claude updates FUTURE-FEATURES.md:
 
 ---
 
-**Pattern Source**: LIMOR AI (Entry #163 - claude-code-implementation-guide-patterns.md)  
+**Pattern Source**: LIMOR AI (Entry #163 - claude-code-guide-patterns.md)  
 **Status**: Production validated December 2025  
 **Last Updated**: 2026-01-19
 **License**: MIT

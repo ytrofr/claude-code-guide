@@ -9,11 +9,13 @@ Created skills with WRONG structure (standalone .md files instead of directory/S
 ### 1. Personal Skill Fixed
 
 **Before** ❌:
+
 ```
 ~/.claude/skills/claude-code-setup-guide-skill.md
 ```
 
 **After** ✅:
+
 ```
 ~/.claude/skills/claude-code-setup-guide-skill/
 └── SKILL.md
@@ -26,6 +28,7 @@ Created skills with WRONG structure (standalone .md files instead of directory/S
 ### 2. Template Skills Fixed
 
 **Before** ❌:
+
 ```
 template/.claude/skills/starter/
 ├── troubleshooting-decision-tree-skill.md
@@ -35,6 +38,7 @@ template/.claude/skills/starter/
 ```
 
 **After** ✅:
+
 ```
 template/.claude/skills/starter/
 ├── troubleshooting-decision-tree-skill/
@@ -54,11 +58,13 @@ template/.claude/skills/starter/
 ### 3. Documentation Updated
 
 **Fixed Files**:
+
 1. `template/README.md` - Copy commands now use `-r` for directories
 2. `template/.claude/skills/README.md` - Warns against copying .md files
 3. `STATUS.md` - Shows correct directory structure
 
 **Added**:
+
 - Memory MCP note: "Claude Code Skills - Correct Structure CRITICAL" (rules folder)
 
 ---
@@ -71,11 +77,11 @@ ls ~/.claude/skills/claude-code-setup-guide-skill/
 # Output: SKILL.md ✅
 
 # Check template skills (should be 4)
-find ~/claude-code-implementation-guide/template/.claude/skills -name "SKILL.md" | wc -l
+find ~/claude-code-guide/template/.claude/skills -name "SKILL.md" | wc -l
 # Output: 4 ✅
 
 # Verify directory names
-ls ~/claude-code-implementation-guide/template/.claude/skills/starter/
+ls ~/claude-code-guide/template/.claude/skills/starter/
 # Output:
 # project-patterns-skill/
 # session-start-protocol-skill/
@@ -90,6 +96,7 @@ ls ~/claude-code-implementation-guide/template/.claude/skills/starter/
 **Source**: Entry #115 (claude-code-skills-creation-guide.md)
 
 **Required Pattern**:
+
 ```
 ~/.claude/skills/
 └── descriptive-name-skill/          ← Directory with -skill suffix
@@ -98,11 +105,13 @@ ls ~/claude-code-implementation-guide/template/.claude/skills/starter/
 ```
 
 **Discovery Mechanism**:
+
 - Claude Code scans: `~/.claude/skills/*/SKILL.md`
 - `/skill:` command autocompletes directory names
 - SKILL.md must be uppercase (lowercase won't work)
 
 **Common Mistakes** (ALL FIXED):
+
 - ❌ Standalone .md file → ✅ Directory with SKILL.md
 - ❌ Lowercase skill.md → ✅ Uppercase SKILL.md
 - ❌ Project directory → ✅ User directory (~/.claude/skills/)
@@ -116,6 +125,7 @@ ls ~/claude-code-implementation-guide/template/.claude/skills/starter/
 **Content**: Correct vs wrong patterns, enforcement rules
 
 **Future Reference**:
+
 ```
 "How should I structure a Claude Code skill?"
 → Recalls Memory MCP note
@@ -127,9 +137,11 @@ ls ~/claude-code-implementation-guide/template/.claude/skills/starter/
 ## ✅ All Skills Now Correct
 
 **Personal Skills** (1):
+
 - claude-code-setup-guide-skill/SKILL.md ✅
 
 **Template Skills** (4):
+
 - troubleshooting-decision-tree-skill/SKILL.md ✅
 - session-start-protocol-skill/SKILL.md ✅
 - project-patterns-skill/SKILL.md ✅
