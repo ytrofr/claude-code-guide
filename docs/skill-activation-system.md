@@ -28,6 +28,7 @@
 A comprehensive framework for managing Claude Code skills with high activation accuracy (85%+), automated monitoring, and quality control.
 
 **Key Metrics from Production**:
+
 - **Accuracy**: 61.1% → 88.2% (+27.1% improvement)
 - **Test Suite**: 170 comprehensive queries across 13 domains
 - **Perfect Domains**: 4 domains at 100% (Testing, Sacred, Hebrew, Git)
@@ -97,8 +98,7 @@ P3 (foundational pattern): 25 tests (15%)
 ### P3 Validation Criteria
 
 ```yaml
-MARK_AS_P3_WHEN:
-  ✅ Pattern exists in CORE-PATTERNS.md (authoritative source)
+MARK_AS_P3_WHEN: ✅ Pattern exists in CORE-PATTERNS.md (authoritative source)
   ✅ Pattern exists in .claude/rules/ (auto-loaded rules)
   ✅ Pattern consolidated in always-loaded docs
   ✅ Pattern is foundational (referenced by 3+ domains)
@@ -153,11 +153,13 @@ test_skill "financial-precision-skill" "toFixed 2 decimal" "business" "P3"
 **Location**: `~/.claude/cache/skill-index-hybrid.txt`
 
 **Format**:
+
 ```
 skill-name|keywords|desc_words|not_triggers|full_desc|priority
 ```
 
 **Hash Validation**:
+
 ```bash
 # Cache hash = count + newest mtime + total size
 SKILL_COUNT=$(ls -1 "$SKILLS_DIR" | wc -l)
@@ -167,6 +169,7 @@ CACHE_HASH="${SKILL_COUNT}-${NEWEST_MTIME}-${TOTAL_SIZE}"
 ```
 
 **Why Trigger Updates Don't Invalidate Cache**:
+
 - Adding keywords changes file content
 - But mtime might not update (filesystem-dependent)
 - Size change is minimal (few characters)
@@ -175,6 +178,7 @@ CACHE_HASH="${SKILL_COUNT}-${NEWEST_MTIME}-${TOTAL_SIZE}"
 ### MANDATORY Cache Rebuild Protocol
 
 **ALWAYS rebuild after**:
+
 - Creating new skill
 - Modifying skill (triggers, description, content)
 - Deleting skill
@@ -182,6 +186,7 @@ CACHE_HASH="${SKILL_COUNT}-${NEWEST_MTIME}-${TOTAL_SIZE}"
 - Batch updating multiple skills
 
 **Rebuild Commands**:
+
 ```bash
 # Method 1: Delete and auto-rebuild
 rm ~/.claude/cache/skill-index-hybrid.txt
@@ -304,6 +309,7 @@ bash tests/skills/comprehensive-skill-activation-test.sh | grep "exact query phr
 ### Test Suite Design
 
 **170-Query Comprehensive Test**:
+
 - 13 domains (deployment, database, api, ai, troubleshooting, etc.)
 - 4 priority levels (P0/P1/P2/P3)
 - Real user query patterns
@@ -337,6 +343,7 @@ bash tests/skills/comprehensive-skill-activation-test.sh
 **Schedule**: Every Monday 9:00 AM
 
 **Operations**:
+
 1. Validate cache health (coverage %)
 2. Auto-rebuild if coverage <95%
 3. Run comprehensive 170-query test
@@ -351,6 +358,7 @@ bash tests/skills/comprehensive-skill-activation-test.sh
 **Purpose**: Detailed trend analysis and failure patterns
 
 **Features**:
+
 - Accuracy trends (last 5 runs)
 - Domain performance ranking
 - Recurring failure detection (3+ occurrences)
@@ -367,24 +375,28 @@ bash tests/skills/comprehensive-skill-activation-test.sh
 #### 1. Natural Language Keywords
 
 Include terms users would actually say:
+
 - ✅ "review PRs", "code quality", "pull requests"
 - ❌ Generic "helps improve code"
 
 #### 2. Specific Actions (VERBS)
 
 Name concrete capabilities:
+
 - ✅ "generates commit messages from git diffs"
 - ❌ "works with git"
 
 #### 3. Include Use Cases
 
 Tell Claude WHEN to activate:
+
 - ✅ "Use when explaining code, teaching about codebase, or user asks 'how does this work?'"
 - ❌ No activation guidance
 
 #### 4. Differentiate Similar Skills
 
 Make each description distinct:
+
 - ✅ Unique trigger terms per skill
 - ❌ Generic overlapping descriptions
 
@@ -392,12 +404,72 @@ Make each description distinct:
 
 ```yaml
 ---
-name: skill-name  # Max 64 chars, lowercase-hyphen only
-description: "[ACTIONS with verbs]. Use when [scenarios] or when user mentions [keywords]."  # Max 1024 chars, MUST have "Use when..."
-Triggers: keyword1, keyword2, exact query phrase, command variation  # Comma-separated
-user-invocable: false  # Optional: true for /command skills
+name: skill-name # Required. Max 64 chars, lowercase-hyphen only
+description: "[ACTIONS with verbs]. Use when [scenarios] or when user mentions [keywords]." # Required. Max 1024 chars, MUST have "Use when..."
+Triggers: keyword1, keyword2, exact query phrase, command variation # Custom field (for pre-prompt hook matching)
+user-invocable: false # Optional: true makes it a /slash-command
+disable-model-invocation: true # Optional: prevents auto-activation (user-only via /command)
+context: # Optional: isolated context for the skill
+  fork: true
 ---
 ```
+
+### Official vs Custom Frontmatter Fields
+
+| Field                      | Official | Purpose                            |
+| -------------------------- | -------- | ---------------------------------- |
+| `name`                     | Yes      | Skill identifier (max 64 chars)    |
+| `description`              | Yes      | Triggering mechanism (max 1024)    |
+| `user-invocable`           | Yes      | Enable `/slash-command` invocation |
+| `disable-model-invocation` | Yes      | Prevent auto-activation            |
+| `context`                  | Yes      | Fork context, isolated execution   |
+| `allowed-tools`            | Yes      | Restrict which tools skill can use |
+| `model`                    | Yes      | Override model for this skill      |
+| `hooks`                    | Yes      | Skill-specific hooks               |
+| `argument-hint`            | Yes      | Hint for /command arguments        |
+| `Triggers`                 | Custom   | Keyword matching (pre-prompt hook) |
+
+**Source**: [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills)
+
+### Token Budget (Important for Large Skill Libraries)
+
+Claude Code loads skill descriptions into its context window, subject to a **2% budget** (~15,760 chars for a 197k context window). If your total skill descriptions exceed this:
+
+- Skills may be **truncated** or **not loaded** into native context
+- The `description` field is what counts against the budget (not skill body content)
+
+**Mitigations**:
+
+```bash
+# Option 1: Expand budget with environment variable
+export SLASH_COMMAND_TOOL_CHAR_BUDGET=40000  # Expands to ~5%
+
+# Option 2: Add disable-model-invocation to non-slash skills
+# This removes them from native budget (they won't auto-activate)
+disable-model-invocation: true
+
+# Option 3: Use a pre-prompt hook for skill discovery
+# Hook handles matching independently of native budget
+```
+
+**Budget check**:
+
+```bash
+# Count total description chars across all skills
+total=0; for f in ~/.claude/skills/*/SKILL.md; do
+  chars=$(sed -n '/^---$/,/^---$/p' "$f" | grep "^description:" | wc -c)
+  total=$((total + chars))
+done; echo "Total: $total chars (budget: 15,760 native, 40,000 with override)"
+```
+
+### Sandbox Mode (Claude Code 2.1.38+)
+
+```yaml
+Project-level skills: .claude/skills/ — BLOCKED in sandbox mode
+User-level skills: ~/.claude/skills/ — UNAFFECTED by sandbox mode
+```
+
+If you use sandbox mode, place skills at **user level** (`~/.claude/skills/`) to ensure they load.
 
 ---
 
@@ -406,11 +478,13 @@ user-invocable: false  # Optional: true for /command skills
 ### Issue 1: Cache Staleness (35% Coverage)
 
 **Symptoms**:
+
 - Skill not appearing despite correct triggers
 - Test accuracy suddenly drops
 - Cache has fewer lines than filesystem skills
 
 **Solution**:
+
 ```bash
 rm ~/.claude/cache/skill-index-hybrid.txt
 echo '{"prompt": "rebuild"}' | bash .claude/hooks/pre-prompt.sh >/dev/null 2>&1
@@ -471,16 +545,19 @@ Triggers: cloud run deploy, safe deployment, gcloud run deploy, gcloud deploy
 ### Production Project (January 2026)
 
 **Entry #271 (Option A)**:
+
 - Started: 61.1% accuracy (104/170)
 - Achieved: 86.4% accuracy (147/170)
 - Improvement: +25.3% (+43 PASS)
 
 **Entry #272 (Sustainability)**:
+
 - Created: Complete infrastructure
 - ROI: 85+ hours/year saved
 - Validation: 5x testing (0% variance)
 
 **Total Achievement**:
+
 - Before: 61.1% (104/170)
 - After: 88.2% (150/170)
 - Improvement: +27.1% (+46 PASS)
@@ -488,12 +565,14 @@ Triggers: cloud run deploy, safe deployment, gcloud run deploy, gcloud deploy
 ### Domain Performance
 
 **Perfect (100%)**:
+
 - Testing: 12/12
 - Sacred: 10/10
 - Hebrew: 8/8
 - Git: 5/5
 
 **Excellent (90%+)**:
+
 - AI/LLM: 19/20 (95.0%)
 - Troubleshooting: 14/15 (93.3%)
 - API: 14/15 (93.3%)
@@ -532,10 +611,12 @@ node scripts/skill-activation-analytics.js
 **Source Project**: Production  
 **Repository**: https://github.com/ytrofr/production-Knowledge  
 **Entries**:
+
 - Entry #271: Option A Complete (P3 patterns + triggers + cache rebuild)
 - Entry #272: Skill System Sustainability Infrastructure
 
 **External Resources**:
+
 - [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills)
 - [Anthropic Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
 
