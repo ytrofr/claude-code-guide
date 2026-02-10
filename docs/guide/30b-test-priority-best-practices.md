@@ -1,4 +1,4 @@
-# Chapter 30: Test Priority Best Practices
+# Chapter 30b: Test Priority Best Practices
 
 **Created**: 2026-01-14
 **Source**: Production Entry #271 - Test Priority Relaxation
@@ -12,12 +12,13 @@
 When testing skill activation, you must choose appropriate **priority levels** for each test. This chapter explains when to use P0 (must be #1), P1 (must be in top 3), and P2 (must be present).
 
 **What You'll Learn**:
+
 - When to use each priority level (P0/P1/P2)
 - How to identify unrealistic P0 requirements
 - Evidence-based approach to test design
 - Real-world examples from 170-query comprehensive test
 
-**Prerequisites**: Chapter 29 (Comprehensive Testing)
+**Prerequisites**: [Chapter 29b (Comprehensive Testing)](29b-comprehensive-skill-activation-testing.md)
 
 ---
 
@@ -28,6 +29,7 @@ When testing skill activation, you must choose appropriate **priority levels** f
 **Definition**: The expected skill MUST rank #1 (highest score)
 
 **When to Use**:
+
 - Truly unique skills with no similar alternatives
 - Exact phrase matches (e.g., "/session-start" → session-start-protocol-skill)
 - Workflow commands with one clear handler
@@ -35,12 +37,13 @@ When testing skill activation, you must choose appropriate **priority levels** f
 **Warning**: ⚠️ If 5+ similar skills exist, use P1 instead!
 
 **Examples**:
+
 ```bash
 # GOOD P0 usage
 test_skill "session-start-protocol-skill" "/session-start" "P0"
 # Only 1 skill handles session start
 
-test_skill "perplexity-cache-skill" "search before perplexity" "P0" 
+test_skill "perplexity-cache-skill" "search before perplexity" "P0"
 # Specific unique workflow
 ```
 
@@ -51,16 +54,19 @@ test_skill "perplexity-cache-skill" "search before perplexity" "P0"
 **Definition**: The expected skill MUST appear in top 3 matches
 
 **When to Use**:
+
 - Skills with 2-10 similar alternatives
 - Domain-specific queries that legitimately match multiple skills
 - Most real-world scenarios
 
 **Why This Works**:
+
 - Acknowledges multiple valid matches
 - Realistic for "skill families" (10 deployment skills, 8 database skills)
 - Still ensures high relevance
 
 **Examples**:
+
 ```bash
 # GOOD P1 usage
 test_skill "deployment-workflow-skill" "deploy to staging" "P1"
@@ -80,11 +86,13 @@ test_skill "troubleshooting-workflow-skill" "fix production issue" "P1"
 **Definition**: The expected skill must appear somewhere in matches (any position)
 
 **When to Use**:
+
 - General domain skills
 - Broad category queries
 - Skills that should match but not necessarily rank high
 
 **Examples**:
+
 ```bash
 # GOOD P2 usage
 test_skill "sacred-commandments-skill" "compliance check" "P2"
@@ -108,6 +116,7 @@ Problem: 98% of P0 tests had 5+ competing skills
 ```
 
 **Example Failure**:
+
 ```
 Query: "deploy to staging"
 Expected: deployment-workflow-skill (P0 - must be #1)
@@ -135,6 +144,7 @@ Improvement: +23.5%
 ```
 
 **Same Example Now Passes**:
+
 ```
 Query: "deploy to staging"
 Expected: deployment-workflow-skill (P1 - must be in top 3)
@@ -196,6 +206,7 @@ fi
 ```
 
 **Usage**:
+
 ```bash
 bash count-matches.sh "deploy to staging"
 # Output:
@@ -211,6 +222,7 @@ bash count-matches.sh "deploy to staging"
 ### Example 1: Deployment Domain
 
 **10 Deployment Skills** (all valid for "deploy to staging"):
+
 1. deployment-workflow-skill
 2. cloud-run-safe-deployment-skill
 3. environment-variables-deployment-skill
@@ -223,6 +235,7 @@ bash count-matches.sh "deploy to staging"
 10. staging-database-maintenance-skill
 
 **Wrong Approach (P0)**:
+
 ```bash
 test_skill "deployment-workflow-skill" "deploy to staging" "P0"
 # ❌ FAILS: Ranks #5 out of 10 valid matches
@@ -230,6 +243,7 @@ test_skill "deployment-workflow-skill" "deploy to staging" "P0"
 ```
 
 **Correct Approach (P1)**:
+
 ```bash
 test_skill "deployment-workflow-skill" "deploy to staging" "P1"
 # ✅ PASSES: All 10 deployment skills are legitimate matches
@@ -239,6 +253,7 @@ test_skill "deployment-workflow-skill" "deploy to staging" "P1"
 ### Example 2: Database Domain
 
 **8 Database Skills** (all valid for "database connection refused"):
+
 1. database-credentials-validation-skill ← Most specific
 2. database-patterns-skill
 3. database-context-loader-skill
@@ -249,6 +264,7 @@ test_skill "deployment-workflow-skill" "deploy to staging" "P1"
 8. api-first-validation-skill
 
 **Best Practice**:
+
 ```bash
 # Use P1 since 8 skills match
 test_skill "database-credentials-validation-skill" "ECONNREFUSED postgres" "P1"
@@ -260,6 +276,7 @@ test_skill "database-credentials-validation-skill" "ECONNREFUSED postgres" "P1"
 ### Example 3: Unique Skills
 
 **Session Protocol** (only 1 skill):
+
 ```bash
 # Use P0 - truly unique
 test_skill "session-start-protocol-skill" "/session-start" "P0"
@@ -273,6 +290,7 @@ test_skill "session-end-checkpoint-skill" "/session-end" "P0"
 ### Entry #271 Results (Jan 14, 2026)
 
 **Changes Made**:
+
 - Analyzed 134 P0 tests
 - Found 131 tests (98%) had 5+ competing skills
 - Changed 131 P0 → P1
@@ -280,12 +298,13 @@ test_skill "session-end-checkpoint-skill" "/session-end" "P0"
 
 **Results**:
 
-| Test Suite | Before | After | Change | Target | Status |
-|------------|--------|-------|--------|--------|--------|
-| 221-Query | 80.9% | 79.5% | -1.4% | 75-80% | ✅ MET |
-| 170-Query | 38.2% | 61.7% | **+23.5%** | 60%+ | ✅ MET |
+| Test Suite | Before | After | Change     | Target | Status |
+| ---------- | ------ | ----- | ---------- | ------ | ------ |
+| 221-Query  | 80.9%  | 79.5% | -1.4%      | 75-80% | ✅ MET |
+| 170-Query  | 38.2%  | 61.7% | **+23.5%** | 60%+   | ✅ MET |
 
 **Impact**:
+
 - ✅ 40 additional tests now passing (65 → 105)
 - ✅ Both test suites meet their targets
 - ✅ Test expectations aligned with reality
@@ -299,7 +318,8 @@ test_skill "session-end-checkpoint-skill" "/session-end" "P0"
 
 > "Multiple similar skills matching the same query is **expected behavior**, not a failure."
 
-**Why**: 
+**Why**:
+
 - Specialized skills (staging-database-maintenance) and general skills (deployment-workflow) both match "deploy to staging"
 - This is GOOD - users have multiple relevant options
 - Test priorities should acknowledge this reality
@@ -309,6 +329,7 @@ test_skill "session-end-checkpoint-skill" "/session-end" "P0"
 **Rule**: Always count competing skills before choosing P0/P1/P2
 
 **Quick Check**:
+
 ```bash
 echo '{"prompt": "your query"}' | bash .claude/hooks/pre-prompt.sh 2>/dev/null | grep -c "✅"
 ```
@@ -320,6 +341,7 @@ echo '{"prompt": "your query"}' | bash .claude/hooks/pre-prompt.sh 2>/dev/null |
 ### Lesson 3: P1 is the Sweet Spot
 
 **Statistics from Entry #271**:
+
 - Before: 79% P0, 21% P1+P2 → Accuracy: 38.2%
 - After: 2% P0, 77% P1, 21% P2 → Accuracy: 61.7%
 
@@ -340,10 +362,10 @@ TEST_FILE="tests/skills/comprehensive-skill-activation-test.sh"
 
 grep -n "test_skill.*P0" "$TEST_FILE" | while IFS=: read -r line_num test_line; do
     query=$(echo "$test_line" | sed 's/test_skill "[^"]*" "\([^"]*\)".*/\1/')
-    
+
     result=$(echo "{\"prompt\": \"$query\"}" | bash "$HOOK" 2>/dev/null)
     count=$(echo "$result" | grep -c "✅")
-    
+
     if [ "$count" -ge 5 ]; then
         echo "Line $line_num: $count skills → Change P0 to P1"
         echo "  Query: '$query'"
@@ -352,6 +374,7 @@ done
 ```
 
 **Then apply changes**:
+
 ```bash
 # Create sed script to change specific lines
 # See Entry #271 for complete implementation
@@ -374,11 +397,13 @@ done
 ## 📖 References
 
 **Production Entries**:
+
 - Entry #271: Test Priority Relaxation (170-Query +23.5%)
 - Entry #270: 100% Accuracy Achievement (80/80 tests)
 
 **Related Chapters**:
-- Chapter 29: Comprehensive Skill Activation Testing
+
+- [Chapter 29b: Comprehensive Skill Activation Testing](29b-comprehensive-skill-activation-testing.md)
 - Chapter 17: Skill Detection Enhancement
 - Chapter 20: Skills Filtering Optimization
 

@@ -1,8 +1,14 @@
+---
+layout: default
+title: "Claude Code Quick Start - 30 Minute Setup Guide"
+description: "Get Claude Code running in 30 minutes. Install via npm, configure CLAUDE.md, set up hooks, and connect MCP servers."
+---
+
 # Quick Start - Claude Code in 30 Minutes
 
 **Get productive with Claude Code immediately**
 
-This quick-start guide gets you from zero to a working Claude Code setup in 30 minutes.
+This quick-start guide gets you from zero to a working Claude Code setup in 30 minutes. You will install Claude Code, configure project context via CLAUDE.md, set up hooks for workflow automation, and connect MCP servers for external tool integration.
 
 ---
 

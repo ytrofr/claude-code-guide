@@ -1,4 +1,12 @@
+---
+layout: default
+title: "Claude Code Agents & Subagents - Create Specialized AI Workers"
+description: "Create custom Claude Code agents with persistent memory, model selection, and tool restrictions. Domain expert, lightweight scout, and expensive expert patterns."
+---
+
 # Chapter 36: Agents and Subagents
+
+Claude Code agents (subagents) are specialized AI workers you create as markdown files in `.claude/agents/`. Each agent gets its own context window, can use a specific model (sonnet, opus, haiku), has persistent memory across conversations, and can be restricted to specific tools. This guide covers 3 proven agent design patterns and production configuration.
 
 **Purpose**: Create, configure, and use custom agents for specialized tasks
 **Source**: Anthropic Claude Code documentation + production patterns
@@ -71,14 +79,14 @@ You are a deployment specialist...
 
 ### Field Reference
 
-| Field         | Required | Values                       | Purpose                          |
-| ------------- | -------- | ---------------------------- | -------------------------------- |
-| `name`        | Yes      | kebab-case identifier        | Agent name for Task() calls      |
-| `description` | Yes      | What it does + "Use when..." | Routing guidance                 |
-| `model`       | No       | `sonnet`, `opus`, `haiku`    | Override model (default: parent) |
-| `tools`       | No       | Array of tool names          | Restrict available tools         |
-| `memory`      | No       | `project` or `user`          | Persistent memory (see below)    |
-| `maxTurns`    | No       | Number (e.g., 15)            | Max API round-trips              |
+| Field         | Required | Values                        | Purpose                          |
+| ------------- | -------- | ----------------------------- | -------------------------------- |
+| `name`        | Yes      | kebab-case identifier         | Agent name for Task() calls      |
+| `description` | Yes      | What it does + "Use when..."  | Routing guidance                 |
+| `model`       | No       | `sonnet`, `opus`, `haiku`     | Override model (default: parent) |
+| `tools`       | No       | Array of tool names           | Restrict available tools         |
+| `memory`      | No       | `project`, `user`, or `local` | Persistent memory (see below)    |
+| `maxTurns`    | No       | Number (e.g., 15)             | Max API round-trips              |
 
 ### Model Selection
 
@@ -88,7 +96,7 @@ You are a deployment specialist...
 | `sonnet` | Most tasks (default)         | Medium  |
 | `opus`   | Complex reasoning, planning  | Highest |
 
-**Important**: Use valid model IDs only. `sonnet-4`, `claude-sonnet`, etc. are **invalid** and will fail silently.
+**Important**: Use valid model IDs only: `sonnet`, `opus`, `haiku`. Values like `sonnet-4`, `claude-sonnet`, etc. are **invalid** and will fail silently. You can also specify full model IDs like `claude-sonnet-4-5-20250929` for version pinning.
 
 ---
 
@@ -106,6 +114,17 @@ memory: project
 
 **Use for**: Most agents (deploy, database, testing, debugging).
 The agent builds knowledge about YOUR project's patterns, common issues, and solutions.
+
+### `memory: local`
+
+Personal memory, not committed to git. Agent remembers YOUR personal patterns.
+
+```yaml
+memory: local
+```
+
+**Use for**: Personal workflow agents, experimental agents, developer-specific preferences.
+Local memory is stored in `.claude/settings.local.json` and not shared with the team.
 
 ### `memory: user`
 

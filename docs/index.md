@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: 100+ hours saved. 370x hook optimization. Production-tested patterns.
+description: Complete guide to Claude Code hooks, skills, agents, MCP integration. 14 hook events. 370x optimization. Production-tested.
 ---
 
 # Claude Code Guide
@@ -40,6 +40,18 @@ Skills are Markdown files with structured frontmatter containing triggers, keywo
 
 The memory bank is a hierarchical knowledge system that stores project context, patterns, and decisions. It uses a 4-tier structure (always → learned → ondemand → reference) to optimize token usage while maintaining full context access. See [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md).
 
+### What are Claude Code hooks?
+
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 14 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
+
+### What are Claude Code agents?
+
+Agents (subagents) are specialized Claude Code workers spawned via the Task tool. Each agent gets its own context window, can use a specific model (sonnet, opus, haiku), has persistent memory, and can be configured with restricted tool access. They enable parallel execution and domain expertise. See our [Agents Guide](guide/36-agents-and-subagents.md).
+
+### How do Claude Code agent teams work?
+
+Agent teams are an experimental feature where a lead agent coordinates multiple teammate agents working in parallel. Enabled via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, teams share a task list and mailbox for coordination. The lead can operate in delegate mode (coordination only) or default mode (can also use tools). See our [Agent Teams Guide](guide/37-agent-teams.md).
+
 ### How much time does this save?
 
 Based on production metrics: **100+ hours per year** in developer time. Key achievements include 370x hook optimization, 47-70% token savings per branch, and 88.2% skill activation accuracy.
@@ -52,44 +64,75 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 - [Quick Start Guide](quick-start.md) - 30-minute basic setup
 - [Minimal Setup](guide/02-minimal-setup.md) - Essential configuration
+- [Task Tracking System](guide/04-task-tracking-system.md) - Organize work with task lists
+- [Developer Mode & UI Feedback](guide/05-developer-mode-ui-feedback-system.md) - Visual debugging tools
 
 ### Core Systems
 
+- [MCP Integration](guide/06-mcp-integration.md) - External tool connections (PostgreSQL, GitHub, Playwright)
+- [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md) - 4-tier context management
+- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 14 hook events, 3 hook types
+- [Git vs Claude Hooks](guide/14-git-vs-claude-hooks-distinction.md) - When to use which
+- [Progressive Disclosure](guide/15-progressive-disclosure.md) - Token-efficient context loading
 - [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) - 370x optimization
-- [Claude Code Hooks](guide/13-claude-code-hooks.md) - Hook lifecycle and triggers
-- [Skill Activation System](skill-activation-system.md) - 162+ production skills
-- [MCP Integration](guide/06-mcp-integration.md) - External tool connections
+
+### Skills System
+
+- [Skill Activation System](skill-activation-system.md) - 162+ production skills, 88.2% accuracy
+- [Skills Activation Breakthrough](guide/16-skills-activation-breakthrough.md) - How activation works
+- [Skill Detection Enhancement](guide/17-skill-detection-enhancement.md) - Improving match rates
+- [Skill Keyword Methodology](guide/24-skill-keyword-enhancement-methodology.md) - Trigger optimization
+- [Skills Filtering Optimization](guide/20-skills-filtering-optimization.md) - Token reduction
+- [Skill Optimization Patterns](guide/28-skill-optimization-patterns.md) - Maintenance workflows
+- [Skill Optimization & Maintenance](guide/35-skill-optimization-maintenance.md) - 6-step audit workflow
+- [Session Documentation Skill](guide/23-session-documentation-skill.md) - Auto-document sessions
+- [Document Automation](guide/32-document-automation.md) - Pattern analysis engine
 
 ### Agents & Teams
 
-- [Agents and Subagents](guide/36-agents-and-subagents.md) - Create specialized agent workers
+- [Agents and Subagents](guide/36-agents-and-subagents.md) - Create specialized AI workers
 - [Agent Teams](guide/37-agent-teams.md) - Coordinate parallel agents (experimental)
+
+### Testing
+
+- [Playwright E2E Testing](guide/19-playwright-e2e-testing.md) - End-to-end browser testing
+- [Playwright MCP Integration](guide/19b-playwright-mcp-integration.md) - MCP-based browser automation
+- [Comprehensive Skill Activation Testing](guide/29b-comprehensive-skill-activation-testing.md) - 170-query test suite
+- [Test Priority Best Practices](guide/30b-test-priority-best-practices.md) - P0/P1/P2 guidelines
+
+### Branch & Context Management
+
+- [Branch Context System](guide/29-branch-context-system.md) - Multi-branch workflows
+- [Blueprint Auto-Loading](guide/30-blueprint-auto-loading.md) - Automatic context injection
+- [Branch-Aware Development](guide/31-branch-aware-development.md) - Branch-specific patterns
+- [Branch-Specific Skill Curation](guide/33-branch-specific-skill-curation.md) - Per-branch skill sets
 
 ### Advanced Topics
 
-- [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md) - Context management
-- [Branch Context System](guide/29-branch-context-system.md) - Multi-branch workflows
-- [Rules System](guide/26-claude-code-rules-system.md) - Project-level enforcement
-- [Best Practices Reference](guide/25-best-practices-reference.md) - Anthropic-aligned patterns
-
-### Optimization
-
+- [Perplexity Cost Optimization](guide/18-perplexity-cost-optimization.md) - Cache-first research
 - [Pre-Prompt Optimization](guide/21-pre-prompt-optimization.md) - Performance tuning
-- [Skills Filtering](guide/20-skills-filtering-optimization.md) - Token reduction
-- [Skill Optimization Patterns](guide/28-skill-optimization-patterns.md) - Maintenance workflows
+- [Marketplace Integration](guide/22-wshobson-marketplace-integration.md) - Third-party agent integration
+- [Best Practices Reference](guide/25-best-practices-reference.md) - Anthropic-aligned patterns
+- [Rules System](guide/26-claude-code-rules-system.md) - Project-level enforcement
+- [Fast Cloud Run Deployment](guide/27-fast-cloud-run-deployment.md) - GCP deployment patterns
+- [Basic Memory MCP Integration](guide/34-basic-memory-mcp-integration.md) - Persistent knowledge
 
 ---
 
 ## Key Metrics
 
-| Metric            | Result                |
-| ----------------- | --------------------- |
-| Time Saved        | 100+ hours/year       |
-| Hook Optimization | 370x faster           |
-| Skill Activation  | 88.2% accuracy        |
-| Token Savings     | 47-70% per branch     |
-| Production Skills | 162+ documented       |
-| MCP Integrations  | 13 servers, 70+ tools |
+| Metric            | Result                     |
+| ----------------- | -------------------------- |
+| Time Saved        | 100+ hours/year            |
+| Hook Optimization | 370x faster                |
+| Hook Events       | 14 documented              |
+| Hook Types        | 3 (command, prompt, agent) |
+| Skill Activation  | 88.2% accuracy             |
+| Agent Patterns    | 3 documented               |
+| Token Savings     | 47-70% per branch          |
+| Production Skills | 162+ documented            |
+| MCP Integrations  | 13 servers, 70+ tools      |
+| Chapters          | 37+ comprehensive          |
 
 ---
 
@@ -105,20 +148,20 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "Claude Code Guide - Complete Implementation Guide",
-  "description": "100+ hours saved with Claude Code setup patterns. Production-tested.",
+  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. 14 hook events, 3 hook types, 370x optimization. Production-tested patterns.",
   "author": {
     "@type": "Person",
     "name": "ytrofr",
     "url": "https://github.com/ytrofr"
   },
   "datePublished": "2024-12-14",
-  "dateModified": "2026-02-08",
+  "dateModified": "2026-02-10",
   "publisher": {
     "@type": "Organization",
     "name": "Claude Code Guide",
     "url": "https://ytrofr.github.io/claude-code-guide"
   },
-  "keywords": "claude code, claude ai, anthropic, mcp, hooks, skills, ai coding assistant, cli, developer tools",
+  "keywords": "claude code, claude ai, anthropic, mcp, hooks, skills, agents, subagents, agent teams, ai coding assistant, cli, developer tools, pre-prompt hook",
   "articleSection": "Developer Tools",
   "inLanguage": "en-US"
 }
@@ -177,6 +220,30 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
         "@type": "Answer",
         "text": "The memory bank is a hierarchical knowledge system that stores project context, patterns, and decisions. It uses a 4-tier structure (always, learned, ondemand, reference) to optimize token usage while maintaining full context access."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "What are Claude Code hooks?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 14 hook events (PreToolUse, PostToolUse, UserPromptSubmit, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are Claude Code agents and subagents?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Agents (subagents) are specialized Claude Code workers spawned via the Task tool. Each agent gets its own context window, can use a specific model (sonnet, opus, haiku), has persistent memory, and can be configured with restricted tool access. They enable parallel execution and domain expertise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do Claude Code agent teams work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Agent teams are an experimental feature where a lead agent coordinates multiple teammate agents working in parallel. Enabled via CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1, teams share a task list and mailbox for coordination. The lead can operate in delegate mode (coordination only) or default mode (can also use tools)."
+      }
     }
   ]
 }
@@ -217,20 +284,26 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
     {
       "@type": "HowToStep",
       "position": 4,
-      "name": "Set up pre-prompt hook",
-      "text": "Copy and configure the pre-prompt.sh hook for 370x optimization"
+      "name": "Set up hooks",
+      "text": "Configure hooks in .claude/settings.json. Set up pre-prompt hook for skill matching, PostToolUse for auto-formatting, and PreToolUse for safety validation. 14 hook events available with 3 hook types (command, prompt, agent)."
     },
     {
       "@type": "HowToStep",
       "position": 5,
+      "name": "Create agents",
+      "text": "Create specialized agents in .claude/agents/ as markdown files with YAML frontmatter. Configure model, tools, memory persistence, and maxTurns for cost control."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
       "name": "Configure MCP servers",
       "text": "Set up GitHub, PostgreSQL, and other MCP integrations in mcp_servers.json"
     },
     {
       "@type": "HowToStep",
-      "position": 6,
+      "position": 7,
       "name": "Validate setup",
-      "text": "Run ./scripts/validate-setup.sh to verify configuration"
+      "text": "Run ./scripts/validate-setup.sh to verify configuration. Test hook activation, agent spawning, and MCP connections."
     }
   ]
 }
@@ -254,5 +327,27 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
     "name": "Anthropic"
   },
   "description": "Anthropic's official CLI for AI-powered coding assistance"
+}
+</script>
+
+<!-- BreadcrumbList Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://ytrofr.github.io/claude-code-guide/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guide",
+      "item": "https://ytrofr.github.io/claude-code-guide/guide/"
+    }
+  ]
 }
 </script>
