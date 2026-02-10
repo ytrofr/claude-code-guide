@@ -241,9 +241,9 @@ When selecting top skills for a branch:
 
 - [Chapter 29: Branch Context System](29-branch-context-system.md) - CONTEXT-MANIFEST.json
 - [Chapter 31: Branch-Aware Development](31-branch-aware-development.md) - Branch variables
-- [Chapter 14: Pre-Prompt Hook](14-pre-prompt-hook.md) - Skill matching basics
+- [Pre-Prompt Hook Complete Guide](../pre-prompt-hook-complete-guide.md) - Skill matching basics
 
 ---
 
-**Previous**: [32: Session Start Hook](32-session-start-hook.md)
+**Previous**: [32: Document Automation](32-document-automation.md)
 **Next**: [34: Basic Memory MCP Integration](34-basic-memory-mcp-integration.md)

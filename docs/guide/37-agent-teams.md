@@ -1,4 +1,12 @@
+---
+layout: default
+title: "Claude Code Agent Teams - Coordinate Parallel AI Workers"
+description: "Experimental agent teams feature for Claude Code. Lead agent coordinates teammates with shared task lists and mailbox communication."
+---
+
 # Chapter 37: Agent Teams (Experimental)
+
+Agent teams are an experimental Claude Code feature that enables a lead agent to coordinate multiple teammate agents working in parallel. Enabled via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, teams share a task list and mailbox for inter-agent communication. This guide covers team setup, natural team groupings, hook events for teams, and when to use teams vs standard subagents.
 
 **Purpose**: Coordinate multiple agents working in parallel on complex tasks
 **Source**: Anthropic Claude Code documentation (agent teams research preview)
@@ -193,4 +201,3 @@ This groundwork makes team adoption seamless when the feature stabilizes.
 ---
 
 **Previous**: [36: Agents and Subagents](36-agents-and-subagents.md)
-**Next**: (Future chapters)

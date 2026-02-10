@@ -1,27 +1,38 @@
+---
+layout: default
+title: "Claude Code Hooks - Complete Guide to 14 Hook Events"
+description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 12 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
+---
+
 # Chapter 13: Claude Code Hooks
+
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 14 hook events, 3 hook types, async execution, and production-tested patterns.
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: 11 hooks in production, 96% test validation
-**Updated**: Feb 10, 2026 — All 11 hook events documented
+**Evidence**: 14 hooks in production, 96% test validation
+**Updated**: Feb 10, 2026 — All 14 hook events documented
 
 ---
 
-## Hook Events (11 Available)
+## Hook Events (14 Available)
 
-| Hook                   | Trigger                   | Use For                                |
-| ---------------------- | ------------------------- | -------------------------------------- |
-| **SessionStart**       | Session begins            | Inject git status, context, env vars   |
-| **UserPromptSubmit**   | User sends message        | Skill matching, prompt preprocessing   |
-| **PreToolUse**         | Before tool executes      | Block dangerous operations, validation |
-| **PostToolUse**        | After tool runs           | Auto-format, logging, monitoring       |
-| **PreCompact**         | Before context compaction | Backup transcripts, save state         |
-| **PermissionRequest**  | Permission dialog appears | Auto-approve safe commands             |
-| **Stop**               | Response ends             | Suggest skill creation, cleanup        |
-| **SessionEnd**         | Session closes            | Save summaries, final checkpoint       |
-| **PostToolUseFailure** | Tool call fails           | Log errors, track failure patterns     |
-| **SubagentStart**      | Subagent spawns           | Monitor agent lifecycle, logging       |
-| **SubagentStop**       | Subagent completes        | Log results, track agent activity      |
+| Hook                   | Trigger                       | Use For                                |
+| ---------------------- | ----------------------------- | -------------------------------------- |
+| **SessionStart**       | Session begins                | Inject git status, context, env vars   |
+| **UserPromptSubmit**   | User sends message            | Skill matching, prompt preprocessing   |
+| **PreToolUse**         | Before tool executes          | Block dangerous operations, validation |
+| **PostToolUse**        | After tool runs               | Auto-format, logging, monitoring       |
+| **PreCompact**         | Before context compaction     | Backup transcripts, save state         |
+| **PermissionRequest**  | Permission dialog appears     | Auto-approve safe commands             |
+| **Notification**       | Claude sends a notification   | Custom alerts, logging, integrations   |
+| **Stop**               | Response ends                 | Suggest skill creation, cleanup        |
+| **SessionEnd**         | Session closes                | Save summaries, final checkpoint       |
+| **PostToolUseFailure** | Tool call fails               | Log errors, track failure patterns     |
+| **SubagentStart**      | Subagent spawns               | Monitor agent lifecycle, logging       |
+| **SubagentStop**       | Subagent completes            | Log results, track agent activity      |
+| **TeammateIdle**       | Teammate agent becomes idle   | Pause teammates, reassign work         |
+| **TaskCompleted**      | A task finishes (Agent Teams) | Reassign work, trigger follow-ups      |
 
 ### Hook Categories
 
@@ -31,7 +42,9 @@
 
 **Agent Lifecycle**: SubagentStart → (agent works) → SubagentStop
 
-**Other**: PreCompact (context management), PermissionRequest (security)
+**Agent Teams**: TeammateIdle (idle detection), TaskCompleted (task completion)
+
+**Other**: PreCompact (context management), PermissionRequest (security), Notification (alerts)
 
 ---
 
@@ -67,6 +80,290 @@ File: `.claude/settings.json`
   }
 }
 ```
+
+---
+
+## Hook Types (3 Available)
+
+Claude Code supports three distinct hook types. Each serves a different purpose and complexity level.
+
+### Command Hooks (`type: "command"`)
+
+Shell script execution. The hook receives JSON via stdin and can return JSON on stdout. This is the most common type and what all examples in this guide use by default.
+
+```json
+{
+  "hooks": [
+    {
+      "type": "command",
+      "command": ".claude/hooks/my-hook.sh"
+    }
+  ]
+}
+```
+
+- Receives event data as JSON on stdin
+- Returns structured JSON on stdout (optional)
+- Exit code 0 = success, exit code 2 = block/deny (event-dependent)
+- Full control over logic via any scripting language
+
+### Prompt Hooks (`type: "prompt"`)
+
+Single-turn LLM evaluation. Instead of running a shell script, the hook sends a prompt to an LLM which evaluates the situation and returns a decision. No tools are available to the LLM -- it makes its decision based solely on the prompt and the event context provided.
+
+```json
+{
+  "PreToolUse": [
+    {
+      "matcher": { "tool_name": "Bash" },
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Evaluate if this bash command is safe to run. Block any destructive commands like rm -rf, git push --force, or DROP TABLE. Return ALLOW for safe commands, DENY for dangerous ones."
+        }
+      ]
+    }
+  ]
+}
+```
+
+**When to use prompt hooks**:
+
+- Quick safety evaluations that don't need file system access
+- Style or convention checks based on content alone
+- Simple allow/deny decisions based on pattern recognition
+
+**Tradeoffs**:
+
+- Simpler to set up than command hooks (no script file needed)
+- Adds LLM inference latency to every matched event
+- Cannot run external tools, read files, or execute commands
+- Decision quality depends on prompt clarity
+
+### Agent Hooks (`type: "agent"`)
+
+Multi-turn hook with full tool access. The hook prompt is given to an agent that can use tools (Read, Bash, Grep, etc.) to investigate the situation before making a decision. This is the most powerful but also the most expensive hook type.
+
+```json
+{
+  "PreToolUse": [
+    {
+      "matcher": { "tool_name": "Write" },
+      "hooks": [
+        {
+          "type": "agent",
+          "prompt": "Review the file being written. Check if it follows project conventions by reading similar files in the same directory. Block if it violates established patterns."
+        }
+      ]
+    }
+  ]
+}
+```
+
+**When to use agent hooks**:
+
+- Complex validations requiring file system inspection
+- Checks that need to compare against existing code patterns
+- Reviews that require reading multiple files for context
+
+**Tradeoffs**:
+
+- Most powerful: can read files, run commands, search code
+- Most expensive: multiple LLM calls + tool execution per hook invocation
+- Slowest: adds significant latency (seconds to minutes)
+- Use sparingly on high-frequency events like PostToolUse
+
+### Hook Type Comparison
+
+| Aspect       | `command`         | `prompt`            | `agent`                |
+| ------------ | ----------------- | ------------------- | ---------------------- |
+| Execution    | Shell script      | Single LLM turn     | Multi-turn LLM + tools |
+| Latency      | Milliseconds      | 1-3 seconds         | 5-30+ seconds          |
+| Cost         | Free (local)      | 1 LLM call          | Multiple LLM calls     |
+| Tool access  | External commands | None                | Full Claude tools      |
+| Setup effort | Script file       | Inline prompt       | Inline prompt          |
+| Best for     | Automation, CI    | Quick safety checks | Deep code review       |
+
+---
+
+## Async Hooks
+
+Any hook can be made asynchronous by adding `"async": true`. Async hooks run in the background without blocking Claude's workflow.
+
+```json
+{
+  "PostToolUse": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": ".claude/hooks/log-analytics.sh",
+          "async": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Key behaviors**:
+
+- The hook runs in the background; Claude does not wait for it to finish
+- Cannot influence Claude's behavior (no blocking, no modifying output)
+- Ideal for logging, analytics, notifications, and telemetry
+- If the hook fails, Claude is not affected
+
+**When to use async**:
+
+- Sending notifications to Slack/Discord/email
+- Logging tool usage to an external analytics service
+- Writing audit trails that don't need to block execution
+- Any "fire and forget" side effect
+
+---
+
+## Hook Locations (6 Scopes)
+
+Hooks can be defined in multiple locations. They are loaded and merged in this order (later scopes add to, but don't override, earlier ones):
+
+| Priority | Location                      | Scope                      | Use Case                         |
+| -------- | ----------------------------- | -------------------------- | -------------------------------- |
+| 1        | `~/.claude/settings.json`     | User (all projects)        | Personal workflow automation     |
+| 2        | `.claude/settings.json`       | Project (committed)        | Team-shared hooks                |
+| 3        | `.claude/settings.local.json` | Local (not committed)      | Personal overrides for a project |
+| 4        | Managed policy                | Enterprise (admin-managed) | Organization-wide enforcement    |
+| 5        | Plugin hooks                  | Installed plugins          | Plugin-provided automation       |
+| 6        | Skill/agent frontmatter       | YAML `hooks:` field        | Skill-specific hooks             |
+
+**How merging works**: Hooks from all scopes are combined. If the same event has hooks in multiple scopes, all hooks run (they don't replace each other). This means a user-level SessionStart hook and a project-level SessionStart hook both execute.
+
+**Skill frontmatter hooks** support a `once` field to limit execution:
+
+```yaml
+hooks:
+  PreToolUse:
+    - matcher: { tool_name: "Bash" }
+      hooks:
+        - type: command
+          command: "./check.sh"
+      once: true # Only runs once per session, not on every match
+```
+
+---
+
+## Decision Control Patterns
+
+Different hook events handle decisions differently. Understanding these patterns is essential for writing hooks that correctly block, allow, or modify behavior.
+
+### PreToolUse Decision Output
+
+PreToolUse hooks use `hookSpecificOutput` to communicate decisions:
+
+```json
+{
+  "hookSpecificOutput": {
+    "decision": "allow"
+  }
+}
+```
+
+Valid decisions for PreToolUse:
+
+- `"allow"` -- permit the tool call to proceed
+- `"deny"` -- block the tool call (Claude sees the denial)
+- `"ask_user"` -- pause and ask the user for confirmation
+
+Example deny with reason:
+
+```json
+{
+  "hookSpecificOutput": {
+    "decision": "deny",
+    "reason": "Cannot write files to project root. Use src/ or memory-bank/ instead."
+  }
+}
+```
+
+### Other Events Decision Output
+
+Events other than PreToolUse use a top-level `decision` field:
+
+```json
+{
+  "decision": "block",
+  "reason": "Explanation shown to the user"
+}
+```
+
+### Exit Code 2 Behavior
+
+Exit code 2 has **different effects** depending on the hook event:
+
+| Event              | Exit Code 2 Effect                     |
+| ------------------ | -------------------------------------- |
+| PreToolUse         | Blocks the tool call                   |
+| PostToolUse        | Ignored (tool already ran)             |
+| UserPromptSubmit   | Blocks the prompt from being processed |
+| Notification       | Ignored                                |
+| Stop               | Ignored                                |
+| SessionEnd         | Ignored                                |
+| PostToolUseFailure | Ignored                                |
+| TeammateIdle       | Pauses the idle teammate               |
+| TaskCompleted      | Can reassign the completed task        |
+| SubagentStart      | Ignored                                |
+| SubagentStop       | Ignored                                |
+
+**Rule of thumb**: Exit code 2 only matters for "Pre" events (where blocking makes sense) and agent team events (where pausing/reassignment makes sense).
+
+---
+
+## MCP Tool Matching
+
+When matching MCP (Model Context Protocol) tool calls in `PreToolUse` or `PostToolUse`, use the `mcp__<server>__<tool>` naming pattern:
+
+```json
+{
+  "PreToolUse": [
+    {
+      "matcher": {
+        "tool_name": "mcp__postgres__query"
+      },
+      "hooks": [
+        {
+          "type": "command",
+          "command": ".claude/hooks/validate-sql-query.sh"
+        }
+      ]
+    }
+  ]
+}
+```
+
+More examples:
+
+```json
+{
+  "PreToolUse": [
+    {
+      "matcher": { "tool_name": "mcp__slack__post_message" },
+      "hooks": [
+        {
+          "type": "command",
+          "command": ".claude/hooks/review-slack-message.sh"
+        }
+      ]
+    },
+    {
+      "matcher": { "tool_name": "mcp__github__create_pull_request" },
+      "hooks": [
+        { "type": "command", "command": ".claude/hooks/validate-pr.sh" }
+      ]
+    }
+  ]
+}
+```
+
+**Pattern**: The tool name follows the format `mcp__<server-name>__<tool-name>`, where the server name comes from your MCP configuration and the tool name is defined by the MCP server.
 
 ---
 
@@ -334,9 +631,98 @@ exit 0
 
 **Production use**: Track which agents are spawned, how often, and correlate with tool failures.
 
+### Notification
+
+Fires when Claude Code sends a notification (e.g., task completed, waiting for input). Use for custom alert routing or logging.
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/notification-handler.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**stdin JSON**: `{"message": "Task completed successfully", "title": "Claude Code"}`
+
+**Example use cases**:
+
+- Forward notifications to Slack, Discord, or desktop notification systems
+- Log notification history for session analysis
+- Trigger external workflows when specific notifications occur
+
+**Exit code 2**: Ignored (notification has already been generated).
+
+### TeammateIdle (Agent Teams)
+
+Fires when a teammate agent becomes idle in an Agent Teams configuration. Use to monitor agent utilization or pause idle agents to conserve resources.
+
+```json
+{
+  "hooks": {
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/teammate-idle.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Exit code 2**: Pauses the idle teammate, preventing it from picking up new work until explicitly resumed.
+
+**Example use cases**:
+
+- Pause agents that have been idle too long to reduce API costs
+- Log agent utilization metrics
+- Trigger rebalancing of work across teammates
+
+### TaskCompleted (Agent Teams)
+
+Fires when a task is completed in an Agent Teams configuration. Use to trigger follow-up actions or reassign work.
+
+```json
+{
+  "hooks": {
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/task-completed.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Exit code 2**: Can reassign the completed task (e.g., for review by another agent or additional processing).
+
+**Example use cases**:
+
+- Automatically trigger tests after a coding task completes
+- Reassign completed work to a review agent
+- Update external project tracking systems
+
 ---
 
-## Complete settings.json Example (All 11 Events)
+## Complete settings.json Example (All 14 Events)
 
 ```json
 {
@@ -418,6 +804,30 @@ exit 0
           { "type": "command", "command": ".claude/hooks/subagent-monitor.sh" }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/notification-handler.sh"
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/teammate-idle.sh" }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/task-completed.sh" }
+        ]
+      }
     ]
   }
 }
@@ -429,7 +839,7 @@ exit 0
 
 ## Real Example
 
-**Production**: 11 hooks, 6-8 hours/year ROI
+**Production**: 14 hooks, 6-8 hours/year ROI
 
 See: `examples/production-claude-hooks/`
 

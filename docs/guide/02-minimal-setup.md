@@ -388,7 +388,7 @@ claude-code
 - Pre-prompt hook (84% skill activation)
 - Learned patterns directory
 
-→ See [03-phase-1-essential.md](03-phase-1-essential.md)
+→ See [Chapter 13: Claude Code Hooks](13-claude-code-hooks.md) and [Chapter 06: MCP Integration](06-mcp-integration.md)
 
 ### Phase 2: Productive Setup (Week 2-3 - Optional)
 
@@ -399,7 +399,7 @@ claude-code
 - Feature blueprints
 - Domain authorities
 
-→ See [04-phase-2-productive.md](04-phase-2-productive.md)
+→ See [Chapter 12: Memory Bank Hierarchy](12-memory-bank-hierarchy.md) and [Chapter 16: Skills Activation](16-skills-activation-breakthrough.md)
 
 ### Phase 3: Advanced Setup (Month 2+ - Optional)
 
@@ -410,7 +410,7 @@ claude-code
 - Full agent system
 - Complete 4-tier memory bank
 
-→ See [05-phase-3-advanced.md](05-phase-3-advanced.md)
+→ See [Chapter 36: Agents and Subagents](36-agents-and-subagents.md) and [Chapter 29: Branch Context System](29-branch-context-system.md)
 
 ---
 
@@ -569,12 +569,11 @@ git commit -m "checkpoint: [what you accomplished]"
 ## References
 
 - **Complete Setup Guide**: [../guide/](../)
-- **Skills Framework**: [06-skills-framework.md](06-skills-framework.md)
-- **MCP Integration**: [07-mcp-integration.md](07-mcp-integration.md)
-- **Troubleshooting**: [10-troubleshooting.md](10-troubleshooting.md)
+- **MCP Integration**: [06-mcp-integration.md](06-mcp-integration.md)
+- **Skills Activation**: [16-skills-activation-breakthrough.md](16-skills-activation-breakthrough.md)
 - **Interactive Checklist**: [../../web/index.html](../../web/index.html)
 
 ---
 
 **Minimal Setup Guide**: 30-minute path to productive Claude Code
-**Next**: [Phase 1 Essential Setup](03-phase-1-essential.md) (optional, Week 1)
+**Next**: [Chapter 04: Task Tracking System](04-task-tracking-system.md)

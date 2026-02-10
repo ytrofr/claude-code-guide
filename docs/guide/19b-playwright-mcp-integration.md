@@ -1,4 +1,4 @@
-# Chapter 19: Playwright MCP Integration
+# Chapter 19b: Playwright MCP Integration
 
 > Browser automation for Claude Code via accessibility tree (no vision model needed)
 
@@ -14,13 +14,13 @@ Playwright MCP enables Claude Code to automate web browsers using Playwright's a
 
 ### Key Benefits
 
-| Aspect | Playwright MCP | Screenshot-based |
-|--------|----------------|------------------|
-| Data Format | Structured accessibility tree | Pixel images |
-| Model Type | Language model only | Vision model required |
-| Speed | Faster (no image processing) | Slower (image analysis) |
-| Cost | Lower (no vision models) | Higher (vision models) |
-| Reliability | Higher (deterministic) | Lower (ambiguity risk) |
+| Aspect      | Playwright MCP                | Screenshot-based        |
+| ----------- | ----------------------------- | ----------------------- |
+| Data Format | Structured accessibility tree | Pixel images            |
+| Model Type  | Language model only           | Vision model required   |
+| Speed       | Faster (no image processing)  | Slower (image analysis) |
+| Cost        | Lower (no vision models)      | Higher (vision models)  |
+| Reliability | Higher (deterministic)        | Lower (ambiguity risk)  |
 
 ---
 
@@ -37,6 +37,7 @@ sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
 ```
 
 **Why needed**: Chromium requires these shared libraries. Without them, you'll see:
+
 ```
 error while loading shared libraries: libnspr4.so: cannot open shared object file
 ```
@@ -44,16 +45,19 @@ error while loading shared libraries: libnspr4.so: cannot open shared object fil
 ### 2. Install Playwright MCP Globally
 
 **For WSL/Linux (RECOMMENDED)**:
+
 ```bash
 claude mcp add --scope user playwright -- npx -y @playwright/mcp@latest --browser chromium --isolated
 ```
 
 **For macOS/Windows**:
+
 ```bash
 claude mcp add --scope user playwright -- npx -y @playwright/mcp@latest
 ```
 
 **Flags explained**:
+
 - `--browser chromium`: Use bundled Chromium (WSL doesn't have system Chrome)
 - `--isolated`: Prevent "browser already in use" errors
 
@@ -87,46 +91,46 @@ browser_screenshot()  # Returns page image
 
 ### Navigation Tools
 
-| Tool | Purpose | Example |
-|------|---------|---------|
-| `browser_navigate` | Go to URL | `browser_navigate(url="https://example.com")` |
-| `browser_navigate_back` | Navigate back | `browser_navigate_back()` |
-| `browser_reload` | Refresh page | `browser_reload()` |
+| Tool                    | Purpose       | Example                                       |
+| ----------------------- | ------------- | --------------------------------------------- |
+| `browser_navigate`      | Go to URL     | `browser_navigate(url="https://example.com")` |
+| `browser_navigate_back` | Navigate back | `browser_navigate_back()`                     |
+| `browser_reload`        | Refresh page  | `browser_reload()`                            |
 
 ### Inspection Tools
 
-| Tool | Purpose | Returns |
-|------|---------|---------|
-| `browser_snapshot` | Get accessibility tree | Structured page content |
-| `browser_console_messages` | Console output | Logs, errors, warnings |
-| `browser_network_requests` | Network activity | XHR/fetch requests |
+| Tool                       | Purpose                | Returns                 |
+| -------------------------- | ---------------------- | ----------------------- |
+| `browser_snapshot`         | Get accessibility tree | Structured page content |
+| `browser_console_messages` | Console output         | Logs, errors, warnings  |
+| `browser_network_requests` | Network activity       | XHR/fetch requests      |
 
 ### Interaction Tools
 
-| Tool | Purpose | Example |
-|------|---------|---------|
-| `browser_click` | Click element | `browser_click(element="Submit button", ref="e123")` |
-| `browser_type` | Type into field | `browser_type(element="Search", ref="e45", text="query")` |
-| `browser_fill_form` | Fill multiple fields | `browser_fill_form(fields=[...])` |
-| `browser_hover` | Hover element | `browser_hover(element="Menu", ref="e67")` |
-| `browser_drag` | Drag and drop | `browser_drag(startElement="Item", startRef="e1", endElement="Target", endRef="e2")` |
-| `browser_select_option` | Select dropdown | `browser_select_option(element="Country", ref="e89", values=["Israel"])` |
+| Tool                    | Purpose              | Example                                                                              |
+| ----------------------- | -------------------- | ------------------------------------------------------------------------------------ |
+| `browser_click`         | Click element        | `browser_click(element="Submit button", ref="e123")`                                 |
+| `browser_type`          | Type into field      | `browser_type(element="Search", ref="e45", text="query")`                            |
+| `browser_fill_form`     | Fill multiple fields | `browser_fill_form(fields=[...])`                                                    |
+| `browser_hover`         | Hover element        | `browser_hover(element="Menu", ref="e67")`                                           |
+| `browser_drag`          | Drag and drop        | `browser_drag(startElement="Item", startRef="e1", endElement="Target", endRef="e2")` |
+| `browser_select_option` | Select dropdown      | `browser_select_option(element="Country", ref="e89", values=["Israel"])`             |
 
 ### Screenshot Tools
 
-| Tool | Purpose | Output |
-|------|---------|--------|
-| `browser_take_screenshot` | Capture page/element | PNG file |
-| `browser_evaluate` | Run JavaScript | Custom output |
+| Tool                      | Purpose              | Output        |
+| ------------------------- | -------------------- | ------------- |
+| `browser_take_screenshot` | Capture page/element | PNG file      |
+| `browser_evaluate`        | Run JavaScript       | Custom output |
 
 ### Tab Management
 
-| Tool | Purpose |
-|------|---------|
-| `browser_tabs` (action="list") | List all tabs |
-| `browser_tabs` (action="new") | Open new tab |
+| Tool                             | Purpose       |
+| -------------------------------- | ------------- |
+| `browser_tabs` (action="list")   | List all tabs |
+| `browser_tabs` (action="new")    | Open new tab  |
 | `browser_tabs` (action="select") | Switch to tab |
-| `browser_tabs` (action="close") | Close tab |
+| `browser_tabs` (action="close")  | Close tab     |
 
 ---
 
@@ -187,7 +191,13 @@ Playwright MCP defaults to Chromium. For other browsers:
   "playwright": {
     "type": "stdio",
     "command": "npx",
-    "args": ["-y", "@playwright/mcp@latest", "--browser", "firefox", "--isolated"]
+    "args": [
+      "-y",
+      "@playwright/mcp@latest",
+      "--browser",
+      "firefox",
+      "--isolated"
+    ]
   }
 }
 ```
@@ -200,7 +210,14 @@ Default is headless (no visible browser). For visible:
 
 ```json
 {
-  "args": ["-y", "@playwright/mcp@latest", "--browser", "chromium", "--headless", "false"]
+  "args": [
+    "-y",
+    "@playwright/mcp@latest",
+    "--browser",
+    "chromium",
+    "--headless",
+    "false"
+  ]
 }
 ```
 
@@ -208,7 +225,16 @@ Default is headless (no visible browser). For visible:
 
 ```json
 {
-  "args": ["-y", "@playwright/mcp@latest", "--browser", "chromium", "--viewport-width", "1920", "--viewport-height", "1080"]
+  "args": [
+    "-y",
+    "@playwright/mcp@latest",
+    "--browser",
+    "chromium",
+    "--viewport-width",
+    "1920",
+    "--viewport-height",
+    "1080"
+  ]
 }
 ```
 
@@ -316,6 +342,7 @@ npx playwright install chromium
 **Cause**: Browser process crashed or stale lock exists
 
 **Solutions**:
+
 1. **Restart Claude Code** (most reliable)
 2. Kill Chromium: `pkill -f chromium`
 3. Clear cache: `rm -rf ~/.cache/ms-playwright/mcp-chromium-*`
@@ -325,6 +352,7 @@ npx playwright install chromium
 **Cause**: Previous browser session didn't close cleanly
 
 **Solutions**:
+
 1. Use `--isolated` flag in MCP config (prevents this)
 2. Call `browser_close()` before navigating
 3. Restart Claude Code
@@ -332,6 +360,7 @@ npx playwright install chromium
 ### "Browser specified in config is not installed"
 
 **Solution**: Install browser binaries:
+
 ```bash
 npx playwright install chromium
 ```
@@ -378,6 +407,7 @@ playwright: npx -y @playwright/mcp@latest --browser chromium --isolated - ✓ Co
 ### Production Production Test
 
 **Test Results**:
+
 - ✅ Navigation: `https://example.com` loaded successfully
 - ✅ Accessibility tree: Full Hebrew RTL dashboard structure captured
 - ✅ Interactions: Clicked chat button, typed Hebrew text
@@ -387,6 +417,7 @@ playwright: npx -y @playwright/mcp@latest --browser chromium --isolated - ✓ Co
 - ✅ Multi-tab: Tab management working
 
 **Data Extracted** (Dec 30, 2025):
+
 - Labor cost ratio: 17.73%
 - Total labor: ₪2,155
 - Total sales: ₪12,156
@@ -394,6 +425,7 @@ playwright: npx -y @playwright/mcp@latest --browser chromium --isolated - ✓ Co
 - Forecast: 20 products with trends
 
 **Errors Found**:
+
 - `/api/auth/me` → 404
 - `/api/page-permissions/my-pages` → 500
 
@@ -401,12 +433,12 @@ playwright: npx -y @playwright/mcp@latest --browser chromium --isolated - ✓ Co
 
 ## Integration with Other MCPs
 
-| MCP | Integration Pattern | Example |
-|-----|-------------------|---------|
-| PostgreSQL | Verify UI matches DB | Extract dashboard value → query DB → compare |
-| GitHub | Automate PR reviews | Navigate to PR → screenshot diff → analyze |
-| Basic Memory | Cache test patterns | Store common workflows for reuse |
-| Perplexity | Research before testing | Search for site structure before automating |
+| MCP          | Integration Pattern     | Example                                      |
+| ------------ | ----------------------- | -------------------------------------------- |
+| PostgreSQL   | Verify UI matches DB    | Extract dashboard value → query DB → compare |
+| GitHub       | Automate PR reviews     | Navigate to PR → screenshot diff → analyze   |
+| Basic Memory | Cache test patterns     | Store common workflows for reuse             |
+| Perplexity   | Research before testing | Search for site structure before automating  |
 
 ---
 
@@ -469,9 +501,11 @@ Check page structure:
 ---
 
 **Related Guides**:
+
 - [Chapter 06: MCP Integration](06-mcp-integration.md)
 - [Chapter 18: Perplexity Cost Optimization](18-perplexity-cost-optimization.md)
 
 **Skills**:
+
 - `playwright-mcp-skill` (recommended)
 - `comprehensive-testing-skill` (for E2E patterns)

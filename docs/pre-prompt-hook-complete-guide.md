@@ -1,9 +1,17 @@
+---
+layout: default
+title: "Claude Code Pre-Prompt Hook - 370x Performance Optimization"
+description: "Optimize Claude Code pre-prompt hooks from 38 seconds to 103ms. Skill caching, hybrid matching, and branch-aware context injection."
+---
+
 # Pre-Prompt Hook System - Complete Implementation Guide
 
-**Author**: Production dev-Knowledge Branch  
-**Performance**: 370x optimization (50s → 136ms) - Entry #267  
-**Accuracy**: 88.2% (150/170 tests) - Entry #271  
-**ROI**: 85+ hours/year saved - Entry #272  
+The pre-prompt hook is a UserPromptSubmit hook that automatically intercepts queries, matches them against a cached skill library using keyword scoring, and injects the top 3 matching skills into Claude's context. This implementation achieved a 370x performance improvement (from 50 seconds to 136ms) and 88.2% activation accuracy across 170 test queries. It saves 85+ hours per year in production.
+
+**Author**: Production dev-Knowledge Branch
+**Performance**: 370x optimization (50s -> 136ms) - Entry #267
+**Accuracy**: 88.2% (150/170 tests) - Entry #271
+**ROI**: 85+ hours/year saved - Entry #272
 **Status**: Production-validated, battle-tested
 
 ---
@@ -160,6 +168,7 @@ echo "✅ skill-name-3"
 ```
 
 **Full Implementation**: See Production repository for complete 500-line version with:
+
 - Hybrid cache system (370x faster)
 - Advanced scoring algorithm
 - P0-P3 priority handling
@@ -178,7 +187,7 @@ mkdir -p tests/skills/results
 
 **Example**: `~/.claude/skills/deployment-workflow-skill/SKILL.md`
 
-```yaml
+````yaml
 ---
 name: deployment-workflow-skill
 description: "Execute deployment workflow with validation and rollback. Use when deploying to staging/production, running gcloud deploy, or when user mentions 'deployment stuck'."
@@ -199,7 +208,7 @@ gcloud run deploy SERVICE-staging --source . --region us-central1
 
 # Production deployment (after staging validation)
 gcloud run deploy SERVICE-production --source . --region us-central1
-```
+````
 
 ## When to Use
 
@@ -243,6 +252,7 @@ curl https://SERVICE.run.app/health
 
 - cloud-run-safe-deployment-skill
 - post-deployment-validation-skill
+
 ```
 
 **Key Requirements** (MANDATORY):
@@ -253,9 +263,11 @@ curl https://SERVICE.run.app/health
    - `Triggers:` field (5-10 comma-separated keywords)
 
 2. **Description Pattern** (Anthropic Official):
-   ```
-   "[SPECIFIC ACTIONS with verbs]. Use when [scenarios] or when user mentions [keywords]."
-   ```
+```
+
+"[SPECIFIC ACTIONS with verbs]. Use when [scenarios] or when user mentions [keywords]."
+
+````
 
 3. **File Size**: Max 500 lines (Anthropic limit)
 
@@ -269,7 +281,7 @@ echo '{"prompt": "deploy to staging"}' | bash .claude/hooks/pre-prompt.sh
 
 # Expected output:
 # ✅ deployment-workflow-skill (rank #1, score 95.2)
-```
+````
 
 If cache doesn't exist, the hook will build it automatically.
 
@@ -286,10 +298,10 @@ test_skill() {
   local query="$2"
   local domain="$3"
   local priority="$4"
-  
+
   # Run hook
   result=$(echo "{\"prompt\": \"$query\"}" | bash .claude/hooks/pre-prompt.sh)
-  
+
   # Check if expected skill in top 3
   if echo "$result" | grep -q "✅ $expected"; then
     echo "PASS: $expected | $query"
@@ -355,6 +367,7 @@ wc -l ~/.claude/cache/skill-index-hybrid.txt
 ### When to Rebuild Cache
 
 ✅ **ALWAYS rebuild after**:
+
 - Created new skill
 - Modified skill triggers/description
 - Deleted skill
@@ -384,7 +397,7 @@ echo "Cached skills: $CACHE_COUNT"
 if [ "$FS_COUNT" -gt 0 ]; then
   COVERAGE=$(awk "BEGIN {printf \"%.1f\", ($CACHE_COUNT / $FS_COUNT) * 100}")
   echo "Coverage: $COVERAGE%"
-  
+
   if (( $(echo "$COVERAGE < 95" | bc -l) )); then
     echo "⚠️  WARNING: Cache coverage below 95% - rebuild recommended"
     echo ""
@@ -606,12 +619,12 @@ LAST_WEEK=$(ls -t tests/skills/results/weekly-health-*.json 2>/dev/null | head -
 if [ -f "$LAST_WEEK" ]; then
   LAST_ACCURACY=$(jq -r '.accuracy' "$LAST_WEEK" 2>/dev/null || echo "0")
   CHANGE=$(awk "BEGIN {printf \"%.1f\", $ACCURACY - $LAST_ACCURACY}")
-  
+
   echo "📈 Week-over-Week:"
   echo "  Last week: $LAST_ACCURACY%"
   echo "  This week: $ACCURACY%"
   echo "  Change: $CHANGE%"
-  
+
   if (( $(echo "$CHANGE < -2" | bc -l) )); then
     echo "  ⚠️  ALERT: Accuracy dropped >2% - investigation needed!"
   fi
@@ -672,7 +685,7 @@ Set calendar reminder: "Monday 9AM - Skill Health Check"
 Weekly_Monitoring:
   Time: 50 min/week × 52 weeks
   Savings: 43.3 hours/year
-  
+
 Monthly_Optimization:
   Time: 40 min × 12 months
   Savings: 8 hours/year
@@ -708,7 +721,7 @@ Perfect (100%):
   Sacred: 3/3 tests
   Hebrew: 2/2 tests
   Git: 1/1 test
-  
+
 Excellent (90%+):
   AI/LLM: 19/20 tests (95%)
   Troubleshooting: 17/18 tests (94.4%)
@@ -745,12 +758,12 @@ Solution:
      - mobile-responsive-skill (mobile, responsive)
      - theme-migration-skill (theme, chakra, css)
      - dashboard-optimization-skill (dashboard, ui, layout)
-  
+
   2. Add exact phrases:
      - "mobile not working" → mobile-responsive-skill
      - "theme broken" → theme-migration-skill
      - "dashboard layout" → dashboard-optimization-skill
-  
+
   3. Re-test:
      Expected: 12/16 tests (75%) → 14/16 tests (87.5%)
 ```
@@ -823,11 +836,13 @@ grep -r "deployment" ~/.claude/skills/*/SKILL.md | cut -d: -f1 | sort -u
 ### Issue 1: Cache Coverage Below 100%
 
 **Symptoms**:
+
 - Cache shows fewer skills than filesystem
 - Skills exist but don't match queries
 - Coverage <95%
 
 **Diagnosis**:
+
 ```bash
 FS_COUNT=$(find ~/.claude/skills -name "SKILL.md" -type f | wc -l)
 CACHE_COUNT=$(( $(wc -l < ~/.claude/cache/skill-index-hybrid.txt) - 1 ))
@@ -835,6 +850,7 @@ echo "Filesystem: $FS_COUNT | Cache: $CACHE_COUNT"
 ```
 
 **Solution**:
+
 ```bash
 # Force cache rebuild
 rm ~/.claude/cache/skill-index-hybrid.txt
@@ -850,11 +866,13 @@ echo '{"prompt": "rebuild"}' | bash .claude/hooks/pre-prompt.sh >/dev/null 2>&1
 ### Issue 2: Skill Not Ranking in Top 3
 
 **Symptoms**:
+
 - Skill exists and in cache
 - But ranks #4-10 for relevant queries
 - Tests showing FAIL
 
 **Diagnosis**:
+
 ```bash
 # Test specific query
 echo '{"prompt": "your query"}' | bash .claude/hooks/pre-prompt.sh
@@ -867,6 +885,7 @@ echo '{"prompt": "your query"}' | bash .claude/hooks/pre-prompt.sh
 ```
 
 **Solution**:
+
 ```bash
 # 1. Add exact query phrase to skill Triggers
 vim ~/.claude/skills/your-skill/SKILL.md
@@ -883,6 +902,7 @@ echo '{"prompt": "your query"}' | bash .claude/hooks/pre-prompt.sh
 ```
 
 **Best Practices**:
+
 - Add 7-10 trigger keywords per skill
 - Include exact user query phrases
 - Use specific terms (not generic)
@@ -893,11 +913,13 @@ echo '{"prompt": "your query"}' | bash .claude/hooks/pre-prompt.sh
 ### Issue 3: Accuracy Dropped >5%
 
 **Symptoms**:
+
 - Weekly test shows accuracy drop
 - Multiple domains affected
 - No obvious code changes
 
 **Diagnosis**:
+
 ```bash
 # Compare recent results
 ls -t tests/skills/results/skill-test-*.json | head -3
@@ -907,12 +929,14 @@ diff <(cat result1.json | grep FAIL) <(cat result2.json | grep FAIL)
 ```
 
 **Common Causes**:
+
 1. **Cache staleness** (most common)
 2. **Skill deletions** (removed without updating tests)
 3. **Trigger keyword conflicts** (new skill shadowing old)
 4. **Test suite changes** (new harder tests added)
 
 **Solution**:
+
 ```bash
 # 1. Rebuild cache
 rm ~/.claude/cache/skill-index-hybrid.txt
@@ -932,11 +956,13 @@ cat tests/skills/results/skill-test-*.json | grep '"status":"FAIL"' | jq -r '.ex
 ### Issue 4: Hook Not Running
 
 **Symptoms**:
+
 - No skill suggestions appear
 - Hook output not showing
 - Claude not loading skills
 
 **Diagnosis**:
+
 ```bash
 # 1. Check hook exists
 ls -la .claude/hooks/pre-prompt.sh
@@ -949,6 +975,7 @@ echo '{"prompt": "test"}' | bash .claude/hooks/pre-prompt.sh
 ```
 
 **Solution**:
+
 ```bash
 # Make hook executable
 chmod +x .claude/hooks/pre-prompt.sh
@@ -963,11 +990,13 @@ echo '{"prompt": "test"}' | bash .claude/hooks/pre-prompt.sh
 ### Issue 5: Flaky Tests (Pass/Fail Inconsistently)
 
 **Symptoms**:
+
 - Test passes sometimes, fails other times
 - Same query, different results
 - Accuracy varies >3% between runs
 
 **Diagnosis**:
+
 ```bash
 # Run test 5 times, check variance
 for i in {1..5}; do
@@ -983,11 +1012,13 @@ done
 ```
 
 **Common Causes**:
+
 1. **Tied scores** (multiple skills same score)
 2. **Cache rebuilding** during test (timing issue)
 3. **Non-deterministic ranking** (random tiebreaker)
 
 **Solution**:
+
 ```bash
 # 1. Ensure cache built before test
 rm ~/.claude/cache/skill-index-hybrid.txt
@@ -1128,7 +1159,7 @@ Use this checklist to track your implementation:
 
 ---
 
-**Questions?** 
+**Questions?**
 
 - Check [Troubleshooting](#troubleshooting) section
 - Review Production implementation (dev-Knowledge branch)

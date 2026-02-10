@@ -1,7 +1,15 @@
+---
+layout: default
+title: "Claude Code Skills - Activation System & Best Practices"
+description: "Build Claude Code skills with 88% activation accuracy. Frontmatter standards, trigger keywords, and testing methodology for production skill libraries."
+---
+
 # Skill Activation System - Complete Implementation Guide
 
+The Claude Code skill activation system matches user queries to reusable skill files using keyword scoring, achieving 88.2% accuracy across 170 test queries and 13 domains. This guide covers the complete architecture: YAML frontmatter standards, trigger keyword optimization, cache management, P0-P3 test priorities, and weekly monitoring workflows.
+
 **Source**: Production Project - Entries #271, #272
-**Achievement**: 61.1% → 88.2% accuracy in 170-query test suite
+**Achievement**: 61.1% -> 88.2% accuracy in 170-query test suite
 **Created**: 2026-01-14
 
 ---

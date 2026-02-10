@@ -1,4 +1,4 @@
-# Chapter 29: Comprehensive Skill Activation Testing & Optimization
+# Chapter 29b: Comprehensive Skill Activation Testing & Optimization
 
 **Created**: 2026-01-14
 **Updated**: 2026-01-14 (Entry #271 - Test Priority Results)
@@ -13,11 +13,12 @@
 This chapter covers **comprehensive testing** and **optimization** for Claude Code skill activation systems. Learn how to measure, baseline, and improve skill matching accuracy from baseline to 100% for core workflows.
 
 **What You'll Learn**:
+
 - Multi-tier test suite architecture (80-841 query tests)
 - Skill activation optimization techniques (trigger deduplication, priority system)
 - Performance monitoring (accuracy + latency + usage frequency)
 - Anthropic best practices for skill design (500-line limit, progressive disclosure)
-- **NEW**: Test priority best practices (P0/P1/P2) - See Chapter 30
+- **NEW**: Test priority best practices (P0/P1/P2) - See [Chapter 30b](30b-test-priority-best-practices.md)
 
 **Prerequisites**: Chapter 17 (Skill Detection Enhancement), Chapter 20 (Skills Filtering)
 
@@ -27,16 +28,17 @@ This chapter covers **comprehensive testing** and **optimization** for Claude Co
 
 ### 6-Tier Testing Strategy
 
-| Test Suite | Size | Purpose | Target | Frequency |
-|------------|------|---------|--------|-----------|
-| **80-Query** | 80 | Core workflows, non-overlapping | 100% | Every commit |
-| **170-Query** | 170 | All skills + edge cases | **60%+** | Before merge |
-| **221-Query** | 220 | Existing skills verified | **75-80%** | Weekly |
-| **249-Query** | 249 | All trigger phrases | 95%+ | Before merge |
-| **500-Query** | ~295 | Prefix variations (help/how/show) | 70%+ | Before merge |
-| **841-Query** | ~740 | Realistic user variations | 65%+ | Monthly |
+| Test Suite    | Size | Purpose                           | Target     | Frequency    |
+| ------------- | ---- | --------------------------------- | ---------- | ------------ |
+| **80-Query**  | 80   | Core workflows, non-overlapping   | 100%       | Every commit |
+| **170-Query** | 170  | All skills + edge cases           | **60%+**   | Before merge |
+| **221-Query** | 220  | Existing skills verified          | **75-80%** | Weekly       |
+| **249-Query** | 249  | All trigger phrases               | 95%+       | Before merge |
+| **500-Query** | ~295 | Prefix variations (help/how/show) | 70%+       | Before merge |
+| **841-Query** | ~740 | Realistic user variations         | 65%+       | Monthly      |
 
 **Progressive Validation**:
+
 1. **80-Query** validates core workflows work
 2. **170/221-Query** validates comprehensive skill coverage
 3. **500/841-Query** validates natural language variations
@@ -52,6 +54,7 @@ This chapter covers **comprehensive testing** and **optimization** for Claude Co
 **Purpose**: Validate core workflows with 100% accuracy target
 
 **Structure**:
+
 ```bash
 # .claude/tests/skill-activation/test-cases-80.txt
 deploy to staging|deployment-workflow-skill
@@ -68,6 +71,7 @@ validate sacred compliance|sacred-commandments-skill
 **Purpose**: All skills including edge cases
 
 **Domains Covered** (13 domains):
+
 - Deployment (15 tests)
 - Database (10 tests)
 - API (10 tests)
@@ -85,22 +89,25 @@ validate sacred compliance|sacred-commandments-skill
 **Runner**: `tests/skills/comprehensive-skill-activation-test.sh`
 **Priority Levels**: P0 (must be #1), P1 (top 3), P2 (present in matches)
 
-**🆕 IMPORTANT (Entry #271)**: See Chapter 30 for test priority best practices!
+**🆕 IMPORTANT (Entry #271)**: See [Chapter 30b](30b-test-priority-best-practices.md) for test priority best practices!
 
 ### 3. Automated Test Generation (500/841 queries)
 
 **Generator Script**:
+
 ```bash
 # tests/skills/generate-comprehensive-tests.sh
 bash generate-comprehensive-tests.sh both  # Generate both suites
 ```
 
 **500-Query Generation** (Prefix Variations):
+
 - Extracts triggers from all skills
 - Creates "help me X", "how to X", "show me X" variations
 - ~295 test cases from 193 skills
 
 **841-Query Generation** (Realistic Variations):
+
 - Mixed case ("Deploy", "DEPLOY", "deploy")
 - Natural language ("i need to deploy")
 - Problem statements ("Deploy issue")
@@ -116,12 +123,14 @@ bash generate-comprehensive-tests.sh both  # Generate both suites
 **Example**: "test" matches 10+ skills
 
 **Solution**:
+
 1. Extract all trigger keywords
 2. Find keywords appearing in 3+ skills
 3. Make triggers skill-specific
 4. Deduplicate overlapping keywords
 
 **Command**:
+
 ```bash
 # Find overlapping triggers
 grep -h "^Triggers:" ~/.claude/skills/*/SKILL.md | \
@@ -142,11 +151,12 @@ grep -h "^Triggers:" ~/.claude/skills/*/SKILL.md | \
 ---
 name: deployment-workflow-skill
 description: "Deploy to Cloud Run..."
-priority: critical   # critical > high > medium > low
+priority: critical # critical > high > medium > low
 ---
 ```
 
 **Priority Levels**:
+
 - **critical** (2.0x multiplier): deployment, troubleshooting, Sacred compliance
 - **high** (1.5x multiplier): AI quality, testing, parity validation
 - **medium** (1.0x): Specific domain skills
@@ -163,6 +173,7 @@ priority: critical   # critical > high > medium > low
 **Solution**: Apply Anthropic 500-line limit
 
 **Pattern** (Progressive Disclosure):
+
 ```
 ~/.claude/skills/my-skill/
 ├── SKILL.md (under 500 lines)
@@ -173,6 +184,7 @@ priority: critical   # critical > high > medium > low
 ```
 
 **Example**:
+
 - skill-detection-enhancement-skill: 700 → 136 lines (81% reduction)
 - troubleshooting-workflow-skill: 665 → 176 lines (74% reduction)
 - sacred-commandments-skill: 573 → 211 lines (63% reduction)
@@ -186,6 +198,7 @@ priority: critical   # critical > high > medium > low
 **Problem**: Unrealistic P0 requirements causing low accuracy
 
 **Analysis**:
+
 - 134/170 tests required P0 (must be #1)
 - 98% of P0 tests had 5+ competing skills
 - Example: "deploy to staging" matches 10 skills - all valid!
@@ -193,6 +206,7 @@ priority: critical   # critical > high > medium > low
 **Solution**: Change P0 → P1 for tests with competing skills
 
 **Command**:
+
 ```bash
 # Identify P0 tests with 5+ matches
 bash analyze-competing-p0.sh
@@ -202,11 +216,12 @@ bash relax-p0-tests.sh
 ```
 
 **Result**:
+
 - Before: 134 P0 tests (79%) → Accuracy: 38.2%
 - After: 3 P0 (2%), 131 P1 (77%) → Accuracy: 61.7%
 - **Improvement**: +23.5% in 45 minutes
 
-**See Chapter 30** for complete test priority best practices!
+**See [Chapter 30b](30b-test-priority-best-practices.md)** for complete test priority best practices!
 
 ---
 
@@ -217,6 +232,7 @@ bash relax-p0-tests.sh
 **Monitor Script**: `tests/skills/skill-activation-monitor.sh`
 
 **Features**:
+
 - Accuracy tracking over time
 - Performance metrics (execution time)
 - Usage frequency (top 20 most matched skills)
@@ -224,6 +240,7 @@ bash relax-p0-tests.sh
 - Trend analysis (historical data)
 
 **Commands**:
+
 ```bash
 # Quick health check (10 critical skills)
 bash tests/skills/skill-activation-monitor.sh --health
@@ -245,13 +262,13 @@ bash tests/skills/skill-activation-monitor.sh --full
 
 ### Template Files
 
-| Template | Purpose | Size |
-|----------|---------|------|
-| `SKILL-TEMPLATE.md` | Anthropic-compliant skill structure | ~100 lines |
-| `RULE-TEMPLATE.md` | Project constraint patterns | ~60 lines |
-| `ENTRY-TEMPLATE.md` | Memory bank documentation | ~130 lines |
-| `BLUEPRINT-TEMPLATE.md` | System recreation guides | ~190 lines |
-| `README.md` | Template selection guide | ~150 lines |
+| Template                | Purpose                             | Size       |
+| ----------------------- | ----------------------------------- | ---------- |
+| `SKILL-TEMPLATE.md`     | Anthropic-compliant skill structure | ~100 lines |
+| `RULE-TEMPLATE.md`      | Project constraint patterns         | ~60 lines  |
+| `ENTRY-TEMPLATE.md`     | Memory bank documentation           | ~130 lines |
+| `BLUEPRINT-TEMPLATE.md` | System recreation guides            | ~190 lines |
+| `README.md`             | Template selection guide            | ~150 lines |
 
 ### When to Use Each Template
 
@@ -268,31 +285,32 @@ bash tests/skills/skill-activation-monitor.sh --full
 
 ### Progression Summary
 
-| Phase | Accuracy | Tests | Achievement |
-|-------|----------|-------|-------------|
-| Baseline | 80.4% | 35/80 | Initial state |
-| Phase 2 | 88% | 70.4/80 | Synonym expansion |
-| Phase 2.5 | 90% | 72/80 | Priority system |
-| **FINAL** | **100%** | **80/80** | ✅ COMPLETE |
+| Phase     | Accuracy | Tests     | Achievement       |
+| --------- | -------- | --------- | ----------------- |
+| Baseline  | 80.4%    | 35/80     | Initial state     |
+| Phase 2   | 88%      | 70.4/80   | Synonym expansion |
+| Phase 2.5 | 90%      | 72/80     | Priority system   |
+| **FINAL** | **100%** | **80/80** | ✅ COMPLETE       |
 
 **Total Improvement**: +19.6 percentage points (80.4% → 100%)
 
 ### Comprehensive Test Baselines
 
-| Test Suite | Tests | Accuracy | Status | Notes |
-|------------|-------|----------|--------|-------|
-| **80-Query** | 80 | **100%** | ✅ TARGET MET | Core workflows |
-| **170-Query** | 170 | **61.7%** | ✅ TARGET MET | Entry #271 (+23.5%) |
-| **221-Query** | 220 | **79.5%** | ✅ TARGET MET | Entry #271 |
-| **249-Query** | 249 | **100%** | ✅ TARGET MET | All trigger phrases |
-| **500-Query** | 295 | **32.2%** | 🎯 BASELINE | Prefix variations |
-| **841-Query** | 740 | **19.1%** | 🎯 BASELINE | Realistic variations |
+| Test Suite    | Tests | Accuracy  | Status        | Notes                |
+| ------------- | ----- | --------- | ------------- | -------------------- |
+| **80-Query**  | 80    | **100%**  | ✅ TARGET MET | Core workflows       |
+| **170-Query** | 170   | **61.7%** | ✅ TARGET MET | Entry #271 (+23.5%)  |
+| **221-Query** | 220   | **79.5%** | ✅ TARGET MET | Entry #271           |
+| **249-Query** | 249   | **100%**  | ✅ TARGET MET | All trigger phrases  |
+| **500-Query** | 295   | **32.2%** | 🎯 BASELINE   | Prefix variations    |
+| **841-Query** | 740   | **19.1%** | 🎯 BASELINE   | Realistic variations |
 
 **🆕 Updated Baselines (Entry #271)**:
+
 - 170-Query: 31.7% → **61.7%** (+23.5% via test priority relaxation)
 - 221-Query: 60.9% → **79.5%** (P0→P1 changes)
 
-**Key Insight**: 100% on core workflows validates primary mission success. Comprehensive test improvements came from realistic test priority expectations (see Chapter 30).
+**Key Insight**: 100% on core workflows validates primary mission success. Comprehensive test improvements came from realistic test priority expectations (see [Chapter 30b](30b-test-priority-best-practices.md)).
 
 ---
 
@@ -343,6 +361,7 @@ bash tests/skills/skill-activation-monitor.sh --full
 ## 🏆 Optimization Checklist
 
 ### Task 1: Remove Overlapping Triggers ✅
+
 - [ ] Extract all trigger keywords
 - [ ] Find keywords in 3+ skills
 - [ ] Make triggers skill-specific
@@ -351,6 +370,7 @@ bash tests/skills/skill-activation-monitor.sh --full
 **Result**: 0% overlap → 100% accuracy on core tests
 
 ### Task 2: Add Priority System ✅
+
 - [ ] Add priority field to critical skills (critical)
 - [ ] Add priority to high-use skills (high)
 - [ ] Add priority to domain skills (medium)
@@ -359,6 +379,7 @@ bash tests/skills/skill-activation-monitor.sh --full
 **Result**: 50+ skills with priority → tie-breaking works
 
 ### Task 3: Content Optimization ✅
+
 - [ ] Identify skills >500 lines
 - [ ] Split into SKILL.md + reference/
 - [ ] Keep SKILL.md under 500 lines
@@ -367,6 +388,7 @@ bash tests/skills/skill-activation-monitor.sh --full
 **Result**: ~1,200 lines reduced, 100% accuracy maintained
 
 ### **🆕 Task 4: Test Priority Relaxation ✅ (Entry #271)**
+
 - [ ] Analyze P0 tests for competing skills
 - [ ] Change P0 → P1 for tests with 5+ matches
 - [ ] Maintain only 2-5% P0 tests (truly unique skills)
@@ -381,22 +403,25 @@ bash tests/skills/skill-activation-monitor.sh --full
 ### Skill Creation
 
 **YAML Frontmatter** (REQUIRED):
+
 ```yaml
 ---
-name: your-skill-name-here  # Max 64 chars, lowercase-hyphen only
-description: "What it does and when to use it. Include 'Use when' clause."  # Max 1024 chars
-priority: medium  # critical|high|medium|low
-user-invocable: false  # Hide from menu if workflow-only
+name: your-skill-name-here # Max 64 chars, lowercase-hyphen only
+description: "What it does and when to use it. Include 'Use when' clause." # Max 1024 chars
+priority: medium # critical|high|medium|low
+user-invocable: false # Hide from menu if workflow-only
 ---
 ```
 
 **Description Guidelines**:
+
 - ✅ GOOD: "Validates database parity. Use when checking data consistency, after migrations"
 - ❌ BAD: "Helps with databases" (too vague)
 
 ### Testing Strategy
 
 **Test Pyramid**:
+
 ```
              /\     80-Query (100%)
             /  \    249-Query (95%+)
@@ -418,20 +443,21 @@ echo '{"prompt": "deploy to staging"}' | bash .claude/hooks/pre-prompt.sh 2>/dev
 ```
 
 **Decision Matrix**:
+
 - **5+ skills match** → Use P1 (top 3)
 - **2-4 skills match** → Use P1 (safe choice)
 - **1 skill matches** → P0 might be appropriate (if truly unique)
 
-**See Chapter 30** for complete test priority best practices and real-world examples!
+**See [Chapter 30b](30b-test-priority-best-practices.md)** for complete test priority best practices and real-world examples!
 
 ### Performance Targets
 
-| Metric | Target | Achieved |
-|--------|--------|----------|
-| Hook execution | <500ms | 136ms (370x faster) |
-| Test execution | <1s | ~0.8s |
-| Accuracy (core) | 100% | 100% ✅ |
-| Accuracy (comprehensive) | 60%+ | 61.7% ✅ (Entry #271) |
+| Metric                   | Target | Achieved              |
+| ------------------------ | ------ | --------------------- |
+| Hook execution           | <500ms | 136ms (370x faster)   |
+| Test execution           | <1s    | ~0.8s                 |
+| Accuracy (core)          | 100%   | 100% ✅               |
+| Accuracy (comprehensive) | 60%+   | 61.7% ✅ (Entry #271) |
 
 ---
 
@@ -442,7 +468,7 @@ echo '{"prompt": "deploy to staging"}' | bash .claude/hooks/pre-prompt.sh 2>/dev
 - **Chapter 21**: Pre-prompt Optimization (68% reduction, skills-first ordering)
 - **Chapter 24**: Skill Keyword Enhancement (20+ synonym patterns)
 - **Chapter 28**: Skill Optimization Patterns (context:fork, agent:, wildcards)
-- **🆕 Chapter 30**: Test Priority Best Practices (P0/P1/P2 guidelines, +23.5% improvement)
+- **🆕 [Chapter 30b](30b-test-priority-best-practices.md)**: Test Priority Best Practices (P0/P1/P2 guidelines, +23.5% improvement)
 
 ---
 
@@ -451,6 +477,7 @@ echo '{"prompt": "deploy to staging"}' | bash .claude/hooks/pre-prompt.sh 2>/dev
 From `Production-Knowledge` repository:
 
 ### Test Infrastructure
+
 ```bash
 # Copy to your project
 .claude/tests/skill-activation/run-tests.sh         # 80-query runner
@@ -465,6 +492,7 @@ tests/skills/skill-activation-monitor.sh            # Monitor with analytics
 ```
 
 ### Templates
+
 ```bash
 .claude/templates/SKILL-TEMPLATE.md       # Anthropic-compliant
 .claude/templates/RULE-TEMPLATE.md        # Project rules
@@ -474,6 +502,7 @@ tests/skills/skill-activation-monitor.sh            # Monitor with analytics
 ```
 
 ### Enhanced Skills
+
 ```bash
 ~/.claude/skills/session-documentation-skill/SKILL.md  # With template refs
 ```
@@ -519,22 +548,25 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 
 > "100% accuracy is achievable through systematic optimization: eliminate ambiguity (trigger deduplication), add priority resolution (tie-breaking), and optimize content for clarity (500-line limit with progressive disclosure)."
 
-> **🆕 Entry #271**: "Multiple similar skills matching the same query is **expected behavior**, not a failure. Test priorities should reflect this reality." (See Chapter 30)
+> **🆕 Entry #271**: "Multiple similar skills matching the same query is **expected behavior**, not a failure. Test priorities should reflect this reality." (See [Chapter 30b](30b-test-priority-best-practices.md))
 
 ---
 
 ## 📊 Performance Metrics
 
 ### Hook Execution
+
 - **Baseline**: 50 seconds
 - **Optimized**: 136ms
 - **Improvement**: 370x faster
 
 ### Skill Matching
+
 - **Latency**: <50ms per query
 - **Total Overhead**: <200ms per request
 
 ### Token Efficiency
+
 - **Skills Compressed**: ~1,200 lines reduced
 - **Progressive Disclosure**: Reference files for detailed content
 - **Anthropic Compliance**: All skills under 500 lines
@@ -546,11 +578,13 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 ### Monthly Maintenance
 
 1. **Run Comprehensive Tests** (10 min)
+
    ```bash
    bash tests/skills/comprehensive-skill-activation-test.sh
    ```
 
 2. **Check Usage Frequency** (5 min)
+
    ```bash
    bash tests/skills/skill-activation-monitor.sh --usage
    ```
@@ -580,13 +614,15 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 **Symptom**: 80-query at 100%, but 170/500/841-query below target
 
 **Root Causes**:
+
 1. **🆕 Unrealistic P0 requirements** (most common - see Entry #271)
 2. Generic skills with high priority beating specialized skills
 3. Missing specialized skills for specific domains
 4. Trigger overlap between similar skills
 
 **Solutions**:
-1. **🆕 Relax test priorities**: Change P0 → P1 for tests with 5+ competing skills (see Chapter 30)
+
+1. **🆕 Relax test priorities**: Change P0 → P1 for tests with 5+ competing skills (see [Chapter 30b](30b-test-priority-best-practices.md))
 2. Lower priority of generic skills (high → medium)
 3. Raise priority of specialized skills (medium → high)
 4. Consolidate overlapping skills (merge similar ones)
@@ -596,11 +632,13 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 **Symptom**: Expected skill not in matches at all
 
 **Root Causes**:
+
 1. Missing trigger keywords
 2. Triggers too specific
 3. Skill name mismatch
 
 **Solutions**:
+
 1. Add synonym patterns to pre-prompt hook
 2. Broaden trigger keywords
 3. Validate skill name in YAML frontmatter
@@ -610,11 +648,13 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 **Symptom**: Different skill matches instead of expected one
 
 **Root Causes**:
+
 1. Generic keywords matching wrong skill
 2. Missing priority on expected skill
 3. Trigger overlap
 
 **Solutions**:
+
 1. Make triggers more specific
 2. Add priority: high or critical to expected skill
 3. Remove overlapping keywords
@@ -624,6 +664,7 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 ## 📖 References
 
 **Production Entries**:
+
 - Entry #267: Pre-Prompt Hook 370x Optimization
 - Entry #268: Skill Activation Phase 2/3 (80.4%→88%)
 - Entry #269: Skills Optimization Task 3 (88%→90%)
@@ -631,14 +672,16 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 - **🆕 Entry #271**: Test Priority Relaxation (170-Query +23.5%)
 
 **Related Chapters**:
+
 - Chapter 17: Skill Detection Enhancement
 - Chapter 20: Skills Filtering Optimization
 - Chapter 21: Pre-prompt Optimization
 - Chapter 24: Skill Keyword Enhancement
 - Chapter 28: Skill Optimization Patterns
-- **🆕 Chapter 30**: Test Priority Best Practices
+- **🆕 [Chapter 30b](30b-test-priority-best-practices.md)**: Test Priority Best Practices
 
 **Anthropic Resources**:
+
 - [Building Skills for Claude Code](https://claude.com/blog/building-skills-for-claude-code)
 - [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
 
@@ -647,6 +690,7 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 ## ✅ Success Criteria
 
 ### Core Workflow Validation
+
 - [ ] 80-query test at 100%
 - [ ] 249-query test at 95%+
 - [ ] Pre-prompt hook under 200ms
@@ -654,6 +698,7 @@ bash tests/skills/skill-activation-monitor.sh --usage  # Top 20 skills
 - [ ] All skills under 500 lines
 
 ### Comprehensive Validation
+
 - [ ] 170-query test at **60%+** (updated target - Entry #271)
 - [ ] 221-query test at **75-80%** (updated target - Entry #271)
 - [ ] 500-query test at 70%+
