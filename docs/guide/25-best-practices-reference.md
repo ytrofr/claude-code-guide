@@ -15,21 +15,23 @@ This chapter provides a comprehensive index of Anthropic best practices research
 
 ## 📊 Index Statistics
 
-| Metric | Count | Status |
-|--------|-------|--------|
-| **Total Articles** | 33 | Indexed ✅ |
-| **Anthropic Engineering** | 18 | Indexed ✅ |
-| **Claude.com Blog** | 15 | Indexed ✅ |
-| **Fully Extracted** | 15 | Implementation-ready |
-| **Priority 1 IMPLEMENTED** | 3 | Production patterns |
+| Metric                     | Count | Status               |
+| -------------------------- | ----- | -------------------- |
+| **Total Articles**         | 33    | Indexed ✅           |
+| **Anthropic Engineering**  | 18    | Indexed ✅           |
+| **Claude.com Blog**        | 15    | Indexed ✅           |
+| **Fully Extracted**        | 15    | Implementation-ready |
+| **Priority 1 IMPLEMENTED** | 3     | Production patterns  |
 
 ---
 
 ## 🚀 Priority 1: Critical Patterns (Extracted & Implemented)
 
 ### Context Engineering
+
 **Article**: [Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 **Key Patterns**:
+
 - Just-in-time retrieval (load context when needed, not upfront)
 - Hybrid strategy (always-loaded core + on-demand details)
 - Structured notes for multi-session continuity
@@ -38,8 +40,10 @@ This chapter provides a comprehensive index of Anthropic best practices research
 **Implementation**: See `memory-bank/always/` (always-loaded) + `memory-bank/ondemand/` (on-demand)
 
 ### Long-Running Agent Harnesses
+
 **Article**: [Effective Harnesses for Long-Running Agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)
 **Key Patterns**:
+
 - Feature list guardrails (track what's done)
 - Incremental progress (one feature at a time)
 - Git + progress file pairing
@@ -48,8 +52,10 @@ This chapter provides a comprehensive index of Anthropic best practices research
 **Implementation**: See `SESSION-PROTOCOL.md`, `system-status.json`
 
 ### Advanced Tool Use
+
 **Article**: [Advanced Tool Use on Claude Developer Platform](https://www.anthropic.com/engineering/advanced-tool-use)
 **Key Patterns**:
+
 - Tool Search (51k token savings)
 - Parallel Tool Calling (PTC) - 37% latency reduction
 - Tool examples (+18% accuracy)
@@ -58,8 +64,10 @@ This chapter provides a comprehensive index of Anthropic best practices research
 **Implementation**: See Chapter 20 (Skills Filtering), Entry #198
 
 ### Writing Effective Tools
+
 **Article**: [Writing Effective Tools for Agents](https://www.anthropic.com/engineering/writing-tools-for-agents)
 **Key Patterns**:
+
 - Pagination defaults (LIMIT 10, not unlimited)
 - Tool consolidation (733% ROI)
 - Meaningful responses (not just "done")
@@ -71,58 +79,59 @@ This chapter provides a comprehensive index of Anthropic best practices research
 
 ## 🤖 Skills & Agents Category
 
-| Article | URL | Key Takeaway |
-|---------|-----|--------------|
-| Equipping Agents with Skills | [Link](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) | 84% activation rate with numbered triggers |
-| Building Agents with Claude Agent SDK | [Link](https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk) | SDK patterns for custom agents |
-| Building Effective Agents | [Link](https://www.anthropic.com/engineering/building-effective-agents) | Workflow patterns vs custom agents |
-| Multi-Agent Research System | [Link](https://www.anthropic.com/engineering/multi-agent-research-system) | Agent coordination patterns |
+| Article                               | URL                                                                                                 | Key Takeaway                               |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Equipping Agents with Skills          | [Link](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) | 84% activation rate with numbered triggers |
+| Building Agents with Claude Agent SDK | [Link](https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk)             | SDK patterns for custom agents             |
+| Building Effective Agents             | [Link](https://www.anthropic.com/engineering/building-effective-agents)                             | Workflow patterns vs custom agents         |
+| Multi-Agent Research System           | [Link](https://www.anthropic.com/engineering/multi-agent-research-system)                           | Agent coordination patterns                |
 
 ---
 
 ## 🛠️ Context & Tools Category
 
-| Article | URL | Key Takeaway |
-|---------|-----|--------------|
+| Article                       | URL                                                                                       | Key Takeaway                            |
+| ----------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------- |
 | Effective Context Engineering | [Link](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) | Just-in-time retrieval, hybrid strategy |
-| Writing Effective Tools | [Link](https://www.anthropic.com/engineering/writing-tools-for-agents) | Pagination defaults, consolidation |
-| Advanced Tool Use | [Link](https://www.anthropic.com/engineering/advanced-tool-use) | Tool Search, PTC, examples |
-| The "Think" Tool | [Link](https://www.anthropic.com/engineering/claude-think-tool) | Extended thinking for complex tasks |
-| Contextual Retrieval | [Link](https://www.anthropic.com/engineering/contextual-retrieval) | RAG optimization patterns |
+| Writing Effective Tools       | [Link](https://www.anthropic.com/engineering/writing-tools-for-agents)                    | Pagination defaults, consolidation      |
+| Advanced Tool Use             | [Link](https://www.anthropic.com/engineering/advanced-tool-use)                           | Tool Search, PTC, examples              |
+| The "Think" Tool              | [Link](https://www.anthropic.com/engineering/claude-think-tool)                           | Extended thinking for complex tasks     |
+| Contextual Retrieval          | [Link](https://www.anthropic.com/engineering/contextual-retrieval)                        | RAG optimization patterns               |
 
 ---
 
 ## 🪝 Hooks & Configuration Category
 
-| Article | URL | Key Takeaway |
-|---------|-----|--------------|
-| How to Configure Hooks | [Link](https://claude.com/blog/how-to-configure-hooks) | 8 hook types for workflow automation |
-| Using CLAUDE.md Files | [Link](https://claude.com/blog/using-claude-md-files) | Project context customization |
-| Building Skills for Claude Code | [Link](https://claude.com/blog/building-skills-for-claude-code) | Skill creation workflow |
+| Article                         | URL                                                             | Key Takeaway                           |
+| ------------------------------- | --------------------------------------------------------------- | -------------------------------------- |
+| How to Configure Hooks          | [Link](https://claude.com/blog/how-to-configure-hooks)          | 11 hook events for workflow automation |
+| Using CLAUDE.md Files           | [Link](https://claude.com/blog/using-claude-md-files)           | Project context customization          |
+| Building Skills for Claude Code | [Link](https://claude.com/blog/building-skills-for-claude-code) | Skill creation workflow                |
 
 ---
 
 ## 🔌 MCP & Execution Category
 
-| Article | URL | Key Takeaway |
-|---------|-----|--------------|
-| Code Execution with MCP | [Link](https://www.anthropic.com/engineering/code-execution-with-mcp) | MCP server patterns |
-| Desktop Extensions | [Link](https://www.anthropic.com/engineering/desktop-extensions) | One-click MCP installation |
+| Article                 | URL                                                                   | Key Takeaway               |
+| ----------------------- | --------------------------------------------------------------------- | -------------------------- |
+| Code Execution with MCP | [Link](https://www.anthropic.com/engineering/code-execution-with-mcp) | MCP server patterns        |
+| Desktop Extensions      | [Link](https://www.anthropic.com/engineering/desktop-extensions)      | One-click MCP installation |
 
 ---
 
 ## 💰 Cost Optimization Category
 
-| Article | URL | Key Takeaway |
-|---------|-----|--------------|
-| Prompt Caching | [Link](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) | 90% cost reduction on repeated loads |
-| Building Effective Agents | [Link](https://www.anthropic.com/research/building-effective-agents) | Workflow patterns (3x faster than custom agents) |
+| Article                   | URL                                                                          | Key Takeaway                                     |
+| ------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------ |
+| Prompt Caching            | [Link](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) | 90% cost reduction on repeated loads             |
+| Building Effective Agents | [Link](https://www.anthropic.com/research/building-effective-agents)         | Workflow patterns (3x faster than custom agents) |
 
 ---
 
 ## 📚 Claude.com Blog Articles (15)
 
 ### Skills Category
+
 - [Extending Claude's Capabilities](https://claude.com/blog/extending-claude-capabilities-with-skills-mcp-servers)
 - [Skills for Organizations](https://claude.com/blog/organization-skills-and-directory)
 - [Building Skills for Claude Code](https://claude.com/blog/building-skills-for-claude-code) ⭐
@@ -130,10 +139,12 @@ This chapter provides a comprehensive index of Anthropic best practices research
 - [Skills Explained](https://claude.com/blog/skills-explained)
 
 ### Hooks & Configuration
+
 - [How to Configure Hooks](https://claude.com/blog/how-to-configure-hooks) ⭐
 - [Using CLAUDE.md Files](https://claude.com/blog/using-claude-md-files) ⭐
 
 ### Enterprise & Use Cases
+
 - [Enterprise AI Agents in 2026](https://claude.com/blog/how-enterprises-are-building-ai-agents-in-2026)
 - [Anthropic Legal Team Case Study](https://claude.com/blog/how-anthropic-uses-claude-legal)
 - [YC Startups with Claude Code](https://claude.com/blog/building-companies-with-claude-code)
@@ -158,40 +169,45 @@ EXTRACTION_WORKFLOW:
 
 ## 📅 Maintenance Schedule
 
-| Frequency | Task |
-|-----------|------|
-| **Weekly** | Check for new Anthropic blog posts |
-| **Monthly** | Review extraction priorities based on active work |
+| Frequency     | Task                                                       |
+| ------------- | ---------------------------------------------------------- |
+| **Weekly**    | Check for new Anthropic blog posts                         |
+| **Monthly**   | Review extraction priorities based on active work          |
 | **Quarterly** | Validate existing entries still align with latest research |
 
 ---
 
 ## 🔗 Cross-Reference with Implementation Guide
 
-| Chapter | Related Research |
-|---------|------------------|
-| **Chapter 13**: Claude Code Hooks | How to Configure Hooks |
-| **Chapter 17**: Skill Detection | Equipping Agents with Skills |
-| **Chapter 20**: Skills Filtering | Advanced Tool Use, Writing Tools |
-| **Chapter 21**: Pre-prompt Optimization | Effective Context Engineering |
-| **Chapter 24**: Keyword Enhancement | Skills patterns + context engineering |
+| Chapter                                 | Related Research                      |
+| --------------------------------------- | ------------------------------------- |
+| **Chapter 13**: Claude Code Hooks       | How to Configure Hooks                |
+| **Chapter 17**: Skill Detection         | Equipping Agents with Skills          |
+| **Chapter 20**: Skills Filtering        | Advanced Tool Use, Writing Tools      |
+| **Chapter 21**: Pre-prompt Optimization | Effective Context Engineering         |
+| **Chapter 24**: Keyword Enhancement     | Skills patterns + context engineering |
+| **Chapter 36**: Agents and Subagents    | Building Effective Agents, Agent SDK  |
+| **Chapter 37**: Agent Teams             | Multi-Agent Research System           |
 
 ---
 
 ## 📊 Implementation Priority Matrix
 
 ### High ROI (Implement First)
+
 1. **Context Optimization** (34% token reduction) - Chapter 21
 2. **Skill Detection** (100% accuracy) - Chapter 17, 24
 3. **Tool Consolidation** (733% ROI) - Chapter 20
 4. **Session Protocol** (3x continuity) - Chapter 12
 
 ### Medium ROI (Phase 2)
+
 1. **MCP Integration** (zero-token validation)
 2. **Perplexity Caching** (80% cost savings)
 3. **Playwright E2E** (100% test coverage)
 
 ### Lower Priority (As-Needed)
+
 1. Enterprise patterns
 2. Slack integration
 3. Advanced RAG
@@ -201,12 +217,14 @@ EXTRACTION_WORKFLOW:
 ## 🎯 Quick Reference Links
 
 **Most Important Articles** (Start Here):
+
 1. [Effective Context Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) - Foundation pattern
 2. [Building Skills for Claude Code](https://claude.com/blog/building-skills-for-claude-code) - Skill creation
 3. [How to Configure Hooks](https://claude.com/blog/how-to-configure-hooks) - Automation
 4. [Writing Effective Tools](https://www.anthropic.com/engineering/writing-tools-for-agents) - Tool design
 
 **Implementation Guide Chapters**:
+
 - [Chapter 17](17-skill-detection-enhancement.md) - 4-phase skill detection
 - [Chapter 20](20-skills-filtering-optimization.md) - Score-at-match-time
 - [Chapter 21](21-pre-prompt-optimization.md) - 68% reduction
@@ -216,12 +234,12 @@ EXTRACTION_WORKFLOW:
 
 ## 📈 Success Metrics
 
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| Articles indexed | 30+ | 33 | ✅ |
-| Priority 1 extracted | 4 | 4 | ✅ |
-| Implementation coverage | 80% | 85% | ✅ |
-| ROI documented | 10+ patterns | 15+ | ✅ |
+| Metric                  | Target       | Current | Status |
+| ----------------------- | ------------ | ------- | ------ |
+| Articles indexed        | 30+          | 33      | ✅     |
+| Priority 1 extracted    | 4            | 4       | ✅     |
+| Implementation coverage | 80%          | 85%     | ✅     |
+| ROI documented          | 10+ patterns | 15+     | ✅     |
 
 ---
 

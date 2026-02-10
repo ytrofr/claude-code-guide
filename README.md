@@ -94,7 +94,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 ### Claude Code Hooks
 
 - [Pre-Prompt Hook Complete Guide](docs/pre-prompt-hook-complete-guide.md) - **370x optimization**
-- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 8 hook types
+- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 11 hook events
 - [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) - Clear distinction
 
 ### Skills System
@@ -125,6 +125,11 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) - Advanced patterns
 - [Skill Optimization Maintenance](docs/guide/35-skill-optimization-maintenance.md) - 6-step workflow
 
+### Agents & Teams
+
+- [Agents and Subagents](docs/guide/36-agents-and-subagents.md) - Create and configure custom agents
+- [Agent Teams](docs/guide/37-agent-teams.md) - Coordinate parallel agent teammates (experimental)
+
 ---
 
 ## Repository Structure
@@ -135,7 +140,7 @@ claude-code-guide/
 │   ├── quick-start.md      # 30-minute setup
 │   ├── pre-prompt-hook-complete-guide.md  # 370x optimization
 │   ├── skill-activation-system.md
-│   └── guide/              # 35+ detailed guides
+│   └── guide/              # 37+ detailed guides
 ├── template/                # Clone-and-go starter
 │   ├── .claude/            # Pre-configured setup
 │   │   ├── CLAUDE.md       # Project context
@@ -190,7 +195,7 @@ claude-code-guide/
 ## Key Features
 
 - **Claude Code Setup**: Complete project configuration with templates
-- **Claude Code Hooks**: 8 hook types for workflow automation
+- **Claude Code Hooks**: 11 hook events for workflow automation
 - **Claude Code Skills**: 162+ production-tested patterns
 - **Claude Code MCP**: 13 servers, 70+ tools integrated
 - **Context Optimization**: 47-70% token savings per branch
