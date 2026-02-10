@@ -12,6 +12,7 @@
 Chapter 23 covers basic `/document` for Entry creation.
 
 But it's missing:
+
 - **Pattern analysis**: Should this become a skill? A rule? A blueprint?
 - **Decision matrix**: When to create what
 - **5-type suggestions**: Automatic recommendations
@@ -61,13 +62,13 @@ Result: 0-5 suggestions can be generated simultaneously
 
 ### 5 Suggestion Types
 
-| Type | When | Template |
-|------|------|----------|
-| **SKILL** | ROI >100%, used 20+/year | SKILL-TEMPLATE.md |
-| **PROJECT RULE** | Universal enforcement | rules/domain/pattern.md |
-| **BRANCH RULE** | Branch-specific pattern | CONTEXT-MANIFEST update |
+| Type              | When                       | Template                |
+| ----------------- | -------------------------- | ----------------------- |
+| **SKILL**         | ROI >100%, used 20+/year   | SKILL-TEMPLATE.md       |
+| **PROJECT RULE**  | Universal enforcement      | rules/domain/pattern.md |
+| **BRANCH RULE**   | Branch-specific pattern    | CONTEXT-MANIFEST update |
 | **CORE-PATTERNS** | Quick reference (<5 lines) | Add to CORE-PATTERNS.md |
-| **BLUEPRINT** | 3+ files, system change | BLUEPRINT-TEMPLATE.md |
+| **BLUEPRINT**     | 3+ files, system change    | BLUEPRINT-TEMPLATE.md   |
 
 ---
 
@@ -100,7 +101,7 @@ user-invocable: true
 
 ### Phase 3: Pattern Analysis (Steps 5-8) 🆕
 5. Check: Repeatable 20+/year + >1h savings? → SKILL suggestion
-6. Check: Universal enforcement needed? → RULE suggestion  
+6. Check: Universal enforcement needed? → RULE suggestion
 7. Check: Quick reference pattern? → CORE-PATTERNS update
 8. Check: 3+ files changed? → BLUEPRINT suggestion
 
@@ -140,27 +141,35 @@ user-invocable: true
 ## Example Output
 
 ```
+
 ## 📋 DOCUMENTATION COMPLETE
+
 Entry #282 created
 
 ## 🎯 PATTERN ANALYSIS (3 suggestions detected)
 
 ### 1. SKILL SUGGESTION ✓
+
 Name: gap-detection-workflow-skill
 ROI: 40+ hrs/year (20 uses × 2 hours)
 Triggers: gap detection, missing data, investigate gaps
 
 ### 2. RULE SUGGESTION ✓
+
 Name: database/gap-detection-patterns.md
 Scope: PROJECT (applies to all branches)
 Reason: Universal enforcement needed
 
 ### 3. CORE-PATTERNS UPDATE ✓
+
 Pattern: Gap workflow quick reference (3 lines)
 
 ---
+
 Select options (1-3 comma-separated, 'all', or 'none'): 1,3
+
 ```
+
 ```
 
 ---
@@ -173,7 +182,7 @@ Before suggesting, check for existing:
 # Check if skill already exists
 grep -r "Use when" ~/.claude/skills/ | grep -i "[keywords]"
 
-# Check if rule already exists  
+# Check if rule already exists
 grep -r "[pattern]" .claude/rules/
 
 # Check if in CORE-PATTERNS
@@ -186,15 +195,15 @@ grep "[pattern]" memory-bank/always/CORE-PATTERNS.md
 
 This chapter ENHANCES Chapter 23 (Session Documentation):
 
-| Aspect | Chapter 23 | Chapter 32 |
-|--------|------------|------------|
-| Entry creation | ✅ Yes | ✅ Yes |
-| Roadmap update | ✅ Yes | ✅ Yes |
-| Status update | ✅ Yes | ✅ Yes |
-| Pattern analysis | ❌ No | ✅ YES |
-| Skill suggestion | ❌ No | ✅ YES |
-| Rule suggestion | ❌ No | ✅ YES |
-| Blueprint suggestion | ❌ No | ✅ YES |
+| Aspect               | Chapter 23 | Chapter 32 |
+| -------------------- | ---------- | ---------- |
+| Entry creation       | ✅ Yes     | ✅ Yes     |
+| Roadmap update       | ✅ Yes     | ✅ Yes     |
+| Status update        | ✅ Yes     | ✅ Yes     |
+| Pattern analysis     | ❌ No      | ✅ YES     |
+| Skill suggestion     | ❌ No      | ✅ YES     |
+| Rule suggestion      | ❌ No      | ✅ YES     |
+| Blueprint suggestion | ❌ No      | ✅ YES     |
 
 ---
 
@@ -203,6 +212,7 @@ This chapter ENHANCES Chapter 23 (Session Documentation):
 ### Option 1: Enhance Existing Skill
 
 Update `~/.claude/skills/session-documentation-skill/SKILL.md` with:
+
 - Decision matrix section
 - Pattern analysis steps
 - 5 suggestion types
@@ -227,6 +237,7 @@ echo '{"prompt": "/document"}' | bash .claude/hooks/pre-prompt.sh
 ---
 
 **Related Chapters**:
+
 - Chapter 23: Session Documentation (basic workflow)
 - Chapter 29: Branch Context System
 - Chapter 31: Branch-Aware Development
@@ -234,3 +245,4 @@ echo '{"prompt": "/document"}' | bash .claude/hooks/pre-prompt.sh
 ---
 
 **Previous**: [31: Branch-Aware Development](31-branch-aware-development.md)
+**Next**: [33: Branch-Specific Skill Curation](33-branch-specific-skill-curation.md)

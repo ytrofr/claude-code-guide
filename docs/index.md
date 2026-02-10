@@ -60,6 +60,11 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Skill Activation System](skill-activation-system.md) - 162+ production skills
 - [MCP Integration](guide/06-mcp-integration.md) - External tool connections
 
+### Agents & Teams
+
+- [Agents and Subagents](guide/36-agents-and-subagents.md) - Create specialized agent workers
+- [Agent Teams](guide/37-agent-teams.md) - Coordinate parallel agents (experimental)
+
 ### Advanced Topics
 
 - [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md) - Context management

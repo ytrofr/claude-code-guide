@@ -5,6 +5,7 @@
 With 100+ skills available, developers often miss the most relevant skills for their branch's specific mission. A developer on an AI-focused branch shouldn't have to search through deployment skills, and vice versa.
 
 **Symptoms:**
+
 - Developers miss important skills for their work
 - Generic skill suggestions don't match branch context
 - No visibility into "what skills should I know for this branch?"
@@ -184,31 +185,35 @@ When a developer on `dev-feature` asks about AI issues:
 When selecting top skills for a branch:
 
 ### 1. Focus on Mission
+
 - What is this branch's primary purpose?
 - What tasks happen most frequently?
 
 ### 2. Limit to 10-15 Skills
+
 - Top 5 always visible
 - Remaining available for keyword boost
 
 ### 3. Avoid Overlap
+
 - Don't include generic skills every branch needs
 - Focus on domain-specific skills
 
 ### 4. Update Quarterly
+
 - Review skill usage analytics
 - Remove unused skills
 - Add new relevant skills
 
 ## Example Branch Configurations
 
-| Branch | Mission | Key Skills |
-|--------|---------|------------|
-| dev-feature | AI Quality | ai-quality-validation, ai-behavioral-testing, gemini-latency |
-| dev-Data | Data Parity | api-first-validation, gap-detection, sync-master |
-| dev-MERGE | Deployment | deployment-workflow, traffic-routing, safe-deployment |
-| dev-Test | Testing | testing-workflow, comprehensive-testing, baseline-methodology |
-| dev-UI | Frontend | frontend-theme, dashboard-migration, field-sync |
+| Branch      | Mission     | Key Skills                                                    |
+| ----------- | ----------- | ------------------------------------------------------------- |
+| dev-feature | AI Quality  | ai-quality-validation, ai-behavioral-testing, gemini-latency  |
+| dev-Data    | Data Parity | api-first-validation, gap-detection, sync-master              |
+| dev-MERGE   | Deployment  | deployment-workflow, traffic-routing, safe-deployment         |
+| dev-Test    | Testing     | testing-workflow, comprehensive-testing, baseline-methodology |
+| dev-UI      | Frontend    | frontend-theme, dashboard-migration, field-sync               |
 
 ## Benefits
 
@@ -226,11 +231,7 @@ When selecting top skills for a branch:
   "your-branch": {
     "mission": "Short mission description",
     "type": "branch-type",
-    "top_skills": [
-      "skill-1",
-      "skill-2",
-      "skill-3"
-    ],
+    "top_skills": ["skill-1", "skill-2", "skill-3"],
     "skill_count": 3
   }
 }
@@ -241,3 +242,8 @@ When selecting top skills for a branch:
 - [Chapter 29: Branch Context System](29-branch-context-system.md) - CONTEXT-MANIFEST.json
 - [Chapter 31: Branch-Aware Development](31-branch-aware-development.md) - Branch variables
 - [Chapter 14: Pre-Prompt Hook](14-pre-prompt-hook.md) - Skill matching basics
+
+---
+
+**Previous**: [32: Session Start Hook](32-session-start-hook.md)
+**Next**: [34: Basic Memory MCP Integration](34-basic-memory-mcp-integration.md)

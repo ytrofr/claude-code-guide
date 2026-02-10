@@ -50,7 +50,7 @@ name: deploy-agent
 description: "Deployment specialist for GCP Cloud Run. Use when deploying to staging or production."
 model: sonnet              # Optional: sonnet, opus, haiku (inherits from parent if omitted)
 tools: ['Read', 'Write', 'Edit', 'Bash', 'Grep', 'Glob']  # Optional: restrict available tools
-memory: project            # Optional: persistent memory across conversations
+memory: project            # Optional: project (per-project) or user (cross-project)
 maxTurns: 15               # Optional: limit API round-trips (cost control)
 ---
 

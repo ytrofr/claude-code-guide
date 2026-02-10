@@ -24,12 +24,12 @@ Basic Memory MCP provides persistent knowledge storage with semantic observation
 
 Without proper integration, Basic Memory becomes a graveyard of notes that are never queried:
 
-| Issue | Impact |
-|-------|--------|
-| Flat notes without semantic structure | AI can't extract patterns |
-| No proactive triggers | Memory never used |
-| Scattered folders | Hard to find relevant notes |
-| No session context | Start each session from scratch |
+| Issue                                 | Impact                          |
+| ------------------------------------- | ------------------------------- |
+| Flat notes without semantic structure | AI can't extract patterns       |
+| No proactive triggers                 | Memory never used               |
+| Scattered folders                     | Hard to find relevant notes     |
+| No session context                    | Start each session from scratch |
 
 ---
 
@@ -51,13 +51,13 @@ Without proper integration, Basic Memory becomes a graveyard of notes that are n
 
 ### When to Use Each Type
 
-| Type | Use For | Example |
-|------|---------|---------|
-| `[decision]` | Choices made, rationale | "Use employee_id not record.id" |
-| `[technique]` | Methods, patterns | "SELECT current_database() first" |
-| `[issue]` | Problems identified | "ID confusion causes 0 employees bug" |
-| `[requirement]` | Must-have specs | "100% parity mandatory" |
-| `[lesson]` | Learnings | "Test locally before staging" |
+| Type            | Use For                 | Example                               |
+| --------------- | ----------------------- | ------------------------------------- |
+| `[decision]`    | Choices made, rationale | "Use employee_id not record.id"       |
+| `[technique]`   | Methods, patterns       | "SELECT current_database() first"     |
+| `[issue]`       | Problems identified     | "ID confusion causes 0 employees bug" |
+| `[requirement]` | Must-have specs         | "100% parity mandatory"               |
+| `[lesson]`      | Learnings               | "Test locally before staging"         |
 
 ---
 
@@ -79,14 +79,14 @@ Without proper integration, Basic Memory becomes a graveyard of notes that are n
 
 ### Relation Types
 
-| Relation | Meaning | Use For |
-|----------|---------|---------|
+| Relation     | Meaning                           | Use For          |
+| ------------ | --------------------------------- | ---------------- |
 | `implements` | This note implements that concept | Patterns → Rules |
-| `requires` | Must use this first | Prerequisites |
-| `extends` | Builds upon that pattern | Enhancements |
-| `part_of` | Belongs to larger system | Hierarchy |
-| `pairs_with` | Works together with | Companions |
-| `relates_to` | General connection | Loose coupling |
+| `requires`   | Must use this first               | Prerequisites    |
+| `extends`    | Builds upon that pattern          | Enhancements     |
+| `part_of`    | Belongs to larger system          | Hierarchy        |
+| `pairs_with` | Works together with               | Companions       |
+| `relates_to` | General connection                | Loose coupling   |
 
 ---
 
@@ -211,13 +211,13 @@ Create `.claude/rules/mcp/memory-usage.md`:
 
 **MUST use Basic Memory MCP when these patterns detected:**
 
-| Pattern | Trigger | Action |
-|---------|---------|--------|
-| Past Decisions | "what did we decide", "why did we" | `search_notes(query="topic decision")` |
-| Past Fixes | "how did we fix", "similar bug" | `build_context(url="memory://fixes/*")` |
-| Patterns | "pattern for", "best practice" | `build_context(url="memory://patterns/*")` |
-| Recent Context | new session, complex task | `recent_activity(timeframe="7d")` |
-| Research | "documentation for" | `search_notes(query="topic")` BEFORE Perplexity |
+| Pattern        | Trigger                            | Action                                          |
+| -------------- | ---------------------------------- | ----------------------------------------------- |
+| Past Decisions | "what did we decide", "why did we" | `search_notes(query="topic decision")`          |
+| Past Fixes     | "how did we fix", "similar bug"    | `build_context(url="memory://fixes/*")`         |
+| Patterns       | "pattern for", "best practice"     | `build_context(url="memory://patterns/*")`      |
+| Recent Context | new session, complex task          | `recent_activity(timeframe="7d")`               |
+| Research       | "documentation for"                | `search_notes(query="topic")` BEFORE Perplexity |
 
 ---
 
@@ -225,24 +225,24 @@ Create `.claude/rules/mcp/memory-usage.md`:
 
 **SHOULD document after completing work:**
 
-| After | Format | Folder |
-|-------|--------|--------|
-| Decisions | `[decision] What was decided #category` | decisions/ |
-| Fixes | `[technique] How it was fixed #category` | fixes/ |
-| Bugs | `[issue] What the problem was #category` | fixes/ |
-| Learning | `[lesson] What was learned #category` | patterns/ |
+| After     | Format                                   | Folder     |
+| --------- | ---------------------------------------- | ---------- |
+| Decisions | `[decision] What was decided #category`  | decisions/ |
+| Fixes     | `[technique] How it was fixed #category` | fixes/     |
+| Bugs      | `[issue] What the problem was #category` | fixes/     |
+| Learning  | `[lesson] What was learned #category`    | patterns/  |
 
 ---
 
 ## Key Memory Folders
 
-| Folder | Purpose | When to Query |
-|--------|---------|---------------|
-| `fixes/` | Production fixes | Bug investigation |
-| `patterns/` | Reusable patterns | Implementation |
-| `decisions/` | Architecture decisions | Design questions |
-| `research-cache/` | Perplexity results | Before external search |
-| `session-summaries/` | Session history | Context recovery |
+| Folder               | Purpose                | When to Query          |
+| -------------------- | ---------------------- | ---------------------- |
+| `fixes/`             | Production fixes       | Bug investigation      |
+| `patterns/`          | Reusable patterns      | Implementation         |
+| `decisions/`         | Architecture decisions | Design questions       |
+| `research-cache/`    | Perplexity results     | Before external search |
+| `session-summaries/` | Session history        | Context recovery       |
 ```
 
 ---
@@ -262,13 +262,13 @@ user-invocable: false
 
 ### Trigger Activation
 
-| Query | Activates Skill |
-|-------|-----------------|
-| "what did we decide about X" | ✅ |
-| "show patterns for database" | ✅ |
-| "document this fix" | ✅ |
-| "similar bug seen before" | ✅ |
-| "check memory for past decisions" | ✅ |
+| Query                             | Activates Skill |
+| --------------------------------- | --------------- |
+| "what did we decide about X"      | ✅              |
+| "show patterns for database"      | ✅              |
+| "document this fix"               | ✅              |
+| "similar bug seen before"         | ✅              |
+| "check memory for past decisions" | ✅              |
 
 ---
 
@@ -293,43 +293,53 @@ user-invocable: false
 
 ### Consolidation Rules
 
-| If You Have | Merge Into |
-|-------------|------------|
-| Multiple 1-file folders | Appropriate parent folder |
-| `bugs/`, `troubleshooting/` | `fixes/` |
-| `research/` | `research-cache/` |
-| `plans/`, `planning/` | `planning/` |
-| Empty folders | Delete |
+| If You Have                 | Merge Into                |
+| --------------------------- | ------------------------- |
+| Multiple 1-file folders     | Appropriate parent folder |
+| `bugs/`, `troubleshooting/` | `fixes/`                  |
+| `research/`                 | `research-cache/`         |
+| `plans/`, `planning/`       | `planning/`               |
+| Empty folders               | Delete                    |
 
 ---
 
 ## MCP Commands Reference
 
 ### Search Notes
+
 ```javascript
-mcp__basic-memory__search_notes(query="deployment decision")
+mcp__basic - memory__search_notes((query = "deployment decision"));
 // Returns notes matching query
 ```
 
 ### Build Context
+
 ```javascript
-mcp__basic-memory__build_context(url="memory://fixes/*", timeframe="30d", max_related=5)
+mcp__basic -
+  memory__build_context(
+    (url = "memory://fixes/*"),
+    (timeframe = "30d"),
+    (max_related = 5),
+  );
 // Returns notes with observations and relations
 ```
 
 ### Write Note
+
 ```javascript
-mcp__basic-memory__write_note(
-  title="Fix Name",
-  folder="fixes",
-  content="# Fix\n\n## Observations\n\n- [technique] ...",
-  tags=["fix", "database"]
-)
+mcp__basic -
+  memory__write_note(
+    (title = "Fix Name"),
+    (folder = "fixes"),
+    (content = "# Fix\n\n## Observations\n\n- [technique] ..."),
+    (tags = ["fix", "database"]),
+  );
 ```
 
 ### Recent Activity
+
 ```javascript
-mcp__basic-memory__recent_activity(timeframe="7d")
+mcp__basic - memory__recent_activity((timeframe = "7d"));
 // Returns recently modified notes
 ```
 
@@ -391,22 +401,26 @@ bash tests/basic-memory/comprehensive-basic-memory-test.sh
 ## Implementation Checklist
 
 ### Phase 1: Skill + Rules (30 min)
+
 - [ ] Create `basic-memory-semantic-patterns-skill`
 - [ ] Create `.claude/rules/mcp/memory-usage.md`
 - [ ] Add BASIC MEMORY USAGE to CLAUDE.md
 - [ ] Rebuild skill cache
 
 ### Phase 2: Session Integration (15 min)
+
 - [ ] Add memory section to session-start.sh
 - [ ] Test hook execution
 - [ ] Verify context displays
 
 ### Phase 3: Folder Organization (15 min)
+
 - [ ] Audit existing folders
 - [ ] Consolidate 1-file folders
 - [ ] Delete empty folders
 
 ### Phase 4: Testing (15 min)
+
 - [ ] Create test script
 - [ ] Run all tests
 - [ ] Fix any failures
@@ -415,14 +429,14 @@ bash tests/basic-memory/comprehensive-basic-memory-test.sh
 
 ## Success Metrics
 
-| Metric | Target |
-|--------|--------|
+| Metric           | Target              |
+| ---------------- | ------------------- |
 | Skill activation | 6/6 generic queries |
-| Test pass rate | 36/36 (100%) |
-| Folders | <30 (consolidated) |
-| Observations | 30+ across notes |
-| Relations | 20+ across notes |
-| Session context | Automatic display |
+| Test pass rate   | 36/36 (100%)        |
+| Folders          | <30 (consolidated)  |
+| Observations     | 30+ across notes    |
+| Relations        | 20+ across notes    |
+| Session context  | Automatic display   |
 
 ---
 
@@ -477,7 +491,13 @@ grep -r "^\- \[decision\]" ~/basic-memory/
 **Tests**: 36/36 passing
 **ROI**: ~2 hours setup → 30-50 hours/year saved
 **Metrics**:
+
 - Memory folders: 51 → 23 (55% reduction)
 - Semantic observations: 44
 - Relations: 35
 - Skill triggers: 26
+
+---
+
+**Previous**: [33: Branch-Specific Skill Curation](33-branch-specific-skill-curation.md)
+**Next**: [35: Skill Optimization Maintenance](35-skill-optimization-maintenance.md)
