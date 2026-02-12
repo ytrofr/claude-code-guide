@@ -310,3 +310,4 @@ Use this checklist to audit your Claude Code context costs:
 ---
 
 **Previous**: [37: Agent Teams](37-agent-teams.md)
+**Next**: [39: Context Separation](39-context-separation.md)
