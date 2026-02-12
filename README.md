@@ -202,9 +202,9 @@ claude-code-guide/
 
 ---
 
-## Tools
+## Related Projects
 
-- **[AI Intelligence Hub](tools/trendradar-dashboard/)** - Local dashboard tracking 12 AI sources including Claude Code releases and docs changes. Port 4444.
+- **[AI Intelligence Hub](https://github.com/ytrofr/ai-intelligence-hub)** — Track 12 AI sources (GitHub, HuggingFace, MCP, Claude Code) with full-text search. Port 4444.
 
 ---
 
