@@ -100,6 +100,29 @@ description: "This skill helps with database work. It has patterns for employees
 
 The bad example wastes budget on details that belong in the skill body, not the description.
 
+### Budget Monitoring: When You're Near the Limit
+
+At high utilization (>90%), adding a single skill can silently drop others. Monitor and enforce:
+
+```bash
+# Measure current budget usage
+total=0
+for f in $(find ~/.claude/skills -name "SKILL.md") $(find .claude/skills -name "SKILL.md"); do
+  desc=$(grep "^description:" "$f" | sed 's/^description: *//;s/^"//;s/"$//')
+  total=$((total + ${#desc}))
+done
+echo "Budget: $total / ${SLASH_COMMAND_TOOL_CHAR_BUDGET:-16000} chars"
+```
+
+**What to do when budget is tight**:
+
+1. **Move unused skills** to `~/.claude/skills-disabled/` (not loaded, but recoverable)
+2. **Trim verbose descriptions** — target 80-150 chars, not 300+
+3. **Use `disable-model-invocation: true`** for user-only skills (removes from budget)
+4. **Move project-specific skills** from `~/.claude/skills/` (global) to `.claude/skills/` (per-project) so they only load where needed
+
+**Real example**: A project hit 98.7% budget (39,480/40,000 chars). Four skills unrelated to the active project were moved to `skills-disabled/`, bringing usage to 93.4% with 2,639 chars headroom.
+
 ### Skills Outside the Budget
 
 Two mechanisms remove skills from the description budget entirely:

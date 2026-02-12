@@ -466,6 +466,28 @@ kill $BG; rm /tmp/test-fifo
 
 ---
 
+## Hook Safety: Command Timeouts
+
+Hooks that run external commands (like `git fetch`) should also use `timeout` to prevent hangs from network or I/O failures.
+
+**The problem**: A `SessionStart` hook running `git fetch origin` hangs if the network is down or the remote is unresponsive. The hook's 600-second timeout budget is generous, but users see Claude Code as frozen.
+
+**The fix**: Wrap external commands with `timeout`:
+
+```bash
+# WRONG — hangs if network is down
+git fetch origin --quiet 2>/dev/null
+
+# CORRECT — fails fast after 5 seconds
+timeout 5 git fetch origin --quiet 2>/dev/null
+```
+
+**When to use**: Any hook calling network services (`git fetch`, `curl`, API calls). The timeout should be short (2-5 seconds) since hooks should not block the user experience.
+
+**Evidence**: Feb 2026 — Intermittent `SessionStart` hook errors traced to `git fetch` network failures. Adding `timeout 5` eliminated the issue. Hook runs reliably at ~700ms average.
+
+---
+
 ## Hook Event Details
 
 ### UserPromptSubmit
