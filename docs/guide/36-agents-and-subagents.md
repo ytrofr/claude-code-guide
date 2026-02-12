@@ -204,6 +204,42 @@ Check later with `TaskOutput(task_id: "...")` or `Read` the output file.
 
 ---
 
+## Tool Restrictions with Task(agent_type)
+
+You can restrict which sub-agents an agent can spawn by using `Task(agent_type)` syntax in the `tools` field:
+
+```yaml
+---
+name: api-coordinator
+description: "Coordinates API operations with intelligent routing."
+tools:
+  ["Read", "Write", "Edit", "Bash", "Task(shifts-agent)", "Task(beecom-agent)"]
+---
+```
+
+This agent can only spawn `shifts-agent` and `beecom-agent` via `Task()`. Attempts to spawn other agent types will be blocked.
+
+**When to use**: Agents that delegate to known specialists (API coordinator -> shifts/beecom, deploy -> gcp, data integrity -> accuracy).
+
+**When NOT to use**: Agents that need flexibility to spawn any agent type (e.g., a branch policy enforcer that may need any specialist).
+
+### Examples
+
+```yaml
+# Deploy agent can only delegate to GCP infrastructure agent
+tools: ['Read', 'Write', 'Edit', 'Bash', 'Task(gcp-agent)']
+
+# Data integrity agent can only delegate to accuracy specialist
+tools: ['Read', 'Edit', 'Bash', 'Task(accuracy-agent)']
+
+# Context orchestrator can only delegate to context agent
+tools: ['Read', 'Task(context-agent)']
+```
+
+**Benefits**: Prevents wrong routing (an API coordinator accidentally spawning a deploy agent), reduces token waste from misrouted sub-agent calls, and makes agent responsibilities explicit.
+
+---
+
 ## Creating Your First Agent
 
 ### Step 1: Create the file

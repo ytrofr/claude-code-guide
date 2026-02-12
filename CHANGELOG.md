@@ -4,6 +4,17 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.1.0] - 2026-02-12
+
+### Added
+
+- **Guide #36**: Task(agent_type) restriction patterns and examples for controlled sub-agent delegation
+- **Guide #38**: "When You MUST Override" section with real-world 213-skill measurement example
+
+### Changed
+
+- **Guide #38**: Budget measurement script updated to include project-level skills (.claude/skills/)
+
 ## [2.0.0] - 2026-02-08
 
 ### Added
@@ -92,12 +103,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Version History Summary
 
-| Version | Date       | Highlights                        |
-| ------- | ---------- | --------------------------------- |
-| 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename |
-| 1.5.0   | 2026-02-05 | Skill maintenance patterns        |
-| 1.4.0   | 2026-01-20 | Branch-aware development          |
-| 1.3.0   | 2026-01-10 | Context and testing systems       |
-| 1.2.0   | 2025-12-28 | Rules and best practices          |
-| 1.1.0   | 2025-12-20 | Pre-prompt 370x optimization      |
-| 1.0.0   | 2025-12-14 | Initial release                   |
+| Version | Date       | Highlights                         |
+| ------- | ---------- | ---------------------------------- |
+| 2.1.0   | 2026-02-12 | Task restrictions, budget override |
+| 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename  |
+| 1.5.0   | 2026-02-05 | Skill maintenance patterns         |
+| 1.4.0   | 2026-01-20 | Branch-aware development           |
+| 1.3.0   | 2026-01-10 | Context and testing systems        |
+| 1.2.0   | 2025-12-28 | Rules and best practices           |
+| 1.1.0   | 2025-12-20 | Pre-prompt 370x optimization       |
+| 1.0.0   | 2025-12-14 | Initial release                    |
