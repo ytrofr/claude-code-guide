@@ -70,6 +70,27 @@ export SLASH_COMMAND_TOOL_CHAR_BUDGET=40000
 
 This increases the budget to 40,000 characters. Useful when you have a large skill library, but be aware it steals from your available context for conversation.
 
+### When You MUST Override
+
+If your project has 100+ skills (user + project level combined), the native 16k budget is likely insufficient. Measure total description characters before deciding:
+
+```bash
+total=0
+for f in $(find ~/.claude/skills .claude/skills -maxdepth 3 -name "SKILL.md" 2>/dev/null); do
+  desc=$(sed -n '/^description:/p' "$f" | head -1 | sed 's/^description: *//;s/^"//;s/"$//')
+  total=$((total + ${#desc}))
+done
+echo "Total: $total chars (budget: ${SLASH_COMMAND_TOOL_CHAR_BUDGET:-16000})"
+```
+
+**Real example**: A project with 213 skills (22 user-level + 182 project-level + 9 plugin) had 35,415 chars of descriptions (224% of native budget). Without the 40,000 override, 56% of skills were silently excluded. The fix was a single line in `~/.bashrc`:
+
+```bash
+export SLASH_COMMAND_TOOL_CHAR_BUDGET=40000
+```
+
+**Warning**: If you previously used a custom pre-prompt hook to bypass the budget (e.g., top-N injection), and that hook was removed, the override becomes your only safety net. Do not remove it without measuring first.
+
 ### Description Format Best Practices
 
 Each skill's `description` field in its YAML frontmatter should follow this pattern:
