@@ -1,5 +1,0 @@
-# Database files (generated)
-*.db
-*.db-shm
-*.db-wal
-node_modules/
