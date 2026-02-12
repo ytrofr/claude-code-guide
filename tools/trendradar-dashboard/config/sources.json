@@ -101,6 +101,26 @@
       "rate_limit_minutes": 60,
       "config": {},
       "color": "#750014"
+    },
+    {
+      "id": "claude-code-releases",
+      "name": "Claude Code Releases",
+      "type": "changelog",
+      "url": "https://api.github.com/repos/anthropics/claude-code/releases",
+      "enabled": true,
+      "rate_limit_minutes": 60,
+      "config": { "mode": "releases", "max_items": 30 },
+      "color": "#cc785c"
+    },
+    {
+      "id": "claude-code-docs",
+      "name": "Claude Code Changelog",
+      "type": "changelog",
+      "url": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md",
+      "enabled": true,
+      "rate_limit_minutes": 120,
+      "config": { "mode": "docs", "max_items": 30 },
+      "color": "#e8956a"
     }
   ]
 }

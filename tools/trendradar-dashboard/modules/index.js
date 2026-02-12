@@ -6,12 +6,14 @@ const GitHubModule = require("./github");
 const HuggingFaceModule = require("./huggingface");
 const RSSModule = require("./rss");
 const MCPRegistryModule = require("./mcp-registry");
+const ChangelogModule = require("./changelog");
 
 const moduleTypes = {
   github: GitHubModule,
   huggingface: HuggingFaceModule,
   rss: RSSModule,
   mcp: MCPRegistryModule,
+  changelog: ChangelogModule,
 };
 
 function createModule(sourceConfig) {

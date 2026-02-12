@@ -73,6 +73,27 @@
         "apache"
       ],
       "color": "#22c55e"
+    },
+    {
+      "id": "claude-code-updates",
+      "name": "Claude Code Updates",
+      "weight": 2.5,
+      "keywords": [
+        "claude code",
+        "changelog",
+        "release",
+        "version",
+        "breaking change",
+        "subagent",
+        "hook",
+        "CLAUDE.md",
+        "context window",
+        "skill",
+        "SDK",
+        "IDE",
+        "VS Code"
+      ],
+      "color": "#cc785c"
     }
   ]
 }

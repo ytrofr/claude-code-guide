@@ -202,6 +202,12 @@ claude-code-guide/
 
 ---
 
+## Tools
+
+- **[AI Intelligence Hub](tools/trendradar-dashboard/)** - Local dashboard tracking 12 AI sources including Claude Code releases and docs changes. Port 4444.
+
+---
+
 ## What Makes This Different
 
 | Aspect                | This Guide                       |

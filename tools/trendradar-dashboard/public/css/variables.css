@@ -37,6 +37,8 @@
   --color-mcp: #6366f1;
   --color-ainews: #8b5cf6;
   --color-techcrunch: #0a0;
+  --color-claude-code-releases: #cc785c;
+  --color-claude-code-docs: #e8956a;
 
   /* Spacing */
   --spacing-xs: 0.25rem;
