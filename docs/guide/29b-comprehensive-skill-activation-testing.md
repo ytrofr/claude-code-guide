@@ -1,5 +1,7 @@
 # Chapter 29b: Comprehensive Skill Activation Testing & Optimization
 
+> **PARTIALLY DEPRECATED (Feb 2026)**: The custom hook-based activation testing described here is no longer needed -- Claude Code natively loads skills. However, the **frontmatter quality checks** (description clarity, "Use when" clauses, file size limits) remain valuable. Focus on writing clear `description:` fields for reliable native activation.
+
 **Created**: 2026-01-14
 **Updated**: 2026-01-14 (Entry #271 - Test Priority Results)
 **Source**: Production Entry #270, #271

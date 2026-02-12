@@ -1,6 +1,8 @@
 # Chapter 21: Pre-prompt Optimization (Entry #228)
 
-**Status**: Production-Validated (Jan 1, 2026)
+> **DEPRECATED (Feb 2026)**: The UserPromptSubmit pre-prompt hook is no longer needed. Claude Code now natively discovers and loads skills from `~/.claude/skills/`. The optimization techniques described here are historical. This chapter is kept for reference.
+
+**Status**: Deprecated (Feb 2026) -- was Production-Validated (Jan 1, 2026)
 **Difficulty**: Intermediate
 **Time**: 45 minutes
 **ROI**: 68% reduction (28k→9k chars)

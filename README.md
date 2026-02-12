@@ -15,10 +15,10 @@ Production-tested Claude Code patterns. 162+ documented patterns, 100+ hours sav
 | Metric            | Result                    |
 | ----------------- | ------------------------- |
 | Time Saved        | **100+ hours/year**       |
-| Hook Optimization | **370x faster**           |
-| Skill Activation  | **88.2% accuracy**        |
+| Hooks             | **14 events automated**   |
+| Skills            | **226+ native loading**   |
 | Token Savings     | **47-70% per branch**     |
-| Production Skills | **162+ documented**       |
+| Production Skills | **226+ documented**       |
 | MCP Integrations  | **13 servers, 70+ tools** |
 
 **Source**: 14+ months of production use with 97 components validated.
@@ -35,9 +35,8 @@ cd ~/my-project
 # 2. Validate structure
 ./scripts/validate-setup.sh
 
-# 3. Set up pre-prompt hook (370x optimization)
-cp template/.claude/hooks/pre-prompt.sh .claude/hooks/
-chmod +x .claude/hooks/pre-prompt.sh
+# 3. Add skills (Claude Code discovers them automatically)
+cp -r template/.claude/skills/ ~/.claude/skills/
 
 # 4. Configure MCP servers
 cp .claude/mcp_servers.json.template .claude/mcp_servers.json
@@ -47,7 +46,7 @@ cp .claude/mcp_servers.json.template .claude/mcp_servers.json
 claude
 ```
 
-**Detailed walkthrough**: [Quick Start Guide](docs/quick-start.md) | [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md)
+**Detailed walkthrough**: [Quick Start Guide](docs/quick-start.md) | [Skills System](docs/skill-activation-system.md)
 
 ---
 
@@ -63,7 +62,7 @@ Install via npm: `npm install -g @anthropic-ai/claude-code`. Create a `CLAUDE.md
 
 ### What are Claude Code hooks?
 
-Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. The pre-prompt hook runs before every message (skill activation, context injection). Other hooks include session-start, pre-compact, and stop hooks. We achieved **370x performance improvement** with optimized pre-prompt hooks—from 38 seconds to 103ms.
+Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 14 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
 
 ### What is MCP integration?
 
@@ -71,7 +70,7 @@ MCP (Model Context Protocol) extends Claude Code with external tools. Connect to
 
 ### How do Claude Code skills work?
 
-Skills are Markdown files with YAML frontmatter containing triggers, keywords, and instructions. When your query matches skill triggers, the pre-prompt hook injects relevant skills into context. Skills use keyword matching, regex patterns, and semantic detection. Our system achieves **88.2% activation accuracy** with 162+ production skills.
+Skills are Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clause). Claude Code natively discovers all skills from `~/.claude/skills/` and matches them to queries using the description field. No custom hooks needed -- skills are built into Claude Code. Our system runs **226+ production skills** with native activation.
 
 ### What is the memory bank?
 
@@ -93,9 +92,9 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ### Claude Code Hooks
 
-- [Pre-Prompt Hook Complete Guide](docs/pre-prompt-hook-complete-guide.md) - **370x optimization**
-- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 11 hook events
+- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 14 hook events
 - [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) - Clear distinction
+- [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md) - Historical reference (deprecated Feb 2026)
 
 ### Skills System
 
@@ -116,7 +115,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Memory Bank Hierarchy](docs/guide/12-memory-bank-hierarchy.md) - 4-tier structure
 - [Branch Context System](docs/guide/29-branch-context-system.md) - **47-70% token savings**
 - [Branch-Specific Skills](docs/guide/33-branch-specific-skill-curation.md) - Two-tier display
-- [Pre-Prompt Optimization](docs/guide/21-pre-prompt-optimization.md) - 68% reduction
+- [Pre-Prompt Optimization](docs/guide/21-pre-prompt-optimization.md) - Historical (deprecated)
 
 ### Best Practices
 
@@ -138,7 +137,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 claude-code-guide/
 ├── docs/                    # Complete documentation
 │   ├── quick-start.md      # 30-minute setup
-│   ├── pre-prompt-hook-complete-guide.md  # 370x optimization
+│   ├── pre-prompt-hook-complete-guide.md  # Historical (deprecated)
 │   ├── skill-activation-system.md
 │   └── guide/              # 37+ detailed guides
 ├── template/                # Clone-and-go starter
@@ -168,7 +167,7 @@ claude-code-guide/
 
 ### Phase 1: Essential (Week 1)
 
-- Pre-prompt hook (84% activation)
+- Skills library (native activation)
 - Memory Bank MCP
 - 5 troubleshooting skills
 - Perplexity with caching
@@ -195,8 +194,8 @@ claude-code-guide/
 ## Key Features
 
 - **Claude Code Setup**: Complete project configuration with templates
-- **Claude Code Hooks**: 11 hook events for workflow automation
-- **Claude Code Skills**: 162+ production-tested patterns
+- **Claude Code Hooks**: 14 hook events for workflow automation
+- **Claude Code Skills**: 226+ production-tested patterns (native loading)
 - **Claude Code MCP**: 13 servers, 70+ tools integrated
 - **Context Optimization**: 47-70% token savings per branch
 - **Best Practices**: Anthropic-aligned patterns from production
@@ -207,7 +206,7 @@ claude-code-guide/
 
 | Aspect                | This Guide                       |
 | --------------------- | -------------------------------- |
-| **Production-Tested** | 162+ patterns from real systems  |
+| **Production-Tested** | 226+ patterns from real systems  |
 | **Evidence-Based**    | Every claim backed by metrics    |
 | **Team-Ready**        | Shared vs personal configuration |
 | **Phased Approach**   | Value in 30 minutes              |
@@ -237,7 +236,7 @@ MIT License - See [LICENSE.md](LICENSE.md)
 **Getting Started**
 
 - [Quick Start Guide](docs/quick-start.md)
-- [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md)
+- [Skills System](docs/skill-activation-system.md)
 - [Template Repository](template/)
 
 **Core Systems**
