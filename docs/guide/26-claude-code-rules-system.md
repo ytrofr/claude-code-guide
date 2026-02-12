@@ -15,6 +15,7 @@ Claude Code automatically discovers `.md` files in `.claude/rules/` directories.
 ```
 
 **Higher priority rules override lower ones.** This allows:
+
 - Organizations to enforce standards
 - Developers to set personal preferences
 - Projects to define specific patterns
@@ -25,7 +26,7 @@ Claude Code automatically discovers `.md` files in `.claude/rules/` directories.
 
 ```
 .claude/rules/
-├── README.md              # Index of all rules (quick reference)
+├── INDEX.txt              # Index of all rules (.txt = not auto-loaded)
 ├── src-code.md            # Path-specific: src/**/*.js
 ├── tests.md               # Path-specific: tests/**/*
 ├── sacred/
@@ -41,9 +42,9 @@ Claude Code automatically discovers `.md` files in `.claude/rules/` directories.
 ### File Discovery
 
 - Claude Code recursively searches `.claude/rules/`
-- All `.md` files are loaded automatically
+- **Only `.md` files are loaded** — `.txt`, `.json`, etc. are ignored
 - Subdirectories help organize by domain
-- README.md provides quick navigation
+- Use INDEX.txt (not README.md) for human navigation — see "Optimization Tips" below
 
 ## Path-Specific Rules
 
@@ -59,11 +60,13 @@ path_patterns:
 # Source Code Rules
 
 ## Modular Architecture
+
 - Routes in src/routes/
 - Controllers in src/controllers/
 - Utilities in src/utils/
 
 ## Code Standards
+
 - Use async/await (not callbacks)
 - Prefer const over let
 - Document public functions
@@ -75,7 +78,7 @@ This rule only loads when working with files matching the patterns.
 
 ### Domain Rule Template
 
-```markdown
+````markdown
 # [Domain] Rules - [Project Name]
 
 **Authority**: [What this rule governs]
@@ -87,24 +90,26 @@ This rule only loads when working with files matching the patterns.
 
 ```yaml
 Pattern_Name:
-  Rule: 'Description of the rule'
-  Example: 'Code or usage example'
-  Violation: 'What NOT to do'
+  Rule: "Description of the rule"
+  Example: "Code or usage example"
+  Violation: "What NOT to do"
 ```
+````
 
 ---
 
 ## Quick Reference
 
-| Pattern | Usage |
-|---------|-------|
+| Pattern   | Usage       |
+| --------- | ----------- |
 | Pattern 1 | When to use |
 | Pattern 2 | When to use |
 
 ---
 
 **Skills Reference**: [Related skills]
-```
+
+````
 
 ### Path-Specific Rule Template
 
@@ -123,13 +128,14 @@ path_patterns:
 ## Patterns
 - Pattern 1
 - Pattern 2
-```
+````
 
 ## Best Practices
 
 ### 1. Keep Rules Focused
 
 **DO**: One domain per file
+
 ```
 .claude/rules/
 ├── database/patterns.md     # Database only
@@ -138,6 +144,7 @@ path_patterns:
 ```
 
 **DON'T**: Mix domains
+
 ```
 .claude/rules/
 └── everything.md            # Database + API + Testing (too broad)
@@ -146,35 +153,45 @@ path_patterns:
 ### 2. Reference, Don't Duplicate
 
 **DO**: Point to authoritative sources
+
 ```markdown
 # Database Rules
 
 **Full Reference**: See `CORE-PATTERNS.md` (authoritative source)
 
 ## Quick Summary
+
 - Golden Rule: Always use `employee_id`
 - Safety: `SELECT current_database()` before operations
 ```
 
 **DON'T**: Copy entire documents
+
 ```markdown
 # Database Rules
 
-[400 lines copied from CORE-PATTERNS.md]  # Causes duplication!
+[400 lines copied from CORE-PATTERNS.md] # Causes duplication!
 ```
 
-### 3. Add Index README
+### 3. Use INDEX.txt (Not README.md)
 
-Always include a README.md for quick navigation:
+**Important**: Since Claude Code auto-loads all `.md` files in `.claude/rules/`, a `README.md` index file wastes context tokens on human navigation content. Rename it to `INDEX.txt` — Claude Code ignores non-`.md` files, but humans can still read it.
+
+```bash
+# Save ~700 tokens per session
+mv .claude/rules/README.md .claude/rules/INDEX.txt
+```
+
+Include an INDEX.txt for quick navigation:
 
 ```markdown
 # Project Rules Index
 
-| Rule File | Domain | Key Patterns |
-|-----------|--------|---------------|
-| `sacred/commandments.md` | Core | 14 Sacred Commandments |
-| `database/patterns.md` | Database | Golden Rule, SQL |
-| `api/integrations.md` | External | OAuth2, endpoints |
+| Rule File                | Domain   | Key Patterns           |
+| ------------------------ | -------- | ---------------------- |
+| `sacred/commandments.md` | Core     | 14 Sacred Commandments |
+| `database/patterns.md`   | Database | Golden Rule, SQL       |
+| `api/integrations.md`    | External | OAuth2, endpoints      |
 
 **Last Updated**: YYYY-MM-DD
 ```
@@ -187,26 +204,29 @@ Track rule changes in your index:
 ## Changelog
 
 ### 2026-01-06
+
 - Added: hebrew/preservation.md
 - Updated: database/patterns.md (Cloud SQL credentials)
 
 ### 2025-12-15
+
 - Initial rules structure created
 ```
 
 ## Rules vs CLAUDE.md
 
-| Aspect | CLAUDE.md | .claude/rules/ |
-|--------|-----------|----------------|
-| Loading | Always loaded | Auto-discovered |
-| Path-specific | No | Yes (YAML frontmatter) |
-| Organization | Single file | Directory structure |
-| Best for | Core project instructions | Domain-specific patterns |
-| Size limit | Keep concise | Can be detailed |
+| Aspect        | CLAUDE.md                 | .claude/rules/           |
+| ------------- | ------------------------- | ------------------------ |
+| Loading       | Always loaded             | Auto-discovered          |
+| Path-specific | No                        | Yes (YAML frontmatter)   |
+| Organization  | Single file               | Directory structure      |
+| Best for      | Core project instructions | Domain-specific patterns |
+| Size limit    | Keep concise              | Can be detailed          |
 
 ### When to Use Each
 
 **Use CLAUDE.md for**:
+
 - Project overview and mission
 - Critical deployment rules
 - Session protocols
@@ -214,6 +234,7 @@ Track rule changes in your index:
 - Auto-load file references (@file)
 
 **Use .claude/rules/ for**:
+
 - Domain-specific patterns (database, API, testing)
 - Path-specific rules (src/, tests/)
 - Detailed compliance standards
@@ -224,6 +245,7 @@ Track rule changes in your index:
 ### Problem: Context Bloat
 
 Rules that duplicate content waste context tokens:
+
 - Same Sacred Commandments in 3 files
 - API patterns repeated everywhere
 - 75%+ context utilization degrades quality
@@ -240,24 +262,90 @@ CROSS_REFERENCE_RULE:
 ### Implementation
 
 **In CLAUDE.md**:
+
 ```markdown
 ## Sacred Compliance
+
 → See `.claude/rules/sacred/commandments.md` for details
 → Full reference: `CORE-PATTERNS.md`
 ```
 
 **In rules/sacred/commandments.md**:
+
 ```markdown
 # Sacred Commandments Summary
 
 **Full Reference**: CORE-PATTERNS.md (authoritative source)
 
-| # | Rule | Quick Check |
-|---|------|-------------|
-| I | Golden Rule | `employee_id` not `id` |
-| II | Real Data | No hardcoding |
+| #   | Rule        | Quick Check            |
+| --- | ----------- | ---------------------- |
+| I   | Golden Rule | `employee_id` not `id` |
+| II  | Real Data   | No hardcoding          |
+
 ...
 ```
+
+## Optimization Tips
+
+### 1. Rename Non-Rule Files to .txt
+
+Claude Code only auto-loads `.md` files. Any file that exists for human reference (indexes, changelogs, READMEs) should use `.txt` extension:
+
+```bash
+mv .claude/rules/README.md .claude/rules/INDEX.txt      # ~700 tokens saved
+mv .claude/rules/CHANGELOG.md .claude/rules/CHANGELOG.txt  # if applicable
+```
+
+### 2. Trim Evidence from Rules
+
+Rules should contain the **rule itself**, not the history of why it was created. Move evidence, dated lessons, and bug narratives to `memory-bank/learned/`:
+
+```markdown
+# Before (bloated - 2,900 tokens)
+
+## Sacred Commandment I
+
+Rule: Use employee_id
+Evidence: Dec 22, 2025 - Found bug where...
+Lesson: The 0-employees bug occurred when...
+Sprint-C: 4-hour debugging session led to...
+
+# After (focused - 1,800 tokens)
+
+## Sacred Commandment I
+
+Rule: Use employee_id (NEVER just id)
+Validation: grep -r 'record\.employee\.id' src/
+```
+
+### 3. Deduplicate Across Files
+
+If the same rule appears in both `.claude/rules/database/patterns.md` and `CORE-PATTERNS.md`, keep the full version in one place and reference from the other:
+
+```markdown
+# In database/patterns.md (condensed)
+
+## Golden Rule (Sacred I)
+
+→ See sacred/commandments.md for full rule
+Quick check: always use employee_id, never id
+```
+
+### 4. Measure Your Token Budget
+
+```bash
+# Count tokens across all auto-loaded rules
+total=0
+for f in $(find .claude/rules -name "*.md" -type f); do
+  chars=$(wc -c < "$f")
+  tokens=$((chars / 4))
+  total=$((total + tokens))
+  echo "$tokens tokens | $f"
+done | sort -rn
+echo "TOTAL: $total tokens"
+```
+
+**Target**: Keep total rules under 15k tokens. Over 20k likely contains duplicated content.
 
 ## Example: Complete Rules Setup
 

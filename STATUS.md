@@ -1,13 +1,31 @@
 # Claude Code Implementation Guide - Project Status
 
 **Created**: 2025-12-14
-**Updated**: 2026-02-05
-**Status**: Phase 1 Complete + Hook Safety Fix + 34 Guide Chapters
-**Progress**: 85% of planned work complete
+**Updated**: 2026-02-12
+**Status**: Phase 1 Complete + Hook Safety Fix + Context Optimization Guide + 34 Guide Chapters
+**Progress**: 87% of planned work complete
 
 ---
 
-## 🆕 Recent Updates (Feb 5, 2026)
+## Recent Updates (Feb 12, 2026)
+
+### Context Optimization: INDEX.txt + Rules Trimming Guide
+
+- **Chapter 26**: Added "Optimization Tips" section with 4 production-tested techniques
+- **INDEX.txt pattern**: `README.md` in `.claude/rules/` wastes ~700 tokens — rename to `.txt` to prevent auto-loading
+- **Evidence trimming**: Move dated evidence/lessons from rules to `memory-bank/learned/` (saved ~5k tokens in production)
+- **Token measurement script**: Added bash snippet to count total auto-loaded rule tokens
+- **Template updated**: `template/.claude/rules/README.md` renamed to `INDEX.txt`
+
+**Production results** (LIMOR AI project):
+
+- Before: ~51k tokens auto-loaded per session
+- After: ~39k tokens (24% reduction)
+- Techniques: INDEX.txt rename, evidence trimming, cross-reference dedup, CLAUDE.md condensation
+
+---
+
+## Previous Updates (Feb 5, 2026)
 
 ### Critical Fix: Hook stdin Timeout (Prevents Infinite Hangs)
 
