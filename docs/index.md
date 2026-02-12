@@ -1,14 +1,14 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: Complete guide to Claude Code hooks, skills, agents, MCP integration. 14 hook events. 370x optimization. Production-tested.
+description: Complete guide to Claude Code hooks, skills, agents, MCP integration. 14 hook events. 226+ native skills. Production-tested.
 ---
 
 # Claude Code Guide
 
 **What is Claude Code?** Claude Code is Anthropic's official CLI for AI-powered coding assistance. It provides an interactive terminal experience where you can collaborate with Claude directly in your development environment.
 
-**What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 162+ proven patterns from production use.
+**What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 226+ proven patterns from production use.
 
 **How long to set up?** 30 minutes for basic setup, 2-4 hours for full optimization.
 
@@ -22,11 +22,11 @@ Claude Code is installed via npm: `npm install -g @anthropic-ai/claude-code`. Af
 
 ### What are Claude Code skills?
 
-Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. Our guide documents 162+ production-tested skills with an 88.2% activation accuracy. Learn more in our [Skill Activation System](skill-activation-system.md) documentation.
+Skills are reusable Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clauses). Claude Code natively discovers all skills from `~/.claude/skills/` and activates them based on your query. No custom hooks needed. Our guide documents 226+ production-tested skills. Learn more in our [Skill Activation System](skill-activation-system.md) documentation.
 
 ### What is the pre-prompt hook?
 
-The pre-prompt hook is a powerful feature that runs before every Claude Code prompt. It can inject context, validate inputs, and optimize your workflow. Our implementation achieved a 370x performance improvement (from 38 seconds to 103ms). See the complete [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md).
+**Deprecated (Feb 2026)**: The pre-prompt hook was a custom `UserPromptSubmit` hook that matched skills to queries before Claude Code added native skill loading. Claude Code now discovers and loads skills automatically from `~/.claude/skills/`, making custom pre-prompt hooks unnecessary. See the [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) for historical reference.
 
 ### What is MCP integration?
 
@@ -34,7 +34,7 @@ MCP (Model Context Protocol) extends Claude Code with external tools like databa
 
 ### How do skills work?
 
-Skills are Markdown files with structured frontmatter containing triggers, keywords, and instructions. When your query matches skill triggers, Claude Code automatically loads relevant skills. Our system uses keyword matching, regex patterns, and AI-powered detection to achieve 88.2% accuracy.
+Skills are Markdown files with YAML frontmatter (`name:` and `description:` fields). Claude Code natively discovers all skills in `~/.claude/skills/` and matches them to your queries using the `description:` field. The key to good activation is writing clear "Use when..." clauses in your descriptions. 226+ skills documented in this guide.
 
 ### What is the memory bank?
 
@@ -74,11 +74,11 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Claude Code Hooks](guide/13-claude-code-hooks.md) - 14 hook events, 3 hook types
 - [Git vs Claude Hooks](guide/14-git-vs-claude-hooks-distinction.md) - When to use which
 - [Progressive Disclosure](guide/15-progressive-disclosure.md) - Token-efficient context loading
-- [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) - 370x optimization
+- [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) - Historical (deprecated Feb 2026)
 
 ### Skills System
 
-- [Skill Activation System](skill-activation-system.md) - 162+ production skills, 88.2% accuracy
+- [Skill Activation System](skill-activation-system.md) - 226+ production skills (native loading)
 - [Skills Activation Breakthrough](guide/16-skills-activation-breakthrough.md) - How activation works
 - [Skill Detection Enhancement](guide/17-skill-detection-enhancement.md) - Improving match rates
 - [Skill Keyword Methodology](guide/24-skill-keyword-enhancement-methodology.md) - Trigger optimization
@@ -194,7 +194,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What is the pre-prompt hook in Claude Code?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The pre-prompt hook is a shell script that runs before every Claude Code prompt. It can inject context, validate inputs, and optimize workflow. Optimized implementations achieve 370x performance improvement (from 38 seconds to 103ms)."
+        "text": "The pre-prompt hook was a custom UserPromptSubmit hook for skill matching, now deprecated (Feb 2026). Claude Code natively discovers and loads skills from ~/.claude/skills/ using the description field. No custom hooks needed for skill activation."
       }
     },
     {
@@ -285,7 +285,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "@type": "HowToStep",
       "position": 4,
       "name": "Set up hooks",
-      "text": "Configure hooks in .claude/settings.json. Set up pre-prompt hook for skill matching, PostToolUse for auto-formatting, and PreToolUse for safety validation. 14 hook events available with 3 hook types (command, prompt, agent)."
+      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 14 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
     },
     {
       "@type": "HowToStep",

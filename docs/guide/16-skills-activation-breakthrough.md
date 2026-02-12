@@ -1,5 +1,7 @@
 # Chapter 16: Skills Activation Breakthrough - Scott Spence Pattern
 
+> **DEPRECATED (Feb 2026)**: Claude Code now natively loads all skills from `~/.claude/skills/` and matches them using the `description:` field. The custom pre-prompt hook described here is no longer needed. This chapter is kept for historical reference. See [Skill Activation System](../skill-activation-system.md) for the current approach.
+
 **Created**: 2025-12-23
 **Source**: Production Entry #203
 **Pattern**: Scott Spence filtering + Skills-first ordering
