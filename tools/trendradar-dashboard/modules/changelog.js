@@ -57,67 +57,139 @@ class ChangelogModule extends BaseModule {
   }
 
   /**
-   * Mode: docs - Fetch and parse CHANGELOG.md from GitHub
+   * Mode: docs - Fetch all documentation files from Claude Code repo
    */
   async fetchDocs() {
-    const res = await fetch(this.url, {
-      headers: { "User-Agent": "AI-Intelligence-Hub/1.0" },
-    });
+    const headers = {
+      Accept: "application/vnd.github.v3+json",
+      "User-Agent": "AI-Intelligence-Hub/1.0",
+    };
 
-    if (!res.ok) {
-      console.error(`Changelog docs fetch error: ${res.status}`);
+    // Get repo tree to find all .md files
+    const treeRes = await fetch(`${this.url}?recursive=1`, { headers });
+    if (!treeRes.ok) {
+      console.error(`Docs tree fetch error: ${treeRes.status}`);
       return [];
     }
 
-    const markdown = await res.text();
-    return this.parseChangelogMd(markdown);
-  }
+    const tree = await treeRes.json();
+    const mdFiles = (tree.tree || []).filter(
+      (f) =>
+        f.type === "blob" &&
+        f.path.endsWith(".md") &&
+        f.path !== "CHANGELOG.md" &&
+        f.path !== "LICENSE.md" &&
+        f.size > 200,
+    );
 
-  /**
-   * Parse CHANGELOG.md into version sections
-   */
-  parseChangelogMd(markdown) {
+    const maxItems = this.config.max_items || 100;
     const items = [];
-    const maxItems = this.config.max_items || 30;
-    // Match ## version headings (e.g. "## 2.1.39" or "## [2.1.39]")
-    const sections = markdown.split(/^## /m).slice(1);
 
-    for (const section of sections.slice(0, maxItems)) {
-      const firstLine = section.split("\n")[0];
-      const versionMatch = firstLine.match(/\[?(\d+\.\d+\.\d+)\]?/);
-      if (!versionMatch) continue;
+    for (const file of mdFiles.slice(0, maxItems)) {
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/anthropics/claude-code/main/${file.path}`;
+        const res = await fetch(rawUrl, {
+          headers: { "User-Agent": "AI-Intelligence-Hub/1.0" },
+        });
+        if (!res.ok) continue;
 
-      const version = versionMatch[1];
-      const rest = section.substring(firstLine.length);
-      const changes = this.parseChanges(rest);
-      const plainText = this.stripMarkdown(rest);
+        const content = await res.text();
+        const title = this.extractTitle(content, file.path);
+        const description = this.stripMarkdown(content).substring(0, 500);
+        const sections = this.extractSections(content);
+        const category = this.categorizeDoc(file.path);
 
-      // Try to extract date from heading line (e.g. "## 2.1.39 (2026-02-10)")
-      const dateMatch = firstLine.match(/(\d{4}-\d{2}-\d{2})/);
-      const published_at = dateMatch
-        ? new Date(dateMatch[1]).toISOString()
-        : null;
+        items.push(
+          this.normalize({
+            id: file.path,
+            title,
+            url: `https://github.com/anthropics/claude-code/blob/main/${file.path}`,
+            description,
+            author: "anthropic",
+            published_at: new Date().toISOString(),
+            score: this.docScore(file.path, file.size),
+            metadata: {
+              type: "docs",
+              category,
+              file_path: file.path,
+              size_bytes: file.size,
+              section_count: sections.length,
+              sections: sections.slice(0, 10),
+            },
+          }),
+        );
 
-      items.push(
-        this.normalize({
-          id: `changelog-${version}`,
-          title: `Claude Code Changelog: v${version}`,
-          url: `https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md`,
-          description: plainText.substring(0, 500),
-          author: "anthropic",
-          published_at,
-          score: this.recencyScore(published_at),
-          metadata: {
-            version,
-            type: "changelog",
-            change_count: changes.length,
-            changes: changes.slice(0, 10),
-          },
-        }),
-      );
+        // Small delay to be polite to GitHub
+        await new Promise((r) => setTimeout(r, 100));
+      } catch (err) {
+        console.error(`Doc fetch error for ${file.path}:`, err.message);
+      }
     }
 
     return items;
+  }
+
+  /**
+   * Extract title from markdown content or file path
+   */
+  extractTitle(content, filePath) {
+    // Try first h1 heading
+    const h1Match = content.match(/^#\s+(.+)$/m);
+    if (h1Match) return h1Match[1].trim();
+
+    // Try YAML frontmatter name
+    const nameMatch = content.match(/^name:\s*(.+)$/m);
+    if (nameMatch) return nameMatch[1].trim();
+
+    // Fall back to file path
+    const parts = filePath.replace(/\.md$/, "").split("/");
+    return parts[parts.length - 1]
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  /**
+   * Extract section headings from markdown
+   */
+  extractSections(content) {
+    return content
+      .split("\n")
+      .filter((line) => /^#{2,3}\s+/.test(line))
+      .map((line) => line.replace(/^#{2,3}\s+/, "").trim())
+      .filter((s) => s.length > 0);
+  }
+
+  /**
+   * Categorize a doc file by its path
+   */
+  categorizeDoc(filePath) {
+    if (filePath.startsWith("plugins/")) {
+      const plugin = filePath.split("/")[1];
+      if (filePath.includes("/skills/")) return `plugin/${plugin}/skill`;
+      if (filePath.includes("/agents/")) return `plugin/${plugin}/agent`;
+      if (filePath.includes("/commands/")) return `plugin/${plugin}/command`;
+      return `plugin/${plugin}`;
+    }
+    if (filePath.startsWith("examples/")) return "example";
+    if (filePath === "README.md") return "overview";
+    if (filePath === "SECURITY.md") return "security";
+    return "docs";
+  }
+
+  /**
+   * Score docs by importance (READMEs and top-level docs rank higher)
+   */
+  docScore(filePath, size) {
+    let score = 50;
+    if (filePath === "README.md") score = 150;
+    else if (filePath.endsWith("README.md")) score = 100;
+    else if (filePath.includes("SKILL.md")) score = 90;
+    else if (filePath.includes("/commands/")) score = 85;
+    else if (filePath.includes("/agents/")) score = 80;
+    // Larger files tend to have more content
+    if (size > 10000) score += 20;
+    else if (size > 5000) score += 10;
+    return score;
   }
 
   /**

@@ -91,7 +91,13 @@
         "skill",
         "SDK",
         "IDE",
-        "VS Code"
+        "VS Code",
+        "plugin",
+        "agent",
+        "command",
+        "MCP",
+        "memory",
+        "permission"
       ],
       "color": "#cc785c"
     }

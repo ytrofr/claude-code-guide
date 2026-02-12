@@ -13,20 +13,20 @@ node server.js
 
 ## Sources (12)
 
-| Source                | Type        | Rate Limit | What It Tracks                     |
-| --------------------- | ----------- | ---------- | ---------------------------------- |
-| GitHub Trending       | github      | 60 min     | AI/LLM/MCP repos by stars          |
-| HuggingFace           | huggingface | 30 min     | Trending ML models                 |
-| Hacker News           | rss         | 5 min      | Front page tech news               |
-| Product Hunt          | rss         | 15 min     | New product launches               |
-| AI News               | rss         | 60 min     | AI industry newsletter             |
-| Anthropic Blog        | rss         | 60 min     | Official Anthropic announcements   |
-| OpenAI Blog           | rss         | 60 min     | OpenAI research and updates        |
-| MCP Servers           | mcp         | 30 min     | MCP server registry (glama.ai)     |
-| TechCrunch AI         | rss         | 15 min     | AI category from TechCrunch        |
-| MIT AI News           | rss         | 60 min     | MIT AI research (disabled)         |
-| Claude Code Releases  | changelog   | 60 min     | GitHub releases with version notes |
-| Claude Code Changelog | changelog   | 120 min    | Full CHANGELOG.md version history  |
+| Source               | Type        | Rate Limit | What It Tracks                                             |
+| -------------------- | ----------- | ---------- | ---------------------------------------------------------- |
+| GitHub Trending      | github      | 60 min     | AI/LLM/MCP repos by stars                                  |
+| HuggingFace          | huggingface | 30 min     | Trending ML models                                         |
+| Hacker News          | rss         | 5 min      | Front page tech news                                       |
+| Product Hunt         | rss         | 15 min     | New product launches                                       |
+| AI News              | rss         | 60 min     | AI industry newsletter                                     |
+| Anthropic Blog       | rss         | 60 min     | Official Anthropic announcements                           |
+| OpenAI Blog          | rss         | 60 min     | OpenAI research and updates                                |
+| MCP Servers          | mcp         | 30 min     | MCP server registry (glama.ai)                             |
+| TechCrunch AI        | rss         | 15 min     | AI category from TechCrunch                                |
+| MIT AI News          | rss         | 60 min     | MIT AI research (disabled)                                 |
+| Claude Code Releases | changelog   | 60 min     | GitHub releases with version notes                         |
+| Claude Code Docs     | changelog   | 360 min    | 98 documentation pages (plugins, commands, skills, agents) |
 
 ## Architecture
 

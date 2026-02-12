@@ -114,12 +114,12 @@
     },
     {
       "id": "claude-code-docs",
-      "name": "Claude Code Changelog",
+      "name": "Claude Code Docs",
       "type": "changelog",
-      "url": "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md",
+      "url": "https://api.github.com/repos/anthropics/claude-code/git/trees/main",
       "enabled": true,
-      "rate_limit_minutes": 120,
-      "config": { "mode": "docs", "max_items": 30 },
+      "rate_limit_minutes": 360,
+      "config": { "mode": "docs", "max_items": 100 },
       "color": "#e8956a"
     }
   ]
