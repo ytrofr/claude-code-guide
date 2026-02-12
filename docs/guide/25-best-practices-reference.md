@@ -179,15 +179,31 @@ EXTRACTION_WORKFLOW:
 
 ## 🔗 Cross-Reference with Implementation Guide
 
-| Chapter                                 | Related Research                      |
-| --------------------------------------- | ------------------------------------- |
-| **Chapter 13**: Claude Code Hooks       | How to Configure Hooks                |
-| **Chapter 17**: Skill Detection         | Equipping Agents with Skills          |
-| **Chapter 20**: Skills Filtering        | Advanced Tool Use, Writing Tools      |
-| **Chapter 21**: Pre-prompt Optimization | Effective Context Engineering         |
-| **Chapter 24**: Keyword Enhancement     | Skills patterns + context engineering |
-| **Chapter 36**: Agents and Subagents    | Building Effective Agents, Agent SDK  |
-| **Chapter 37**: Agent Teams             | Multi-Agent Research System           |
+| Chapter                                 | Related Research                          |
+| --------------------------------------- | ----------------------------------------- |
+| **Chapter 13**: Claude Code Hooks       | How to Configure Hooks                    |
+| **Chapter 17**: Skill Detection         | Equipping Agents with Skills              |
+| **Chapter 20**: Skills Filtering        | Advanced Tool Use, Writing Tools          |
+| **Chapter 21**: Pre-prompt Optimization | Effective Context Engineering             |
+| **Chapter 24**: Keyword Enhancement     | Skills patterns + context engineering     |
+| **Chapter 36**: Agents and Subagents    | Building Effective Agents, Agent SDK      |
+| **Chapter 37**: Agent Teams             | Multi-Agent Research System               |
+| **Chapter 38**: Context Costs & Budget  | Best Practices, Skills, Features Overview |
+
+---
+
+## 📖 Official Documentation References
+
+These are pages from Anthropic's official Claude Code documentation site (`code.claude.com`) that cover core concepts referenced throughout this guide:
+
+| Documentation Page | URL                                                       | Key Topics                                                                                                                  |
+| ------------------ | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Best Practices     | [Link](https://code.claude.com/docs/en/best-practices)    | Context management, CLAUDE.md pruning, verification patterns, subagent best practices                                       |
+| Sub-agents         | [Link](https://code.claude.com/docs/en/sub-agents)        | Agent memory (project/user), skills preloading, permission modes, hooks for agents                                          |
+| Skills             | [Link](https://code.claude.com/docs/en/skills)            | Description budget (2% / `SLASH_COMMAND_TOOL_CHAR_BUDGET`), description format, `disable-model-invocation`, `context: fork` |
+| Features Overview  | [Link](https://code.claude.com/docs/en/features-overview) | Context cost table (what loads when), comparison of extension points (skills vs agents vs hooks vs MCP)                     |
+
+**Related chapters**: [Chapter 36](36-agents-and-subagents.md) (agents), [Chapter 38](38-context-costs-and-skill-budget.md) (context costs & skill budget), [Chapter 20](20-skills-filtering-optimization.md) (skill filtering)
 
 ---
 
