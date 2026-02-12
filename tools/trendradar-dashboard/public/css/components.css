@@ -102,6 +102,20 @@
   background: rgba(0, 170, 0, 0.15);
   color: var(--color-techcrunch);
 }
+.badge-claude-code-releases {
+  background: rgba(204, 120, 92, 0.15);
+  color: var(--color-claude-code-releases);
+}
+.badge-claude-code-docs {
+  background: rgba(232, 149, 106, 0.15);
+  color: var(--color-claude-code-docs);
+}
+.badge-version {
+  background: rgba(204, 120, 92, 0.25);
+  color: var(--color-claude-code-releases);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
 
 /* Buttons */
 .btn {

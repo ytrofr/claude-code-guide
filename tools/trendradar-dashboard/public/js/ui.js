@@ -39,6 +39,8 @@ const UI = {
         <div class="item-header">
           <div>
             <span class="badge badge-${item.source}">${item.source}</span>
+            ${metadata.version ? `<span class="badge badge-version">v${metadata.version}</span>` : ""}
+            ${metadata.change_count ? `<span class="item-stat" title="Changes">${Icons.code} ${metadata.change_count} changes</span>` : ""}
           </div>
           <div class="item-actions">
             <button class="btn btn-icon bookmark-btn ${isBookmarked ? "active" : ""}"
