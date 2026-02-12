@@ -6,11 +6,16 @@ description: "Build Claude Code skills with 88% activation accuracy. Frontmatter
 
 # Skill Activation System - Complete Implementation Guide
 
+> **UPDATE (February 2026)**: Claude Code now natively loads all skills and matches them to user queries. The custom pre-prompt hook described below is **no longer needed**. However, the skill quality standards in this guide (frontmatter, descriptions, organization) remain essential for Claude Code's native matching to work well.
+>
+> **Current best practice**: Focus on writing clear `description:` fields with "Use when..." clauses. Claude Code's native matching uses these descriptions directly - no custom hook needed.
+
 The Claude Code skill activation system matches user queries to reusable skill files using keyword scoring, achieving 88.2% accuracy across 170 test queries and 13 domains. This guide covers the complete architecture: YAML frontmatter standards, trigger keyword optimization, cache management, P0-P3 test priorities, and weekly monitoring workflows.
 
 **Source**: Production Project - Entries #271, #272
 **Achievement**: 61.1% -> 88.2% accuracy in 170-query test suite
 **Created**: 2026-01-14
+**Updated**: 2026-02-12 (Native Claude Code skill loading replaces custom hook)
 
 ---
 
@@ -48,6 +53,20 @@ A comprehensive framework for managing Claude Code skills with high activation a
 
 ### How Skills Are Matched
 
+**Native Claude Code (Current - Feb 2026+)**:
+
+```
+User Query
+    ↓
+Claude Code Native Skill Discovery
+    ↓
+Description-Based Matching (name + description fields)
+    ↓
+Skill Loaded into Context (via Skill tool)
+```
+
+**Legacy Custom Hook (Deprecated)**:
+
 ```
 User Query
     ↓
@@ -58,16 +77,14 @@ Skill Index Cache (~/.claude/cache/skill-index-hybrid.txt)
 Keyword Matching Algorithm
     ↓
 Ranked Skills (✅ Top 5)
-    ↓
-Proactive Recommendations (🚀 DEPLOYMENT, 🎯 DATABASE, etc.)
 ```
 
-### Four Components
+### Components
 
-1. **Skills** (~/.claude/skills/) - 184 standalone workflows
-2. **Cache** (~/.claude/cache/) - Hash-indexed skill metadata
-3. **Test Suite** (tests/skills/) - 170-query validation
-4. **Monitoring** (scripts/) - Weekly health checks and analytics
+1. **Skills** (~/.claude/skills/) - 226+ standalone workflows
+2. **Frontmatter** - name + description with "Use when..." (critical for native matching)
+3. **Test Suite** (tests/skills/) - 170-query validation (optional, for quality assurance)
+4. **Cache** (~/.claude/cache/) - No longer needed (was for custom hook)
 
 ---
 

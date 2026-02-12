@@ -6,13 +6,21 @@ description: "Optimize Claude Code pre-prompt hooks from 38 seconds to 103ms. Sk
 
 # Pre-Prompt Hook System - Complete Implementation Guide
 
+> **UPDATE (February 2026)**: Claude Code now natively loads all skills into context and performs its own matching. The custom `UserPromptSubmit` pre-prompt hook described in this guide is **no longer necessary** for skill activation. Claude Code's built-in skill system handles discovery, matching, and activation automatically.
+>
+> **What changed**: Claude Code's native skill loading matured to handle 200+ skills natively. The hook's custom `Triggers:` field, hybrid cache, and keyword scoring are now redundant with the built-in description-based matching.
+>
+> **Recommendation**: Remove the `UserPromptSubmit` hook from `.claude/settings.json`. Keep skills in `~/.claude/skills/` with proper `name:` and `description:` (with "Use when...") frontmatter - Claude Code discovers them automatically.
+>
+> **What to keep from this guide**: The skill quality standards (frontmatter, "Use when" clauses, trigger keywords in descriptions, <500 line limit) remain best practices for native Claude Code skill discovery.
+
 The pre-prompt hook is a UserPromptSubmit hook that automatically intercepts queries, matches them against a cached skill library using keyword scoring, and injects the top 3 matching skills into Claude's context. This implementation achieved a 370x performance improvement (from 50 seconds to 136ms) and 88.2% activation accuracy across 170 test queries. It saves 85+ hours per year in production.
 
 **Author**: Production dev-Knowledge Branch
 **Performance**: 370x optimization (50s -> 136ms) - Entry #267
 **Accuracy**: 88.2% (150/170 tests) - Entry #271
 **ROI**: 85+ hours/year saved - Entry #272
-**Status**: Production-validated, battle-tested
+**Status**: Deprecated (Feb 2026) - Native Claude Code skill loading replaces this approach
 
 ---
 
