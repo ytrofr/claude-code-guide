@@ -7,6 +7,18 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+
+// Load .env file if present (for GITHUB_TOKEN etc.)
+const envPath = path.join(__dirname, ".env");
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
+    const match = line.match(/^([^#=]+)=(.*)$/);
+    if (match && !process.env[match[1].trim()]) {
+      process.env[match[1].trim()] = match[2].trim();
+    }
+  }
+}
+
 const db = require("./database/db");
 
 const app = express();

@@ -54,3 +54,4 @@ coverage/
 # Personal notes (optional - team can decide)
 NOTES.md
 TODO.personal.md
+.env
