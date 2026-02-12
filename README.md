@@ -3,10 +3,10 @@
 > **The complete guide to Claude Code setup, skills, hooks, and MCP integration.**
 
 [![GitHub stars](https://img.shields.io/github/stars/ytrofr/claude-code-guide?style=social)](https://github.com/ytrofr/claude-code-guide)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns. 162+ documented patterns, 100+ hours saved per year.
+Production-tested Claude Code patterns. 226+ documented patterns, 100+ hours saved per year.
 
 ---
 
@@ -233,7 +233,7 @@ claude-code-guide/
 
 ## License
 
-MIT License - See [LICENSE.md](LICENSE.md)
+MIT License - See [LICENSE](LICENSE)
 
 ---
 
