@@ -116,6 +116,11 @@
   font-family: var(--font-mono);
   font-weight: 600;
 }
+.badge-category {
+  background: rgba(232, 149, 106, 0.15);
+  color: var(--color-claude-code-docs);
+  font-size: var(--font-xs);
+}
 
 /* Buttons */
 .btn {

@@ -34,6 +34,7 @@ const stmts = {
       description = @description,
       stars = @stars,
       score = @score,
+      published_at = @published_at,
       fetched_at = @fetched_at,
       metadata = @metadata
   `),

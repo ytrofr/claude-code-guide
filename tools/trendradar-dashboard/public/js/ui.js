@@ -40,7 +40,10 @@ const UI = {
           <div>
             <span class="badge badge-${item.source}">${item.source}</span>
             ${metadata.version ? `<span class="badge badge-version">v${metadata.version}</span>` : ""}
+            ${metadata.category ? `<span class="badge badge-category">${metadata.category}</span>` : ""}
             ${metadata.change_count ? `<span class="item-stat" title="Changes">${Icons.code} ${metadata.change_count} changes</span>` : ""}
+            ${metadata.section_count ? `<span class="item-stat" title="Sections">${metadata.section_count} sections</span>` : ""}
+            ${metadata.fetched_at_version ? `<span class="item-stat" title="Claude Code version at fetch">@ v${metadata.fetched_at_version}</span>` : ""}
           </div>
           <div class="item-actions">
             <button class="btn btn-icon bookmark-btn ${isBookmarked ? "active" : ""}"

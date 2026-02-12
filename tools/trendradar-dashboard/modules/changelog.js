@@ -13,18 +13,25 @@ class ChangelogModule extends BaseModule {
   }
 
   /**
-   * Mode: releases - GitHub Releases API
+   * GitHub API headers with optional token for higher rate limits
+   */
+  githubHeaders() {
+    const headers = {
+      Accept: "application/vnd.github.v3+json",
+      "User-Agent": "AI-Intelligence-Hub/1.0",
+    };
+    const token = process.env.GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
+  }
+
+  /**
+   * Mode: releases - GitHub Releases API (newest first)
    */
   async fetchReleases() {
     const maxItems = this.config.max_items || 30;
     const url = `${this.url}?per_page=${maxItems}`;
-
-    const res = await fetch(url, {
-      headers: {
-        Accept: "application/vnd.github.v3+json",
-        "User-Agent": "AI-Intelligence-Hub/1.0",
-      },
-    });
+    const res = await fetch(url, { headers: this.githubHeaders() });
 
     if (!res.ok) {
       console.error(`Changelog releases fetch error: ${res.status}`);
@@ -32,6 +39,12 @@ class ChangelogModule extends BaseModule {
     }
 
     const releases = await res.json();
+
+    // Sort newest first (API usually does this, but be explicit)
+    releases.sort(
+      (a, b) => new Date(b.published_at) - new Date(a.published_at),
+    );
+
     return releases.map((release) => {
       const body = release.body || "";
       const changes = this.parseChanges(body);
@@ -58,14 +71,15 @@ class ChangelogModule extends BaseModule {
 
   /**
    * Mode: docs - Fetch all documentation files from Claude Code repo
+   * Uses GitHub Commits API for real last-modified dates per file
    */
   async fetchDocs() {
-    const headers = {
-      Accept: "application/vnd.github.v3+json",
-      "User-Agent": "AI-Intelligence-Hub/1.0",
-    };
+    const headers = this.githubHeaders();
 
-    // Get repo tree to find all .md files
+    // Get latest release version for context (1 API call)
+    const latestVersion = await this.getLatestVersion(headers);
+
+    // Get repo tree to find all .md files (1 API call)
     const treeRes = await fetch(`${this.url}?recursive=1`, { headers });
     if (!treeRes.ok) {
       console.error(`Docs tree fetch error: ${treeRes.status}`);
@@ -73,6 +87,7 @@ class ChangelogModule extends BaseModule {
     }
 
     const tree = await treeRes.json();
+    const treeSha = tree.sha;
     const mdFiles = (tree.tree || []).filter(
       (f) =>
         f.type === "blob" &&
@@ -84,9 +99,11 @@ class ChangelogModule extends BaseModule {
 
     const maxItems = this.config.max_items || 100;
     const items = [];
+    let rateLimitRemaining = 100; // Assume OK until told otherwise
 
     for (const file of mdFiles.slice(0, maxItems)) {
       try {
+        // Fetch raw content (CDN, no API rate limit)
         const rawUrl = `https://raw.githubusercontent.com/anthropics/claude-code/main/${file.path}`;
         const res = await fetch(rawUrl, {
           headers: { "User-Agent": "AI-Intelligence-Hub/1.0" },
@@ -99,6 +116,21 @@ class ChangelogModule extends BaseModule {
         const sections = this.extractSections(content);
         const category = this.categorizeDoc(file.path);
 
+        // Get real last-modified date from GitHub Commits API
+        // Stop making API calls if we're running low on rate limit
+        let lastModifiedAt = null;
+        let lastCommitMsg = null;
+        if (rateLimitRemaining > 10) {
+          const commitInfo = await this.getFileLastCommit(file.path, headers);
+          if (commitInfo) {
+            if (commitInfo.rateLimitRemaining !== undefined) {
+              rateLimitRemaining = commitInfo.rateLimitRemaining;
+            }
+            lastModifiedAt = commitInfo.date;
+            lastCommitMsg = commitInfo.message;
+          }
+        }
+
         items.push(
           this.normalize({
             id: file.path,
@@ -106,7 +138,7 @@ class ChangelogModule extends BaseModule {
             url: `https://github.com/anthropics/claude-code/blob/main/${file.path}`,
             description,
             author: "anthropic",
-            published_at: new Date().toISOString(),
+            published_at: lastModifiedAt || new Date().toISOString(),
             score: this.docScore(file.path, file.size),
             metadata: {
               type: "docs",
@@ -115,18 +147,76 @@ class ChangelogModule extends BaseModule {
               size_bytes: file.size,
               section_count: sections.length,
               sections: sections.slice(0, 10),
+              blob_sha: file.sha,
+              last_modified_at: lastModifiedAt,
+              last_commit_message: lastCommitMsg,
+              fetched_at_version: latestVersion,
+              tree_sha: treeSha,
             },
           }),
         );
 
-        // Small delay to be polite to GitHub
-        await new Promise((r) => setTimeout(r, 100));
+        // Small delay between requests
+        await new Promise((r) => setTimeout(r, 150));
       } catch (err) {
         console.error(`Doc fetch error for ${file.path}:`, err.message);
       }
     }
 
+    const withDates = items.filter((i) => i.metadata?.last_modified_at).length;
+    console.log(
+      `  Docs: ${items.length} files, ${withDates} with commit dates (rate limit remaining: ${rateLimitRemaining})`,
+    );
+
     return items;
+  }
+
+  /**
+   * Get the latest Claude Code release version
+   */
+  async getLatestVersion(headers) {
+    try {
+      const res = await fetch(
+        "https://api.github.com/repos/anthropics/claude-code/releases?per_page=1",
+        { headers },
+      );
+      if (!res.ok) return null;
+      const releases = await res.json();
+      return releases[0]?.tag_name?.replace(/^v/, "") || null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get the last commit that touched a specific file
+   * Returns { date, message, sha, rateLimitRemaining } or null
+   */
+  async getFileLastCommit(filePath, headers) {
+    try {
+      const url = `https://api.github.com/repos/anthropics/claude-code/commits?path=${encodeURIComponent(filePath)}&per_page=1`;
+      const res = await fetch(url, { headers });
+
+      const remaining = parseInt(res.headers.get("x-ratelimit-remaining"), 10);
+
+      if (res.status === 403 || res.status === 429) {
+        console.warn(`  GitHub rate limit hit (remaining: ${remaining})`);
+        return { rateLimitRemaining: 0 };
+      }
+      if (!res.ok) return null;
+
+      const commits = await res.json();
+      if (!commits.length) return null;
+
+      return {
+        date: commits[0].commit.author.date,
+        message: commits[0].commit.message.split("\n")[0].substring(0, 100),
+        sha: commits[0].sha.substring(0, 8),
+        rateLimitRemaining: isNaN(remaining) ? 100 : remaining,
+      };
+    } catch {
+      return null;
+    }
   }
 
   /**
