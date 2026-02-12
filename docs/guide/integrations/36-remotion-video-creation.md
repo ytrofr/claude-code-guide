@@ -81,6 +81,8 @@ export const RemotionRoot: React.FC = () => (
 
 ### Frame-Based Animation
 
+{% raw %}
+
 ```tsx
 import { useCurrentFrame, interpolate, spring } from "remotion";
 
@@ -105,6 +107,8 @@ export const FadeIn: React.FC = () => {
 };
 ```
 
+{% endraw %}
+
 ---
 
 ## Mobile Video Patterns
@@ -126,6 +130,8 @@ For TikTok, Instagram Reels, YouTube Shorts:
 
 ### Phone Mockup Component
 
+{% raw %}
+
 ```tsx
 export const PhoneMockup: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -146,7 +152,11 @@ export const PhoneMockup: React.FC<{ children: React.ReactNode }> = ({
 );
 ```
 
+{% endraw %}
+
 ### Touch Animation (Ripple Effect)
+
+{% raw %}
 
 ```tsx
 export const TouchAnimation: React.FC<{ x: number; y: number }> = ({
@@ -176,6 +186,8 @@ export const TouchAnimation: React.FC<{ x: number; y: number }> = ({
   );
 };
 ```
+
+{% endraw %}
 
 ---
 
@@ -215,6 +227,8 @@ async function captureTyping(message: string) {
 
 ### Use Screenshots in Composition
 
+{% raw %}
+
 ```tsx
 import { Img, staticFile } from "remotion";
 
@@ -237,6 +251,8 @@ export const TypingAnimation: React.FC<{ screenshots: string[] }> = ({
   );
 };
 ```
+
+{% endraw %}
 
 ---
 
