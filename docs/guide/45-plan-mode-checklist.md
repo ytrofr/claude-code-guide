@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "Plan Mode Quality Checklist - Enforcing 7 Mandatory Sections"
-description: "Automatically enforce comprehensive plan quality with a 7-section checklist covering existing code search, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, and observability."
+title: "Plan Mode Quality Checklist - Enforcing 8 Mandatory Sections"
+description: "Automatically enforce comprehensive plan quality with an 8-section checklist covering requirements clarification, existing code search, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, and observability."
 ---
 
 # Chapter 45: Plan Mode Quality Checklist
 
 Claude Code's plan mode is powerful for designing implementations before writing code. But plans often miss critical sections -- testing strategy, documentation, debugging. This chapter shows how to enforce a mandatory checklist that every plan must include, using rules files and skills.
 
-**Purpose**: Ensure every plan covers 7 quality dimensions automatically
+**Purpose**: Ensure every plan covers 8 quality dimensions automatically
 **Difficulty**: Beginner
 **Time**: 15 minutes to set up
 
@@ -18,6 +18,7 @@ Claude Code's plan mode is powerful for designing implementations before writing
 
 Plans created in plan mode tend to focus on "what to build" but skip:
 
+- Clarifying requirements (assuming instead of asking)
 - Checking if code already exists (rebuilding what's there)
 - Over-engineering assessment (building too much)
 - Testing strategy (vague "add tests later")
@@ -46,7 +47,7 @@ The `permission_mode` field in hook input JSON will show `"plan"` when plan mode
 
 ### Approach A: Rules File (Passive, Always in Context)
 
-Create a rules file that's auto-loaded every message. When Claude enters plan mode, the 7-section template is already in context.
+Create a rules file that's auto-loaded every message. When Claude enters plan mode, the 8-section template is already in context.
 
 **File**: `~/.claude/rules/planning/plan-checklist.md`
 
@@ -54,11 +55,16 @@ Create a rules file that's auto-loaded every message. When Claude enters plan mo
 # Plan Mode Checklist - MANDATORY for Every Plan
 
 **Scope**: ALL plans in ALL projects
-**Enforcement**: Every plan MUST include ALL 7 sections below
+**Enforcement**: Every plan MUST include ALL 8 sections below
 
 ---
 
-## 7 Mandatory Plan Sections
+## 8 Mandatory Plan Sections
+
+### Section 0: Requirements Clarification
+
+Ask clarifying questions BEFORE planning. Don't assume -- confirm scope,
+constraints, and expected behavior. Skip only if instructions are unambiguous.
 
 ### Section 1: Existing Code Check
 
@@ -101,7 +107,7 @@ Create a `/plan-checklist` skill with the full detailed template, anti-patterns,
 ```yaml
 ---
 name: plan-checklist-skill
-description: "Generate a 7-section plan checklist with existing code check, over-engineering prevention, best practices, modular architecture, documentation plan, E2E testing, and debugging strategy. Use when entering plan mode, creating implementation plans, or when user mentions 'plan checklist'."
+description: "Generate an 8-section plan checklist with requirements clarification, existing code check, over-engineering prevention, best practices, modular architecture, documentation plan, E2E testing, and debugging strategy. Use when entering plan mode, creating implementation plans, or when user mentions 'plan checklist'."
 user-invocable: true
 argument-hint: "[feature-description]"
 ---
@@ -123,7 +129,7 @@ The skill body contains the full plan template with:
 
 | Scenario                      | What Fires                                            |
 | ----------------------------- | ----------------------------------------------------- |
-| Enter plan mode normally      | **Rules file** -- 7 sections guide the plan structure |
+| Enter plan mode normally      | **Rules file** -- 8 sections guide the plan structure |
 | Type `/plan-checklist`        | **Skill** -- full template with examples loads        |
 | Say "let's plan this feature" | **Both** -- rules always there, skill may auto-match  |
 
@@ -131,7 +137,20 @@ The rules file is the safety net (always present). The skill is the power tool (
 
 ---
 
-## The 7 Mandatory Sections
+## The 8 Mandatory Sections
+
+### 0. Requirements Clarification
+
+```markdown
+## 0. Requirements Clarification
+
+- **Clarified with user**: [yes -- summary of answers / skipped -- instructions were unambiguous]
+- **Scope**: [what's included and excluded]
+- **Constraints**: [performance, compatibility, deadlines]
+- **Expected behavior**: [input -> output, edge cases]
+```
+
+**Why**: A 30-second clarifying question prevents hours of wrong-direction work. Don't assume -- confirm scope, constraints, and expected behavior before planning.
 
 ### 1. Existing Code Check
 
@@ -226,13 +245,13 @@ After implementation:
 
 ## Validation: Does It Work?
 
-After setting up both files, test by entering plan mode for any task. The plan output should contain all 7 numbered sections with real content -- not placeholders.
+After setting up both files, test by entering plan mode for any task. The plan output should contain all 8 numbered sections with real content -- not placeholders.
 
 **Quick validation**:
 
 1. Enter plan mode (`Shift+Tab` or `--permission-mode plan`)
 2. Give a simple task
-3. Check the plan file -- all 7 sections should appear
+3. Check the plan file -- all 8 sections should appear
 4. Each section should have real content from actual codebase exploration
 
 ---
@@ -258,5 +277,5 @@ The rules file is a lightweight always-on reminder. The skill provides the full 
 1. **No plan mode hook exists** -- use rules files and skills instead
 2. **Rules files are always in context** -- ~800 tokens, automatic, no manual step
 3. **Skills load on demand** -- zero cost until invoked, full template available
-4. **7 sections prevent common plan gaps** -- testing, docs, and observability are most often missed
+4. **8 sections prevent common plan gaps** -- requirements clarification, testing, docs, and observability are most often missed
 5. **Real content required** -- the checklist enforces actual codebase searches, not placeholder text

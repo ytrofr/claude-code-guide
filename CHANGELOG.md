@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- **Guide #45**: Plan Mode Quality Checklist - 7 mandatory plan sections (existing code check, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, observability). Two complementary approaches: rules file (passive, always in context) and user-invocable skill (on-demand). Covers the limitation of no plan mode hook event.
+- **Guide #45**: Plan Mode Quality Checklist - 8 mandatory plan sections (requirements clarification, existing code check, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, observability). Two complementary approaches: rules file (passive, always in context) and user-invocable skill (on-demand). Covers the limitation of no plan mode hook event.
 
 ## [2.3.0] - 2026-02-13
 
@@ -137,6 +137,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                           |
 | ------- | ---------- | -------------------------------------------------------------------- |
+| 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                   |
 | 2.3.0   | 2026-02-13 | 5 new chapters (orchestration, evals, compaction, SDK, skill design) |
 | 2.1.0   | 2026-02-12 | Task restrictions, budget override                                   |
 | 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename                                    |
