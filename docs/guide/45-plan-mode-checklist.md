@@ -107,7 +107,7 @@ Create a `/plan-checklist` skill with the full detailed template, anti-patterns,
 ```yaml
 ---
 name: plan-checklist-skill
-description: "Generate an 8-section plan checklist with requirements clarification, existing code check, over-engineering prevention, best practices, modular architecture, documentation plan, E2E testing, and debugging strategy. Use when entering plan mode, creating implementation plans, or when user mentions 'plan checklist'."
+description: "Generate an 8-section plan checklist with requirements clarification, existing code check, over-engineering prevention, best practices, modular architecture, documentation plan, E2E testing, and debugging strategy. Use when entering plan mode, creating implementation plans, or when user mentions '/plan-checklist', 'plan checklist', or 'planning'."
 user-invocable: true
 argument-hint: "[feature-description]"
 ---
