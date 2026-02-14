@@ -8,7 +8,6 @@ description: Browser automation and E2E testing with Playwright MCP. Use when au
 **Purpose**: Browser automation via accessibility tree + E2E test patterns
 **MCP Server**: `playwright` (user-level)
 **Created**: December 2025
-**Source**: production Entry #224 (176/176 tests passing)
 
 ---
 
@@ -59,16 +58,16 @@ npx playwright test --project=chromium # Single browser
 
 ## Key Tools
 
-| Tool | Purpose |
-|------|---------|
-| `browser_navigate` | Go to URL |
-| `browser_snapshot` | Get accessibility tree |
-| `browser_click` | Click element |
-| `browser_type` | Type into input |
-| `browser_console_messages` | JS console output |
-| `browser_network_requests` | API calls |
-| `browser_take_screenshot` | Capture PNG |
-| `browser_resize` | Change viewport |
+| Tool                       | Purpose                |
+| -------------------------- | ---------------------- |
+| `browser_navigate`         | Go to URL              |
+| `browser_snapshot`         | Get accessibility tree |
+| `browser_click`            | Click element          |
+| `browser_type`             | Type into input        |
+| `browser_console_messages` | JS console output      |
+| `browser_network_requests` | API calls              |
+| `browser_take_screenshot`  | Capture PNG            |
+| `browser_resize`           | Change viewport        |
 
 ---
 
@@ -117,10 +116,13 @@ browser_snapshot()
 ```javascript
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
-    localStorage.setItem('authToken', JSON.stringify({
-      token: 'test-token',
-      user: { id: 1, username: 'test' },
-    }));
+    localStorage.setItem(
+      "authToken",
+      JSON.stringify({
+        token: "test-token",
+        user: { id: 1, username: "test" },
+      }),
+    );
   });
 });
 ```
@@ -130,15 +132,15 @@ test.beforeEach(async ({ page }) => {
 ```javascript
 // Use innerText (not textContent) to exclude script content
 const content = await page.evaluate(() => document.body.innerText);
-expect(content).not.toContain('synthetic');
+expect(content).not.toContain("synthetic");
 ```
 
 ### API Response Capture
 
 ```javascript
 const apiResponses = [];
-page.on('response', (response) => {
-  if (response.url().includes('/api/')) {
+page.on("response", (response) => {
+  if (response.url().includes("/api/")) {
     apiResponses.push({ url: response.url(), status: response.status() });
   }
 });
@@ -148,32 +150,24 @@ page.on('response', (response) => {
 
 ## Failed Attempts
 
-| Wrong | Correct |
-|-------|--------|
+| Wrong                         | Correct                                |
+| ----------------------------- | -------------------------------------- |
 | CSS selectors (`#btn-submit`) | Accessibility labels (`Submit button`) |
-| Navigate then immediate click | Navigate → snapshot → click |
-| textContent for validation | innerText (excludes scripts) |
-| Skip auth bypass | Add localStorage token injection |
+| Navigate then immediate click | Navigate → snapshot → click            |
+| textContent for validation    | innerText (excludes scripts)           |
+| Skip auth bypass              | Add localStorage token injection       |
 
 ---
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| "Not connected" | Restart Claude Code or `pkill -f chromium` |
-| "Browser already in use" | Call `browser_close` first |
-| "Browser not installed" | `npx playwright install chromium` |
-| Tests timeout | Add `waitForLoadState('networkidle')` |
-| Auth redirect | Add `page.addInitScript()` |
-
----
-
-## Evidence
-
-- **production**: 176/176 E2E tests passing (100%)
-- **Coverage**: 5 test files, Chromium + Mobile Chrome
-- **Execution**: ~4 minutes full suite
+| Issue                    | Solution                                   |
+| ------------------------ | ------------------------------------------ |
+| "Not connected"          | Restart Claude Code or `pkill -f chromium` |
+| "Browser already in use" | Call `browser_close` first                 |
+| "Browser not installed"  | `npx playwright install chromium`          |
+| Tests timeout            | Add `waitForLoadState('networkidle')`      |
+| Auth redirect            | Add `page.addInitScript()`                 |
 
 ---
 
@@ -181,4 +175,3 @@ page.on('response', (response) => {
 
 - `testing-workflow-skill` - Test selection decision tree
 - `visual-regression-testing-skill` - Screenshot comparison
-- `api-first-validation-skill` - Backend validation first
