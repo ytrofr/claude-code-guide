@@ -319,6 +319,55 @@ Use this checklist to audit your Claude Code context costs:
 
 ---
 
+## The Context Window Is a Public Good
+
+Anthropic's skill design guide states: _"The context window is a public good. Skills share the context window with everything else."_
+
+This means every character you put into CLAUDE.md, skill descriptions, agent descriptions, and MCP tool schemas competes with the actual work Claude needs to do -- reading files, reasoning about code, and generating responses.
+
+**The default assumption**: Claude is already very smart. Only add context that Claude does not already have. If a rule is common sense (e.g., "write clean code"), it wastes budget without adding value.
+
+### Three-Level Progressive Disclosure
+
+Instead of loading everything upfront, use a layered approach:
+
+```
+Level 1: Description (per-message, ~100-200 chars)
+  → Tells the model WHEN to use a skill/agent
+  → Always loaded, always costs tokens
+
+Level 2: Skill Body (on-invocation, ~2-8k chars)
+  → Tells the model HOW to execute the task
+  → Only loaded when skill activates
+
+Level 3: Supporting Files (on-demand, unlimited)
+  → Deep reference data, examples, large configs
+  → Only loaded via Read tool during execution
+```
+
+**Token savings example**: A deployment skill with 500 lines of content costs ~2k tokens at Level 2 -- but only when triggered. The same content in CLAUDE.md would cost ~2k tokens on EVERY message.
+
+### Scripts as Black Boxes
+
+Skills that reference executable scripts should treat them as black boxes:
+
+```yaml
+# In SKILL.md:
+## Usage
+Run `scripts/validate.sh --help` for available options.
+DO NOT read the script source into context.
+```
+
+**Why**: Scripts can be very large (hundreds of lines). Reading them into context wastes tokens on implementation details the model doesn't need. Instead, the model runs `--help` to discover usage, then executes the script.
+
+**Rule**: All scripts referenced by skills MUST support `--help` for self-documentation.
+
+**Token savings**: A 200-line bash script = ~800 tokens saved by not reading it into context.
+
+**Source**: Anthropic webapp-testing skill uses this pattern for its test runner scripts.
+
+---
+
 ## Key Takeaways
 
 1. **CLAUDE.md and rules load every message**. This is your largest fixed cost. Keep it lean.
@@ -327,6 +376,7 @@ Use this checklist to audit your Claude Code context costs:
 4. **Hooks are free**. Zero context cost. Prefer hooks for enforcement rules.
 5. **Full skill/agent content loads only on invocation/spawn**. The per-message cost is only the description.
 6. **Measure before optimizing**. Count your actual character usage, then trim strategically.
+7. **The context window is a public good**. Only add context Claude doesn't already have.
 
 ---
 

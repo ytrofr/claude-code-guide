@@ -4,6 +4,22 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.3.0] - 2026-02-13
+
+### Added
+
+- **Guide #40**: Agent Orchestration Patterns - 5 core workflow architectures (Chain, Parallel, Routing, Orchestrator-Workers, Evaluator-Optimizer), query classification, subagent budgeting
+- **Guide #41**: Evaluation Patterns - Anthropic's 6 eval best practices (capability vs regression, outcome-based grading, pass^k consistency, LLM-as-judge, transcript review, saturation monitoring)
+- **Guide #42**: Session Memory & Compaction - SESSION_MEMORY_PROMPT template, PreCompact hooks, 75% rule, recovery patterns
+- **Guide #43**: Claude Agent SDK - Stateless vs stateful agents, tool permissions (allowed_tools vs disallowed_tools), MCP integration, plan mode
+- **Guide #44**: Skill Design Principles - Degrees of freedom framework, progressive disclosure, scripts as black boxes, negative scope, anti-clutter rules
+
+### Changed
+
+- **Guide #13**: Added "Always Exit 0" best practice, Python hook patterns, settings.local.json configuration
+- **Guide #36**: Added tool permission models (allowed_tools vs disallowed_tools distinction), query classification for agent routing, "Fresh Eyes" QA pattern
+- **Guide #38**: Added "Context Window Is a Public Good" principle, three-level progressive disclosure, scripts-as-black-boxes token savings
+
 ## [2.2.0] - 2026-02-12
 
 ### Changed
@@ -113,13 +129,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Version History Summary
 
-| Version | Date       | Highlights                         |
-| ------- | ---------- | ---------------------------------- |
-| 2.1.0   | 2026-02-12 | Task restrictions, budget override |
-| 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename  |
-| 1.5.0   | 2026-02-05 | Skill maintenance patterns         |
-| 1.4.0   | 2026-01-20 | Branch-aware development           |
-| 1.3.0   | 2026-01-10 | Context and testing systems        |
-| 1.2.0   | 2025-12-28 | Rules and best practices           |
-| 1.1.0   | 2025-12-20 | Pre-prompt 370x optimization       |
-| 1.0.0   | 2025-12-14 | Initial release                    |
+| Version | Date       | Highlights                                                           |
+| ------- | ---------- | -------------------------------------------------------------------- |
+| 2.3.0   | 2026-02-13 | 5 new chapters (orchestration, evals, compaction, SDK, skill design) |
+| 2.1.0   | 2026-02-12 | Task restrictions, budget override                                   |
+| 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename                                    |
+| 1.5.0   | 2026-02-05 | Skill maintenance patterns                                           |
+| 1.4.0   | 2026-01-20 | Branch-aware development                                             |
+| 1.3.0   | 2026-01-10 | Context and testing systems                                          |
+| 1.2.0   | 2025-12-28 | Rules and best practices                                             |
+| 1.1.0   | 2025-12-20 | Pre-prompt 370x optimization                                         |
+| 1.0.0   | 2025-12-14 | Initial release                                                      |

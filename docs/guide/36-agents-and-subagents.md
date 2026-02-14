@@ -358,6 +358,130 @@ See [Chapter 13: Hooks](13-claude-code-hooks.md) for the monitor script implemen
 
 ---
 
+## Tool Permission Models
+
+Claude Code has two distinct tool permission mechanisms. Understanding the difference prevents common configuration mistakes.
+
+### `allowed-tools` (Frontmatter / Settings)
+
+Used in skill or agent frontmatter. **Restricts** the agent to ONLY the listed tools -- all other tools are unavailable.
+
+```yaml
+---
+name: read-only-agent
+tools: ["Read", "Grep", "Glob"] # Can ONLY use these 3 tools
+---
+```
+
+### `allowed_tools` (Claude Agent SDK)
+
+Used in the Claude Agent SDK (`claude-sdk`). **Auto-approves** the listed tools (no user permission prompt), but does NOT restrict access. All other tools remain available -- they just require user approval.
+
+```python
+# SDK: These tools run without permission prompts, but all tools are still AVAILABLE
+agent = Agent(allowed_tools=["Read", "Grep", "Glob"])
+```
+
+### `disallowed_tools` (Claude Agent SDK)
+
+Used in the Claude Agent SDK only. **Removes** tools from the agent's context entirely -- the agent cannot use them at all, not even with user permission.
+
+```python
+# SDK: These tools are completely invisible to the agent
+agent = Agent(disallowed_tools=["Bash", "Write"])
+```
+
+### Quick Reference
+
+| Mechanism          | Where Used        | Effect                                           |
+| ------------------ | ----------------- | ------------------------------------------------ |
+| `tools` (list)     | Agent frontmatter | Agent can ONLY use listed tools                  |
+| `allowed_tools`    | Claude SDK        | Auto-approve (no prompt), others still available |
+| `disallowed_tools` | Claude SDK        | Tools removed entirely from agent                |
+
+**Key insight**: In frontmatter, `tools: [...]` restricts. In SDK, `allowed_tools` auto-approves but does NOT restrict. They are different behaviors despite similar names.
+
+---
+
+## Query Classification for Agent Routing
+
+When deciding how many agents to spawn and how to coordinate them, classify the incoming query:
+
+### Depth-First
+
+**When**: Multiple perspectives needed on the same topic.
+
+```
+"Investigate slow AI queries"
+  → database-agent (check query plans)
+  → ai-agent (check prompt size)
+  → monitoring-agent (check latency metrics)
+  = 3 agents exploring DIFFERENT ANGLES of ONE problem
+```
+
+### Breadth-First
+
+**When**: Multiple independent sub-questions.
+
+```
+"Check all environments are healthy"
+  → staging-agent (check staging)
+  → production-agent (check production)
+  → localhost-agent (check local)
+  = 1 agent PER QUESTION, running in parallel
+```
+
+### Straightforward
+
+**When**: Focused lookup or single-domain task.
+
+```
+"Check employee count in database"
+  → database-agent only
+  = SINGLE agent, <5 tool calls
+```
+
+### Subagent Budget Guidelines
+
+| Complexity   | Agents | Tool Calls Each | Total Budget |
+| ------------ | ------ | --------------- | ------------ |
+| Simple       | 1      | <5              | ~5 calls     |
+| Standard     | 2-3    | ~5              | ~15 calls    |
+| Complex      | 3-5    | ~10             | ~50 calls    |
+| Very Complex | 5-10   | up to 15        | ~100 calls   |
+
+**Rule**: More subagents = more overhead. Only add agents when they provide distinct value. A single well-prompted agent often beats 3 poorly-scoped ones.
+
+**Source**: Anthropic research_lead_agent.md, orchestrator_workers.ipynb
+
+---
+
+## "Fresh Eyes" QA Pattern
+
+After generating complex output (multi-file changes, generated artifacts, deployments), spawn a verification subagent. The subagent has fresh context and will catch issues that the generating agent -- which has been staring at the code -- will miss.
+
+```
+// After generating code:
+Task(
+  subagent_type: "Explore",
+  prompt: "Verify the changes in src/auth/ are consistent and follow project patterns. Check for typos, missing imports, and logic errors.",
+  model: "haiku"  // Cheap verification
+)
+```
+
+**Why it works**: The generating agent sees what it expects, not what is there. A fresh subagent has no bias from the generation process.
+
+**When to use**:
+
+- After multi-file refactoring
+- After generating test suites
+- After deployment configuration changes
+- After any output that will be hard to review manually
+
+**Source**: Anthropic pptx and doc-coauthoring skills both use this pattern.
+
+---
+
 ## Tips
 
 - **Keep agent prompts focused**: One clear responsibility per agent

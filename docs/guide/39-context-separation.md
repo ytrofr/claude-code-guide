@@ -267,3 +267,4 @@ The project's functionality was unaffected -- all removed content was accessible
 ---
 
 **Previous**: [38: Context Costs and Skill Budget](38-context-costs-and-skill-budget.md)
+**Next**: [40: Agent Orchestration Patterns](40-agent-orchestration-patterns.md)

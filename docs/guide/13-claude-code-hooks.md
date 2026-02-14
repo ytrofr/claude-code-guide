@@ -859,6 +859,116 @@ Fires when a task is completed in an Agent Teams configuration. Use to trigger f
 
 ---
 
+## Hook Best Practices
+
+### Always Exit 0
+
+Hooks **must** exit with code 0 unless they intentionally want to block an action (PreToolUse exit code 2). A non-zero exit from a non-blocking hook causes Claude Code to display an error and can disrupt the workflow.
+
+```bash
+#!/bin/bash
+# CORRECT: Always exit 0 in non-blocking hooks
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+# ... process input ...
+
+# Ensure exit 0 even if processing fails
+exit 0
+```
+
+**Pattern**: Use `|| true` or explicit `exit 0` at the end of every hook script. Even if earlier commands fail, the hook should not block Claude.
+
+```bash
+#!/bin/bash
+# Safe pattern: trap ensures exit 0 on any failure
+trap 'exit 0' ERR
+set -euo pipefail
+
+# ... your hook logic ...
+
+exit 0
+```
+
+**Source**: Anthropic Chief of Staff agent cookbook pattern. In production, 100% of hooks should exit 0 (except intentional PreToolUse blockers).
+
+### Python Hooks
+
+For complex JSON processing or logic that's cumbersome in bash, use Python hook scripts instead:
+
+```json
+{
+  "PostToolUse": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python3 .claude/hooks/report-tracker.py"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Example** (`.claude/hooks/report-tracker.py`):
+
+```python
+#!/usr/bin/env python3
+import sys, json
+
+try:
+    data = json.loads(sys.stdin.read())
+    tool_name = data.get("tool_name", "unknown")
+    # Complex JSON processing is much easier in Python
+    if tool_name == "Write":
+        file_path = data.get("tool_input", {}).get("file_path", "")
+        # Track which files were written during session
+        with open(".claude/logs/files-written.log", "a") as f:
+            f.write(f"{file_path}\n")
+except Exception:
+    pass  # Never crash, never block
+
+sys.exit(0)  # Always exit 0
+```
+
+**When to use Python hooks**:
+
+- Complex JSON parsing (nested objects, arrays, conditional logic)
+- File tracking, report generation, analytics aggregation
+- Any logic that would require `jq` gymnastics in bash
+
+**Source**: Anthropic Chief of Staff agent uses `report-tracker.py` and `script-usage-logger.py` as production hook patterns.
+
+### Hook Configuration with settings.local.json
+
+Use `.claude/settings.local.json` for personal hook overrides that should not be committed to git:
+
+```json
+// .claude/settings.local.json (NOT committed)
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/my-personal-formatter.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Local hooks merge with project hooks (they don't replace them). This is useful for:
+
+- Personal formatting preferences
+- Debug logging hooks during development
+- Experimental hooks before promoting to project-level
+
+---
+
 ## Real Example
 
 **Production**: 14 hooks, 6-8 hours/year ROI
