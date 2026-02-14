@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.4.0] - 2026-02-14
+
+### Added
+
+- **Guide #45**: Plan Mode Quality Checklist - 7 mandatory plan sections (existing code check, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, observability). Two complementary approaches: rules file (passive, always in context) and user-invocable skill (on-demand). Covers the limitation of no plan mode hook event.
+
 ## [2.3.0] - 2026-02-13
 
 ### Added
