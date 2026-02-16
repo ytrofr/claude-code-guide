@@ -107,6 +107,10 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Branch-Aware Development](guide/31-branch-aware-development.md) - Branch-specific patterns
 - [Branch-Specific Skill Curation](guide/33-branch-specific-skill-curation.md) - Per-branch skill sets
 
+### Planning & Quality
+
+- [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 10 mandatory plan sections with metadata
+
 ### Advanced Topics
 
 - [Perplexity Cost Optimization](guide/18-perplexity-cost-optimization.md) - Cache-first research
@@ -116,6 +120,13 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Rules System](guide/26-claude-code-rules-system.md) - Project-level enforcement
 - [Fast Cloud Run Deployment](guide/27-fast-cloud-run-deployment.md) - GCP deployment patterns
 - [Basic Memory MCP Integration](guide/34-basic-memory-mcp-integration.md) - Persistent knowledge
+- [Context Costs & Skill Budget](guide/38-context-costs-and-skill-budget.md) - Token optimization
+- [Context Separation](guide/39-context-separation.md) - Isolation patterns
+- [Agent Orchestration Patterns](guide/40-agent-orchestration-patterns.md) - 5 workflow architectures
+- [Evaluation Patterns](guide/41-evaluation-patterns.md) - Anthropic eval best practices
+- [Session Memory & Compaction](guide/42-session-memory-compaction.md) - Context recovery
+- [Claude Agent SDK](guide/43-claude-agent-sdk.md) - Building custom agents
+- [Skill Design Principles](guide/44-skill-design-principles.md) - Degrees of freedom framework
 
 ---
 
@@ -128,11 +139,11 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | Hook Events       | 14 documented              |
 | Hook Types        | 3 (command, prompt, agent) |
 | Skill Activation  | 88.2% accuracy             |
-| Agent Patterns    | 3 documented               |
+| Agent Patterns    | 5 workflow architectures   |
 | Token Savings     | 47-70% per branch          |
-| Production Skills | 162+ documented            |
+| Production Skills | 226+ documented            |
 | MCP Integrations  | 13 servers, 70+ tools      |
-| Chapters          | 37+ comprehensive          |
+| Chapters          | 42 comprehensive           |
 
 ---
 
@@ -155,7 +166,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
     "url": "https://github.com/ytrofr"
   },
   "datePublished": "2024-12-14",
-  "dateModified": "2026-02-10",
+  "dateModified": "2026-02-16",
   "publisher": {
     "@type": "Organization",
     "name": "Claude Code Guide",
@@ -186,7 +197,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What are Claude Code skills?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. This guide documents 162+ production-tested skills with 88.2% activation accuracy."
+        "text": "Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. This guide documents 226+ production-tested skills with 88.2% activation accuracy."
       }
     },
     {

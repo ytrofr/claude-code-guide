@@ -4,6 +4,13 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.5.0] - 2026-02-16
+
+### Changed
+
+- **Guide #45**: Plan Mode Quality Checklist expanded from 8 to 10 mandatory sections. Added Section 8 (File Change Summary - table of affected files with action and description) and Section 9 (Plan Summary TL;DR - 3-5 bullet points). Added Plan File Metadata section (branch, timestamp, topic, keywords for discoverability). Updated design decisions and takeaways.
+- **index.md**: Fixed stale metrics (Skills 162+ → 226+, Chapters 37+ → 42, Agent Patterns 3 → 5). Added Planning & Quality navigation section. Added missing Advanced Topics links (chapters 38-44).
+
 ## [2.4.0] - 2026-02-14
 
 ### Added
@@ -137,6 +144,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                           |
 | ------- | ---------- | -------------------------------------------------------------------- |
+| 2.5.0   | 2026-02-16 | Plan mode: 10 sections + file metadata (branch, timestamp, keywords) |
 | 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                   |
 | 2.3.0   | 2026-02-13 | 5 new chapters (orchestration, evals, compaction, SDK, skill design) |
 | 2.1.0   | 2026-02-12 | Task restrictions, budget override                                   |

@@ -1,6 +1,8 @@
 # Chapter 20: Skills Filtering Optimization (Entry #229)
 
-**Status**: Production-Validated (Jan 2, 2026)
+> **DEPRECATED (Feb 2026)**: The pre-prompt hook filtering described here is no longer needed. Claude Code now natively discovers and loads skills from `~/.claude/skills/` using the `description:` field. The scoring principles (relevance thresholds, branch priority) may still inform how to write effective skill descriptions. Kept for historical reference.
+
+**Status**: Deprecated (Feb 2026) - Originally Production-Validated (Jan 2, 2026)
 **Difficulty**: Intermediate
 **Time**: 30 minutes
 **ROI**: 93% reduction in noise (127→6 matched skills)
