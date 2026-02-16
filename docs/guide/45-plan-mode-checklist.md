@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "Plan Mode Quality Checklist - Enforcing 8 Mandatory Sections"
-description: "Automatically enforce comprehensive plan quality with an 8-section checklist covering requirements clarification, existing code search, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, and observability."
+title: "Plan Mode Quality Checklist - Enforcing 10 Mandatory Sections"
+description: "Automatically enforce comprehensive plan quality with a 10-section checklist covering requirements clarification, existing code search, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, observability, file change summary, and TL;DR. Includes plan file metadata for discoverability."
 ---
 
 # Chapter 45: Plan Mode Quality Checklist
 
 Claude Code's plan mode is powerful for designing implementations before writing code. But plans often miss critical sections -- testing strategy, documentation, debugging. This chapter shows how to enforce a mandatory checklist that every plan must include, using rules files and skills.
 
-**Purpose**: Ensure every plan covers 8 quality dimensions automatically
+**Purpose**: Ensure every plan covers 10 quality dimensions automatically
 **Difficulty**: Beginner
 **Time**: 15 minutes to set up
 
@@ -24,6 +24,8 @@ Plans created in plan mode tend to focus on "what to build" but skip:
 - Testing strategy (vague "add tests later")
 - Documentation plan (forgotten entirely)
 - Observability (no logging or debugging strategy)
+- Listing affected files (scope unclear until implementation)
+- Summarizing the plan concisely (reader can't scan quickly)
 
 There's no built-in plan template in Claude Code. No hook event fires on plan mode entry. But we can solve this with two complementary approaches.
 
@@ -43,11 +45,46 @@ The `permission_mode` field in hook input JSON will show `"plan"` when plan mode
 
 ---
 
+## Plan File Metadata
+
+Plan files get random names like `wild-tickling-pretzel.md`. Without metadata, you can't tell what a plan is about, which branch it targets, or when it was created.
+
+**File**: `~/.claude/rules/planning/plan-link.md`
+
+Every plan file must include this metadata header immediately after the title:
+
+```markdown
+# Plan: Fix Authentication Bug
+
+> **Plan file**: /home/user/.claude/plans/wild-tickling-pretzel.md
+> **Branch**: dev-Auth | **Created**: 2026-02-16 14:30 UTC
+> **Topic**: Fix session expiry bug causing logout loops on mobile
+> **Keywords**: auth, session, logout, mobile, cookie
+```
+
+| Field     | Purpose                                 | Format                    |
+| --------- | --------------------------------------- | ------------------------- |
+| Plan file | Clickable path in VS Code terminal      | Full absolute path        |
+| Branch    | Which branch this plan targets          | Git branch name           |
+| Created   | When the plan was written               | ISO 8601 with time + UTC  |
+| Topic     | 1-sentence summary of the plan's goal   | Plain text, max ~80 chars |
+| Keywords  | Searchable terms for finding plan later | 3-6 comma-separated terms |
+
+This makes plans searchable:
+
+```bash
+grep -rl "auth" ~/.claude/plans/         # Find by keyword
+grep -rl "dev-Auth" ~/.claude/plans/     # Find by branch
+grep -rl "2026-02" ~/.claude/plans/      # Find by date
+```
+
+---
+
 ## Solution: Two Complementary Approaches
 
 ### Approach A: Rules File (Passive, Always in Context)
 
-Create a rules file that's auto-loaded every message. When Claude enters plan mode, the 8-section template is already in context.
+Create a rules file that's auto-loaded every message. When Claude enters plan mode, the 10-section template is already in context.
 
 **File**: `~/.claude/rules/planning/plan-checklist.md`
 
@@ -55,11 +92,11 @@ Create a rules file that's auto-loaded every message. When Claude enters plan mo
 # Plan Mode Checklist - MANDATORY for Every Plan
 
 **Scope**: ALL plans in ALL projects
-**Enforcement**: Every plan MUST include ALL 8 sections below
+**Enforcement**: Every plan MUST include ALL 10 sections below
 
 ---
 
-## 8 Mandatory Plan Sections
+## 10 Mandatory Plan Sections
 
 ### Section 0: Requirements Clarification
 
@@ -93,9 +130,17 @@ Unit tests, integration tests, E2E tests, baseline regression, manual verificati
 ### Section 7: Debugging and Observability
 
 What to log, error handling, health checks, monitoring, rollback plan.
+
+### Section 8: File Change Summary
+
+List every file that will be created, modified, or deleted with a 1-line description.
+
+### Section 9: Plan Summary (TL;DR)
+
+3-5 bullet points summarizing the entire plan. Reader should understand it in <10 seconds.
 ```
 
-**Cost**: ~800 tokens per message (loaded even outside plan mode)
+**Cost**: ~1,000 tokens per message (loaded even outside plan mode)
 **Benefit**: Zero manual effort -- the template is always available
 
 ### Approach B: User-Invocable Skill (Active, On-Demand)
@@ -107,7 +152,7 @@ Create a `/plan-checklist` skill with the full detailed template, anti-patterns,
 ```yaml
 ---
 name: plan-checklist-skill
-description: "Generate an 8-section plan checklist with requirements clarification, existing code check, over-engineering prevention, best practices, modular architecture, documentation plan, E2E testing, and debugging strategy. Use when entering plan mode, creating implementation plans, or when user mentions '/plan-checklist', 'plan checklist', or 'planning'."
+description: "Generate a 10-section plan checklist with requirements clarification, existing code check, over-engineering prevention, best practices, modular architecture, documentation plan, E2E testing, debugging strategy, file change summary, and TL;DR. Use when entering plan mode, creating implementation plans, or when user mentions '/plan-checklist', 'plan checklist', or 'planning'."
 user-invocable: true
 argument-hint: "[feature-description]"
 ---
@@ -127,17 +172,17 @@ The skill body contains the full plan template with:
 
 ## How They Work Together
 
-| Scenario                      | What Fires                                            |
-| ----------------------------- | ----------------------------------------------------- |
-| Enter plan mode normally      | **Rules file** -- 8 sections guide the plan structure |
-| Type `/plan-checklist`        | **Skill** -- full template with examples loads        |
-| Say "let's plan this feature" | **Both** -- rules always there, skill may auto-match  |
+| Scenario                      | What Fires                                             |
+| ----------------------------- | ------------------------------------------------------ |
+| Enter plan mode normally      | **Rules file** -- 10 sections guide the plan structure |
+| Type `/plan-checklist`        | **Skill** -- full template with examples loads         |
+| Say "let's plan this feature" | **Both** -- rules always there, skill may auto-match   |
 
 The rules file is the safety net (always present). The skill is the power tool (detailed guidance when needed).
 
 ---
 
-## The 8 Mandatory Sections
+## The 10 Mandatory Sections
 
 ### 0. Requirements Clarification
 
@@ -241,18 +286,49 @@ After implementation:
 - Monitoring: [what to watch post-deploy]
 ```
 
+### 8. File Change Summary
+
+```markdown
+## 8. Files Affected
+
+| File                              | Action | What Changes          |
+| --------------------------------- | ------ | --------------------- |
+| `src/routes/auth.js`              | MODIFY | Add logout endpoint   |
+| `src/services/session.service.js` | NEW    | Session cleanup logic |
+| `public/dashboard/auth.html`      | MODIFY | Add logout button     |
+| `tests/auth.test.js`              | MODIFY | Add logout tests      |
+```
+
+**Action values**: `NEW` (create), `MODIFY` (edit existing), `DELETE` (remove)
+
+**Why**: If you can't list the files, the plan isn't concrete enough. This section forces specificity and gives the reviewer immediate scope visibility.
+
+### 9. Plan Summary (TL;DR)
+
+```markdown
+## 9. TL;DR
+
+- Add logout endpoint to auth routes with session cleanup
+- Create session service for token invalidation
+- Update auth dashboard with logout button + confirmation dialog
+- Run auth E2E tests + manual verification
+```
+
+**Why**: A reader should understand the full plan from this section alone in under 10 seconds. This is what gets scanned first during review.
+
 ---
 
 ## Validation: Does It Work?
 
-After setting up both files, test by entering plan mode for any task. The plan output should contain all 8 numbered sections with real content -- not placeholders.
+After setting up both files, test by entering plan mode for any task. The plan output should contain all 10 numbered sections with real content -- not placeholders.
 
 **Quick validation**:
 
 1. Enter plan mode (`Shift+Tab` or `--permission-mode plan`)
 2. Give a simple task
-3. Check the plan file -- all 8 sections should appear
+3. Check the plan file -- all 10 sections should appear
 4. Each section should have real content from actual codebase exploration
+5. Verify the plan file has the metadata header (branch, timestamp, topic, keywords)
 
 ---
 
@@ -261,8 +337,8 @@ After setting up both files, test by entering plan mode for any task. The plan o
 **Why rules file instead of CLAUDE.md?**
 Rules files in `~/.claude/rules/` are auto-discovered and keep CLAUDE.md lean. They also apply across all projects.
 
-**Why ~800 tokens is acceptable**:
-The rules file costs ~800 tokens per message. With a 200k context window, that's 0.4%. The value of preventing missed testing/documentation in every plan far outweighs the cost.
+**Why ~1,000 tokens is acceptable**:
+The rules file costs ~1,000 tokens per message. With a 200k context window, that's 0.5%. The value of preventing missed testing/documentation in every plan far outweighs the cost.
 
 **Why not a UserPromptSubmit hook?**
 Hooks print to stderr (informational only). They can remind but can't enforce. The rules file is in Claude's actual context, so it directly influences plan structure.
@@ -270,12 +346,17 @@ Hooks print to stderr (informational only). They can remind but can't enforce. T
 **Why both approaches?**
 The rules file is a lightweight always-on reminder. The skill provides the full detailed template when you want comprehensive guidance. Different situations call for different levels of detail.
 
+**Why Sections 8 and 9 at the end?**
+They serve as a scannable summary of the entire plan. Section 8 (files) shows scope at a glance. Section 9 (TL;DR) gives the executive summary. Reviewers read these first.
+
 ---
 
 ## Key Takeaways
 
 1. **No plan mode hook exists** -- use rules files and skills instead
-2. **Rules files are always in context** -- ~800 tokens, automatic, no manual step
+2. **Rules files are always in context** -- ~1,000 tokens, automatic, no manual step
 3. **Skills load on demand** -- zero cost until invoked, full template available
-4. **8 sections prevent common plan gaps** -- requirements clarification, testing, docs, and observability are most often missed
-5. **Real content required** -- the checklist enforces actual codebase searches, not placeholder text
+4. **10 sections prevent common plan gaps** -- requirements, testing, docs, observability, file scope, and summary are most often missed
+5. **Plan metadata makes files findable** -- branch, timestamp, topic, and keywords solve the random-name problem
+6. **File change summary forces specificity** -- if you can't list the files, the plan isn't ready
+7. **TL;DR enables quick review** -- the entire plan in 3-5 bullet points

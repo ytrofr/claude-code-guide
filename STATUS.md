@@ -2,8 +2,8 @@
 
 **Created**: 2025-12-14
 **Updated**: 2026-02-12
-**Status**: Phase 1 Complete + Hook Safety Fix + Context Optimization Guide + 34 Guide Chapters
-**Progress**: 87% of planned work complete
+**Status**: Phase 1 Complete + 42 Guide Chapters + Plan Mode Quality Checklist
+**Progress**: 95% of planned work complete
 
 ---
 
@@ -135,16 +135,16 @@ claude-code-guide/
 
 **Status**: ✅ **All scripts are executable and tested**
 
-### 5. Documentation ✅ **34 Guide Chapters Complete**
+### 5. Documentation ✅ **42 Guide Chapters Complete**
 
-Core docs + 34 numbered chapters in `docs/guide/`:
+Core docs + 42 numbered chapters in `docs/guide/`:
 
 1. ✅ `README.md` - Complete overview with 4-format navigation
 2. ✅ `docs/quick-start.md` - 30-minute entry point
-3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/34-*.md` - 34 chapters covering setup, hooks, skills, MCP, context, deployment, and more
+3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/34-*.md` - 42 chapters covering setup, hooks, skills, MCP, context, deployment, and more
 4. ✅ `docs/guide/13-claude-code-hooks.md` - **Updated Feb 2026** with stdin timeout safety section
 
-**Status**: ✅ **Comprehensive guide with 34 chapters**
+**Status**: ✅ **Comprehensive guide with 42 chapters**
 
 ### 6. MCP Configurations ✅ **3/4 Complete**
 
@@ -328,7 +328,7 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 - `mcp-configs/essential/` - + Memory Bank
 - `mcp-configs/productive/` - + PostgreSQL
 - `docs/quick-start.md` - Entry point
-- `docs/guide/` - 34 chapters complete (02 through 34)
+- `docs/guide/` - 42 chapters complete (02 through 45)
 
 **Total deliverable**: ~45 files, ~9,100 lines, production-ready
 
@@ -342,11 +342,11 @@ Core docs + 34 numbered chapters in `docs/guide/`:
 **Time to use**: 30 minutes per new project
 **ROI**: Pays for itself after 6 new projects
 
-**Quality**: Based on 163+ proven patterns, **95%+ activation rate**, Anthropic best practices, Scott Spence research
+**Quality**: Based on 226+ proven patterns, **95%+ activation rate**, Anthropic best practices, Scott Spence research
 
 **Ready**: Clone template, customize placeholders, start coding with skills that actually activate
 
 ---
 
-**Last Updated**: 2026-02-05 (Hook stdin timeout fix + STATUS refresh)
+**Last Updated**: 2026-02-16 (v2.5.0 - Plan mode 10-section checklist + deprecation audit)
 **Next**: Test with a real project or continue building optional enhancements
