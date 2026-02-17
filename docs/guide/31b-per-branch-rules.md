@@ -234,6 +234,41 @@ Small per-file, but it compounds: 875 tokens x 5 branches x multiple sessions/da
 
 ---
 
+## Cross-Branch Sync Verification
+
+When you add universal rules on one branch and merge to others, **git can silently drop new directories**. This happens when the target branch has no version of a directory and the merge base also lacks it -- git may not create it.
+
+### Post-Merge Verification (Mandatory)
+
+After merging rules from one branch to another, always verify:
+
+```bash
+# Compare rule file counts between source and target
+echo "Source:" && find .claude/rules/ -name "*.md" | wc -l
+git stash && git checkout target-branch
+echo "Target:" && find .claude/rules/ -name "*.md" | wc -l
+git checkout -  # go back
+```
+
+If counts don't match, use a temporary worktree to fix the target:
+
+```bash
+# Create temp worktree, copy missing files, commit, push, clean up
+git worktree add /tmp/branch-fix target-branch
+cp -r .claude/rules/missing-dir/ /tmp/branch-fix/.claude/rules/
+cd /tmp/branch-fix && git add . && git commit -m "fix: sync missing rule files"
+git push origin target-branch
+git worktree remove /tmp/branch-fix
+```
+
+### Real-World Example
+
+Adding 15 universal rule files on `dev-Knowledge` and merging to 5 other branches: the merge carried agents and skills changes but silently dropped all 6 new rule directories (`global/`, `planning/`, `quality/`, `technical/`, `documentation/`, `projects/`). Only discovered by checking file counts post-merge.
+
+**Lesson**: Always run `find .claude/rules/ -name "*.md" | wc -l` on both branches after a merge.
+
+---
+
 ## Key Takeaways
 
 1. **`.claude/rules/` is for universal rules** that every branch needs. Keep it lean.
@@ -242,6 +277,7 @@ Small per-file, but it compounds: 875 tokens x 5 branches x multiple sessions/da
 4. **Flat structure** -- no subdirectories within branch rule folders.
 5. **One question decides placement**: "Does every branch need this rule to avoid mistakes?"
 6. **Move cautiously** -- validate on the target branch before committing. A rule that doesn't load when needed is worse than one that loads when not needed.
+7. **Verify after merging** -- git can silently drop new rule directories during cross-branch merges. Always compare file counts.
 
 ---
 
