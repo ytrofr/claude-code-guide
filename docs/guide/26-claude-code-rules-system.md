@@ -74,6 +74,60 @@ path_patterns:
 
 This rule only loads when working with files matching the patterns.
 
+### Production Path-Specific Rules Examples
+
+Here are real examples from a production project with 13 rule files, where 5 use conditional loading and 8 remain unconditional:
+
+**Conditional rules** (only load when editing matching files):
+
+```yaml
+# .claude/rules/sacred/commandments.md — Core code patterns
+---
+paths:
+  - "src/**"
+  - "index.js"
+---
+# .claude/rules/deployment/patterns.md — Deploy safety
+---
+paths:
+  - "Dockerfile"
+  - "*.yml"
+  - "scripts/deploy*"
+  - "start-limor.sh"
+---
+# .claude/rules/hebrew/preservation.md — UI/prompt encoding
+---
+paths:
+  - "public/**"
+  - "src/prompts/**"
+---
+# .claude/rules/database/patterns.md — Database operations
+---
+paths:
+  - "src/database/**"
+  - "src/sync/**"
+  - "scripts/*sync*"
+  - "scripts/*gap*"
+---
+# .claude/rules/api/integrations.md — API patterns
+---
+paths:
+  - "src/routes/**"
+  - "src/controllers/**"
+  - "src/services/**"
+---
+```
+
+**Unconditional rules** (always relevant, no `paths:` needed):
+
+- `src-code.md` — App structure reference (needed for all code work)
+- `process/git-safety.md` — Git push/commit rules (always applies)
+- `process/branch-files.md` — Naming conventions (always applies)
+- `infrastructure/docker-setup.md` — Container safety (always applies)
+- `mcp/memory-usage.md` — Memory patterns (always applies)
+
+**Decision guide**: Use `paths:` when the rule is domain-specific. Keep unconditional when the rule applies regardless of which file is being edited.
+
 ## Rule File Templates
 
 ### Domain Rule Template

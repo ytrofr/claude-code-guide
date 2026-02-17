@@ -308,6 +308,106 @@ Claude Code enforces a 500-line limit on skill files. But even within 500 lines,
 
 ---
 
+## Advanced Skill Frontmatter Fields
+
+Beyond the basics (`name`, `description`, `user-invocable`), several fields give fine-grained control:
+
+### model: — Control Which Model Runs the Skill
+
+```yaml
+---
+name: my-skill
+description: "..."
+model: haiku # Options: haiku, sonnet, opus
+---
+```
+
+Assign based on skill complexity. Simple lookups → `haiku`. Complex reasoning → `opus`.
+
+### allowed-tools: — Restrict Available Tools
+
+```yaml
+---
+name: reference-skill
+description: "..."
+allowed-tools: [Read, Grep, Glob] # Read-only, cannot write files
+---
+```
+
+Use for reference/navigation skills that should never modify files. Prevents accidental writes when the skill is invoked.
+
+### hooks: — Skill-Scoped Hooks
+
+```yaml
+---
+name: deploy-skill
+description: "..."
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: prompt
+          prompt: "Verify this bash command is safe for deployment..."
+---
+```
+
+Hooks that only activate when THIS skill is running. Useful for adding safety checks to specific workflows.
+
+### $ARGUMENTS — Parameterized Skills
+
+For user-invocable skills, `$ARGUMENTS` injects whatever the user types after the slash command:
+
+```yaml
+---
+name: plan-checklist-skill
+description: "Generate plan checklist..."
+user-invocable: true
+argument-hint: "[feature-description]"
+---
+
+# Plan Checklist
+
+## Feature Description
+
+$ARGUMENTS
+
+## Workflow
+
+Generate a plan for: $ARGUMENTS
+```
+
+When the user types `/plan-checklist add logout feature`, `$ARGUMENTS` becomes "add logout feature".
+
+Use `$ARGUMENTS[0]`, `$ARGUMENTS[1]` for positional arguments.
+
+### Dynamic Injection with !`command`
+
+Inject live system state into skill context when the skill is loaded:
+
+```markdown
+## Current Database Health
+
+!`docker exec my-postgres psql -U user -d mydb -c "SELECT current_database(), pg_size_pretty(pg_database_size(current_database()))" 2>/dev/null || echo "Database not running"`
+
+## Recent Git Activity
+
+!`git log --oneline -3 2>/dev/null || echo "Not a git repo"`
+
+## Server Status
+
+!`curl -s localhost:8080/health 2>/dev/null | jq '.status' || echo "Server not running"`
+```
+
+**Key rules for dynamic injection**:
+
+- Command runs when skill is loaded (not on every message)
+- Always include `2>/dev/null || echo "fallback"` for graceful failure
+- Keep commands fast (<2 seconds) — slow commands delay skill loading
+- Use for: database health, git status, server state, last test results
+- Don't use for: long-running commands, interactive commands, commands with side effects
+
+---
+
 ## Checklist: Before Creating a Skill
 
 - [ ] **Frequency**: Is this pattern used 20+ times per year?

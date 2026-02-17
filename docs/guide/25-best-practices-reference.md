@@ -259,6 +259,67 @@ These are pages from Anthropic's official Claude Code documentation site (`code.
 
 ---
 
+## Best Practices Audit Methodology (Entry #363)
+
+A systematic approach to auditing your Claude Code setup against official documentation:
+
+### Step 1: Fetch Official Docs
+
+Review all pages at code.claude.com/docs/en/:
+
+- best-practices, skills, sub-agents, hooks-guide, memory, features-overview
+
+### Step 2: Inventory Current Setup
+
+Run verification commands to count what you have:
+
+```bash
+# Skills with each feature
+grep -rl "^model:" .claude/skills/*/SKILL.md | wc -l
+grep -rl "^allowed-tools:" .claude/skills/*/SKILL.md | wc -l
+grep -rl "^context: fork" .claude/skills/ | wc -l
+
+# Agent features
+grep -rl "^memory:" .claude/agents/*.md | wc -l
+grep -rl "^skills:" .claude/agents/*.md | wc -l
+grep -rl "^permissionMode:" .claude/agents/*.md | wc -l
+
+# Global agents
+ls ~/.claude/agents/*.md 2>/dev/null | wc -l
+
+# Hook types
+grep -c '"type": "prompt"' .claude/settings.json
+grep -c '"async": true' .claude/settings.json
+```
+
+### Step 3: Gap Analysis
+
+Compare features available in docs vs features you're using. Common gaps:
+
+- `paths:` YAML frontmatter in rules files (conditional loading)
+- `memory:` field on agents (cross-session learning)
+- `skills:` preloading on agents (faster startup)
+- `model:` field on skills (cost optimization)
+- `allowed-tools:` on read-only skills (safety)
+- `!`command`` dynamic injection in skills (live context)
+- Prompt-based hooks (intelligent validation)
+- Global agents at `~/.claude/agents/` (cross-project reuse)
+
+### Step 4: Prioritize by Impact
+
+| Priority | Feature             | Impact                             | Effort |
+| -------- | ------------------- | ---------------------------------- | ------ |
+| P0       | Path-specific rules | HIGH (reduces context per message) | 1h     |
+| P0       | Agent memory        | HIGH (cross-session learning)      | 30min  |
+| P1       | Skills model: field | MEDIUM (cost savings)              | 2h     |
+| P1       | Dynamic injection   | HIGH (live context)                | 2h     |
+| P2       | Prompt-based hooks  | MEDIUM (intelligent validation)    | 2h     |
+| P2       | allowed-tools       | LOW (safety improvement)           | 1h     |
+
+_Reference: Entry #363 implemented 11 gaps across 120+ files in ~25 hours total._
+
+---
+
 **Research Authority**: Anthropic engineering + Claude.com blog
 **Sacred Compliance**: All patterns validated against Sacred Commandments
 **ROI**: 50-100h/year saved with research-backed patterns vs trial-and-error

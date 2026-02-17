@@ -3,7 +3,10 @@ name: your-skill-name-here
 description: "What this skill does with action verbs. Use when [scenario 1], [scenario 2], or when user mentions [keywords]. Max 1024 chars. This IS the triggering mechanism."
 Triggers: keyword1, keyword2, keyword3, exact user phrase, natural language variant
 user-invocable: false
+model: haiku # Optional: haiku (cheap/fast) | sonnet (balanced) | opus (complex) | (default: inherit session)
+allowed-tools: [Read, Grep, Glob] # Optional: Restrict tool access for safety/efficiency
 # disable-model-invocation: true  # Uncomment to prevent auto-activation (user-only via /command)
+# argument-hint: "[environment]"  # Uncomment if user-invocable: true (shows usage hint)
 ---
 
 <!-- FRONTMATTER NOTES (delete this comment block):
@@ -11,6 +14,22 @@ user-invocable: false
     allowed-tools, model, context, agent, hooks, argument-hint
   Custom fields: Triggers (for pre-prompt hook keyword matching only)
   NON-official (remove if found): priority
+
+  Model selection (cost optimization):
+    - haiku: Navigation, lookups, simple reference (~40% of skills)
+    - sonnet: Validation, workflows, standard work (~40% of skills)
+    - opus: Architecture, debugging, complex reasoning (~15% of skills)
+    - (default): Inherits session model
+
+  Tool restrictions (safety + efficiency):
+    - [Read, Grep, Glob]: Read-only skills (navigation, reference)
+    - [Read, Write, Edit, Bash]: Full-access skills (code generation, system changes)
+    - Best practice: Restrict to minimum needed tools
+
+  User-invocable patterns:
+    - Set user-invocable: true + argument-hint: "[param]"
+    - Use $ARGUMENTS, $ARGUMENTS[0], $ARGUMENTS[1] in skill body
+
   Token budget: 2% of context (~15,760 chars). Override: SLASH_COMMAND_TOOL_CHAR_BUDGET=40000
   Sandbox: .claude/skills/ blocked in sandbox mode; ~/.claude/skills/ unaffected
   Ref: https://code.claude.com/docs/en/skills
@@ -21,6 +40,39 @@ user-invocable: false
 **Purpose**: [One-sentence purpose]
 **Created**: [YYYY-MM-DD]
 **ROI**: [X hours/year saved]
+
+---
+
+## User Parameters (For User-Invocable Skills Only)
+
+**If this skill has `user-invocable: true` and `argument-hint: "[environment]"` in frontmatter:**
+
+```markdown
+Deploy to $ARGUMENTS environment:
+
+1. Validate $ARGUMENTS configuration exists
+2. Run tests for $ARGUMENTS
+3. Build assets for $ARGUMENTS
+4. Deploy to $ARGUMENTS
+
+Supported environments:
+
+- development ($ARGUMENTS = "development")
+- staging ($ARGUMENTS = "staging")
+- production ($ARGUMENTS = "production")
+```
+
+**Multiple arguments** (use positional indexing):
+
+```markdown
+Create feature $ARGUMENTS[0] in module $ARGUMENTS[1]:
+
+User types: `/create-feature auth-system users`
+→ $ARGUMENTS[0] = "auth-system"
+→ $ARGUMENTS[1] = "users"
+```
+
+**Delete this section if skill is NOT user-invocable.**
 
 ---
 

@@ -368,6 +368,63 @@ DO NOT read the script source into context.
 
 ---
 
+## Model Field Cost Implications
+
+The `model:` field in skill frontmatter controls which Claude model runs the skill. This has direct cost and performance implications.
+
+### Syntax
+
+```yaml
+---
+name: sacred-commandments-skill
+description: "Navigate Sacred Commandments..."
+model: haiku
+---
+```
+
+### Model Selection Guide
+
+| Model    | Cost    | Speed   | Best For                                   | Count (typical) |
+| -------- | ------- | ------- | ------------------------------------------ | --------------- |
+| `haiku`  | Lowest  | Fastest | Navigation, lookups, reference skills      | ~30 skills      |
+| `sonnet` | Medium  | Medium  | Validation, workflows, integration         | ~30 skills      |
+| `opus`   | Highest | Slowest | Architecture, debugging, complex reasoning | ~10 skills      |
+
+### Cost Optimization Strategy
+
+Most skills don't need the most powerful model. A reference skill that just looks up patterns works perfectly with `haiku`:
+
+```yaml
+# Good: Simple lookup → cheap model
+model: haiku
+# Skills: sacred-commandments, blueprint-discovery, system-inventory
+
+# Good: Validation logic → medium model
+model: sonnet
+# Skills: compliance-verification, deployment-checklist, gap-detection
+
+# Good: Complex reasoning → best model
+model: opus
+# Skills: architecture-review, pipeline-debugging, performance-optimization
+```
+
+### Combined with allowed-tools
+
+For read-only reference skills, combine `model: haiku` with `allowed-tools: [Read, Grep, Glob]` for maximum safety and cost efficiency:
+
+```yaml
+---
+name: database-column-standards-skill
+description: "Database column naming and schema patterns..."
+model: haiku
+allowed-tools: [Read, Grep, Glob]
+---
+```
+
+This creates a fast, cheap, read-only skill that can never accidentally write files.
+
+---
+
 ## Key Takeaways
 
 1. **CLAUDE.md and rules load every message**. This is your largest fixed cost. Keep it lean.

@@ -859,6 +859,64 @@ Fires when a task is completed in an Agent Teams configuration. Use to trigger f
 
 ---
 
+## Real-World Production Example: Sacred Pattern Validation Hook
+
+This example shows a prompt-based hook used in production to enforce code quality patterns on every file write:
+
+```json
+{
+  "matcher": "Write|Edit",
+  "hooks": [
+    {
+      "type": "prompt",
+      "prompt": "Check if this code change to a src/**/*.js file follows Sacred patterns: (1) Uses employee_id not id for employee lookups, (2) No hardcoded business data like employee counts or revenue amounts, (3) Hebrew strings use UTF-8 encoding. If the file is NOT in src/ or is not a .js file, always allow. Output JSON: {\"decision\":\"allow\"} or {\"decision\":\"block\",\"reason\":\"Sacred violation: ...\"}"
+    }
+  ]
+}
+```
+
+**Key patterns demonstrated**:
+
+- **Scoped validation**: The prompt itself filters by file path (`src/**/*.js`), allowing non-matching files through
+- **Multiple checks in one hook**: Validates 3 different patterns in a single prompt
+- **Structured output**: Returns JSON for programmatic decision-making
+- **Non-blocking for irrelevant files**: Files outside `src/` are auto-allowed
+
+### Combining Prompt Hooks with Async Background Hooks
+
+For non-critical monitoring, use `async: true` to avoid blocking:
+
+```json
+{
+  "SubagentStart": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": ".claude/hooks/subagent-monitor.sh",
+          "async": true
+        }
+      ]
+    }
+  ],
+  "PostToolUseFailure": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": ".claude/hooks/tool-failure-logger.sh",
+          "async": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Rule of thumb**: Use `async: true` for logging/monitoring hooks. Keep synchronous for validation/blocking hooks.
+
+---
+
 ## Hook Best Practices
 
 ### Always Exit 0
