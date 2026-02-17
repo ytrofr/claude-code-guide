@@ -110,10 +110,13 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 ### Planning & Quality
 
 - [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 10 mandatory plan sections with metadata
+- [Adoptable Rules, Commands & Templates](guide/47-adoptable-rules-and-commands.md) - 15 rules, 7 commands, ready to adopt
 
 ### Advanced Topics
 
-- [Perplexity Cost Optimization](guide/18-perplexity-cost-optimization.md) - Cache-first research
+- [Advanced Configuration Patterns](guide/46-advanced-configuration-patterns.md) - Path-specific rules, agent memory, scope
+
+- [MCP Cost Control](guide/18-perplexity-cost-optimization.md) - Cache-first research with hook enforcement
 - [Pre-Prompt Optimization](guide/21-pre-prompt-optimization.md) - Performance tuning
 - [Marketplace Integration](guide/22-wshobson-marketplace-integration.md) - Third-party agent integration
 - [Best Practices Reference](guide/25-best-practices-reference.md) - Anthropic-aligned patterns
@@ -143,7 +146,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | Token Savings     | 47-70% per branch          |
 | Production Skills | 226+ documented            |
 | MCP Integrations  | 13 servers, 70+ tools      |
-| Chapters          | 42 comprehensive           |
+| Chapters          | 47 comprehensive           |
 
 ---
 

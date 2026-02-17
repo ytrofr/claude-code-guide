@@ -1,8 +1,8 @@
-# Project Rules Index
+# Adoptable Rules Index
 
 **Location**: `.claude/rules/`
-**Purpose**: Project-specific rules auto-discovered by Claude Code
-**Reference**: https://code.claude.com/docs/en/memory
+**Purpose**: Universal rules for any Claude Code project
+**Source**: Claude Code Guide - Chapter 47
 
 ---
 
@@ -10,22 +10,70 @@
 
 ```
 .claude/rules/
-├── README.md           # This index file
-├── src-code.md         # Path-specific: src/**/*
-├── tests.md            # Path-specific: tests/**/*
-└── domain/
-    └── patterns.md     # Domain-specific patterns
+├── INDEX.txt (this file - .txt to prevent auto-loading)
+├── src-code.md             # Path-specific: src/**/*
+├── tests.md                # Path-specific: tests/**/*
+├── documentation/
+│   └── versioning.md       # Version format standards
+├── domain/
+│   └── patterns.md         # Domain-specific patterns (project-specific)
+├── global/
+│   ├── agent-usage.md      # MANDATORY agent-first workflow
+│   ├── context-checking.md # CHECK BEFORE BUILDING
+│   └── validation-workflow.md  # 7-step + 5-gate validation
+├── mcp/
+│   ├── agent-routing.md    # Agent coordination preferences
+│   ├── memory-usage.md     # Basic Memory MCP patterns
+│   └── mcp-first.md        # MANDATORY: MCP tools over npm/pip
+├── planning/
+│   ├── anti-overengineering.md  # 6-point validation checklist
+│   ├── plan-checklist.md        # 10 mandatory plan sections
+│   └── plan-link.md             # Plan file metadata
+├── process/
+│   ├── safety-rules.md     # WSL/VS Code protection
+│   └── session-protocol.md # Start/end session rules
+├── projects/
+│   └── registry.md         # Project inventory (CUSTOMIZE THIS)
+├── quality/
+│   ├── no-mock-data.md     # SUPREME: No mock/fake data anywhere
+│   └── standards.md        # Accuracy standards
+└── technical/
+    └── patterns.md         # Universal technical standards
 ```
 
 ---
 
 ## Quick Reference
 
-| Rule File | Domain | Key Patterns |
-|-----------|--------|---------------|
-| `src-code.md` | Source Code | Modular architecture, code standards |
-| `tests.md` | Testing | Coverage targets, test patterns |
-| `domain/patterns.md` | Domain | Project-specific business rules |
+| Rule File                 | Priority | Key Rule                     |
+| ------------------------- | -------- | ---------------------------- |
+| `agent-usage.md`          | HIGH     | ALWAYS use agents            |
+| `context-checking.md`     | HIGH     | Check if exists first        |
+| `validation-workflow.md`  | HIGH     | 5 gates mandatory            |
+| `session-protocol.md`     | HIGH     | /session-start, /session-end |
+| `safety-rules.md`         | HIGH     | No killall node              |
+| `no-mock-data.md`         | HIGH     | NEVER mock data              |
+| `anti-overengineering.md` | HIGH     | 6-point checklist            |
+| `plan-checklist.md`       | MEDIUM   | 10 plan sections             |
+| `plan-link.md`            | MEDIUM   | Plan metadata header         |
+| `mcp-first.md`            | MEDIUM   | MCP over npm/pip             |
+| `agent-routing.md`        | MEDIUM   | Task-based routing           |
+| `standards.md`            | MEDIUM   | Accuracy targets             |
+| `patterns.md`             | MEDIUM   | Format-first workflow        |
+| `versioning.md`           | LOW      | v{MAJOR}.{MINOR}.{PATCH}    |
+| `registry.md`             | LOW      | Project inventory            |
+
+---
+
+## Customization Guide
+
+Files to customize for your project:
+- `projects/registry.md` - Replace example projects with yours
+- `technical/patterns.md` - Update port number and format commands
+- `quality/standards.md` - Set your health check URLs
+
+Files that work as-is (no customization needed):
+- All other files are universal best practices
 
 ---
 
@@ -34,15 +82,15 @@
 1. **Auto-discovered**: Claude Code finds `.claude/rules/*.md` automatically
 2. **Recursive**: Subdirectories are searched
 3. **Priority**: Project rules override user rules (`~/.claude/rules/`)
-4. **Path-specific**: YAML frontmatter targets specific file paths
+4. **Path-specific**: YAML frontmatter can target specific file paths
 
 ---
 
 ## Adding New Rules
 
-1. Create `.md` file in appropriate location
+1. Create `.md` file in appropriate subdirectory
 2. Add YAML frontmatter for path-specific rules (optional)
-3. Update this README index
+3. Update this INDEX file
 4. Keep rules focused (one domain per file)
 
 ---
@@ -52,7 +100,8 @@
 - **CLAUDE.md**: Core project instructions
 - **User Rules**: `~/.claude/rules/` (personal defaults)
 - **Official Docs**: https://code.claude.com/docs/en/memory
+- **Guide**: Chapter 47 - Adoptable Rules, Commands & Configuration Templates
 
 ---
 
-**Last Updated**: YYYY-MM-DD (update when adding rules)
+Total Rules: 15 universal + 3 project-specific (src-code, tests, domain)

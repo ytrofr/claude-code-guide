@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.6.0] - 2026-02-17
+
+### Changed
+
+- **Guide #18**: Expanded from "Perplexity Cost Optimization" to "MCP Cost Control" with hook enforcement. Added PreToolUse/PostToolUse two-hook sandwich pattern, global settings placement (user-level), generalizable MCP cost control table, and updated validation checklist.
+
 ## [2.5.0] - 2026-02-16
 
 ### Changed
@@ -144,6 +150,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                           |
 | ------- | ---------- | -------------------------------------------------------------------- |
+| 2.6.0   | 2026-02-17 | MCP cost control hooks (PreToolUse/PostToolUse sandwich pattern)     |
 | 2.5.0   | 2026-02-16 | Plan mode: 10 sections + file metadata (branch, timestamp, keywords) |
 | 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                   |
 | 2.3.0   | 2026-02-13 | 5 new chapters (orchestration, evals, compaction, SDK, skill design) |
