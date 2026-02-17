@@ -473,6 +473,157 @@ When deciding how many agents to spawn and how to coordinate them, classify the 
 
 ---
 
+## Agent Skills Preloading
+
+The `skills:` field in agent frontmatter tells the agent which skills to load immediately when spawned, rather than discovering them during operation.
+
+### Frontmatter Syntax
+
+```yaml
+---
+name: database-agent
+description: "Database operations specialist"
+model: sonnet
+memory: project
+skills:
+  - database-master-skill
+  - database-column-standards-skill
+---
+```
+
+### When to Use Skills Preloading
+
+| Agent Type     | Recommended Skills                         | Why                                |
+| -------------- | ------------------------------------------ | ---------------------------------- |
+| Database agent | database-master-skill, column-standards    | Needs schema patterns immediately  |
+| Deploy agent   | deployment-master-skill, safe-deployment   | Must know deploy checklist upfront |
+| Test engineer  | testing-master-skill, baseline-methodology | Needs test patterns from start     |
+| Security agent | compliance-skill, vulnerability-patterns   | Security context critical early    |
+
+### Benefits
+
+- **Faster startup**: Agent has domain knowledge immediately (no discovery phase)
+- **More accurate**: Agent follows established patterns from first tool call
+- **Reduced context waste**: No exploratory file reads to find patterns
+
+### Implementation Pattern
+
+Match skills to agent domains. A database agent shouldn't preload deployment skills:
+
+```yaml
+# Good: Domain-aligned skills
+skills:
+  - database-master-skill
+  - database-column-standards-skill
+
+# Bad: Unrelated skills waste context
+skills:
+  - database-master-skill
+  - deployment-master-skill  # Why would a DB agent need this?
+```
+
+---
+
+## Agent Permission Modes
+
+The `permissionMode:` field controls how the agent handles permission prompts during execution.
+
+### Available Modes
+
+| Mode                | Behavior                                           | Best For                                |
+| ------------------- | -------------------------------------------------- | --------------------------------------- |
+| (default)           | Inherits parent session mode                       | Most agents                             |
+| `plan`              | Agent can only read/explore, never write           | Read-only agents (navigators, monitors) |
+| `acceptEdits`       | Auto-accepts file edits, prompts for other actions | Code-writing agents                     |
+| `bypassPermissions` | No permission prompts at all                       | Fully trusted automation                |
+
+### Frontmatter Syntax
+
+```yaml
+---
+name: knowledge-navigator
+description: "Navigate and search project knowledge"
+model: haiku
+memory: project
+permissionMode: plan
+---
+```
+
+### Recommended Assignment
+
+```yaml
+# Read-only agents — can only explore, never modify
+knowledge-navigator:    permissionMode: plan
+blueprint-context:      permissionMode: plan
+monitoring-agent:       permissionMode: plan
+
+# Code-writing agents — auto-accept edits for efficiency
+database-agent:         permissionMode: acceptEdits
+deploy-agent:           permissionMode: acceptEdits
+test-engineer:          permissionMode: acceptEdits
+
+# Coordinator agents — need to orchestrate subagents
+api-coordinator:        permissionMode: acceptEdits
+data-integrity-guardian: permissionMode: acceptEdits
+```
+
+### Safety Note
+
+Never use `bypassPermissions` for agents that interact with external services (APIs, databases, deployments). Use `acceptEdits` as the maximum for production agents.
+
+---
+
+## Global vs Project Agents
+
+Agents can exist at two scope levels:
+
+| Scope       | Location                       | Available To      | Memory            |
+| ----------- | ------------------------------ | ----------------- | ----------------- |
+| **Project** | `.claude/agents/` (in repo)    | This project only | `memory: project` |
+| **Global**  | `~/.claude/agents/` (home dir) | ALL projects      | `memory: user`    |
+
+### When to Use Global Agents
+
+Create global agents for capabilities that apply across all projects:
+
+```yaml
+# ~/.claude/agents/architecture-agent.md
+---
+name: architecture-agent
+description: "Cross-project architecture review and design patterns"
+model: sonnet
+memory: user
+---
+Review architecture decisions using universal patterns...
+```
+
+Good candidates for global agents:
+
+- **Architecture agent** — Design patterns are universal
+- **Security agent** — Security rules apply everywhere
+- **Documentation agent** — Doc standards are consistent
+- **Debug specialist** — Debugging methodology is universal
+
+### Override Behavior
+
+When both exist with the same name, **project-level wins**:
+
+```
+~/.claude/agents/security-agent.md     ← Generic security patterns
+.claude/agents/security-agent.md       ← Project-specific security rules (WINS)
+```
+
+This lets you have a generic global agent with project-specific overrides. The global version handles other projects; the project version adds domain-specific rules.
+
+### Memory Scope Alignment
+
+Match memory scope to agent scope:
+
+- Global agents → `memory: user` (persists across all projects)
+- Project agents → `memory: project` (scoped to this project)
+
+---
+
 ## "Fresh Eyes" QA Pattern
 
 After generating complex output (multi-file changes, generated artifacts, deployments), spawn a verification subagent. The subagent has fresh context and will catch issues that the generating agent -- which has been staring at the code -- will miss.
