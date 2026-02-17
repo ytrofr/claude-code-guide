@@ -48,6 +48,23 @@ Agents live in `.claude/agents/` as markdown files:
 
 Each file has YAML frontmatter + markdown body.
 
+### Project-Level vs User-Level Agents
+
+| Location            | Scope                | Use For                                                    |
+| ------------------- | -------------------- | ---------------------------------------------------------- |
+| `.claude/agents/`   | Current project only | Project-specific agents (deploy, database, domain experts) |
+| `~/.claude/agents/` | All your projects    | Cross-project agents (code-reviewer, security-scanner)     |
+
+When both levels define an agent with the same name, **project-level wins**. Keep each agent at one level only to avoid confusion.
+
+```bash
+# Project-level (committed to git, shared with team)
+mkdir -p .claude/agents
+
+# User-level (personal, available in all projects)
+mkdir -p ~/.claude/agents
+```
+
 ---
 
 ## Agent Frontmatter (All Fields)
@@ -484,6 +501,7 @@ Task(
 
 ## Tips
 
+- **Descriptions are the routing mechanism**: Claude picks which agent to spawn based on the `description` field. Vague descriptions ("handles data stuff") lead to wrong routing. Specific descriptions ("Database operations — schema, sync, queries. Use when working with PostgreSQL.") route correctly. Include "Use when..." triggers.
 - **Keep agent prompts focused**: One clear responsibility per agent
 - **Use `memory: project`** for agents you use repeatedly — they get better over time
 - **Don't over-agent**: Simple tasks (reading a file, running a command) don't need agents
