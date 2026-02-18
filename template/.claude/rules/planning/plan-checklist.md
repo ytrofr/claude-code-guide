@@ -2,17 +2,17 @@
 
 **Authority**: Universal plan quality enforcement
 **Scope**: ALL plans in ALL projects
-**Enforcement**: Every plan MUST include ALL 10 sections below
+**Enforcement**: Every plan MUST include ALL 11 sections below
 
 ---
 
 ## Rule
 
-When writing ANY plan (via plan mode or /plan), the plan MUST contain these 10 mandatory sections. Do NOT skip any section. Each section must have real content, not placeholders.
+When writing ANY plan (via plan mode or /plan), the plan MUST contain these 11 mandatory sections. Do NOT skip any section. Each section must have real content, not placeholders.
 
 ---
 
-## 10 Mandatory Plan Sections
+## 11 Mandatory Plan Sections (Sections 0-10)
 
 ### Section 0: Requirements Clarification (BEFORE planning)
 
@@ -133,14 +133,50 @@ After implementation:
 
 **Rule**: A reader should understand the full plan from this section alone in <10 seconds.
 
+### Section 10: Modularity Enforcement (BLOCKING GATE)
+
+Every plan MUST pass ALL modularity checks below. **Plan is REJECTED if any check fails.**
+
+```
+## 10. Modularity Enforcement
+
+### File Size Gate
+- [ ] No file exceeds 500 lines after changes (if it will, identify split points)
+- [ ] No function/method exceeds 50 lines (if it will, extract to named function)
+- [ ] Every NEW file has ONE clear responsibility (state it in 1 sentence per file)
+
+### Layer Separation Gate
+- [ ] Routes: ONLY routing + middleware wiring (zero business logic)
+- [ ] Controllers: ONLY request parsing + response formatting (delegate to services)
+- [ ] Services: ALL business logic lives here
+- [ ] No database queries outside services/database layer
+- [ ] No HTTP response formatting inside services
+
+### Extraction Gate
+- [ ] Repeated logic (2+ occurrences) extracted to shared module
+- [ ] Complex conditionals (>3 branches) extracted to named function
+- [ ] Configuration/constants extracted to config files (not inline)
+
+### God File Prevention
+- [ ] Entry file stays under 500 lines (delegation only)
+- [ ] No single service file handles more than 1 domain
+- [ ] Will ANY existing file exceed 500 lines after these changes? [yes/no]
+  - If yes: MUST include split plan (before/after line counts)
+```
+
+**Violation Response**: If ANY check fails, STOP. Redesign the plan to pass all checks.
+
+**Rule**: This gate has equal weight to the Over-Engineering check (Section 2). A modular plan that's slightly more complex is ALWAYS preferred over a monolithic plan that's slightly simpler.
+
 ---
 
 ## Quick Validation
 
 Before finalizing any plan, verify:
 
-- [ ] All 10 sections present with real content
+- [ ] All 11 sections present with real content
 - [ ] Requirements clarified with user (or skipped -- instructions were unambiguous)
 - [ ] Existing code searched (not building from scratch unnecessarily)
 - [ ] Simplest approach chosen (not over-engineered)
+- [ ] Modularity enforcement passed (no god files, layers separated, extractions done)
 - [ ] Testing strategy defined (not "add tests later")

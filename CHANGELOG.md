@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.7.0] - 2026-02-18
+
+### Changed
+
+- **Guide #45**: Plan Mode Quality Checklist expanded from 10 to 11 mandatory sections. Added Section 10 (Modularity Enforcement - blocking gate with 4 sub-checks: File Size Gate, Layer Separation Gate, Extraction Gate, God File Prevention). Updated template, Chapter 47 references, and design decisions.
+
 ## [2.6.0] - 2026-02-17
 
 ### Changed
@@ -150,6 +156,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                           |
 | ------- | ---------- | -------------------------------------------------------------------- |
+| 2.7.0   | 2026-02-18 | Plan mode: 11 sections + modularity enforcement gate                 |
 | 2.6.0   | 2026-02-17 | MCP cost control hooks (PreToolUse/PostToolUse sandwich pattern)     |
 | 2.5.0   | 2026-02-16 | Plan mode: 10 sections + file metadata (branch, timestamp, keywords) |
 | 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                   |

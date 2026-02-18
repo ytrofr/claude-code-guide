@@ -109,7 +109,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ### Planning & Quality
 
-- [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 10 mandatory plan sections with metadata
+- [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 11 mandatory plan sections with modularity gate
 - [Adoptable Rules, Commands & Templates](guide/47-adoptable-rules-and-commands.md) - 15 rules, 7 commands, ready to adopt
 
 ### Advanced Topics
@@ -169,7 +169,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
     "url": "https://github.com/ytrofr"
   },
   "datePublished": "2024-12-14",
-  "dateModified": "2026-02-16",
+  "dateModified": "2026-02-18",
   "publisher": {
     "@type": "Organization",
     "name": "Claude Code Guide",

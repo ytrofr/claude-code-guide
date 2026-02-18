@@ -75,7 +75,7 @@ Claude Code loads rules from two locations:
 │   └── mcp-first.md               # MCP tools over npm/pip
 ├── planning/
 │   ├── anti-overengineering.md    # 6-point validation checklist
-│   ├── plan-checklist.md          # 10 mandatory plan sections
+│   ├── plan-checklist.md          # 11 mandatory plan sections
 │   └── plan-link.md               # Plan file metadata
 ├── process/
 │   ├── safety-rules.md            # WSL/VS Code protection
@@ -91,23 +91,23 @@ Claude Code loads rules from two locations:
 
 ### Rule Inventory
 
-| #   | Rule File                 | Category      | Priority | What It Enforces                                       |
-| --- | ------------------------- | ------------- | -------- | ------------------------------------------------------ |
-| 1   | `agent-usage.md`          | global        | HIGH     | Always delegate to agents, never work directly         |
-| 2   | `context-checking.md`     | global        | HIGH     | Search for existing solutions before building new ones |
-| 3   | `validation-workflow.md`  | global        | HIGH     | 7-step workflow + 5 pre-implementation gates           |
-| 4   | `session-protocol.md`     | process       | HIGH     | Git status check at start, checkpoint at end           |
-| 5   | `safety-rules.md`         | process       | HIGH     | Never kill all processes (WSL/VS Code protection)      |
-| 6   | `no-mock-data.md`         | quality       | HIGH     | Zero mock, fake, stub, or placeholder data             |
-| 7   | `anti-overengineering.md` | planning      | HIGH     | 6-point check: can it be done in under 50 lines?       |
-| 8   | `plan-checklist.md`       | planning      | MEDIUM   | 10 mandatory sections in every plan                    |
-| 9   | `plan-link.md`            | planning      | MEDIUM   | Metadata header for plan file discoverability          |
-| 10  | `mcp-first.md`            | mcp           | MEDIUM   | Prefer MCP tools over npm/pip installations            |
-| 11  | `agent-routing.md`        | mcp           | MEDIUM   | Query classification and agent budget rules            |
-| 12  | `standards.md`            | quality       | MEDIUM   | Accuracy targets and self-verification                 |
-| 13  | `patterns.md`             | technical     | MEDIUM   | Format-first workflow, modular development             |
-| 14  | `versioning.md`           | documentation | LOW      | Consistent version/date/changelog format               |
-| 15  | `registry.md`             | projects      | LOW      | Project inventory with ports and paths                 |
+| #   | Rule File                 | Category      | Priority | What It Enforces                                            |
+| --- | ------------------------- | ------------- | -------- | ----------------------------------------------------------- |
+| 1   | `agent-usage.md`          | global        | HIGH     | Always delegate to agents, never work directly              |
+| 2   | `context-checking.md`     | global        | HIGH     | Search for existing solutions before building new ones      |
+| 3   | `validation-workflow.md`  | global        | HIGH     | 7-step workflow + 5 pre-implementation gates                |
+| 4   | `session-protocol.md`     | process       | HIGH     | Git status check at start, checkpoint at end                |
+| 5   | `safety-rules.md`         | process       | HIGH     | Never kill all processes (WSL/VS Code protection)           |
+| 6   | `no-mock-data.md`         | quality       | HIGH     | Zero mock, fake, stub, or placeholder data                  |
+| 7   | `anti-overengineering.md` | planning      | HIGH     | 6-point check: can it be done in under 50 lines?            |
+| 8   | `plan-checklist.md`       | planning      | MEDIUM   | 11 mandatory sections in every plan (incl. modularity gate) |
+| 9   | `plan-link.md`            | planning      | MEDIUM   | Metadata header for plan file discoverability               |
+| 10  | `mcp-first.md`            | mcp           | MEDIUM   | Prefer MCP tools over npm/pip installations                 |
+| 11  | `agent-routing.md`        | mcp           | MEDIUM   | Query classification and agent budget rules                 |
+| 12  | `standards.md`            | quality       | MEDIUM   | Accuracy targets and self-verification                      |
+| 13  | `patterns.md`             | technical     | MEDIUM   | Format-first workflow, modular development                  |
+| 14  | `versioning.md`           | documentation | LOW      | Consistent version/date/changelog format                    |
+| 15  | `registry.md`             | projects      | LOW      | Project inventory with ports and paths                      |
 
 ---
 
@@ -365,7 +365,7 @@ Six checks before any plan: Simplicity (under 50 lines?), Reuse (already exists?
 
 ### 8. Plan Checklist (`planning/plan-checklist.md`)
 
-Every plan must include 10 sections: Requirements Clarification, Existing Code Check, Over-Engineering Prevention, Best Practices, Architecture, Documentation Plan, Testing Plan, Debugging and Logging, File Change Summary, TL;DR.
+Every plan must include 11 sections: Requirements Clarification, Existing Code Check, Over-Engineering Prevention, Best Practices, Architecture, Documentation Plan, Testing Plan, Debugging and Logging, File Change Summary, TL;DR, and Modularity Enforcement (blocking gate with 4 sub-checks: file size, layer separation, extraction, god file prevention).
 
 ### 9. Plan Metadata (`planning/plan-link.md`)
 
