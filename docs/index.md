@@ -120,7 +120,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Pre-Prompt Optimization](guide/21-pre-prompt-optimization.md) - Performance tuning
 - [Marketplace Integration](guide/22-wshobson-marketplace-integration.md) - Third-party agent integration
 - [Best Practices Reference](guide/25-best-practices-reference.md) - Anthropic-aligned patterns
-- [Rules System](guide/26-claude-code-rules-system.md) - Project-level enforcement
+- [Rules System](guide/26-claude-code-rules-system.md) - Project-level enforcement, global vs project deduplication
 - [Fast Cloud Run Deployment](guide/27-fast-cloud-run-deployment.md) - GCP deployment patterns
 - [Basic Memory MCP Integration](guide/34-basic-memory-mcp-integration.md) - Persistent knowledge
 - [Context Costs & Skill Budget](guide/38-context-costs-and-skill-budget.md) - Token optimization

@@ -35,20 +35,20 @@ bash .claude/best-practices/update.sh
 
 ### Installation Tiers
 
-| Tier            | Command          | What's Installed                                        |
-| --------------- | ---------------- | ------------------------------------------------------- |
-| **Core**        | `./install.sh`   | 6 rules + BEST-PRACTICES.md + CLAUDE.md import          |
-| **Full**        | `--full`         | Core + 19 rules + 3 skills + 5 slash commands           |
-| **With Hooks**  | `--with-hooks`   | Full + 4 hooks + settings.json                           |
+| Tier           | Command        | What's Installed                               |
+| -------------- | -------------- | ---------------------------------------------- |
+| **Core**       | `./install.sh` | 6 rules + BEST-PRACTICES.md + CLAUDE.md import |
+| **Full**       | `--full`       | Core + 19 rules + 3 skills + 5 slash commands  |
+| **With Hooks** | `--with-hooks` | Full + 4 hooks + settings.json                 |
 
 ### Component Flags (composable)
 
-| Flag           | What it Installs                                                   |
-| -------------- | ------------------------------------------------------------------ |
-| `--skills`     | 3 starter skills to `~/.claude/skills/` (global, auto-discovered)  |
-| `--commands`   | 5 slash commands (`/session-start`, `/advise`, etc.)               |
-| `--hooks`      | 4 hook scripts + `settings.json` (formatting, skill detection)     |
-| `--all-rules`  | All 19 rules across 9 categories (global, planning, quality, etc.) |
+| Flag          | What it Installs                                                   |
+| ------------- | ------------------------------------------------------------------ |
+| `--skills`    | 3 starter skills to `~/.claude/skills/` (global, auto-discovered)  |
+| `--commands`  | 5 slash commands (`/session-start`, `/advise`, etc.)               |
+| `--hooks`     | 4 hook scripts + `settings.json` (formatting, skill detection)     |
+| `--all-rules` | All 19 rules across 9 categories (global, planning, quality, etc.) |
 
 Claude Code will immediately apply all best practices in every session after installation.
 
@@ -194,7 +194,7 @@ claude-code-guide/
 │   ├── .claude/            # Pre-configured setup
 │   │   ├── CLAUDE.md       # Project context
 │   │   ├── hooks/          # 9 automation scripts
-│   │   ├── rules/          # 17 path-specific rules
+│   │   ├── rules/          # 19 rules across 9 categories
 │   │   └── skills/         # Starter skills
 │   └── memory-bank/        # Knowledge hierarchy
 ├── skills-library/          # 20+ proven workflows

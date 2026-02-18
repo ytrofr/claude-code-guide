@@ -401,6 +401,58 @@ echo "TOTAL: $total tokens"
 
 **Target**: Keep total rules under 15k tokens. Over 20k likely contains duplicated content.
 
+## Global vs Project Rule Deduplication
+
+### The Problem: Double-Loading
+
+Claude Code loads rules from both `~/.claude/rules/` (global) and `.claude/rules/` (project). If the same rule file exists in both locations, it's loaded **twice** -- wasting context tokens on identical content.
+
+This commonly happens when you start with project rules and later promote them to global rules, forgetting to delete the project copies.
+
+### How to Detect Duplicates
+
+```bash
+# Compare global and project rules
+for f in $(find .claude/rules -name "*.md" -type f); do
+  rel="${f#.claude/rules/}"
+  global="$HOME/.claude/rules/$rel"
+  if [ -f "$global" ]; then
+    if diff -q "$f" "$global" > /dev/null 2>&1; then
+      echo "DUPLICATE (identical): $rel"
+    else
+      echo "DIVERGED (different): $rel"
+    fi
+  fi
+done
+```
+
+### Resolution Strategy
+
+| Scenario          | Rule Type                             | Action                                   |
+| ----------------- | ------------------------------------- | ---------------------------------------- |
+| Identical in both | Universal (agents, planning, quality) | Delete from project, keep global         |
+| Identical in both | Project-specific (database, API)      | Delete from global, keep project         |
+| Diverged          | Global has generic content            | Keep global; delete project if redundant |
+| Diverged          | Project has domain additions          | Keep both (different purposes)           |
+
+### Production Evidence
+
+A production project with 26 rule files discovered 15 were identical duplicates:
+
+- **Before**: 26 project rules + 15 global rules = 41 files loaded (15 duplicated)
+- **After**: 11 project rules + 15 global rules = 26 files loaded (0 duplicated)
+- **Savings**: ~1,139 lines of redundant context per session
+
+### Best Practice: Rule Placement
+
+| Rule Purpose                                   | Location                      | Why                           |
+| ---------------------------------------------- | ----------------------------- | ----------------------------- |
+| Universal workflow (agents, quality, safety)   | `~/.claude/rules/` only       | Applies to all projects       |
+| Project-specific (domain patterns, compliance) | `.claude/rules/` only         | Only relevant to this project |
+| Organization-wide standards                    | `~/.claude/enterprise/rules/` | Enforced by organization      |
+
+**Never duplicate a rule across locations.** Use `INDEX.txt` (not `.md`) in each location to document what lives where.
+
 ## Example: Complete Rules Setup
 
 See the `template/.claude/rules/` directory for a complete working example.

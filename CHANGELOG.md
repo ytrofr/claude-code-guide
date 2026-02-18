@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 - **Guide #45**: Plan Mode Quality Checklist expanded from 10 to 11 mandatory sections. Added Section 10 (Modularity Enforcement - blocking gate with 4 sub-checks: File Size Gate, Layer Separation Gate, Extraction Gate, God File Prevention). Updated template, Chapter 47 references, and design decisions.
+- **Guide #26**: Added "Global vs Project Rule Deduplication" section. Best practice for preventing double-loading when identical rules exist in both `~/.claude/rules/` and `.claude/rules/`. Includes audit workflow and token savings evidence (~1,139 lines saved).
 
 ## [2.6.0] - 2026-02-17
 
@@ -156,7 +157,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                           |
 | ------- | ---------- | -------------------------------------------------------------------- |
-| 2.7.0   | 2026-02-18 | Plan mode: 11 sections + modularity enforcement gate                 |
+| 2.7.0   | 2026-02-18 | Plan mode: 11 sections + modularity gate + rule deduplication guide  |
 | 2.6.0   | 2026-02-17 | MCP cost control hooks (PreToolUse/PostToolUse sandwich pattern)     |
 | 2.5.0   | 2026-02-16 | Plan mode: 10 sections + file metadata (branch, timestamp, keywords) |
 | 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                   |

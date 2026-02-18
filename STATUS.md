@@ -2,7 +2,7 @@
 
 **Created**: 2025-12-14
 **Updated**: 2026-02-12
-**Status**: Phase 1 Complete + 42 Guide Chapters + Plan Mode Quality Checklist
+**Status**: Phase 1 Complete + 47 Guide Chapters + Plan Mode Quality Checklist + Rule Deduplication
 **Progress**: 95% of planned work complete
 
 ---
@@ -135,16 +135,18 @@ claude-code-guide/
 
 **Status**: ✅ **All scripts are executable and tested**
 
-### 5. Documentation ✅ **42 Guide Chapters Complete**
+### 5. Documentation ✅ **47 Guide Chapters Complete**
 
-Core docs + 42 numbered chapters in `docs/guide/`:
+Core docs + 47 numbered chapters in `docs/guide/`:
 
 1. ✅ `README.md` - Complete overview with 4-format navigation
 2. ✅ `docs/quick-start.md` - 30-minute entry point
-3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/34-*.md` - 42 chapters covering setup, hooks, skills, MCP, context, deployment, and more
+3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/47-*.md` - 47 chapters covering setup, hooks, skills, MCP, context, deployment, agents, planning, and more
 4. ✅ `docs/guide/13-claude-code-hooks.md` - **Updated Feb 2026** with stdin timeout safety section
+5. ✅ `docs/guide/45-plan-mode-checklist.md` - **Updated Feb 2026** with 11 mandatory sections + modularity gate
+6. ✅ `docs/guide/26-claude-code-rules-system.md` - **Updated Feb 2026** with rule deduplication best practice
 
-**Status**: ✅ **Comprehensive guide with 42 chapters**
+**Status**: ✅ **Comprehensive guide with 47 chapters**
 
 ### 6. MCP Configurations ✅ **3/4 Complete**
 
@@ -266,6 +268,13 @@ Core docs + 42 numbered chapters in `docs/guide/`:
 
 ## Recent Improvements
 
+### Feb 18, 2026 - Plan Mode Modularity Gate + Rule Deduplication
+
+- **Chapter 45**: Plan checklist expanded from 10 to 11 sections. New Section 10 (Modularity Enforcement) is a blocking gate with 4 sub-checks: File Size Gate, Layer Separation Gate, Extraction Gate, God File Prevention
+- **Chapter 26**: Added "Global vs Project Rule Deduplication" section. Prevents double-loading identical rules from `~/.claude/rules/` and `.claude/rules/`
+- **Evidence**: Production project saved ~1,139 lines of redundant context by removing 15 duplicate rule files
+- **Files Updated**: Chapter 26, Chapter 45, Chapter 47, CHANGELOG.md, template plan-checklist.md
+
 ### Feb 5, 2026 - Hook stdin Timeout Fix
 
 - **Problem**: `$(cat)` in hooks hangs forever when Claude Code doesn't close stdin pipe
@@ -328,7 +337,7 @@ Core docs + 42 numbered chapters in `docs/guide/`:
 - `mcp-configs/essential/` - + Memory Bank
 - `mcp-configs/productive/` - + PostgreSQL
 - `docs/quick-start.md` - Entry point
-- `docs/guide/` - 42 chapters complete (02 through 45)
+- `docs/guide/` - 47 chapters complete (02 through 47)
 
 **Total deliverable**: ~45 files, ~9,100 lines, production-ready
 
@@ -348,5 +357,5 @@ Core docs + 42 numbered chapters in `docs/guide/`:
 
 ---
 
-**Last Updated**: 2026-02-16 (v2.5.0 - Plan mode 10-section checklist + deprecation audit)
+**Last Updated**: 2026-02-18 (v2.7.0 - Plan mode 11-section checklist with modularity gate + rule deduplication guide)
 **Next**: Test with a real project or continue building optional enhancements
