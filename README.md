@@ -10,6 +10,43 @@ Production-tested Claude Code patterns. 226+ documented patterns, 100+ hours sav
 
 ---
 
+## Install Best Practices (Any Project)
+
+One command to install production-tested best practices into any project:
+
+```bash
+# Remote install (no clone needed)
+curl -sL https://raw.githubusercontent.com/ytrofr/claude-code-guide/master/install.sh | bash
+
+# Or clone first, then install into your project
+git clone https://github.com/ytrofr/claude-code-guide.git
+cd claude-code-guide
+./install.sh /path/to/your-project
+
+# Install globally (applies to ALL your projects)
+./install.sh --global
+
+# Update to latest version
+bash .claude/best-practices/update.sh
+
+# Uninstall
+./install.sh --uninstall
+```
+
+**What gets installed:**
+
+| Installed                         | Purpose                                                  |
+| --------------------------------- | -------------------------------------------------------- |
+| `.claude/rules/best-practices/`   | 6 universal rules (auto-loaded every session)            |
+| `.claude/best-practices/`         | Comprehensive best practices doc + self-updater          |
+| `CLAUDE.md` import                | `@` import so Claude reads best practices automatically  |
+
+Claude Code will immediately apply all best practices in every session after installation.
+
+See [install.sh](install.sh) for all options (`--global`, `--rules-only`, `--update`, `--uninstall`).
+
+---
+
 ## Why This Guide?
 
 | Metric            | Result                    |
@@ -135,16 +172,20 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ```
 claude-code-guide/
+├── install.sh               # One-command best practices installer
+├── best-practices/          # Installable best practices package
+│   ├── BEST-PRACTICES.md   # Universal best practices document
+│   ├── rules/              # 6 universal rules (project-agnostic)
+│   └── VERSION             # Version tracking for updates
 ├── docs/                    # Complete documentation
 │   ├── quick-start.md      # 30-minute setup
-│   ├── pre-prompt-hook-complete-guide.md  # Historical (deprecated)
 │   ├── skill-activation-system.md
-│   └── guide/              # 37+ detailed guides
-├── template/                # Clone-and-go starter
+│   └── guide/              # 47+ detailed guides
+├── template/                # Clone-and-go starter (full setup)
 │   ├── .claude/            # Pre-configured setup
 │   │   ├── CLAUDE.md       # Project context
-│   │   ├── hooks/          # 4 automation scripts
-│   │   ├── rules/          # Path-specific rules
+│   │   ├── hooks/          # 9 automation scripts
+│   │   ├── rules/          # 17 path-specific rules
 │   │   └── skills/         # Starter skills
 │   └── memory-bank/        # Knowledge hierarchy
 ├── skills-library/          # 20+ proven workflows
