@@ -15,35 +15,44 @@ Production-tested Claude Code patterns. 226+ documented patterns, 100+ hours sav
 One command to install production-tested best practices into any project:
 
 ```bash
-# Remote install (no clone needed)
+# Core install (rules + best practices doc)
 curl -sL https://raw.githubusercontent.com/ytrofr/claude-code-guide/master/install.sh | bash
 
-# Or clone first, then install into your project
+# Full install (rules + skills + commands + all 19 rules)
 git clone https://github.com/ytrofr/claude-code-guide.git
 cd claude-code-guide
-./install.sh /path/to/your-project
+./install.sh --full /path/to/your-project
+
+# Everything including hooks + settings.json
+./install.sh --with-hooks /path/to/your-project
 
 # Install globally (applies to ALL your projects)
 ./install.sh --global
 
 # Update to latest version
 bash .claude/best-practices/update.sh
-
-# Uninstall
-./install.sh --uninstall
 ```
 
-**What gets installed:**
+### Installation Tiers
 
-| Installed                         | Purpose                                                  |
-| --------------------------------- | -------------------------------------------------------- |
-| `.claude/rules/best-practices/`   | 6 universal rules (auto-loaded every session)            |
-| `.claude/best-practices/`         | Comprehensive best practices doc + self-updater          |
-| `CLAUDE.md` import                | `@` import so Claude reads best practices automatically  |
+| Tier            | Command          | What's Installed                                        |
+| --------------- | ---------------- | ------------------------------------------------------- |
+| **Core**        | `./install.sh`   | 6 rules + BEST-PRACTICES.md + CLAUDE.md import          |
+| **Full**        | `--full`         | Core + 19 rules + 3 skills + 5 slash commands           |
+| **With Hooks**  | `--with-hooks`   | Full + 4 hooks + settings.json                           |
+
+### Component Flags (composable)
+
+| Flag           | What it Installs                                                   |
+| -------------- | ------------------------------------------------------------------ |
+| `--skills`     | 3 starter skills to `~/.claude/skills/` (global, auto-discovered)  |
+| `--commands`   | 5 slash commands (`/session-start`, `/advise`, etc.)               |
+| `--hooks`      | 4 hook scripts + `settings.json` (formatting, skill detection)     |
+| `--all-rules`  | All 19 rules across 9 categories (global, planning, quality, etc.) |
 
 Claude Code will immediately apply all best practices in every session after installation.
 
-See [install.sh](install.sh) for all options (`--global`, `--rules-only`, `--update`, `--uninstall`).
+See [install.sh](install.sh) for all options including `--update`, `--uninstall`, `--global`.
 
 ---
 
