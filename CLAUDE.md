@@ -9,11 +9,24 @@
 
 ```
 claude-code-guide/
+├── install.sh               # One-command best practices installer
+├── best-practices/          # Installable best practices package
+│   ├── BEST-PRACTICES.md   # Universal best practices (dynamic, updated)
+│   ├── rules/              # 6 universal rules (project-agnostic)
+│   └── VERSION             # Version for update tracking
 ├── docs/                    # Documentation (Markdown, MDX)
+├── template/                # Full clone-and-go starter
 ├── tools/                   # Standalone utility tools
 │   └── trendradar-dashboard/  # AI Intelligence Hub
 └── CLAUDE.md               # This file
 ```
+
+## Best Practices Installer
+
+The `install.sh` script installs universal best practices into any project.
+The `best-practices/` directory is the source package -- update BEST-PRACTICES.md
+and bump VERSION when best practices evolve. All installed projects can then
+run their local `update.sh` to pull the latest version.
 
 ---
 

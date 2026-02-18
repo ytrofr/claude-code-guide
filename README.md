@@ -10,6 +10,52 @@ Production-tested Claude Code patterns. 226+ documented patterns, 100+ hours sav
 
 ---
 
+## Install Best Practices (Any Project)
+
+One command to install production-tested best practices into any project:
+
+```bash
+# Core install (rules + best practices doc)
+curl -sL https://raw.githubusercontent.com/ytrofr/claude-code-guide/master/install.sh | bash
+
+# Full install (rules + skills + commands + all 19 rules)
+git clone https://github.com/ytrofr/claude-code-guide.git
+cd claude-code-guide
+./install.sh --full /path/to/your-project
+
+# Everything including hooks + settings.json
+./install.sh --with-hooks /path/to/your-project
+
+# Install globally (applies to ALL your projects)
+./install.sh --global
+
+# Update to latest version
+bash .claude/best-practices/update.sh
+```
+
+### Installation Tiers
+
+| Tier            | Command          | What's Installed                                        |
+| --------------- | ---------------- | ------------------------------------------------------- |
+| **Core**        | `./install.sh`   | 6 rules + BEST-PRACTICES.md + CLAUDE.md import          |
+| **Full**        | `--full`         | Core + 19 rules + 3 skills + 5 slash commands           |
+| **With Hooks**  | `--with-hooks`   | Full + 4 hooks + settings.json                           |
+
+### Component Flags (composable)
+
+| Flag           | What it Installs                                                   |
+| -------------- | ------------------------------------------------------------------ |
+| `--skills`     | 3 starter skills to `~/.claude/skills/` (global, auto-discovered)  |
+| `--commands`   | 5 slash commands (`/session-start`, `/advise`, etc.)               |
+| `--hooks`      | 4 hook scripts + `settings.json` (formatting, skill detection)     |
+| `--all-rules`  | All 19 rules across 9 categories (global, planning, quality, etc.) |
+
+Claude Code will immediately apply all best practices in every session after installation.
+
+See [install.sh](install.sh) for all options including `--update`, `--uninstall`, `--global`.
+
+---
+
 ## Why This Guide?
 
 | Metric            | Result                    |
@@ -135,16 +181,20 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ```
 claude-code-guide/
+├── install.sh               # One-command best practices installer
+├── best-practices/          # Installable best practices package
+│   ├── BEST-PRACTICES.md   # Universal best practices document
+│   ├── rules/              # 6 universal rules (project-agnostic)
+│   └── VERSION             # Version tracking for updates
 ├── docs/                    # Complete documentation
 │   ├── quick-start.md      # 30-minute setup
-│   ├── pre-prompt-hook-complete-guide.md  # Historical (deprecated)
 │   ├── skill-activation-system.md
-│   └── guide/              # 37+ detailed guides
-├── template/                # Clone-and-go starter
+│   └── guide/              # 47+ detailed guides
+├── template/                # Clone-and-go starter (full setup)
 │   ├── .claude/            # Pre-configured setup
 │   │   ├── CLAUDE.md       # Project context
-│   │   ├── hooks/          # 4 automation scripts
-│   │   ├── rules/          # Path-specific rules
+│   │   ├── hooks/          # 9 automation scripts
+│   │   ├── rules/          # 17 path-specific rules
 │   │   └── skills/         # Starter skills
 │   └── memory-bank/        # Knowledge hierarchy
 ├── skills-library/          # 20+ proven workflows
