@@ -111,6 +111,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 - [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 11 mandatory plan sections with modularity gate
 - [Adoptable Rules, Commands & Templates](guide/47-adoptable-rules-and-commands.md) - 15 rules, 7 commands, ready to adopt
+- [Lean Orchestrator Pattern](guide/48-lean-orchestrator-pattern.md) - Defeat context rot by delegating plan tasks to fresh subagents
 
 ### Advanced Topics
 
@@ -146,7 +147,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | Token Savings     | 47-70% per branch          |
 | Production Skills | 226+ documented            |
 | MCP Integrations  | 13 servers, 70+ tools      |
-| Chapters          | 47 comprehensive           |
+| Chapters          | 48 comprehensive           |
 
 ---
 

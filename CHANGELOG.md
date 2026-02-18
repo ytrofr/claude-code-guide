@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.8.0] - 2026-02-19
+
+### Added
+
+- **Guide #48**: Lean Orchestrator Pattern - new chapter on defeating context rot during multi-task plan execution. Covers delegation decision matrix (when to spawn subagents vs work inline), parallel execution for independent tasks, context budget targets (<20% orchestrator), filesystem verification patterns, and common mistakes. Inspired by GSD project analysis. Includes adoptable rule template.
+
 ## [2.7.0] - 2026-02-18
 
 ### Changed

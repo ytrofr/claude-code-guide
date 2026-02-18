@@ -433,3 +433,8 @@ ls .claude/commands/*.md
 - [Chapter 46: Advanced Configuration Patterns](46-advanced-configuration-patterns.md) -- Global vs project scope, path-specific rules
 - [Official Rules Docs](https://docs.anthropic.com/en/docs/claude-code/memory#rules) -- Anthropic's rules documentation
 - Template directory: `template/.claude/rules/` and `template/.claude/commands/`
+
+---
+
+**Previous**: [46: Advanced Configuration Patterns](46-advanced-configuration-patterns.md)
+**Next**: [48: Lean Orchestrator Pattern](48-lean-orchestrator-pattern.md)
