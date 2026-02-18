@@ -63,7 +63,7 @@ Questions to consider:
 - [ ] DRY: No duplicated logic
 - [ ] SOLID: Single responsibility per module
 - [ ] YAGNI: No speculative features
-- [ ] Security: No injection risks
+- [ ] Security: No injection risks (OWASP top 10)
 ```
 
 ### Section 4: Modular Architecture
@@ -95,6 +95,7 @@ After implementation:
 - Unit tests: [what to test, expected count]
 - Integration tests: [API endpoints to verify]
 - E2E tests: [user flows to validate]
+- Baseline regression: [which baselines to run after]
 - Manual verification: [curl commands or browser checks]
 ```
 

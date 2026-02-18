@@ -68,6 +68,19 @@ raise HTTPException(status_code=501, detail="Feature not yet implemented")
 
 ---
 
+## Applies To
+
+| Layer         | Rule                                          |
+| ------------- | --------------------------------------------- |
+| API Endpoints | Must return real data from real sources       |
+| Services      | Must call real external APIs                  |
+| Database      | Must query real database                      |
+| Frontend      | Must fetch from real API                      |
+| Tests         | Use real test data or clearly marked fixtures |
+| Development   | Same as production - real data only           |
+
+---
+
 ## Chain-of-Verification (CoVe)
 
 Before ANY data processing code, complete this verification chain:

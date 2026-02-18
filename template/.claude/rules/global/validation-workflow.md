@@ -42,7 +42,33 @@ Before creating any plan:
 
 ---
 
+## Plan Validation Template
+
+```markdown
+## PLAN VALIDATION
+
+**Over-Engineering Check**:
+
+- [What's over-engineered] -> [Simpler alternative]
+
+**Metrics**:
+| Aspect | Original | Simplified | Savings |
+|--------|----------|------------|---------|
+| Code | X lines | Y lines | Z% less |
+
+**Reuse Check**:
+
+- Searched: [project docs, grep, existing code]
+- Found: [Existing code to reuse]
+
+**Final**: Proceed with [simplified/original] approach
+```
+
+---
+
 ## Production Impact Validation
+
+**Critical Lesson**: Validation scripts prove code correctness, not problem resolution.
 
 ### 3-Tier Validation Approach
 
@@ -57,8 +83,20 @@ Before creating any plan:
    - No breaking changes to dependencies
 
 3. **Production Impact** - Does it solve the actual problem?
-   - Measure real metrics (performance, cost, etc.)
+   - Measure real metrics (key metric, performance, cost, etc.)
    - Compare before/after in production-like environment
    - Validate against original problem statement
 
 **Only claim success if all 3 tiers pass.**
+
+### Example
+
+```yaml
+Feature: Cache optimization for API response time improvement
+Tier 1 (Code): Works, no errors, cache hit/miss logic correct
+Tier 2 (Integration): Cache integrates with existing API layer
+Tier 3 (Production): +2ms improvement (negligible impact)
+VERDICT: Code correct, but doesn't solve the problem
+```
+
+**Evidence**: Past project evidence (validation scripts showed large gains, production showed negligible impact)

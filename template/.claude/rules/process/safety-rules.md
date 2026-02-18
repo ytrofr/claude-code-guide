@@ -57,6 +57,7 @@
 | `docker restart <container_name>` | Restart specific container only |
 | `docker stop <container_name>`    | Stop specific container only    |
 | `docker container prune -f`       | Remove only stopped containers  |
+| `docker image prune -f`           | Remove only dangling images     |
 
 ---
 
@@ -66,4 +67,5 @@
 2. ALWAYS use targeted kill commands
 3. NEVER use blanket kill commands
 4. NEVER stop Docker service without saving work first
-5. When in doubt, ask user for confirmation
+5. NEVER remove Docker volumes without backup
+6. When in doubt, ask user for confirmation

@@ -48,6 +48,24 @@ Task requires tool (e.g., browser automation)
 
 ---
 
+## Enforcement Triggers
+
+```yaml
+BLOCKED_PATTERNS:
+  - "npm install playwright"
+  - "npm install puppeteer"
+  - "npx playwright install"
+  - "pip install selenium"
+  - "apt install chromium"
+
+CORRECT_PATTERNS:
+  - "I'll use the Playwright MCP..."
+  - "ToolSearch for browser automation"
+  - "Use MCP server for database queries"
+```
+
+---
+
 ## Why MCP-First?
 
 1. **No installation needed** - MCP tools ready immediately
