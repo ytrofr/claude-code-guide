@@ -31,17 +31,66 @@ There's no built-in plan template in Claude Code. No hook event fires on plan mo
 
 ---
 
-## The Limitation: No Plan Mode Hook
+## Enforcement: PreToolUse Hook on ExitPlanMode
 
-Claude Code supports 14 hook events, but **none for plan mode**:
+While there's no hook event for plan mode _entry_, there **is** one for plan _submission_. The `ExitPlanMode` tool fires when Claude tries to submit a plan for user approval. A `PreToolUse` hook on this tool can block submission if mandatory sections are missing.
 
+**File**: `~/.claude/hooks/plan-sections-gate.sh`
+
+The hook script:
+
+1. Finds the most recently modified `.md` file in `~/.claude/plans/`
+2. Checks for 10 mandatory sections (Section 0 is optional) using flexible keyword matching
+3. If any sections are missing, prints which ones and exits with code 2 (blocks ExitPlanMode)
+4. If all present, exits 0 (allows submission)
+
+**Register in** `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/user/.claude/hooks/plan-sections-gate.sh",
+            "statusMessage": "Validating plan sections..."
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
-SessionStart, UserPromptSubmit, PreToolUse, PermissionRequest,
-PostToolUse, PostToolUseFailure, Notification, SubagentStart,
-SubagentStop, Stop, TeammateIdle, TaskCompleted, PreCompact, SessionEnd
-```
 
-The `permission_mode` field in hook input JSON will show `"plan"` when plan mode is active, but no dedicated event fires on plan mode entry or exit. This rules out hook-based enforcement.
+**Section detection** uses flexible patterns -- not exact header matches:
+
+| Section             | Grep Pattern (any match = pass)                                |
+| ------------------- | -------------------------------------------------------------- |
+| 1: Existing Code    | `existing code\|reuse check\|searched.*found`                  |
+| 2: Over-Engineering | `over.engineering\|simplif.*alternative\|complexity`           |
+| 3: Best Practices   | `best practice\|KISS\|DRY\|SOLID\|YAGNI`                       |
+| 4: Architecture     | `architecture\|routes.*controllers\|layer.*separation`         |
+| 5: Documentation    | `documentation plan\|/document\|entry file`                    |
+| 6: Testing          | `testing\|test plan\|verification\|e2e\|unit test`             |
+| 7: Debugging        | `debug\|logging\|observability\|monitor\|health check`         |
+| 8: Files Affected   | `files affected\|file change\|files changed`                   |
+| 9: TL;DR            | `tl;dr\|before.*after\|summary`                                |
+| 10: Modularity      | `modularity\|file size.*gate\|god file\|single responsibility` |
+
+**Bypass**: Add `<!-- skip-plan-sections -->` anywhere in the plan file to skip validation. Useful for non-standard plans or quick prototyping.
+
+**Install**:
+
+```bash
+# Copy the hook
+cp template/.claude/hooks/plan-sections-gate.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/plan-sections-gate.sh
+
+# Add the PreToolUse entry to ~/.claude/settings.json (see JSON above)
+```
 
 ---
 
@@ -383,8 +432,8 @@ Rules files in `~/.claude/rules/` are auto-discovered and keep CLAUDE.md lean. T
 **Why ~1,000 tokens is acceptable**:
 The rules file costs ~1,000 tokens per message. With a 200k context window, that's 0.5%. The value of preventing missed testing/documentation in every plan far outweighs the cost.
 
-**Why not a UserPromptSubmit hook?**
-Hooks print to stderr (informational only). They can remind but can't enforce. The rules file is in Claude's actual context, so it directly influences plan structure.
+**Why a PreToolUse hook on ExitPlanMode?**
+A `PreToolUse` hook with `exit 2` actually blocks the tool call. Unlike `UserPromptSubmit` hooks (informational only), this prevents plan submission until all sections are present. The rules file guides plan _creation_; the hook enforces plan _completeness_.
 
 **Why both approaches?**
 The rules file is a lightweight always-on reminder. The skill provides the full detailed template when you want comprehensive guidance. Different situations call for different levels of detail.
@@ -399,11 +448,12 @@ Sections 0-9 are quality checks -- they improve the plan but don't reject it. Se
 
 ## Key Takeaways
 
-1. **No plan mode hook exists** -- use rules files and skills instead
-2. **Rules files are always in context** -- ~1,200 tokens, automatic, no manual step
+1. **PreToolUse hook on ExitPlanMode enforces completeness** -- blocks plan submission until all 10 mandatory sections are present
+2. **Rules files are always in context** -- ~1,200 tokens, automatic, guides plan structure
 3. **Skills load on demand** -- zero cost until invoked, full template available
 4. **11 sections prevent common plan gaps** -- requirements, testing, docs, observability, file scope, summary, and modularity are most often missed
 5. **Plan metadata makes files findable** -- branch, timestamp, topic, and keywords solve the random-name problem
 6. **File change summary forces specificity** -- if you can't list the files, the plan isn't ready
 7. **TL;DR enables quick review** -- the entire plan in 3-5 bullet points
 8. **Modularity enforcement is a blocking gate** -- prevents god files, wrong-layer logic, and missing extractions before they happen
+9. **Bypass with `<!-- skip-plan-sections -->`** -- escape hatch for non-standard plans
