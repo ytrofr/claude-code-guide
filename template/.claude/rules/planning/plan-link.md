@@ -37,7 +37,7 @@ When writing a plan file, ALWAYS include the metadata header immediately after t
 | Keywords  | Searchable terms for finding this plan later | 3-6 comma-separated terms |
 
 **Why**: Plan files have random names (e.g., `wild-tickling-pretzel.md`).
-Without metadata, you can't tell what a plan is about or when it was created.
+Without metadata, you can't tell what a plan is about, which branch it targets, or when it was created.
 
 ### Searching Plans
 

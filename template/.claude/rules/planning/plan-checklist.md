@@ -8,7 +8,7 @@
 
 ## Rule
 
-When writing ANY plan (via plan mode or /plan), the plan MUST contain these 11 mandatory sections. Do NOT skip any section. Each section must have real content, not placeholders.
+When writing ANY plan (via EnterPlanMode, /plan, or plan permission mode), the plan MUST contain these 11 mandatory sections. Do NOT skip any section. Each section must have real content, not placeholders.
 
 ---
 
@@ -27,7 +27,7 @@ Questions to consider:
 - Are there preferences? (approach, technology, patterns)
 ```
 
-**Rule**: Skip ONLY if the user gave specific instructions with zero ambiguity.
+**Rule**: Skip ONLY if the user gave specific instructions with zero ambiguity. A 30-second question saves hours of wrong-direction work.
 
 ### Section 1: Existing Code Check
 
@@ -39,7 +39,7 @@ Questions to consider:
 - New code needed: [only what doesn't exist yet]
 ```
 
-**Rule**: Use Grep/Glob/Read BEFORE writing the plan.
+**Rule**: Use Grep/Glob/Read BEFORE writing the plan. Never propose building what already exists.
 
 ### Section 2: Over-Engineering Prevention
 
@@ -111,28 +111,37 @@ After implementation:
 
 ### Section 8: File Change Summary
 
+List every file that will be created or modified, with a 1-line description of what changes:
+
 ```
 ## 8. Files Affected
 | File | Action | What Changes |
 |------|--------|-------------|
 | `src/routes/auth.js` | MODIFY | Add logout endpoint |
 | `src/services/session.service.js` | NEW | Session cleanup logic |
+| `public/dashboard/auth.html` | MODIFY | Add logout button |
 ```
 
 **Action values**: `NEW` (create), `MODIFY` (edit existing), `DELETE` (remove)
 
-**Rule**: If you can't list the files, the plan isn't concrete enough.
+**Rule**: If you can't list the files, the plan isn't concrete enough. Go back and refine.
 
 ### Section 9: Plan Summary (TL;DR)
 
+End every plan with a concise summary -- what you're doing in 3-5 bullet points, max 1 sentence each. Include a **Before/After** showing the bug or feature state before and after the plan:
+
 ```
 ## 9. TL;DR
-- Add logout endpoint to auth routes with session cleanup
-- Create session service for token invalidation
-- Run auth tests + manual verification
+
+**Before**: Users get logged out randomly after 15 minutes (token refresh broken)
+**After**: Token refresh works correctly, sessions persist until explicit logout
+
+- Fix token refresh logic in auth middleware
+- Add session cleanup service for explicit logout
+- 2 files, +15 lines, no breaking changes
 ```
 
-**Rule**: A reader should understand the full plan from this section alone in <10 seconds.
+**Rule**: A reader should understand the full plan from this section alone in <10 seconds. Before/After captures the problem state and expected outcome -- not metrics, just the user-visible behavior change.
 
 ### Section 10: Modularity Enforcement (BLOCKING GATE)
 
@@ -165,7 +174,7 @@ Every plan MUST pass ALL modularity checks below. **Plan is REJECTED if any chec
   - If yes: MUST include split plan (before/after line counts)
 ```
 
-**Violation Response**: If ANY check fails, STOP. Redesign the plan to pass all checks.
+**Violation Response**: If ANY check fails, STOP. Redesign the plan to pass all checks. Show before/after: "File X will be 620 lines -> split into X.js (320) + Y-helper.js (300)".
 
 **Rule**: This gate has equal weight to the Over-Engineering check (Section 2). A modular plan that's slightly more complex is ALWAYS preferred over a monolithic plan that's slightly simpler.
 

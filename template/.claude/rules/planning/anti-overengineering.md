@@ -15,7 +15,7 @@
 4. **Budget**: What's the cost vs managed service alternatives?
 5. **Dependencies**: Zero new packages without justification
 6. **Best Practices**: KISS/DRY/SOLID/YAGNI compliant?
-7. **Context Budget**: Does this add context Claude doesn't already have?
+7. **Context Budget**: Does this add context Claude doesn't already have? ("The context window is a public good" -- Anthropic)
 
 ---
 
