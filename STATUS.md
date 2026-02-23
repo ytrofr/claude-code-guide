@@ -1,8 +1,8 @@
 # Claude Code Implementation Guide - Project Status
 
 **Created**: 2025-12-14
-**Updated**: 2026-02-12
-**Status**: Phase 1 Complete + 47 Guide Chapters + Plan Mode Quality Checklist + Rule Deduplication
+**Updated**: 2026-02-23
+**Status**: Phase 1 Complete + 49 Guide Chapters + Plan Mode Quality Checklist + Workflow Resilience
 **Progress**: 95% of planned work complete
 
 ---
@@ -135,18 +135,19 @@ claude-code-guide/
 
 **Status**: ✅ **All scripts are executable and tested**
 
-### 5. Documentation ✅ **47 Guide Chapters Complete**
+### 5. Documentation ✅ **49 Guide Chapters Complete**
 
-Core docs + 47 numbered chapters in `docs/guide/`:
+Core docs + 49 numbered chapters in `docs/guide/`:
 
 1. ✅ `README.md` - Complete overview with 4-format navigation
 2. ✅ `docs/quick-start.md` - 30-minute entry point
-3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/47-*.md` - 47 chapters covering setup, hooks, skills, MCP, context, deployment, agents, planning, and more
+3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/49-*.md` - 49 chapters covering setup, hooks, skills, MCP, context, deployment, agents, planning, resilience, and more
 4. ✅ `docs/guide/13-claude-code-hooks.md` - **Updated Feb 2026** with stdin timeout safety section
-5. ✅ `docs/guide/45-plan-mode-checklist.md` - **Updated Feb 2026** with 11 mandatory sections + modularity gate
+5. ✅ `docs/guide/45-plan-mode-checklist.md` - **Updated Feb 2026** with 11 mandatory sections + modularity gate + sideways detection
 6. ✅ `docs/guide/26-claude-code-rules-system.md` - **Updated Feb 2026** with rule deduplication best practice
+7. ✅ `docs/guide/49-workflow-resilience-patterns.md` - **NEW Feb 2026** autonomous fixing, correction capture, task tracking, sideways detection
 
-**Status**: ✅ **Comprehensive guide with 47 chapters**
+**Status**: ✅ **Comprehensive guide with 49 chapters**
 
 ### 6. MCP Configurations ✅ **3/4 Complete**
 
@@ -268,6 +269,16 @@ Core docs + 47 numbered chapters in `docs/guide/`:
 
 ## Recent Improvements
 
+### Feb 23, 2026 - Workflow Resilience Patterns (Chapter 49)
+
+- **Chapter 49**: Four production-tested patterns for session resilience
+- **Pattern 1**: Autonomous Fixing -- fix/ask decision framework (fix your own mess, ask before architectural changes)
+- **Pattern 2**: Correction Capture -- persist user corrections to Basic Memory MCP or `.claude/rules/`
+- **Pattern 3**: Task Tracking Conventions -- when and how to use TaskCreate/TaskUpdate with 6 hygiene rules
+- **Pattern 4**: Sideways Detection -- 3-strike rule, scope creep, wrong assumptions trigger re-planning
+- **Each pattern** includes an adoptable rule template for `.claude/rules/`
+- **Evidence**: 400+ production entries from LIMOR AI project
+
 ### Feb 18, 2026 - Plan Mode Modularity Gate + Rule Deduplication
 
 - **Chapter 45**: Plan checklist expanded from 10 to 11 sections. New Section 10 (Modularity Enforcement) is a blocking gate with 4 sub-checks: File Size Gate, Layer Separation Gate, Extraction Gate, God File Prevention
@@ -337,7 +348,7 @@ Core docs + 47 numbered chapters in `docs/guide/`:
 - `mcp-configs/essential/` - + Memory Bank
 - `mcp-configs/productive/` - + PostgreSQL
 - `docs/quick-start.md` - Entry point
-- `docs/guide/` - 47 chapters complete (02 through 47)
+- `docs/guide/` - 49 chapters complete (02 through 49)
 
 **Total deliverable**: ~45 files, ~9,100 lines, production-ready
 
@@ -357,5 +368,5 @@ Core docs + 47 numbered chapters in `docs/guide/`:
 
 ---
 
-**Last Updated**: 2026-02-18 (v2.7.0 - Plan mode 11-section checklist with modularity gate + rule deduplication guide)
+**Last Updated**: 2026-02-23 (v2.9.0 - Workflow resilience patterns: autonomous fixing, correction capture, task tracking, sideways detection)
 **Next**: Test with a real project or continue building optional enhancements

@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.0] - 2026-02-23
+
+### Added
+
+- **Guide #49**: Workflow Resilience Patterns - four production-tested patterns for handling common session failure modes. (1) Autonomous Fixing: fix/ask decision framework for when Claude breaks something vs when to ask the user. (2) Correction Capture: persist user corrections to Basic Memory MCP or `.claude/rules/` so they're never repeated. (3) Task Tracking Conventions: when and how to use TaskCreate/TaskUpdate with 6 hygiene rules. (4) Sideways Detection: 3-strike rule, scope creep, wrong assumptions, and blocked triggers for mid-execution re-planning. Each pattern includes an adoptable rule template.
+
 ## [2.8.0] - 2026-02-19
 
 ### Added
@@ -161,18 +167,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Version History Summary
 
-| Version | Date       | Highlights                                                           |
-| ------- | ---------- | -------------------------------------------------------------------- |
-| 2.7.0   | 2026-02-18 | Plan mode: 11 sections + modularity gate + rule deduplication guide  |
-| 2.6.0   | 2026-02-17 | MCP cost control hooks (PreToolUse/PostToolUse sandwich pattern)     |
-| 2.5.0   | 2026-02-16 | Plan mode: 10 sections + file metadata (branch, timestamp, keywords) |
-| 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                   |
-| 2.3.0   | 2026-02-13 | 5 new chapters (orchestration, evals, compaction, SDK, skill design) |
-| 2.1.0   | 2026-02-12 | Task restrictions, budget override                                   |
-| 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename                                    |
-| 1.5.0   | 2026-02-05 | Skill maintenance patterns                                           |
-| 1.4.0   | 2026-01-20 | Branch-aware development                                             |
-| 1.3.0   | 2026-01-10 | Context and testing systems                                          |
-| 1.2.0   | 2025-12-28 | Rules and best practices                                             |
-| 1.1.0   | 2025-12-20 | Pre-prompt 370x optimization                                         |
-| 1.0.0   | 2025-12-14 | Initial release                                                      |
+| Version | Date       | Highlights                                                                  |
+| ------- | ---------- | --------------------------------------------------------------------------- |
+| 2.9.0   | 2026-02-23 | Workflow resilience: autonomous fixing, correction capture, tasks, sideways |
+| 2.8.0   | 2026-02-19 | Lean orchestrator: context rot prevention via subagent delegation           |
+| 2.7.0   | 2026-02-18 | Plan mode: 11 sections + modularity gate + rule deduplication guide         |
+| 2.6.0   | 2026-02-17 | MCP cost control hooks (PreToolUse/PostToolUse sandwich pattern)            |
+| 2.5.0   | 2026-02-16 | Plan mode: 10 sections + file metadata (branch, timestamp, keywords)        |
+| 2.4.0   | 2026-02-14 | Plan mode quality checklist (8 mandatory sections)                          |
+| 2.3.0   | 2026-02-13 | 5 new chapters (orchestration, evals, compaction, SDK, skill design)        |
+| 2.1.0   | 2026-02-12 | Task restrictions, budget override                                          |
+| 2.0.0   | 2026-02-08 | SEO/AEO/GEO overhaul, repo rename                                           |
+| 1.5.0   | 2026-02-05 | Skill maintenance patterns                                                  |
+| 1.4.0   | 2026-01-20 | Branch-aware development                                                    |
+| 1.3.0   | 2026-01-10 | Context and testing systems                                                 |
+| 1.2.0   | 2025-12-28 | Rules and best practices                                                    |
+| 1.1.0   | 2025-12-20 | Pre-prompt 370x optimization                                                |
+| 1.0.0   | 2025-12-14 | Initial release                                                             |
