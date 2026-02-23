@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.1.0] - 2026-02-23
+
+### Added
+
+- **Guide #51**: Persistent Memory Patterns — Inspired by claude-mem (30K+ stars). Four patterns that automatically persist session knowledge to Basic Memory MCP with zero manual effort: (1) Auto-Observation PostToolUse hook — selective JSONL capture of file edits and significant Bash commands, async <50ms, no AI processing; (2) Auto Session Summary SessionEnd hook — reads git log (2h window) + JSONL observations → writes structured Basic Memory note; (3) Progressive Disclosure Search — 3-layer workflow (search IDs → search_notes preview → fetch full) with 10x token savings vs loading all results; (4) Observation Taxonomy — 6 standardized types ([bugfix]/[feature]/[refactor]/[change]/[discovery]/[decision]) + 5 concepts (#how-it-works/#problem-solution/#gotcha/#pattern/#trade-off). All patterns are global (`~/.claude/`) not project-specific. Includes design comparison: hook approach vs claude-mem worker service.
+
 ## [3.0.0] - 2026-02-23
 
 ### Added
