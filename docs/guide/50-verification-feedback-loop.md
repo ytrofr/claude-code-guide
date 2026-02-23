@@ -66,15 +66,15 @@ description: Verify recent changes with auto-detected scope
 
 ## Pre-computed Context (dynamic injection)
 
-**Branch**: $!git branch --show-current!$
+**Branch**: !`git branch --show-current`
 **Changed files**:
-$!git diff HEAD --name-only!$
+!`git diff HEAD --name-only`
 
 **Unstaged changes**:
-$!git diff --stat!$
+!`git diff --stat`
 
 **Server health** (if running):
-$!curl -s -o /dev/null -w "%{http_code}" http://localhost:${PORT:-8080}/health 2>/dev/null || echo "not running"!$
+!`curl -s -o /dev/null -w "%{http_code}" http://localhost:${PORT:-8080}/health 2>/dev/null || echo "not running"`
 
 ## Verification Instructions
 
@@ -113,7 +113,7 @@ Summarize verification results as:
 
 ### How Dynamic Injection Works
 
-The `$!...!$` syntax (see [Chapter 46: Advanced Configuration Patterns](46-advanced-configuration-patterns.md)) runs shell commands at command invocation time -- before Claude processes the prompt. When a user types `/verify`, Claude Code:
+The `` !`command` `` syntax (see [Chapter 46: Advanced Configuration Patterns](46-advanced-configuration-patterns.md)) runs shell commands at command invocation time -- before Claude processes the prompt. When a user types `/verify`, Claude Code:
 
 1. Runs `git branch --show-current` and injects the result
 2. Runs `git diff HEAD --name-only` and injects the file list
@@ -122,22 +122,20 @@ The `$!...!$` syntax (see [Chapter 46: Advanced Configuration Patterns](46-advan
 
 This eliminates the first round of tool calls Claude would otherwise need. Instead of: "Let me check what changed... [Bash] git diff... OK now let me check health... [Bash] curl...", Claude sees the diff and health status immediately and jumps straight to verification.
 
-**Critical: Do not wrap `$!` injections in code fences.** The preprocessor scans the raw markdown for `$!...!$` patterns. If you wrap them in triple-backtick code fences (` ``` `) or inline backticks (`` ` ``), the preprocessor does not find them and the commands render as literal text instead of being executed. Keep `$!` injections as bare text:
+**Critical: The correct syntax is `` !`command` `` (exclamation mark followed by a backtick-wrapped command).** An earlier version of this chapter used the `$!command!$` syntax, which does not work. The preprocessor looks for `` !`...` `` patterns -- an exclamation mark immediately followed by a backtick-delimited command. Keep injections as bare text in the markdown:
 
 ```markdown
-<!-- CORRECT: bare text, preprocessor executes the command -->
+<!-- CORRECT: !`command` syntax -->
+
+**Branch**: !`git branch --show-current`
+
+<!-- WRONG: $!...!$ does not work -->
 
 **Branch**: $!git branch --show-current!$
 
 <!-- WRONG: code fence prevents execution -->
 
-**Branch**: `$!git branch --show-current!$`
-
-<!-- WRONG: triple backtick prevents execution -->
-
-\`\`\`
-$!git branch --show-current!$
-\`\`\`
+**Branch**: `!`git branch --show-current``
 ```
 
 ### Usage
@@ -393,10 +391,10 @@ description: Verify recent changes with auto-detected scope
 
 ## Context
 
-**Branch**: $!git branch --show-current!$
+**Branch**: !`git branch --show-current`
 **Changed files**:
-$!git diff HEAD --name-only!$
-**Server**: $!curl -s -o /dev/null -w "%{http_code}" http://localhost:${PORT:-8080}/health 2>/dev/null || echo "not running"!$
+!`git diff HEAD --name-only`
+**Server**: !`curl -s -o /dev/null -w "%{http_code}" http://localhost:${PORT:-8080}/health 2>/dev/null || echo "not running"`
 
 ## Instructions
 
@@ -479,11 +477,11 @@ Add to `~/.claude/settings.json` (merge with existing hooks if present):
 
 ## Design Decisions
 
-### Why dynamic injection ($!) in the command
+### Why dynamic injection (`` !`command` ``) in the command
 
-The `$!git diff HEAD --name-only!$` syntax runs at command invocation time, not when Claude processes the prompt. This eliminates an entire round-trip. Without it, Claude would need to call `Bash("git diff HEAD --name-only")` as its first action, wait for the result, then proceed. With dynamic injection, the diff is already in the prompt. Zero round-trips for context gathering.
+The `` !`git diff HEAD --name-only` `` syntax runs at command invocation time, not when Claude processes the prompt. This eliminates an entire round-trip. Without it, Claude would need to call `Bash("git diff HEAD --name-only")` as its first action, wait for the result, then proceed. With dynamic injection, the diff is already in the prompt. Zero round-trips for context gathering.
 
-One important caveat: the `$!` preprocessor only finds injections in bare markdown text. If the `$!...!$` pattern is inside a code fence (triple backticks) or inline code (single backticks), it renders as literal text. See the "How Dynamic Injection Works" section above for the correct format.
+One important caveat: the `` !`...` `` preprocessor only finds injections written as bare text in the markdown. If the injection is nested inside another code fence or escaped, it renders as literal text instead of being executed. See the "How Dynamic Injection Works" section above for the correct format. Note that an earlier draft of this chapter used the `$!command!$` syntax, which does not work -- the correct syntax is `` !`command` ``.
 
 ### Why the Stop hook is async
 
@@ -507,7 +505,7 @@ A "SKIP" is not a failure. It means the check was not applicable.
 
 ## Key Takeaways
 
-1. **Make verification a single command.** The `/verify` command reduces a multi-step checklist to one action. Dynamic injection (`$!`) pre-computes context so Claude can verify immediately with zero round-trips.
+1. **Make verification a single command.** The `/verify` command reduces a multi-step checklist to one action. Dynamic injection (`` !`command` ``) pre-computes context so Claude can verify immediately with zero round-trips.
 2. **Use a dedicated agent for deep checks.** The `verify-app` agent runs in a fresh context window, so verification does not consume your main conversation's context budget. Spawn it via `Task()` after multi-step changes.
 3. **Nudge, don't gate.** The Stop hook detects source code changes and suggests verification without forcing it. This keeps the workflow lightweight while building a verification habit.
 4. **Layer global and project scope.** Install generic versions globally, override with project-specific checks where needed. The global versions auto-detect tech stack and work everywhere.
