@@ -122,6 +122,24 @@ The `$!...!$` syntax (see [Chapter 46: Advanced Configuration Patterns](46-advan
 
 This eliminates the first round of tool calls Claude would otherwise need. Instead of: "Let me check what changed... [Bash] git diff... OK now let me check health... [Bash] curl...", Claude sees the diff and health status immediately and jumps straight to verification.
 
+**Critical: Do not wrap `$!` injections in code fences.** The preprocessor scans the raw markdown for `$!...!$` patterns. If you wrap them in triple-backtick code fences (` ``` `) or inline backticks (`` ` ``), the preprocessor does not find them and the commands render as literal text instead of being executed. Keep `$!` injections as bare text:
+
+```markdown
+<!-- CORRECT: bare text, preprocessor executes the command -->
+
+**Branch**: $!git branch --show-current!$
+
+<!-- WRONG: code fence prevents execution -->
+
+**Branch**: `$!git branch --show-current!$`
+
+<!-- WRONG: triple backtick prevents execution -->
+
+\`\`\`
+$!git branch --show-current!$
+\`\`\`
+```
+
 ### Usage
 
 ```bash
@@ -464,6 +482,8 @@ Add to `~/.claude/settings.json` (merge with existing hooks if present):
 ### Why dynamic injection ($!) in the command
 
 The `$!git diff HEAD --name-only!$` syntax runs at command invocation time, not when Claude processes the prompt. This eliminates an entire round-trip. Without it, Claude would need to call `Bash("git diff HEAD --name-only")` as its first action, wait for the result, then proceed. With dynamic injection, the diff is already in the prompt. Zero round-trips for context gathering.
+
+One important caveat: the `$!` preprocessor only finds injections in bare markdown text. If the `$!...!$` pattern is inside a code fence (triple backticks) or inline code (single backticks), it renders as literal text. See the "How Dynamic Injection Works" section above for the correct format.
 
 ### Why the Stop hook is async
 
