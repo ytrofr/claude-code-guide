@@ -4,6 +4,12 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.0.0] - 2026-02-23
+
+### Added
+
+- **Guide #50**: Verification Feedback Loop - Boris Cherny's insight that giving Claude a way to verify its work 2-3x the quality. Three components: (1) /verify command with $! dynamic context injection for zero-round-trip verification, (2) verify-app agent with 3-tier verification (static/health/tests) and tech stack auto-detection, (3) Stop hook that detects source code changes and nudges verification. Includes global vs project scope explanation and adoptable templates.
+
 ## [2.9.0] - 2026-02-23
 
 ### Added
@@ -169,6 +175,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                                  |
 | ------- | ---------- | --------------------------------------------------------------------------- |
+| 3.0.0   | 2026-02-23 | Verification feedback loop: /verify command, verify-app agent, Stop hook    |
 | 2.9.0   | 2026-02-23 | Workflow resilience: autonomous fixing, correction capture, tasks, sideways |
 | 2.8.0   | 2026-02-19 | Lean orchestrator: context rot prevention via subagent delegation           |
 | 2.7.0   | 2026-02-18 | Plan mode: 11 sections + modularity gate + rule deduplication guide         |

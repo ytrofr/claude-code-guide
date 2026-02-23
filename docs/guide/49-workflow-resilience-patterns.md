@@ -315,4 +315,4 @@ Each pattern handles a different failure mode. Together they cover the most comm
 
 ---
 
-**Previous**: [48: Lean Orchestrator Pattern](48-lean-orchestrator-pattern.md)
+**Previous**: [48: Lean Orchestrator Pattern](48-lean-orchestrator-pattern.md) | **Next**: [50: Verification Feedback Loop](50-verification-feedback-loop.md)
