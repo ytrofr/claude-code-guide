@@ -9,6 +9,16 @@
 
 ## Recent Updates (Feb 24, 2026)
 
+### v3.3.0: 1M Context Window, Model Updates, Comprehensive Refresh
+
+- **README.md**: Added 1M token context window and Opus 4.6/Sonnet 4.6/Haiku 4.5 model names to metrics table and hero section
+- **docs/index.md**: Updated intro, Key Metrics table, TechArticle schema keywords, FAQ schema installation answer, and frontmatter description with 1M context and model names. Chapters count updated to 51
+- **\_config.yml**: Added SEO keywords: claude opus 4.6, claude sonnet 4.6, 1m context window, agent teams, task management. Updated description
+- **llms.txt**: Complete rewrite with models section, 1M context window, 18 hook events, agent teams, task management, 226+ skills, 51 chapters
+- **sitemap.xml**: All lastmod dates updated to 2026-02-24
+- **CHANGELOG.md**: Added v3.3.0 entry and version history summary rows for v3.1.0-v3.3.0
+- **Chapters updated in prior session**: Ch 4 (task management), Ch 13 (18 hooks, new events, hook types), Ch 36 (worktree, CLI agents), Ch 37 (worktree note), Ch 38 (1M context, pricing), Ch 45 (plansDirectory), Ch 46 (permission precedence)
+
 ### File Size / Modularity Enforcement Hooks (Chapter 13)
 
 - **Chapter 13**: Added production example showing PreToolUse + PostToolUse paired pattern for enforcing max file size rules
@@ -154,13 +164,13 @@ Core docs + 49 numbered chapters in `docs/guide/`:
 
 1. ✅ `README.md` - Complete overview with 4-format navigation
 2. ✅ `docs/quick-start.md` - 30-minute entry point
-3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/49-*.md` - 49 chapters covering setup, hooks, skills, MCP, context, deployment, agents, planning, resilience, and more
+3. ✅ `docs/guide/02-minimal-setup.md` through `docs/guide/49-*.md` - 51 chapters covering setup, hooks, skills, MCP, context, deployment, agents, planning, resilience, and more
 4. ✅ `docs/guide/13-claude-code-hooks.md` - **Updated Feb 2026** with stdin timeout safety section
 5. ✅ `docs/guide/45-plan-mode-checklist.md` - **Updated Feb 2026** with 11 mandatory sections + modularity gate + sideways detection
 6. ✅ `docs/guide/26-claude-code-rules-system.md` - **Updated Feb 2026** with rule deduplication best practice
 7. ✅ `docs/guide/49-workflow-resilience-patterns.md` - **NEW Feb 2026** autonomous fixing, correction capture, task tracking, sideways detection
 
-**Status**: ✅ **Comprehensive guide with 49 chapters**
+**Status**: ✅ **Comprehensive guide with 51 chapters**
 
 ### 6. MCP Configurations ✅ **3/4 Complete**
 
@@ -361,7 +371,7 @@ Core docs + 49 numbered chapters in `docs/guide/`:
 - `mcp-configs/essential/` - + Memory Bank
 - `mcp-configs/productive/` - + PostgreSQL
 - `docs/quick-start.md` - Entry point
-- `docs/guide/` - 49 chapters complete (02 through 49)
+- `docs/guide/` - 51 chapters complete (02 through 49)
 
 **Total deliverable**: ~45 files, ~9,100 lines, production-ready
 
@@ -381,5 +391,5 @@ Core docs + 49 numbered chapters in `docs/guide/`:
 
 ---
 
-**Last Updated**: 2026-02-23 (v2.9.0 - Workflow resilience patterns: autonomous fixing, correction capture, task tracking, sideways detection)
+**Last Updated**: 2026-02-24 (v3.3.0 - 1M context window, Opus 4.6/Sonnet 4.6/Haiku 4.5, 18 hook events, agent teams, task management, SEO/AEO refresh)
 **Next**: Test with a real project or continue building optional enhancements

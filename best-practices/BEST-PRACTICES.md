@@ -39,13 +39,13 @@ Before implementing anything:
 
 ### 5 Pre-Implementation Gates
 
-| Gate | Check                   | Pass Criteria         |
-| ---- | ----------------------- | --------------------- |
-| 1    | Existing solution?      | Search first          |
-| 2    | Complexity assessment   | Under 100 lines       |
-| 3    | Modularity validation   | Single responsibility |
-| 4    | Best practices check    | KISS/DRY/SOLID        |
-| 5    | Performance validation  | Minimal token impact  |
+| Gate | Check                  | Pass Criteria         |
+| ---- | ---------------------- | --------------------- |
+| 1    | Existing solution?     | Search first          |
+| 2    | Complexity assessment  | Under 100 lines       |
+| 3    | Modularity validation  | Single responsibility |
+| 4    | Best practices check   | KISS/DRY/SOLID        |
+| 5    | Performance validation | Minimal token impact  |
 
 ---
 
@@ -77,6 +77,7 @@ All data MUST come from real APIs, databases, services, or user input.
 ### Chain-of-Verification (CoVe)
 
 Before any data processing:
+
 1. Verify the real data source exists
 2. Verify the API response structure
 3. Use real extraction methods
@@ -88,13 +89,13 @@ Before any data processing:
 
 ### Forbidden Commands
 
-| Command            | Why Forbidden                        |
-| ------------------ | ------------------------------------ |
-| `killall node`     | Kills WSL/VS Code/Claude Code       |
-| `pkill -f node`    | Kills ALL node processes             |
-| `pkill node`       | Crashes dev environment              |
-| `kill -9 -1`       | Kills all user processes             |
-| `killall -9 <any>` | Forceful kill of all matching        |
+| Command            | Why Forbidden                 |
+| ------------------ | ----------------------------- |
+| `killall node`     | Kills WSL/VS Code/Claude Code |
+| `pkill -f node`    | Kills ALL node processes      |
+| `pkill node`       | Crashes dev environment       |
+| `kill -9 -1`       | Kills all user processes      |
+| `killall -9 <any>` | Forceful kill of all matching |
 
 ### Safe Alternatives
 
@@ -136,15 +137,16 @@ Before any data processing:
 
 ## 7. Quality Standards
 
-| Metric             | Target                  |
-| ------------------ | ----------------------- |
-| Technical Accuracy | 99.997% (never fudge)  |
-| Data Authenticity  | 100% (zero hardcoded)  |
-| Context Relevance  | 100% task alignment    |
+| Metric             | Target                |
+| ------------------ | --------------------- |
+| Technical Accuracy | 99.997% (never fudge) |
+| Data Authenticity  | 100% (zero hardcoded) |
+| Context Relevance  | 100% task alignment   |
 
 ### Self-Verification Before User Testing (MANDATORY)
 
 Always self-test before asking the user to test:
+
 1. **Infrastructure**: Health checks, connectivity, basic validation
 2. **Integration**: API responses, data structure verification
 3. **Documentation**: Document expected behavior, then hand off
@@ -179,11 +181,11 @@ Always self-test before asking the user to test:
 
 ### Modular Development
 
-| Rule                  | Standard                           |
-| --------------------- | ---------------------------------- |
-| File Size Limit       | Max 500 lines per file             |
-| Single Responsibility | One clear purpose per module       |
-| Extract Pattern       | Functions >50 lines get extracted  |
+| Rule                  | Standard                          |
+| --------------------- | --------------------------------- |
+| File Size Limit       | Max 500 lines per file            |
+| Single Responsibility | One clear purpose per module      |
+| Extract Pattern       | Functions >50 lines get extracted |
 
 ### Principles
 
@@ -196,16 +198,16 @@ Always self-test before asking the user to test:
 
 ## 10. Common Anti-Patterns to Avoid
 
-| Anti-Pattern                      | Correct Approach                         |
-| --------------------------------- | ---------------------------------------- |
-| Building without searching first  | Search codebase, then build if needed    |
-| Using mock/placeholder data       | Use real data or return honest errors    |
-| Killing all processes generically | Kill by specific PID only                |
-| Over-engineering simple tasks     | Start with <50 lines, expand if needed   |
-| Skipping tests before completion  | Always verify before marking done        |
-| Adding unnecessary dependencies   | Zero new packages without justification  |
-| Huge monolithic files             | Keep files under 500 lines               |
-| Implementing without a plan       | Follow 7-step validation workflow        |
+| Anti-Pattern                      | Correct Approach                        |
+| --------------------------------- | --------------------------------------- |
+| Building without searching first  | Search codebase, then build if needed   |
+| Using mock/placeholder data       | Use real data or return honest errors   |
+| Killing all processes generically | Kill by specific PID only               |
+| Over-engineering simple tasks     | Start with <50 lines, expand if needed  |
+| Skipping tests before completion  | Always verify before marking done       |
+| Adding unnecessary dependencies   | Zero new packages without justification |
+| Huge monolithic files             | Keep files under 500 lines              |
+| Implementing without a plan       | Follow 7-step validation workflow       |
 
 ---
 
@@ -238,7 +240,7 @@ Claude Code loads rules from two locations:
 For deeper coverage of any topic, see the complete documentation:
 
 - **Quick Start**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/quick-start.md
-- **Hooks (14 events)**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/13-claude-code-hooks.md
+- **Hooks (18 events)**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/13-claude-code-hooks.md
 - **Skills System**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/skill-activation-system.md
 - **MCP Integration**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/06-mcp-integration.md
 - **Rules System**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/26-claude-code-rules-system.md

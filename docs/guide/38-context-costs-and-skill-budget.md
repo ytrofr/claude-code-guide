@@ -23,6 +23,31 @@ Claude Code's context window is finite. Every extension point you configure cons
 
 ---
 
+## Context Window Sizes
+
+| Model             | Context Window   | Notes                                |
+| ----------------- | ---------------- | ------------------------------------ |
+| Claude Opus 4.6   | 1M tokens (beta) | Default for Max plan users           |
+| Claude Sonnet 4.6 | 1M tokens        | Within 1.2% of Opus at 5x lower cost |
+| Claude Haiku 4.5  | 200K tokens      | Cost-optimized for simple tasks      |
+
+Disable 1M context if needed: `CLAUDE_CODE_DISABLE_1M_CONTEXT=true`
+
+### Fast Mode
+
+Toggle with `/fast` for 2.5x faster output at premium pricing. Same intelligence, faster responses. Ideal for iteration-heavy workflows.
+
+### Model Pricing (Feb 2026)
+
+| Model         | Input      | Output   | Best For                           |
+| ------------- | ---------- | -------- | ---------------------------------- |
+| Opus 4.6      | $15/MTok   | $75/MTok | Complex reasoning, architecture    |
+| Opus 4.6 Fast | Premium    | Premium  | Iteration, 2.5x faster             |
+| Sonnet 4.6    | $3/MTok    | $15/MTok | Daily coding, 5x cheaper than Opus |
+| Haiku 4.5     | $0.80/MTok | $4/MTok  | Quick lookups, simple tasks        |
+
+---
+
 ## Context Cost Table
 
 This table shows what loads when for each Claude Code extension point:

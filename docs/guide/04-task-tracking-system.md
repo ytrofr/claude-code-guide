@@ -293,6 +293,25 @@ Claude updates FUTURE-FEATURES.md:
 
 ---
 
+## Native Task Management (v2.1.16+)
+
+Claude Code includes built-in task management tools:
+
+| Tool         | Purpose                                                               |
+| ------------ | --------------------------------------------------------------------- |
+| `TaskCreate` | Create a task with subject, description, activeForm                   |
+| `TaskUpdate` | Update status (pending -> in_progress -> completed), add dependencies |
+| `TaskList`   | View all tasks with status and blockers                               |
+| `TaskGet`    | Get full task details by ID                                           |
+
+**Dependency tracking**: Use `addBlockedBy` and `addBlocks` to define task ordering.
+
+**Multi-agent collaboration**: Share task lists across sessions via `CLAUDE_CODE_TASK_LIST_ID`.
+
+This is separate from the manual roadmap/feature tracking described in this chapter -- TaskCreate is for within-session work tracking, while the roadmap system is for cross-session project management.
+
+---
+
 ## Related Chapters
 
 - **Chapter 12**: Memory Bank Hierarchy (4-tier structure)

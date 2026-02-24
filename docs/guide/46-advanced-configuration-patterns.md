@@ -363,6 +363,25 @@ This creates a fast, cheap, read-only reference skill.
 
 ---
 
+## 9. Permission Precedence (v2.1.27+)
+
+Content-level `ask` now overrides tool-level `allow`:
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash"],
+    "ask": ["Bash(rm *)"]
+  }
+}
+```
+
+**Result**: All Bash commands auto-allowed EXCEPT `rm *` which prompts the user. Previously, `allow: ["Bash"]` would override all `ask` rules.
+
+**Precedence order**: ask > acceptEdits > plan > default
+
+---
+
 ## Verification Checklist
 
 After implementing these patterns, verify your setup:

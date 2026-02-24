@@ -4,6 +4,27 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.3.0] - 2026-02-24
+
+### Changed
+
+- Updated hook events from 14 to 18 (added Setup, ConfigChange, WorktreeCreate, WorktreeRemove)
+- Updated installation instructions: npm deprecated, now uses `claude install` / `curl` installer
+- Fixed PreToolUse "approve" → "allow" in example settings
+- Added prompt-based and agent-based hook types to Chapter 13
+- Added 1M context window documentation across guide
+- Updated model references to Opus 4.6, Sonnet 4.6, Haiku 4.5
+
+### Added
+
+- Chapter 13: 4 new hook events, prompt/agent hook types, additionalContext, frontmatter hooks
+- Chapter 36: Worktree isolation, `claude agents` CLI
+- Chapter 38: 1M context window, fast mode, updated pricing
+- Chapter 4: Native TaskCreate/TaskUpdate/TaskList/TaskGet documentation
+- Chapter 45: plansDirectory configuration
+- Chapter 46: Permission precedence (ask overrides allow)
+- README/index: Updated metrics, installation, SEO keywords
+
 ## [3.2.0] - 2026-02-24
 
 ### Added
@@ -188,6 +209,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                                  |
 | ------- | ---------- | --------------------------------------------------------------------------- |
+| 3.3.0   | 2026-02-24 | 1M context, Opus 4.6/Sonnet 4.6/Haiku 4.5, 18 hooks, task mgmt, agents      |
+| 3.2.0   | 2026-02-24 | File size/modularity enforcement hooks (PreToolUse + PostToolUse paired)    |
+| 3.1.0   | 2026-02-23 | Persistent memory patterns (auto-observation, session summary, taxonomy)    |
 | 3.0.0   | 2026-02-23 | Verification feedback loop: /verify command, verify-app agent, Stop hook    |
 | 2.9.0   | 2026-02-23 | Workflow resilience: autonomous fixing, correction capture, tasks, sideways |
 | 2.8.0   | 2026-02-19 | Lean orchestrator: context rot prevention via subagent delegation           |

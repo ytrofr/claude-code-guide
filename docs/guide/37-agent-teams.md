@@ -185,6 +185,10 @@ Agent teams use significantly more tokens:
 - Keep teams small (2-3 teammates)
 - Use subagents for independent tasks, teams only for coordinated work
 
+### Worktree Isolation for Parallel Teammates
+
+When teammates edit overlapping files, use `isolation: worktree` (see [Chapter 36](36-agents-and-subagents.md#worktree-isolation-v2150)) to give each teammate its own git worktree. This prevents merge conflicts during parallel execution and returns isolated branches that the lead agent can reconcile.
+
 ---
 
 ## Preparing for Teams (Do Now)
