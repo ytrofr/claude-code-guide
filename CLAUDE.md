@@ -40,7 +40,7 @@ run their local `update.sh` to pull the latest version.
 
 ```bash
 cd ~/claude-code-guide/tools/trendradar-dashboard
-npm install  # First time only
+claude update  # Update to latest
 node server.js
 # Open http://localhost:4444
 ```

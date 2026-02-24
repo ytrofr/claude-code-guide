@@ -60,7 +60,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"decision\": \"approve\", \"reason\": \"Safe development commands\"}'"
+            "command": "echo '{\"decision\": \"allow\", \"reason\": \"Safe development commands\"}'"
           }
         ]
       }

@@ -38,7 +38,7 @@ This quick-start guide gets you from zero to a working Claude Code setup in 30 m
 
 ```bash
 # Check installations
-claude-code --version   # Should show version
+claude --version         # Should show version
 git --version           # Should show version
 node --version          # Should show v18+
 npx --version           # Should show version
@@ -102,7 +102,7 @@ Follow the detailed guide:
 
 ```bash
 cd ~/my-project
-claude-code
+claude
 ```
 
 ### Test Basic Functionality

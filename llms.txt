@@ -25,7 +25,7 @@ topics:
   - Anthropic best practices
 
 # Installation
-install_command: npm install -g @anthropic-ai/claude-code
+install_command: claude install (or curl -fsSL https://claude.ai/install.sh | sh)
 setup_time: 30 minutes for basic, 2-4 hours for full optimization
 
 # Key Components

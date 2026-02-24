@@ -8,6 +8,8 @@
 
 Production-tested Claude Code patterns. 226+ documented patterns, 100+ hours saved per year.
 
+**Models**: Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **18 hook events** -- **Agent teams & task management**
+
 ---
 
 ## Install Best Practices (Any Project)
@@ -58,14 +60,16 @@ See [install.sh](install.sh) for all options including `--update`, `--uninstall`
 
 ## Why This Guide?
 
-| Metric            | Result                    |
-| ----------------- | ------------------------- |
-| Time Saved        | **100+ hours/year**       |
-| Hooks             | **14 events automated**   |
-| Skills            | **226+ native loading**   |
-| Token Savings     | **47-70% per branch**     |
-| Production Skills | **226+ documented**       |
-| MCP Integrations  | **13 servers, 70+ tools** |
+| Metric            | Result                              |
+| ----------------- | ----------------------------------- |
+| Context Window    | **1M tokens**                       |
+| Models            | **Opus 4.6, Sonnet 4.6, Haiku 4.5** |
+| Time Saved        | **100+ hours/year**                 |
+| Hooks             | **18 events automated**             |
+| Skills            | **226+ native loading**             |
+| Token Savings     | **47-70% per branch**               |
+| Production Skills | **226+ documented**                 |
+| MCP Integrations  | **13 servers, 70+ tools**           |
 
 **Source**: 14+ months of production use with 97 components validated.
 
@@ -100,15 +104,15 @@ claude
 
 ### What is Claude Code?
 
-Claude Code is Anthropic's official CLI for AI-powered coding assistance. It provides an interactive terminal experience where Claude can read files, write code, run commands, and help with development tasks. Claude Code understands your project context through CLAUDE.md files and can be extended with hooks, skills, and MCP servers.
+Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window. It provides an interactive terminal experience where Claude can read files, write code, run commands, manage tasks, and coordinate agent teams. Claude Code understands your project context through CLAUDE.md files and can be extended with hooks, skills, and MCP servers.
 
 ### How do I set up Claude Code?
 
-Install via npm: `npm install -g @anthropic-ai/claude-code`. Create a `CLAUDE.md` file in your project root with project-specific instructions. Optionally add hooks in `.claude/hooks/` for automation, skills in `~/.claude/skills/` for reusable workflows, and MCP servers for database/API access. Our template provides all these pre-configured.
+Install via the official installer: `curl -fsSL https://claude.ai/install.sh | sh` (or `claude update` if already installed). Create a `CLAUDE.md` file in your project root with project-specific instructions. Optionally add hooks in `.claude/hooks/` for automation, skills in `~/.claude/skills/` for reusable workflows, and MCP servers for database/API access. Our template provides all these pre-configured.
 
 ### What are Claude Code hooks?
 
-Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 14 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
+Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 18 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
 
 ### What is MCP integration?
 
@@ -138,7 +142,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ### Claude Code Hooks
 
-- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 14 hook events
+- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 18 hook events
 - [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) - Clear distinction
 - [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md) - Historical reference (deprecated Feb 2026)
 
@@ -244,7 +248,7 @@ claude-code-guide/
 ## Key Features
 
 - **Claude Code Setup**: Complete project configuration with templates
-- **Claude Code Hooks**: 14 hook events for workflow automation
+- **Claude Code Hooks**: 18 hook events for workflow automation
 - **Claude Code Skills**: 226+ production-tested patterns (native loading)
 - **Claude Code MCP**: 13 servers, 70+ tools integrated
 - **Context Optimization**: 47-70% token savings per branch
