@@ -4,6 +4,13 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.2.0] - 2026-02-24
+
+### Added
+
+- **Guide #13**: File Size / Modularity Enforcement Hooks -- new production example showing how to pair PreToolUse + PostToolUse hooks for code quality enforcement. PreToolUse catches new oversized files before they hit disk (reads `tool_input.content` line count). PostToolUse detects growth in existing files using a `/tmp` cache with md5sum keys (only warns on >500L files if they grew by 20+ lines, avoiding noise on legacy violations). Both hooks are non-blocking (exit 0 always). Includes complete scripts, settings.json config, design decisions table, and practical usage examples.
+- **Examples**: Added `file-size-precheck.sh` and `file-size-warning.sh` to `examples/production-claude-hooks/hooks/`
+
 ## [3.1.0] - 2026-02-23
 
 ### Added

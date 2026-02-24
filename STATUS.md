@@ -1,13 +1,26 @@
 # Claude Code Implementation Guide - Project Status
 
 **Created**: 2025-12-14
-**Updated**: 2026-02-23
+**Updated**: 2026-02-24
 **Status**: Phase 1 Complete + 51 Guide Chapters + Plan Mode Quality Checklist + Persistent Memory Patterns
 **Progress**: 95% of planned work complete
 
 ---
 
-## Recent Updates (Feb 12, 2026)
+## Recent Updates (Feb 24, 2026)
+
+### File Size / Modularity Enforcement Hooks (Chapter 13)
+
+- **Chapter 13**: Added production example showing PreToolUse + PostToolUse paired pattern for enforcing max file size rules
+- **Pattern**: PreToolUse reads `tool_input.content` before Write to catch new god files; PostToolUse checks actual file on disk after Write|Edit with growth detection via `/tmp` cache
+- **Key design**: Non-blocking (exit 0 always), growth-based noise reduction (only warns on >500L files if they grew 20+ lines), source-files-only filtering
+- **Examples**: Added `file-size-precheck.sh` and `file-size-warning.sh` to `examples/production-claude-hooks/hooks/`
+
+**Generalizable pattern**: Any code quality rule (line length, complexity, naming conventions) can use this PreToolUse + PostToolUse sandwich to catch violations before and after writes.
+
+---
+
+## Previous Updates (Feb 12, 2026)
 
 ### Context Optimization: INDEX.txt + Rules Trimming Guide
 

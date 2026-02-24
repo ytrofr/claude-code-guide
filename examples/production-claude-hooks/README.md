@@ -9,10 +9,13 @@
 
 - `settings.json` - Complete 6-hook configuration
 - `hooks/pre-prompt.sh` - UserPromptSubmit hybrid hook (skill activation + caching)
+- `hooks/file-size-precheck.sh` - PreToolUse hook: warns before writing files >400/500 lines
+- `hooks/file-size-warning.sh` - PostToolUse hook: detects file growth past thresholds with cache-based noise reduction
 
 ## Key Innovation: Hybrid Approach
 
 Combines best of both worlds:
+
 1. **Skill Cache** - Pre-built index with keywords/descriptions (rebuild hourly)
 2. **Bash Built-ins** - `[[ ]]` pattern matching (no subshells spawned)
 3. **70+ Synonym Patterns** - Critical for 100% accuracy (ported from original)
@@ -20,11 +23,11 @@ Combines best of both worlds:
 
 ## Results
 
-| Metric | Original | Hybrid | Improvement |
-|--------|----------|--------|-------------|
-| Execution | 50+ sec | 136ms | **370x faster** |
-| Grep calls | ~1,200 | 0 | **100% reduction** |
-| Accuracy | 75% | 100% | **+25%** |
+| Metric     | Original | Hybrid | Improvement        |
+| ---------- | -------- | ------ | ------------------ |
+| Execution  | 50+ sec  | 136ms  | **370x faster**    |
+| Grep calls | ~1,200   | 0      | **100% reduction** |
+| Accuracy   | 75%      | 100%   | **+25%**           |
 
 ## Quick Start
 
