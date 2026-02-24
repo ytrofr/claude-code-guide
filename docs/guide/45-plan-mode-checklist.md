@@ -127,6 +127,19 @@ grep -rl "dev-Auth" ~/.claude/plans/     # Find by branch
 grep -rl "2026-02" ~/.claude/plans/      # Find by date
 ```
 
+### Plan Directory Configuration
+
+Customize where plan files are stored:
+
+```json
+// .claude/settings.json
+{
+  "plansDirectory": ".claude/plans"
+}
+```
+
+Default: `.claude/plans/` in the project root.
+
 ---
 
 ## Solution: Two Complementary Approaches

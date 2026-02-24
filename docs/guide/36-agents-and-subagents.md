@@ -179,6 +179,18 @@ maxTurns: 15 # Stops after 15 API round-trips
 
 ---
 
+## CLI Agent Management
+
+List all configured agents:
+
+```bash
+claude agents
+```
+
+This displays all agents from `.claude/agents/` and `~/.claude/agents/` with their descriptions and model settings.
+
+---
+
 ## Spawning Agents
 
 Use the `Task()` tool to spawn agents:
@@ -254,6 +266,29 @@ tools: ['Read', 'Task(context-agent)']
 ```
 
 **Benefits**: Prevents wrong routing (an API coordinator accidentally spawning a deploy agent), reduces token waste from misrouted sub-agent calls, and makes agent responsibilities explicit.
+
+---
+
+## Worktree Isolation (v2.1.50)
+
+Agents can run in isolated git worktrees, preventing interference with the main working copy:
+
+```yaml
+---
+name: refactor-agent
+model: sonnet
+isolation: worktree
+---
+```
+
+When `isolation: worktree` is set:
+
+- A temporary git worktree is created for the agent
+- The agent works on an isolated copy of the repository
+- If changes are made, the worktree path and branch are returned
+- If no changes, the worktree is automatically cleaned up
+
+This enables parallel agent work on the same codebase without conflicts.
 
 ---
 

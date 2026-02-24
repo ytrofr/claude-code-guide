@@ -1,12 +1,12 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: Complete guide to Claude Code hooks, skills, agents, MCP integration. 18 hook events. 226+ native skills. Production-tested.
+description: Complete guide to Claude Code (Opus 4.6, Sonnet 4.6, Haiku 4.5). 1M token context window. 18 hook events. 226+ native skills. Agent teams and task management. Production-tested.
 ---
 
 # Claude Code Guide
 
-**What is Claude Code?** Claude Code is Anthropic's official CLI for AI-powered coding assistance. It provides an interactive terminal experience where you can collaborate with Claude directly in your development environment.
+**What is Claude Code?** Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a **1M token context window**. It provides an interactive terminal experience where you can collaborate with Claude directly in your development environment -- including agent teams, task management, and coordinated parallel execution.
 
 **What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 226+ proven patterns from production use.
 
@@ -136,18 +136,20 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ## Key Metrics
 
-| Metric            | Result                     |
-| ----------------- | -------------------------- |
-| Time Saved        | 100+ hours/year            |
-| Hook Optimization | 370x faster                |
-| Hook Events       | 18 documented              |
-| Hook Types        | 3 (command, prompt, agent) |
-| Skill Activation  | 88.2% accuracy             |
-| Agent Patterns    | 5 workflow architectures   |
-| Token Savings     | 47-70% per branch          |
-| Production Skills | 226+ documented            |
-| MCP Integrations  | 13 servers, 70+ tools      |
-| Chapters          | 48 comprehensive           |
+| Metric            | Result                          |
+| ----------------- | ------------------------------- |
+| Context Window    | 1M tokens                       |
+| Models            | Opus 4.6, Sonnet 4.6, Haiku 4.5 |
+| Time Saved        | 100+ hours/year                 |
+| Hook Optimization | 370x faster                     |
+| Hook Events       | 18 documented                   |
+| Hook Types        | 3 (command, prompt, agent)      |
+| Skill Activation  | 88.2% accuracy                  |
+| Agent Patterns    | 5 workflow architectures        |
+| Token Savings     | 47-70% per branch               |
+| Production Skills | 226+ documented                 |
+| MCP Integrations  | 13 servers, 70+ tools           |
+| Chapters          | 51 comprehensive                |
 
 ---
 
@@ -163,20 +165,20 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "Claude Code Guide - Complete Implementation Guide",
-  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. 18 hook events, 3 hook types, 370x optimization. Production-tested patterns.",
+  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. Opus 4.6, Sonnet 4.6, Haiku 4.5. 1M token context window. 18 hook events, 3 hook types, agent teams, task management. Production-tested patterns.",
   "author": {
     "@type": "Person",
     "name": "ytrofr",
     "url": "https://github.com/ytrofr"
   },
   "datePublished": "2024-12-14",
-  "dateModified": "2026-02-18",
+  "dateModified": "2026-02-24",
   "publisher": {
     "@type": "Organization",
     "name": "Claude Code Guide",
     "url": "https://ytrofr.github.io/claude-code-guide"
   },
-  "keywords": "claude code, claude ai, anthropic, mcp, hooks, skills, agents, subagents, agent teams, ai coding assistant, cli, developer tools, pre-prompt hook",
+  "keywords": "claude code, claude ai, anthropic, claude opus 4.6, claude sonnet 4.6, 1m context window, mcp, hooks, skills, agents, subagents, agent teams, task management, ai coding assistant, cli, developer tools",
   "articleSection": "Developer Tools",
   "inLanguage": "en-US"
 }
@@ -193,7 +195,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "How do I install Claude Code?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Claude Code is installed via the official installer: curl -fsSL https://claude.ai/install.sh | sh (or 'claude update' if already installed). After installation, run 'claude' in your terminal to start an interactive session. You'll need an Anthropic API key from console.anthropic.com."
+        "text": "Claude Code is installed via the official installer: curl -fsSL https://claude.ai/install.sh | sh (or 'claude update' if already installed). After installation, run 'claude' in your terminal to start an interactive session. You'll need an Anthropic API key from console.anthropic.com. Claude Code is powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window."
       }
     },
     {

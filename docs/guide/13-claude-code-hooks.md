@@ -1,38 +1,42 @@
 ---
 layout: default
-title: "Claude Code Hooks - Complete Guide to 14 Hook Events"
-description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 12 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
+title: "Claude Code Hooks - Complete Guide to 18 Hook Events"
+description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 16 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
 ---
 
 # Chapter 13: Claude Code Hooks
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 14 hook events, 3 hook types, async execution, and production-tested patterns.
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 18 hook events, 3 hook types, async execution, and production-tested patterns.
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: 14 hooks in production, 96% test validation
-**Updated**: Feb 24, 2026 — Added file size / modularity enforcement example (PreToolUse + PostToolUse paired pattern)
+**Evidence**: 18 hooks in production, 96% test validation
+**Updated**: Feb 24, 2026 — Added 4 new hook events (Setup, ConfigChange, WorktreeCreate, WorktreeRemove) and Advanced Hook Capabilities section (prompt/agent hooks, additionalContext, frontmatter hooks, last_assistant_message)
 
 ---
 
-## Hook Events (14 Available)
+## Hook Events (18 Available)
 
-| Hook                   | Trigger                       | Use For                                |
-| ---------------------- | ----------------------------- | -------------------------------------- |
-| **SessionStart**       | Session begins                | Inject git status, context, env vars   |
-| **UserPromptSubmit**   | User sends message            | Skill matching, prompt preprocessing   |
-| **PreToolUse**         | Before tool executes          | Block dangerous operations, validation |
-| **PostToolUse**        | After tool runs               | Auto-format, logging, monitoring       |
-| **PreCompact**         | Before context compaction     | Backup transcripts, save state         |
-| **PermissionRequest**  | Permission dialog appears     | Auto-approve safe commands             |
-| **Notification**       | Claude sends a notification   | Custom alerts, logging, integrations   |
-| **Stop**               | Response ends                 | Suggest skill creation, cleanup        |
-| **SessionEnd**         | Session closes                | Save summaries, final checkpoint       |
-| **PostToolUseFailure** | Tool call fails               | Log errors, track failure patterns     |
-| **SubagentStart**      | Subagent spawns               | Monitor agent lifecycle, logging       |
-| **SubagentStop**       | Subagent completes            | Log results, track agent activity      |
-| **TeammateIdle**       | Teammate agent becomes idle   | Pause teammates, reassign work         |
-| **TaskCompleted**      | A task finishes (Agent Teams) | Reassign work, trigger follow-ups      |
+| Hook                   | Trigger                         | Use For                                |
+| ---------------------- | ------------------------------- | -------------------------------------- |
+| **SessionStart**       | Session begins                  | Inject git status, context, env vars   |
+| **UserPromptSubmit**   | User sends message              | Skill matching, prompt preprocessing   |
+| **PreToolUse**         | Before tool executes            | Block dangerous operations, validation |
+| **PostToolUse**        | After tool runs                 | Auto-format, logging, monitoring       |
+| **PreCompact**         | Before context compaction       | Backup transcripts, save state         |
+| **PermissionRequest**  | Permission dialog appears       | Auto-approve safe commands             |
+| **Notification**       | Claude sends a notification     | Custom alerts, logging, integrations   |
+| **Stop**               | Response ends                   | Suggest skill creation, cleanup        |
+| **SessionEnd**         | Session closes                  | Save summaries, final checkpoint       |
+| **PostToolUseFailure** | Tool call fails                 | Log errors, track failure patterns     |
+| **SubagentStart**      | Subagent spawns                 | Monitor agent lifecycle, logging       |
+| **SubagentStop**       | Subagent completes              | Log results, track agent activity      |
+| **TeammateIdle**       | Teammate agent becomes idle     | Pause teammates, reassign work         |
+| **TaskCompleted**      | A task finishes (Agent Teams)   | Reassign work, trigger follow-ups      |
+| **Setup**              | `--init` / `--maintenance`      | Install deps, configure environments   |
+| **ConfigChange**       | Config file changes mid-session | Security auditing, live reloading      |
+| **WorktreeCreate**     | Agent worktree is created       | Custom VCS setup (SVN, Perforce, Hg)   |
+| **WorktreeRemove**     | Agent worktree is removed       | Cleanup after agent completion         |
 
 ### Hook Categories
 
@@ -44,7 +48,9 @@ Claude Code hooks are customizable scripts that run at specific points in the AI
 
 **Agent Teams**: TeammateIdle (idle detection), TaskCompleted (task completion)
 
-**Other**: PreCompact (context management), PermissionRequest (security), Notification (alerts)
+**Worktree Lifecycle**: WorktreeCreate → (agent works in isolation) → WorktreeRemove
+
+**Other**: PreCompact (context management), PermissionRequest (security), Notification (alerts), Setup (initialization), ConfigChange (config monitoring)
 
 ---
 
@@ -312,8 +318,12 @@ Exit code 2 has **different effects** depending on the hook event:
 | TaskCompleted      | Can reassign the completed task        |
 | SubagentStart      | Ignored                                |
 | SubagentStop       | Ignored                                |
+| Setup              | Ignored (cannot block)                 |
+| ConfigChange       | Blocks config change (except policy)   |
+| WorktreeCreate     | Fails worktree creation                |
+| WorktreeRemove     | Ignored (cannot block)                 |
 
-**Rule of thumb**: Exit code 2 only matters for "Pre" events (where blocking makes sense) and agent team events (where pausing/reassignment makes sense).
+**Rule of thumb**: Exit code 2 only matters for "Pre" events (where blocking makes sense), agent team events (where pausing/reassignment makes sense), ConfigChange (security enforcement), and WorktreeCreate (VCS setup validation).
 
 ---
 
@@ -742,9 +752,186 @@ Fires when a task is completed in an Agent Teams configuration. Use to trigger f
 - Reassign completed work to a review agent
 - Update external project tracking systems
 
+### Setup (v2.1.10)
+
+Fires when Claude Code is invoked with `--init`, `--init-only`, or `--maintenance` flags. Use for first-time project setup tasks like installing dependencies or configuring environments.
+
+```json
+{
+  "hooks": {
+    "Setup": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/project-setup.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Example script** (`.claude/hooks/project-setup.sh`):
+
+```bash
+#!/bin/bash
+set -euo pipefail
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+
+# Install dependencies if package.json exists
+if [ -f "$PROJECT_DIR/package.json" ]; then
+  cd "$PROJECT_DIR" && npm install --silent 2>/dev/null || true
+fi
+
+# Set up git hooks
+if [ -d "$PROJECT_DIR/.git" ] && [ -f "$PROJECT_DIR/.husky/pre-commit" ]; then
+  cd "$PROJECT_DIR" && npx husky install 2>/dev/null || true
+fi
+
+exit 0
+```
+
+**Key behaviors**:
+
+- Cannot block (exit code 2 is ignored)
+- Runs once during initialization, not during normal sessions
+- Ideal for `npm install`, `pip install -r requirements.txt`, environment validation
+
+### ConfigChange (v2.1.49)
+
+Fires when a configuration file changes mid-session. The `matcher` field filters by config type: `user_settings`, `project_settings`, `local_settings`, `policy_settings`, or `skills`.
+
+```json
+{
+  "hooks": {
+    "ConfigChange": [
+      {
+        "matcher": "user_settings|project_settings|local_settings",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/config-audit.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Example script** (`.claude/hooks/config-audit.sh`):
+
+```bash
+#!/bin/bash
+set -euo pipefail
+INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+CONFIG_TYPE=$(echo "$INPUT" | jq -r '.config_type // "unknown"' 2>/dev/null || echo "unknown")
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+LOG_FILE="${CLAUDE_PROJECT_DIR:-.}/.claude/logs/config-changes.log"
+mkdir -p "$(dirname "$LOG_FILE")"
+echo "[$TIMESTAMP] Config changed: $CONFIG_TYPE" >> "$LOG_FILE"
+exit 0
+```
+
+**Key behaviors**:
+
+- Exit code 2 blocks the config change, **except** for `policy_settings` (enterprise policies cannot be blocked)
+- Useful for enterprise security auditing and compliance logging
+- Matchers: `user_settings`, `project_settings`, `local_settings`, `policy_settings`, `skills`
+
+### WorktreeCreate (v2.1.50)
+
+Fires when an agent worktree is created for agents configured with `isolation: worktree`. This enables custom VCS setup for projects using non-git version control (SVN, Perforce, Mercurial).
+
+```json
+{
+  "hooks": {
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/worktree-init.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Example script** (`.claude/hooks/worktree-init.sh`):
+
+```bash
+#!/bin/bash
+set -euo pipefail
+INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+WORKTREE_PATH=$(echo "$INPUT" | jq -r '.worktree_path // empty' 2>/dev/null)
+
+if [ -n "$WORKTREE_PATH" ]; then
+  # Example: Initialize Perforce workspace in worktree
+  # p4 client -o | sed "s|Root:.*|Root: $WORKTREE_PATH|" | p4 client -i
+  echo "Worktree initialized at: $WORKTREE_PATH"
+fi
+
+exit 0
+```
+
+**Key behaviors**:
+
+- Non-zero exit code **fails** the worktree creation (the agent will not spawn)
+- Only fires for agents with `isolation: worktree` in their configuration
+- Use for setting up VCS checkouts, symlinks, or environment files in the worktree
+
+### WorktreeRemove (v2.1.50)
+
+Fires when an agent worktree is removed after the agent completes its work. Use for cleanup tasks.
+
+```json
+{
+  "hooks": {
+    "WorktreeRemove": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/worktree-cleanup.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Example script** (`.claude/hooks/worktree-cleanup.sh`):
+
+```bash
+#!/bin/bash
+set -euo pipefail
+INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+WORKTREE_PATH=$(echo "$INPUT" | jq -r '.worktree_path // empty' 2>/dev/null)
+
+if [ -n "$WORKTREE_PATH" ]; then
+  # Clean up VCS artifacts, temp files, etc.
+  rm -rf "$WORKTREE_PATH/.p4config" 2>/dev/null || true
+  echo "Worktree cleaned up: $WORKTREE_PATH"
+fi
+
+exit 0
+```
+
+**Key behaviors**:
+
+- Cannot block (exit code 2 is ignored; the worktree is already being removed)
+- Use for cleaning up VCS lock files, temporary caches, or external registrations
+- Pairs with WorktreeCreate for full worktree lifecycle management
+
 ---
 
-## Complete settings.json Example (All 14 Events)
+## Complete settings.json Example (All 18 Events)
 
 ```json
 {
@@ -850,12 +1037,180 @@ Fires when a task is completed in an Agent Teams configuration. Use to trigger f
           { "type": "command", "command": ".claude/hooks/task-completed.sh" }
         ]
       }
+    ],
+    "Setup": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/project-setup.sh" }
+        ]
+      }
+    ],
+    "ConfigChange": [
+      {
+        "matcher": "user_settings|project_settings|local_settings",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/config-audit.sh" }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/worktree-init.sh" }
+        ]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/worktree-cleanup.sh" }
+        ]
+      }
     ]
   }
 }
 ```
 
 **Note**: `PermissionRequest` is configured separately per permission type.
+
+---
+
+## Advanced Hook Capabilities
+
+### Prompt-Based Hooks (v2.1.0)
+
+Instead of writing a shell script, you can define a hook as a prompt that gets evaluated by an LLM. The LLM receives the event context and returns an allow/deny decision. No tools are available -- the decision is based solely on the prompt text and event data.
+
+```json
+{
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Check if this change follows coding standards. Verify naming conventions, file organization, and that no secrets or credentials are being written. Return ALLOW if safe, DENY with reason if not."
+        }
+      ]
+    }
+  ]
+}
+```
+
+**When to use**: Quick safety evaluations, style checks, or convention enforcement that can be decided from the event context alone without reading other files.
+
+**Tradeoff**: Adds 1-3 seconds of LLM inference latency per matched event. Use command hooks for latency-sensitive paths.
+
+### Agent-Based Hooks (v2.1.0)
+
+Agent hooks spawn a subagent with tool access for multi-turn verification. The agent can read files, search code, and run commands before making a decision. This is the most powerful but also the most expensive hook type.
+
+```json
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "agent",
+          "prompt": "Verify this command is safe to run. Check if it modifies any protected files by reading .gitignore and .claude/settings.json. Verify it does not delete files outside the project directory.",
+          "tools": ["Read", "Grep", "Glob"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+**When to use**: Complex validations that require file system inspection, comparison against existing patterns, or multi-step reasoning.
+
+**Tradeoff**: Multiple LLM calls + tool execution per invocation. Can add 5-30+ seconds of latency. Use sparingly on high-frequency events.
+
+### PreToolUse additionalContext (v2.1.9)
+
+PreToolUse hooks can return `additionalContext` in their JSON output to inject context that the model sees alongside the tool result. This lets hooks guide Claude's behavior without blocking the tool call.
+
+```json
+{
+  "additionalContext": "Remember: this project uses tabs not spaces. All new files must include the copyright header from .claude/templates/header.txt"
+}
+```
+
+**Example hook script**:
+
+```bash
+#!/bin/bash
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+FILE_PATH=$(echo "$JSON_INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+
+# Inject project-specific reminders for certain file types
+case "$FILE_PATH" in
+  *.sql)
+    echo '{"additionalContext": "All SQL must use parameterized queries. Never concatenate user input."}'
+    ;;
+  *.test.*)
+    echo '{"additionalContext": "Test files must include cleanup in afterEach. No test pollution."}'
+    ;;
+esac
+
+exit 0
+```
+
+**Key behavior**: The `additionalContext` string is shown to the model alongside the tool result. It does not block the tool -- it adds guidance for the model's next response.
+
+### Hooks in Skill/Agent Frontmatter (v2.1.0)
+
+Hooks can be defined directly in skill or agent YAML frontmatter, scoped to the component's lifecycle. These hooks only fire while the skill or agent is active.
+
+```yaml
+---
+name: my-deployment-skill
+description: Deployment workflow with safety hooks
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: "command"
+          command: ".claude/hooks/block-production-commands.sh"
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: "command"
+          command: ".claude/hooks/validate-deployment-config.sh"
+---
+```
+
+**Key behaviors**:
+
+- Hooks are scoped to the skill/agent -- they do not fire outside its context
+- Supports the `once: true` field to limit execution to once per session
+- Merged with project and user hooks (they add to, not replace, other hooks)
+
+### last_assistant_message in Stop/SubagentStop (v2.1.47)
+
+The `Stop` and `SubagentStop` hooks now receive Claude's final response text in the input JSON via the `last_assistant_message` field. This eliminates the need to parse transcripts to access the model's last output.
+
+```json
+{
+  "session_id": "abc123",
+  "last_assistant_message": "I've completed the refactoring. Here's a summary of changes..."
+}
+```
+
+**Example use case**: Extract action items, summaries, or structured data from Claude's final response for logging or follow-up workflows.
+
+```bash
+#!/bin/bash
+INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+LAST_MSG=$(echo "$INPUT" | jq -r '.last_assistant_message // empty' 2>/dev/null)
+
+if [ -n "$LAST_MSG" ]; then
+  # Log the final response for session history
+  echo "$LAST_MSG" >> "${CLAUDE_PROJECT_DIR:-.}/.claude/logs/session-responses.log"
+fi
+
+exit 0
+```
 
 ---
 
@@ -1220,7 +1575,7 @@ echo "{\"tool_input\":{\"file_path\":\"/tmp/test.js\",\"content\":\"$CONTENT\"}}
 
 ## Real Example
 
-**Production**: 14 hooks, 6-8 hours/year ROI
+**Production**: 18 hooks, 6-8 hours/year ROI
 
 See: `examples/production-claude-hooks/`
 

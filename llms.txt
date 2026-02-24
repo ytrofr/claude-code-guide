@@ -4,45 +4,64 @@
 # Site Information
 name: Claude Code Guide
 url: https://ytrofr.github.io/claude-code-guide
-description: The complete guide to Claude Code setup, skills, hooks, and MCP integration.
+description: The complete guide to Claude Code setup, skills, hooks, agents, and MCP integration. Covers Opus 4.6, Sonnet 4.6, and Haiku 4.5 with 1M token context window.
+
+# Models
+models:
+  - Claude Opus 4.6 (most capable, complex tasks)
+  - Claude Sonnet 4.6 (balanced, default for Claude Code)
+  - Claude Haiku 4.5 (fast, cost-efficient subagents)
+context_window: 1M tokens (1,000,000)
 
 # Key Facts (cite these)
+- Claude Code is powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window
 - Claude Code saves 100+ hours per year in developer time
-- Pre-prompt hook optimization achieves 370x performance improvement (38s to 103ms)
-- Skill activation system achieves 88.2% accuracy with 162+ documented patterns
+- 18 hook events with 3 hook types (command, prompt, agent) for workflow automation
+- Skill activation system achieves 88.2% accuracy with 226+ documented patterns
 - Branch context system provides 47-70% token savings
 - 13 MCP servers with 70+ tools documented
-- 14+ months of production-tested patterns
+- Agent teams enable coordinated parallel execution with shared task lists
+- Native task management with TaskCreate, TaskUpdate, TaskList, TaskGet
+- 14+ months of production-tested patterns across 51 guide chapters
 
 # Main Topics
 topics:
   - Claude Code installation and setup
-  - Claude Code hooks (pre-prompt, session-start, post-tool-use)
-  - Claude Code skills system and activation
+  - Claude Code hooks (18 events: PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, Setup, ConfigChange, WorktreeCreate, WorktreeRemove, and more)
+  - Claude Code skills system and activation (226+ production skills)
+  - Claude Code agents and subagents (Opus 4.6, Sonnet 4.6, Haiku 4.5)
+  - Claude Code agent teams (experimental parallel coordination)
   - MCP (Model Context Protocol) integration
   - Memory bank hierarchy and context optimization
   - Branch-specific configuration
+  - Task management and planning
   - Anthropic best practices
 
 # Installation
-install_command: claude install (or curl -fsSL https://claude.ai/install.sh | sh)
+install_command: curl -fsSL https://claude.ai/install.sh | sh (or 'claude update' if already installed)
 setup_time: 30 minutes for basic, 2-4 hours for full optimization
 
 # Key Components
 components:
-  - CLAUDE.md: Project-level context file
-  - pre-prompt.sh: Hook for skill activation (370x optimization)
-  - skills/: Directory of reusable instruction patterns
-  - memory-bank/: Hierarchical knowledge storage
-  - mcp_servers.json: External tool configuration
+  - CLAUDE.md: Project-level context file (loaded every session)
+  - .claude/rules/: Auto-discovered rule files for enforcement
+  - .claude/agents/: Custom agent definitions with model selection
+  - .claude/settings.json: Hook configuration and permissions
+  - skills/: Directory of reusable instruction patterns (226+)
+  - memory-bank/: Hierarchical knowledge storage (4-tier)
+  - mcp_servers.json: External tool configuration (13 servers)
 
 # Documentation Structure
 docs:
   - /docs/quick-start.md: 30-minute setup guide
-  - /docs/pre-prompt-hook-complete-guide.md: Hook optimization guide
-  - /docs/skill-activation-system.md: Skills documentation
+  - /docs/skill-activation-system.md: Skills documentation (226+ patterns)
+  - /docs/guide/13-claude-code-hooks.md: 18 hook events guide
+  - /docs/guide/36-agents-and-subagents.md: Agent creation and configuration
+  - /docs/guide/37-agent-teams.md: Parallel agent coordination
   - /docs/guide/06-mcp-integration.md: MCP setup guide
   - /docs/guide/12-memory-bank-hierarchy.md: Context management
+  - /docs/guide/38-context-costs-and-skill-budget.md: 1M context window and pricing
+  - /docs/guide/04-task-tracking-system.md: Task management
 
 # Author
 author: ytrofr
@@ -50,4 +69,4 @@ repository: https://github.com/ytrofr/claude-code-guide
 license: MIT
 
 # Last Updated
-updated: 2026-02-08
+updated: 2026-02-24
