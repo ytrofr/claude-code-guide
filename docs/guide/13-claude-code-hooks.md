@@ -11,7 +11,7 @@ Claude Code hooks are customizable scripts that run at specific points in the AI
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
 **Evidence**: 14 hooks in production, 96% test validation
-**Updated**: Feb 10, 2026 — All 14 hook events documented
+**Updated**: Feb 24, 2026 — Added file size / modularity enforcement example (PreToolUse + PostToolUse paired pattern)
 
 ---
 
@@ -1024,6 +1024,197 @@ Local hooks merge with project hooks (they don't replace them). This is useful f
 - Personal formatting preferences
 - Debug logging hooks during development
 - Experimental hooks before promoting to project-level
+
+---
+
+## Real-World Production Example: File Size / Modularity Enforcement
+
+This example demonstrates using **PreToolUse + PostToolUse together** to enforce a maximum file size rule. The two hooks are complementary: PreToolUse catches new oversized files _before_ they hit disk, while PostToolUse detects existing files _growing_ past the threshold.
+
+**Problem**: In a large codebase (600+ source files), "god files" accumulate over time. A max-500-lines-per-file rule exists, but without enforcement it is regularly violated. Manually checking every write is impractical.
+
+**Solution**: Two non-blocking hooks that show warnings to Claude, so it can self-correct.
+
+### Hook 1: PreToolUse -- Catch New God Files
+
+File: `.claude/hooks/file-size-precheck.sh`
+
+This fires **before** the `Write` tool. It reads the content about to be written from `tool_input.content`, counts lines, and warns if the new file would exceed thresholds.
+
+```bash
+#!/bin/bash
+# PreToolUse hook: Check Write content size BEFORE file is created
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || true)
+FILE_PATH=$(echo "$JSON_INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+
+[ -z "$FILE_PATH" ] && exit 0
+
+# Only check source code files
+case "$FILE_PATH" in
+  *.js|*.jsx|*.ts|*.tsx|*.py|*.sh) ;; # Check these
+  *) exit 0 ;; # Skip non-source files
+esac
+
+# Skip test files, node_modules, dist
+case "$FILE_PATH" in
+  */node_modules/*|*/dist/*|*package-lock*|*/tests/*|*/scripts/baselines/*) exit 0 ;;
+esac
+
+# Count lines in the content being written
+CONTENT_LINES=$(echo "$JSON_INPUT" | jq -r '.tool_input.content // empty' 2>/dev/null | wc -l)
+
+[ "$CONTENT_LINES" -le 300 ] && exit 0
+
+BASENAME=$(basename "$FILE_PATH")
+[ ! -f "$FILE_PATH" ] && FILE_STATUS="NEW file" || FILE_STATUS="overwriting existing"
+
+if [ "$CONTENT_LINES" -gt 500 ]; then
+  echo ""
+  echo "======================================================================="
+  echo "FILE SIZE: $BASENAME will be $CONTENT_LINES lines ($FILE_STATUS)"
+  echo "======================================================================="
+  echo "This file exceeds the 500-line limit. Consider splitting into:"
+  echo "  - Main module: core logic (<400 lines)"
+  echo "  - Helper module: extracted functions"
+  echo "Allowing write -- but please split this file next."
+  echo "======================================================================="
+elif [ "$CONTENT_LINES" -gt 400 ]; then
+  echo ""
+  echo "-----------------------------------------------------------------------"
+  echo "WARNING: $BASENAME will be $CONTENT_LINES lines ($FILE_STATUS)"
+  echo "-----------------------------------------------------------------------"
+  echo "Approaching 500-line limit. Plan extraction now."
+  echo "-----------------------------------------------------------------------"
+fi
+
+exit 0
+```
+
+### Hook 2: PostToolUse -- Detect Growth in Existing Files
+
+File: `.claude/hooks/file-size-warning.sh`
+
+This fires **after** `Write|Edit`. It checks the actual file on disk and uses a `/tmp` cache to track growth between edits. Only warns on files >500 lines if they **grew by 20+ lines** in this edit (avoids noise on existing large files).
+
+```bash
+#!/bin/bash
+# PostToolUse hook: Warn when edited files GROW past thresholds
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || true)
+FILE_PATH=$(echo "$JSON_INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+
+[ -z "$FILE_PATH" ] || [ ! -f "$FILE_PATH" ] && exit 0
+
+# Only check source code files
+case "$FILE_PATH" in
+  *.js|*.jsx|*.ts|*.tsx|*.py|*.sh) ;;
+  *) exit 0 ;;
+esac
+
+case "$FILE_PATH" in
+  */node_modules/*|*/dist/*|*package-lock*|*/tests/*|*/scripts/baselines/*) exit 0 ;;
+esac
+
+LINE_COUNT=$(wc -l < "$FILE_PATH" 2>/dev/null || echo "0")
+BASENAME=$(basename "$FILE_PATH")
+
+# Growth detection via file size cache
+CACHE_DIR="/tmp/.claude-file-sizes"
+mkdir -p "$CACHE_DIR" 2>/dev/null
+CACHE_KEY=$(echo "$FILE_PATH" | md5sum | cut -d' ' -f1)
+CACHE_FILE="$CACHE_DIR/$CACHE_KEY"
+
+PREV_SIZE=0
+[ -f "$CACHE_FILE" ] && PREV_SIZE=$(cat "$CACHE_FILE" 2>/dev/null || echo "0")
+echo "$LINE_COUNT" > "$CACHE_FILE"
+
+GROWTH=$((LINE_COUNT - PREV_SIZE))
+
+if [ "$LINE_COUNT" -gt 500 ]; then
+  # Only warn if it GREW significantly (20+ lines)
+  if [ "$GROWTH" -ge 20 ] && [ "$PREV_SIZE" -gt 0 ]; then
+    echo ""
+    echo "-----------------------------------------------------------------------"
+    echo "GROWING: $BASENAME grew +${GROWTH} lines -> now $LINE_COUNT lines"
+    echo "-----------------------------------------------------------------------"
+    echo "Consider extracting the new code into a separate module."
+    echo "-----------------------------------------------------------------------"
+  fi
+elif [ "$LINE_COUNT" -gt 400 ]; then
+  echo ""
+  echo "WARNING: $BASENAME is $LINE_COUNT lines (approaching 500 limit)"
+elif [ "$LINE_COUNT" -gt 300 ] && [ "$PREV_SIZE" -le 300 ] && [ "$PREV_SIZE" -gt 0 ]; then
+  echo "NOTE: $BASENAME crossed 300 lines ($PREV_SIZE -> $LINE_COUNT). Monitor growth."
+fi
+
+exit 0
+```
+
+### Configuration
+
+Add both hooks to `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/file-size-precheck.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/file-size-warning.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Design Decisions
+
+| Decision                                | Rationale                                                                                                                                                                                                 |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Non-blocking** (exit 0 always)        | Writes proceed; Claude sees the warning and self-corrects. Blocking writes mid-session causes more disruption than value.                                                                                 |
+| **PreToolUse on Write only** (not Edit) | The Write tool creates/overwrites entire files. Edit makes small changes -- the PostToolUse hook handles growth detection for edits.                                                                      |
+| **Growth detection via md5sum cache**   | In a codebase with 250+ existing files over 500 lines, warning on every edit to those files is pure noise. The cache tracks file sizes between edits, and only warns if a large file _grew_ by 20+ lines. |
+| **Source files only**                   | Only checks `.js`, `.ts`, `.py`, `.sh` (and variants). Skips docs, configs, test files, generated files, and `node_modules`.                                                                              |
+| **Three thresholds** (300 / 400 / 500)  | 300 = informational note (only on first crossing), 400 = warning, 500 = strong alert with split suggestions. Progressive awareness, not a cliff.                                                          |
+
+### How It Works in Practice
+
+```
+Claude writes a 620-line service file:
+  -> PreToolUse fires: "FILE SIZE: service.js will be 620 lines (NEW file)"
+  -> Claude sees the warning, splits into service.js (380L) + service-helpers.js (240L)
+
+Claude edits an existing 510-line file, adding 25 lines:
+  -> PostToolUse fires: "GROWING: service.js grew +25 lines -> now 535 lines"
+  -> Claude extracts the new code into a helper module instead
+
+Claude edits an existing 520-line file, changing 3 lines:
+  -> PostToolUse: SILENT (no growth, avoids noise on legacy files)
+```
+
+**Testing**: Create a test file and pipe mock JSON to validate both hooks:
+
+```bash
+# Test PreToolUse with a 600-line file
+CONTENT=$(python3 -c "print('\n'.join(['line ' + str(i) for i in range(600)]))")
+echo "{\"tool_input\":{\"file_path\":\"/tmp/test.js\",\"content\":\"$CONTENT\"}}" | \
+  bash .claude/hooks/file-size-precheck.sh
+```
 
 ---
 
