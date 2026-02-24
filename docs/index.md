@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: Complete guide to Claude Code hooks, skills, agents, MCP integration. 14 hook events. 226+ native skills. Production-tested.
+description: Complete guide to Claude Code hooks, skills, agents, MCP integration. 18 hook events. 226+ native skills. Production-tested.
 ---
 
 # Claude Code Guide
@@ -18,7 +18,7 @@ description: Complete guide to Claude Code hooks, skills, agents, MCP integratio
 
 ### How do I install Claude Code?
 
-Claude Code is installed via npm: `npm install -g @anthropic-ai/claude-code`. After installation, run `claude` in your terminal to start an interactive session. You'll need an Anthropic API key, which you can get from the [Anthropic Console](https://console.anthropic.com/). See our [Quick Start Guide](quick-start.md) for complete setup instructions.
+Claude Code is installed via the official installer: `curl -fsSL https://claude.ai/install.sh | sh` (or `claude update` if already installed). After installation, run `claude` in your terminal to start an interactive session. You'll need an Anthropic API key, which you can get from the [Anthropic Console](https://console.anthropic.com/). See our [Quick Start Guide](quick-start.md) for complete setup instructions.
 
 ### What are Claude Code skills?
 
@@ -42,7 +42,7 @@ The memory bank is a hierarchical knowledge system that stores project context, 
 
 ### What are Claude Code hooks?
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 14 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 18 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
 
 ### What are Claude Code agents?
 
@@ -71,7 +71,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 - [MCP Integration](guide/06-mcp-integration.md) - External tool connections (PostgreSQL, GitHub, Playwright)
 - [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md) - 4-tier context management
-- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 14 hook events, 3 hook types
+- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 18 hook events, 3 hook types
 - [Git vs Claude Hooks](guide/14-git-vs-claude-hooks-distinction.md) - When to use which
 - [Progressive Disclosure](guide/15-progressive-disclosure.md) - Token-efficient context loading
 - [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) - Historical (deprecated Feb 2026)
@@ -140,7 +140,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | ----------------- | -------------------------- |
 | Time Saved        | 100+ hours/year            |
 | Hook Optimization | 370x faster                |
-| Hook Events       | 14 documented              |
+| Hook Events       | 18 documented              |
 | Hook Types        | 3 (command, prompt, agent) |
 | Skill Activation  | 88.2% accuracy             |
 | Agent Patterns    | 5 workflow architectures   |
@@ -163,7 +163,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "Claude Code Guide - Complete Implementation Guide",
-  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. 14 hook events, 3 hook types, 370x optimization. Production-tested patterns.",
+  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. 18 hook events, 3 hook types, 370x optimization. Production-tested patterns.",
   "author": {
     "@type": "Person",
     "name": "ytrofr",
@@ -193,7 +193,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "How do I install Claude Code?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Claude Code is installed via npm: npm install -g @anthropic-ai/claude-code. After installation, run 'claude' in your terminal to start an interactive session. You'll need an Anthropic API key from console.anthropic.com."
+        "text": "Claude Code is installed via the official installer: curl -fsSL https://claude.ai/install.sh | sh (or 'claude update' if already installed). After installation, run 'claude' in your terminal to start an interactive session. You'll need an Anthropic API key from console.anthropic.com."
       }
     },
     {
@@ -241,7 +241,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What are Claude Code hooks?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 14 hook events (PreToolUse, PostToolUse, UserPromptSubmit, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
+        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 18 hook events (PreToolUse, PostToolUse, UserPromptSubmit, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
       }
     },
     {
@@ -282,7 +282,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "@type": "HowToStep",
       "position": 1,
       "name": "Install Claude Code",
-      "text": "Install Claude Code via npm: npm install -g @anthropic-ai/claude-code"
+      "text": "Install Claude Code via the official installer: curl -fsSL https://claude.ai/install.sh | sh (or claude update)"
     },
     {
       "@type": "HowToStep",
@@ -300,7 +300,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "@type": "HowToStep",
       "position": 4,
       "name": "Set up hooks",
-      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 14 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
+      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 18 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
     },
     {
       "@type": "HowToStep",
