@@ -4,6 +4,19 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.4.0] - 2026-03-03
+
+### Added
+
+- **Guide #53**: Pre-Validation Probe — A 2-minute practice that catches fundamentally wrong plans before implementation begins. Every plan rests on assumptions about reality; the probe verifies those assumptions with real evidence (grep, curl, file reads, test runs, screenshots — any tool counts) during plan mode, before approving. Includes assumption test table, feasibility checks, go/no-go verdict, examples across 12 project types (frontend, backend, performance, security, CI/CD, etc.), anti-patterns, and real-world wins. Integrates as Section 0.1 in the Plan Mode Checklist.
+- **Template**: `~/.claude/rules/planning/pre-validation.md` — adoptable rule file for pre-validation probe enforcement
+
+### Changed
+
+- **Guide #45**: Plan Mode Checklist updated from 12 to 13 mandatory sections (added Section 0.1: Pre-Validation Probe as a blocking gate between TL;DR and Requirements)
+- **Template**: `plan-checklist.md` updated with Section 0.1 and Quick Validation checklist additions
+- **Best Practices**: `validation-workflow.md` updated from 5 to 6 Pre-Implementation Gates (added Gate 0: Pre-Validation Probe)
+
 ## [3.3.0] - 2026-02-24
 
 ### Changed

@@ -109,7 +109,8 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ### Planning & Quality
 
-- [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 11 mandatory plan sections with modularity gate
+- [Plan Mode Quality Checklist](guide/45-plan-mode-checklist.md) - 13 mandatory plan sections with modularity gate and pre-validation probe
+- [Pre-Validation Probe](guide/53-pre-validation-probe.md) - Verify plan assumptions with real evidence before implementation
 - [Adoptable Rules, Commands & Templates](guide/47-adoptable-rules-and-commands.md) - 15 rules, 7 commands, ready to adopt
 - [Lean Orchestrator Pattern](guide/48-lean-orchestrator-pattern.md) - Defeat context rot by delegating plan tasks to fresh subagents
 

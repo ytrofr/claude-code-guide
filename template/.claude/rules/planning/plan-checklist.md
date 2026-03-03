@@ -29,6 +29,31 @@ Questions to consider:
 
 **Rule**: Skip ONLY if the user gave specific instructions with zero ambiguity. A 30-second question saves hours of wrong-direction work.
 
+### Section 0.1: Pre-Validation Probe (Optional)
+
+Before approving the plan, verify its assumptions with real evidence -- file reads, grep, curl, test runs, whatever proves the current state.
+
+```
+## 0.1 Pre-Validation Probe
+
+**Status**: PASSED / FAILED / PARTIAL
+
+### Assumptions Tested
+| # | Assumption | Test | Result | Verdict |
+|---|-----------|------|--------|---------|
+| 1 | [what you assumed] | [how you checked] | [what you found] | CONFIRMED/DISPROVED |
+
+### Feasibility
+| Check | Result | Go/No-Go |
+|-------|--------|----------|
+| [can we do X?] | [evidence] | GO/NO-GO |
+
+### Probe Verdict
+- **VERDICT**: GO / NO-GO
+```
+
+**Rule**: Include when the plan assumes a problem exists, assumes current behavior, or depends on unverified technical facts. Skip for trivial changes (<10 lines). If >50% of assumptions are disproved, reject the plan and re-plan.
+
 ### Section 1: Existing Code Check
 
 ```
@@ -184,8 +209,9 @@ Every plan MUST pass ALL modularity checks below. **Plan is REJECTED if any chec
 
 Before finalizing any plan, verify:
 
-- [ ] All 11 sections present with real content
+- [ ] All 11 sections present with real content (Section 0.1 is optional)
 - [ ] Requirements clarified with user (or skipped -- instructions were unambiguous)
+- [ ] Pre-Validation Probe ran if plan has verifiable assumptions (or justified skip)
 - [ ] Existing code searched (not building from scratch unnecessarily)
 - [ ] Simplest approach chosen (not over-engineered)
 - [ ] Modularity enforcement passed (no god files, layers separated, extractions done)
