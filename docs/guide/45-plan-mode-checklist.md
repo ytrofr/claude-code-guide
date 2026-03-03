@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "Plan Mode Quality Checklist - Enforcing 11 Mandatory Sections"
-description: "Automatically enforce comprehensive plan quality with an 11-section checklist covering requirements clarification, existing code search, over-engineering prevention, best practices, modular architecture, documentation, E2E testing, observability, file change summary, TL;DR, and modularity enforcement. Includes plan file metadata for discoverability."
+title: "Plan Mode Quality Checklist - Enforcing 13 Mandatory Sections"
+description: "Automatically enforce comprehensive plan quality with a 13-section checklist covering TL;DR with KPIs, pre-validation probe, requirements clarification, existing code search, over-engineering prevention, best practices, modular architecture, visual diagrams, documentation, E2E testing, observability, file change summary, and modularity enforcement. Includes plan file metadata for discoverability."
 ---
 
 # Chapter 45: Plan Mode Quality Checklist
 
-Claude Code's plan mode is powerful for designing implementations before writing code. But plans often miss critical sections -- testing strategy, documentation, debugging. This chapter shows how to enforce a mandatory checklist that every plan must include, using rules files and skills.
+Claude Code's plan mode is powerful for designing implementations before writing code. But plans often miss critical sections -- testing strategy, documentation, debugging, and verifying assumptions. This chapter shows how to enforce a mandatory checklist that every plan must include, using rules files and skills.
 
-**Purpose**: Ensure every plan covers 11 quality dimensions automatically
+**Purpose**: Ensure every plan covers 13 quality dimensions automatically
 **Difficulty**: Beginner
 **Time**: 15 minutes to set up
 
@@ -26,6 +26,7 @@ Plans created in plan mode tend to focus on "what to build" but skip:
 - Observability (no logging or debugging strategy)
 - Listing affected files (scope unclear until implementation)
 - Summarizing the plan concisely (reader can't scan quickly)
+- Verifying assumptions before building (plans built on wrong assumptions fail)
 
 There's no built-in plan template in Claude Code. No hook event fires on plan mode entry. But we can solve this with two complementary approaches.
 
@@ -40,7 +41,7 @@ While there's no hook event for plan mode _entry_, there **is** one for plan _su
 The hook script:
 
 1. Finds the most recently modified `.md` file in `~/.claude/plans/`
-2. Checks for 10 mandatory sections (Section 0 is optional) using flexible keyword matching
+2. Checks for 11 mandatory sections (Section 0 and 0.1 are optional) using flexible keyword matching
 3. If any sections are missing, prints which ones and exits with code 2 (blocks ExitPlanMode)
 4. If all present, exits 0 (allows submission)
 
@@ -264,6 +265,41 @@ The rules file is the safety net (always present). The skill is the power tool (
 
 **Why**: A 30-second clarifying question prevents hours of wrong-direction work. Don't assume -- confirm scope, constraints, and expected behavior before planning.
 
+### 0.1. Pre-Validation Probe (Optional Blocking Gate)
+
+```markdown
+## 0.1 Pre-Validation Probe
+
+**Status**: PASSED / FAILED / PARTIAL
+**Run at**: YYYY-MM-DD HH:MM UTC
+
+### Assumptions Tested
+
+| #   | Assumption                 | Test              | Result           | Verdict               |
+| --- | -------------------------- | ----------------- | ---------------- | --------------------- |
+| 1   | [what you assumed is true] | [how you checked] | [what you found] | CONFIRMED / DISPROVED |
+
+### Feasibility (if approach is unproven)
+
+| Check          | Result     | Go/No-Go   |
+| -------------- | ---------- | ---------- |
+| [can we do X?] | [evidence] | GO / NO-GO |
+
+### Probe Verdict
+
+- [ ] All critical assumptions confirmed (or plan adjusted)
+- [ ] No feasibility blockers
+- **VERDICT**: GO / NO-GO
+```
+
+**Why**: Plans fail when they are built on wrong assumptions about reality. Before approving a plan, verify its assumptions with real evidence -- file reads, grep, curl, test runs, log analysis, whatever proves the current state. A 2-minute probe catches what hours of coding cannot fix retroactively.
+
+**When to include**: Include this section when the plan assumes a problem exists, assumes current behavior X, or depends on a technical fact that can be verified right now. Skip it for trivial changes (under 10 lines, single file) or when all assumptions are already confirmed.
+
+**When a probe fails**: If an assumption is disproved, adjust the plan before proceeding. If more than half the assumptions are wrong, reject the plan entirely and re-plan. If a feasibility check returns NO-GO, stop and redesign the approach.
+
+For a full standalone guide on the Pre-Validation Probe pattern, see [Chapter 53: Pre-Validation Probe](53-pre-validation-probe.md).
+
 ### 1. Existing Code Check
 
 ```markdown
@@ -430,10 +466,11 @@ After setting up both files, test by entering plan mode for any task. The plan o
 
 1. Enter plan mode (`Shift+Tab` or `--permission-mode plan`)
 2. Give a simple task
-3. Check the plan file -- all 11 sections should appear
+3. Check the plan file -- all 11 sections should appear (Section 0.1 is optional)
 4. Each section should have real content from actual codebase exploration
 5. Verify the plan file has the metadata header (branch, timestamp, topic, keywords)
 6. Verify Section 10 (Modularity) has all 4 sub-gates filled with real assessments
+7. For plans with verifiable assumptions, confirm Section 0.1 (Pre-Validation Probe) is present and shows CONFIRMED/DISPROVED verdicts
 
 ---
 
@@ -469,4 +506,5 @@ Sections 0-9 are quality checks -- they improve the plan but don't reject it. Se
 6. **File change summary forces specificity** -- if you can't list the files, the plan isn't ready
 7. **TL;DR enables quick review** -- the entire plan in 3-5 bullet points
 8. **Modularity enforcement is a blocking gate** -- prevents god files, wrong-layer logic, and missing extractions before they happen
-9. **Bypass with `<!-- skip-plan-sections -->`** -- escape hatch for non-standard plans
+9. **Pre-Validation Probe catches wrong assumptions** -- a 2-minute check before approving a plan prevents hours of implementing a solution to a problem that does not exist or an approach that cannot work (see [Chapter 53](53-pre-validation-probe.md))
+10. **Bypass with `<!-- skip-plan-sections -->`** -- escape hatch for non-standard plans

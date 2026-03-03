@@ -42,6 +42,19 @@ Before creating any plan:
 
 ---
 
+## Pre-Validation Probe (Before Approving Plans)
+
+Before approving any plan with verifiable assumptions, run a quick probe:
+
+1. **Assumptions**: List what the plan assumes is true about the current state
+2. **Test**: Verify each assumption with real evidence (grep, curl, file read, test run)
+3. **Verdict**: CONFIRMED or DISPROVED for each assumption
+4. **Decision**: If >50% disproved, reject and re-plan
+
+The probe happens DURING planning, not after implementation. A 2-minute check prevents hours of building on wrong assumptions.
+
+---
+
 ## Production Impact Validation
 
 ### 3-Tier Validation Approach
