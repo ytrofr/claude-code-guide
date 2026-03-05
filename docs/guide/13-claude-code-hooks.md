@@ -474,6 +474,8 @@ kill $BG; rm /tmp/test-fifo
 
 **Evidence**: Feb 2026 — Production. `PostToolUse:Read` hook hung during multi-file implementation session. Root cause: `$(cat)` in `skill-access-monitor.sh`. Fix: `$(timeout 2 cat)`. Verified: 2016ms completion vs infinite hang.
 
+**Related**: Even with `timeout`, the `timeout` command itself can write to stderr on signal delivery (e.g., "Terminated"). See [Suppress stderr](#suppress-stderr-prevents-hook-error-display) in Best Practices.
+
 ---
 
 ## Hook Safety: Command Timeouts
@@ -1302,6 +1304,38 @@ exit 0
 ```
 
 **Source**: Anthropic Chief of Staff agent cookbook pattern. In production, 100% of hooks should exit 0 (except intentional PreToolUse blockers).
+
+### Suppress stderr (Prevents "hook error" Display)
+
+Claude Code treats **any output on stderr** as a hook error — even when the exit code is 0. This causes the confusing `UserPromptSubmit hook error` message (or similar for other events) that appears intermittently.
+
+**Root cause**: Subcommands like `python`, `jq`, `git`, `grep`, and `timeout` can write warnings or error messages to stderr. Even suppressing stderr on individual commands (`2>/dev/null`) isn't enough — some messages leak from subshells, command substitutions, or signal handlers.
+
+```bash
+#!/bin/bash
+# ✅ CORRECT: Suppress ALL stderr at script level
+exec 2>/dev/null
+
+# Now all commands are safe — no stderr leakage possible
+USER_MESSAGE=$(timeout 2 cat)
+GIT_BRANCH=$(git branch --show-current)
+VIOLATIONS=$(python check_sizes.py | grep -c "violation" || echo "0")
+
+echo "Hook output goes to stdout"
+exit 0
+```
+
+```bash
+#!/bin/bash
+# ❌ WRONG: Suppressing stderr per-command is fragile
+USER_MESSAGE=$(timeout 2 cat 2>/dev/null)        # OK for cat...
+GIT_BRANCH=$(git branch --show-current 2>/dev/null) # OK for git...
+# But command substitutions, subshells, or signals can still leak stderr
+```
+
+**Key rule**: Add `exec 2>/dev/null` as the **first line** after the shebang in every hook script. This globally redirects stderr to `/dev/null` for the entire script, guaranteeing zero stderr output regardless of what subcommands do.
+
+**Evidence**: Mar 2026 — Intermittent `UserPromptSubmit hook error` traced to stderr leakage from `python` and `timeout` subcommands. Adding `exec 2>/dev/null` eliminated the issue completely.
 
 ### Python Hooks
 
