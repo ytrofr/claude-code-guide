@@ -456,6 +456,35 @@ context: # Optional: isolated context for the skill
 
 **Source**: [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills)
 
+### ${CLAUDE_SKILL_DIR} Variable (v2.1.69)
+
+Skills can reference their own directory using the `${CLAUDE_SKILL_DIR}` variable in SKILL.md content. This resolves to the absolute path of the skill's directory at runtime.
+
+```markdown
+# My Skill
+
+Load the config file:
+Read ${CLAUDE_SKILL_DIR}/config.json
+
+Run the validation script:
+bash ${CLAUDE_SKILL_DIR}/validate.sh
+```
+
+**Use case**: Skills that bundle data files, templates, or scripts alongside their SKILL.md can reference them without hardcoding paths.
+
+### Important: description Field is Required (v2.1.69)
+
+Skills without a `description:` field in their YAML frontmatter will **not appear** in Claude's available skills list. Always include a description with "Use when..." guidance:
+
+```yaml
+---
+name: my-skill
+description: "Do X and Y. Use when user asks about Z or mentions keyword."
+---
+```
+
+**Note**: Description values containing colons must be quoted in YAML to avoid parsing errors (fixed in v2.1.69).
+
 ### Token Budget (Important for Large Skill Libraries)
 
 Claude Code loads skill descriptions into its context window, subject to a **2% budget** (~15,760 chars for a 197k context window). If your total skill descriptions exceed this:

@@ -33,9 +33,32 @@ Claude Code's context window is finite. Every extension point you configure cons
 
 Disable 1M context if needed: `CLAUDE_CODE_DISABLE_1M_CONTEXT=true`
 
+### Useful Settings (v2.1.69)
+
+| Setting | Purpose | Default |
+| ------- | ------- | ------- |
+| `includeGitInstructions` | Remove built-in commit/PR workflow instructions from system prompt | `true` |
+| `sandbox.enableWeakerNetworkIsolation` | Allow Go programs (gh, gcloud, terraform) to verify TLS certs with custom MITM proxy (macOS only) | `false` |
+
+**Environment variable**: `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS=true` is equivalent to `includeGitInstructions: false`.
+
+**When to use `includeGitInstructions: false`**: If you have custom commit/PR workflows in your CLAUDE.md and want to save tokens by removing the built-in instructions. Only disable if your custom instructions fully cover your git workflow.
+
+### Effort Levels (v2.1.68)
+
+Opus 4.6 defaults to **medium effort** for Max and Team subscribers. Medium effort works well for most tasks — the sweet spot between speed and thoroughness.
+
+| Effort | When to Use | How to Set |
+| ------ | ----------- | ---------- |
+| Low    | Simple lookups, quick fixes | `/model` → select low effort |
+| Medium | Most tasks (default for Opus 4.6) | Default — no action needed |
+| High   | Complex reasoning, architecture, multi-file refactors | Type **"ultrathink"** in your message |
+
+The "ultrathink" keyword enables high effort for the next turn only. The current effort level is displayed in the logo and spinner (e.g., "with low effort").
+
 ### Fast Mode
 
-Toggle with `/fast` for 2.5x faster output at premium pricing. Same intelligence, faster responses. Ideal for iteration-heavy workflows.
+Toggle with `/fast` for 2.5x faster output at premium pricing. Same model and intelligence, faster responses. Ideal for iteration-heavy workflows.
 
 ### Model Pricing (Feb 2026)
 

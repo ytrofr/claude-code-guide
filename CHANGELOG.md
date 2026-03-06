@@ -4,6 +4,20 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.5.0] - 2026-03-06
+
+### Changed
+
+- Updated hook events from 18 to 19 (added InstructionsLoaded)
+- Updated TeammateIdle and TaskCompleted hooks to document `{"continue": false, "stopReason": "..."}` JSON output support for stopping teammates
+- Updated model documentation with effort levels (low/medium/high) and "ultrathink" keyword for high effort
+
+### Added
+
+- Chapter 13: InstructionsLoaded hook event (fires when CLAUDE.md or .claude/rules/*.md files are loaded), agent_id/agent_type fields in hook event data, worktree field in status line hooks
+- Chapter 38: Effort levels section (Opus 4.6 defaults to medium effort), includeGitInstructions and sandbox.enableWeakerNetworkIsolation settings
+- Skill Activation System: `${CLAUDE_SKILL_DIR}` variable documentation, description field requirement clarification, colon-in-description fix note
+
 ## [3.4.0] - 2026-03-03
 
 ### Added

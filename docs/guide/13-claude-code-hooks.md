@@ -1,42 +1,43 @@
 ---
 layout: default
-title: "Claude Code Hooks - Complete Guide to 18 Hook Events"
-description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 16 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
+title: "Claude Code Hooks - Complete Guide to 19 Hook Events"
+description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 17 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
 ---
 
 # Chapter 13: Claude Code Hooks
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 18 hook events, 3 hook types, async execution, and production-tested patterns.
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 19 hook events, 3 hook types, async execution, and production-tested patterns.
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: 18 hooks in production, 96% test validation
-**Updated**: Feb 24, 2026 — Added 4 new hook events (Setup, ConfigChange, WorktreeCreate, WorktreeRemove) and Advanced Hook Capabilities section (prompt/agent hooks, additionalContext, frontmatter hooks, last_assistant_message)
+**Evidence**: 19 hooks in production, 96% test validation
+**Updated**: Mar 6, 2026 — Added InstructionsLoaded hook (19th), agent_id/agent_type fields in hook events, worktree status line field, TeammateIdle/TaskCompleted continue:false support
 
 ---
 
-## Hook Events (18 Available)
+## Hook Events (19 Available)
 
-| Hook                   | Trigger                         | Use For                                |
-| ---------------------- | ------------------------------- | -------------------------------------- |
-| **SessionStart**       | Session begins                  | Inject git status, context, env vars   |
-| **UserPromptSubmit**   | User sends message              | Skill matching, prompt preprocessing   |
-| **PreToolUse**         | Before tool executes            | Block dangerous operations, validation |
-| **PostToolUse**        | After tool runs                 | Auto-format, logging, monitoring       |
-| **PreCompact**         | Before context compaction       | Backup transcripts, save state         |
-| **PermissionRequest**  | Permission dialog appears       | Auto-approve safe commands             |
-| **Notification**       | Claude sends a notification     | Custom alerts, logging, integrations   |
-| **Stop**               | Response ends                   | Suggest skill creation, cleanup        |
-| **SessionEnd**         | Session closes                  | Save summaries, final checkpoint       |
-| **PostToolUseFailure** | Tool call fails                 | Log errors, track failure patterns     |
-| **SubagentStart**      | Subagent spawns                 | Monitor agent lifecycle, logging       |
-| **SubagentStop**       | Subagent completes              | Log results, track agent activity      |
-| **TeammateIdle**       | Teammate agent becomes idle     | Pause teammates, reassign work         |
-| **TaskCompleted**      | A task finishes (Agent Teams)   | Reassign work, trigger follow-ups      |
-| **Setup**              | `--init` / `--maintenance`      | Install deps, configure environments   |
-| **ConfigChange**       | Config file changes mid-session | Security auditing, live reloading      |
-| **WorktreeCreate**     | Agent worktree is created       | Custom VCS setup (SVN, Perforce, Hg)   |
-| **WorktreeRemove**     | Agent worktree is removed       | Cleanup after agent completion         |
+| Hook                    | Trigger                                    | Use For                                |
+| ----------------------- | ------------------------------------------ | -------------------------------------- |
+| **SessionStart**        | Session begins                             | Inject git status, context, env vars   |
+| **UserPromptSubmit**    | User sends message                         | Skill matching, prompt preprocessing   |
+| **PreToolUse**          | Before tool executes                       | Block dangerous operations, validation |
+| **PostToolUse**         | After tool runs                            | Auto-format, logging, monitoring       |
+| **PreCompact**          | Before context compaction                  | Backup transcripts, save state         |
+| **PermissionRequest**   | Permission dialog appears                  | Auto-approve safe commands             |
+| **Notification**        | Claude sends a notification                | Custom alerts, logging, integrations   |
+| **Stop**                | Response ends                              | Suggest skill creation, cleanup        |
+| **SessionEnd**          | Session closes                             | Save summaries, final checkpoint       |
+| **PostToolUseFailure**  | Tool call fails                            | Log errors, track failure patterns     |
+| **SubagentStart**       | Subagent spawns                            | Monitor agent lifecycle, logging       |
+| **SubagentStop**        | Subagent completes                         | Log results, track agent activity      |
+| **TeammateIdle**        | Teammate agent becomes idle                | Pause teammates, reassign work         |
+| **TaskCompleted**       | A task finishes (Agent Teams)              | Reassign work, trigger follow-ups      |
+| **InstructionsLoaded**  | CLAUDE.md or .claude/rules/*.md loaded     | Track which instructions are active    |
+| **Setup**               | `--init` / `--maintenance`                 | Install deps, configure environments   |
+| **ConfigChange**        | Config file changes mid-session            | Security auditing, live reloading      |
+| **WorktreeCreate**      | Agent worktree is created                  | Custom VCS setup (SVN, Perforce, Hg)   |
+| **WorktreeRemove**      | Agent worktree is removed                  | Cleanup after agent completion         |
 
 ### Hook Categories
 
@@ -49,6 +50,8 @@ Claude Code hooks are customizable scripts that run at specific points in the AI
 **Agent Teams**: TeammateIdle (idle detection), TaskCompleted (task completion)
 
 **Worktree Lifecycle**: WorktreeCreate → (agent works in isolation) → WorktreeRemove
+
+**Instructions**: InstructionsLoaded (CLAUDE.md and rules file loading)
 
 **Other**: PreCompact (context management), PermissionRequest (security), Notification (alerts), Setup (initialization), ConfigChange (config monitoring)
 
@@ -719,11 +722,14 @@ Fires when a teammate agent becomes idle in an Agent Teams configuration. Use to
 
 **Exit code 2**: Pauses the idle teammate, preventing it from picking up new work until explicitly resumed.
 
+**JSON output** (v2.1.69): Return `{"continue": false, "stopReason": "..."}` to stop the teammate entirely, matching Stop hook behavior.
+
 **Example use cases**:
 
 - Pause agents that have been idle too long to reduce API costs
 - Log agent utilization metrics
 - Trigger rebalancing of work across teammates
+- Stop a teammate permanently with `continue: false`
 
 ### TaskCompleted (Agent Teams)
 
@@ -748,11 +754,14 @@ Fires when a task is completed in an Agent Teams configuration. Use to trigger f
 
 **Exit code 2**: Can reassign the completed task (e.g., for review by another agent or additional processing).
 
+**JSON output** (v2.1.69): Return `{"continue": false, "stopReason": "..."}` to stop the teammate, matching Stop hook behavior.
+
 **Example use cases**:
 
 - Automatically trigger tests after a coding task completes
 - Reassign completed work to a review agent
 - Update external project tracking systems
+- Stop a teammate after a specific task completes with `continue: false`
 
 ### Setup (v2.1.10)
 
@@ -931,9 +940,80 @@ exit 0
 - Use for cleaning up VCS lock files, temporary caches, or external registrations
 - Pairs with WorktreeCreate for full worktree lifecycle management
 
+### InstructionsLoaded (v2.1.69)
+
+Fires when CLAUDE.md or `.claude/rules/*.md` files are loaded into context. Use for tracking which instruction files are active in a session.
+
+```json
+{
+  "hooks": {
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/instructions-loaded.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Example use cases**:
+
+- Log which CLAUDE.md and rules files were loaded for auditing
+- Trigger actions when specific instruction files are detected
+- Monitor instruction file changes across sessions
+
+**Exit code 2**: Ignored (instructions have already been loaded).
+
 ---
 
-## Complete settings.json Example (All 18 Events)
+## Hook Event Data Fields (v2.1.69)
+
+Hook events include contextual fields beyond the event-specific data. These fields were expanded in v2.1.69:
+
+### agent_id and agent_type
+
+Subagent-related hooks (`SubagentStart`, `SubagentStop`) and hooks fired within an `--agent` session now include:
+
+```json
+{
+  "session_id": "abc123",
+  "agent_id": "a7b082d2bec075d54",
+  "agent_type": "general-purpose",
+  "tool_name": "Write",
+  "tool_input": { "..." }
+}
+```
+
+- `agent_id`: Unique identifier for the subagent instance
+- `agent_type`: The subagent type (e.g., `general-purpose`, `Explore`, `Plan`, `code-reviewer`)
+
+Use these to track which agent triggered a hook, correlate events across agents, or apply different validation rules per agent type.
+
+### worktree Field (Status Line Hooks)
+
+When running in a `--worktree` session, status line hook commands receive a `worktree` object:
+
+```json
+{
+  "worktree": {
+    "name": "feature-auth",
+    "path": "/project/.claude/worktrees/feature-auth",
+    "branch": "claude/feature-auth",
+    "originalDir": "/project"
+  }
+}
+```
+
+Use this to detect worktree sessions and apply worktree-specific behavior.
+
+---
+
+## Complete settings.json Example (All 19 Events)
 
 ```json
 {
@@ -1066,6 +1146,13 @@ exit 0
       {
         "hooks": [
           { "type": "command", "command": ".claude/hooks/worktree-cleanup.sh" }
+        ]
+      }
+    ],
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/instructions-loaded.sh" }
         ]
       }
     ]
