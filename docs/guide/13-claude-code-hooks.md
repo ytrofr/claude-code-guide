@@ -1305,26 +1305,58 @@ exit 0
 
 ## Real-World Production Example: Sacred Pattern Validation Hook
 
-This example shows a prompt-based hook used in production to enforce code quality patterns on every file write:
+This example shows a command-based hook used in production to enforce code quality patterns on every file write. The shell script does deterministic path matching — only validating `src/**/*.js` files and instantly allowing everything else:
 
 ```json
 {
   "matcher": "Write|Edit",
   "hooks": [
     {
-      "type": "prompt",
-      "prompt": "Check if this code change to a src/**/*.js file follows Sacred patterns: (1) Uses employee_id not id for employee lookups, (2) No hardcoded business data like employee counts or revenue amounts, (3) Hebrew strings use UTF-8 encoding. If the file is NOT in src/ or is not a .js file, always allow. Output JSON: {\"decision\":\"allow\"} or {\"decision\":\"block\",\"reason\":\"Sacred violation: ...\"}"
+      "type": "command",
+      "command": ".claude/hooks/sacred-pattern-check.sh",
+      "statusMessage": "Checking Sacred patterns..."
     }
   ]
 }
 ```
 
+The script (`.claude/hooks/sacred-pattern-check.sh`):
+
+```bash
+#!/bin/bash
+# Sacred pattern check — only validates src/**/*.js files
+# All other files are allowed immediately
+
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.filePath // empty')
+
+# Allow if no file path or file is outside src/**/*.js
+if [ -z "$FILE_PATH" ]; then exit 0; fi
+if [[ "$FILE_PATH" != */src/*.js ]]; then exit 0; fi
+
+CONTENT=$(echo "$INPUT" | jq -r '.tool_input.content // .tool_input.new_string // empty')
+
+# Check Sacred patterns only on src/**/*.js files
+if echo "$CONTENT" | grep -qP '\.id\b' && echo "$CONTENT" | grep -qi 'employee'; then
+  if ! echo "$CONTENT" | grep -q 'employee_id'; then
+    echo "Sacred violation: Use employee_id, not bare id for employee lookups" >&2
+    exit 2
+  fi
+fi
+
+exit 0
+```
+
 **Key patterns demonstrated**:
 
-- **Scoped validation**: The prompt itself filters by file path (`src/**/*.js`), allowing non-matching files through
-- **Multiple checks in one hook**: Validates 3 different patterns in a single prompt
-- **Structured output**: Returns JSON for programmatic decision-making
-- **Non-blocking for irrelevant files**: Files outside `src/` are auto-allowed
+- **Deterministic path filtering**: Shell `[[ ]]` pattern matching is reliable — no LLM interpretation needed
+- **Multiple checks in one script**: Validates Sacred patterns with `grep` and regex
+- **Non-blocking for irrelevant files**: Files outside `src/**/*.js` exit immediately with code 0
+- **stdin JSON parsing**: Uses `jq` to extract `file_path` and content from hook input
+
+> **Pitfall — Why not use `type: "prompt"` for file-scoped checks?**
+>
+> A `type: "prompt"` hook delegates every matched event to an LLM for evaluation. While the prompt can say "if the file is NOT in src/, always allow", **LLMs don't reliably follow file-scoping instructions** — they may block edits to plan files, markdown, or other non-matching files. For path-based filtering, always use `type: "command"` with a shell script that does deterministic matching. Reserve `type: "prompt"` for checks where LLM judgment is genuinely needed (e.g., reviewing code quality of the content itself, not deciding whether to check it).
 
 ### Combining Prompt Hooks with Async Background Hooks
 
