@@ -196,7 +196,172 @@ Always self-test before asking the user to test:
 
 ---
 
-## 10. Common Anti-Patterns to Avoid
+## 10. Parallel Agent Safety (Multi-Agent)
+
+When using `Task()` delegation or parallel agents on the same repository, follow these rules to prevent cross-agent state corruption:
+
+### Git Safety Rules
+
+| Action                          | Rule                                                           |
+| ------------------------------- | -------------------------------------------------------------- |
+| `git stash`                     | NEVER create/apply/drop unless explicitly requested            |
+| `git checkout <branch>`         | NEVER switch branches unless explicitly requested              |
+| `git add -A` / `git add .`      | NEVER when unrecognized files exist -- add specific files only |
+| `git worktree`                  | NEVER create/modify/remove unless explicitly requested         |
+| `git pull --rebase --autostash` | FORBIDDEN -- autostash can corrupt other agent's WIP           |
+
+### Commit Scoping
+
+| User Says    | Agent Action                                            |
+| ------------ | ------------------------------------------------------- |
+| "commit"     | Stage and commit ONLY files YOU changed                 |
+| "commit all" | Stage everything, commit in grouped chunks by topic     |
+| "push"       | May `git pull --rebase` first (no autostash), then push |
+
+### Unrecognized Files
+
+When you see files you didn't create: **leave them alone**. Another agent or the user may own them. Focus on your task, and only mention "other uncommitted files present" at the end if relevant.
+
+**Source**: Battle-tested in production repos running 5+ parallel agents (OpenClaw, LIMOR AI).
+
+---
+
+## 11. Doctor Command Pattern
+
+Every project with 5+ config knobs should have a self-diagnostic health check script.
+
+### What It Does
+
+A single `npm run doctor` (or equivalent) that checks for common misconfigurations programmatically -- replacing "the developer remembers to check" with "the machine checks automatically."
+
+### Standard Convention
+
+```json
+{ "scripts": { "doctor": "node scripts/doctor.js" } }
+```
+
+### Requirements
+
+| Requirement     | Detail                                      |
+| --------------- | ------------------------------------------- |
+| Exit code       | `0` = healthy, `1` = problems found         |
+| Output          | Human-readable PASS/FAIL/WARN per check     |
+| Speed           | Under 10 seconds (no heavy operations)      |
+| No side effects | Read-only -- NEVER fix things automatically |
+
+### Recommended Check Categories
+
+1. **Environment**: Required env vars present and valid
+2. **Connectivity**: DB, Redis, external APIs reachable
+3. **Data Integrity**: Referential consistency, no orphaned data
+4. **Config Consistency**: Feature flags don't contradict each other
+5. **Lifecycle**: No stale data from disabled features
+
+### When to Create One
+
+- Project has 5+ environment variables or feature flags
+- Project connects to external services (DB, APIs, AI providers)
+- Past bugs were caused by misconfiguration, not code bugs
+- You find yourself manually checking the same things each session
+
+**Evidence**: A doctor script catching stale database entries would have prevented a multi-day investigation in a production RAG pipeline.
+
+---
+
+## 12. Test Profile Convention
+
+Every project with tests should support a standard `TEST_PROFILE` environment variable for consistent test selection across projects.
+
+### Profiles
+
+| Profile    | Purpose                        | Duration | When                                    |
+| ---------- | ------------------------------ | -------- | --------------------------------------- |
+| `quick`    | Smoke tests, sanity checks     | <2 min   | During development, after small changes |
+| `standard` | Core test suite                | 5-15 min | Pre-commit gate (default if not set)    |
+| `full`     | Everything including heavy/E2E | 30+ min  | Pre-deploy, release gate                |
+
+### Usage
+
+```bash
+TEST_PROFILE=quick npm test    # Fast feedback loop
+TEST_PROFILE=standard npm test # Default if omitted
+TEST_PROFILE=full npm test     # Exhaustive validation
+```
+
+### Implementation
+
+Your test runner reads `process.env.TEST_PROFILE` and adjusts suite selection, timeouts, and parallelism. Default to `standard` when the variable is not set.
+
+### Why This Matters
+
+Working across multiple projects, a universal convention means muscle memory works everywhere -- you don't need to remember project-specific test commands.
+
+---
+
+## 13. Primacy-Recency Pattern for CLAUDE.md
+
+Claude has a primacy-recency effect -- the first and last lines of CLAUDE.md are remembered best. Middle content fades when the file exceeds ~200 instructions.
+
+### Implementation
+
+Put your 5 most critical rules as HTML comments at the very top and bottom:
+
+```markdown
+<!-- CRITICAL RULES -- Primacy Zone (top lines remembered best) -->
+<!-- 1. Your most critical rule that gets violated most often -->
+<!-- 2. Your second most critical rule -->
+<!-- ... up to 5 -->
+
+# Project Title
+
+... (normal CLAUDE.md content) ...
+
+<!-- CRITICAL RULES -- Recency Zone (bottom lines remembered best) -->
+<!-- Rules that need reinforcement -- the ones you've corrected 3+ times -->
+```
+
+**Why HTML comments**: Claude reads them, but they don't render on GitHub. They stay invisible in the README while being in context.
+
+**When to use**: Your CLAUDE.md has >100 lines AND you've corrected the same mistake 3+ times.
+
+---
+
+## 14. Path-Scoped Skills with Globs
+
+Skills can include `globs:` in their frontmatter so they only load when Claude touches matching files. This saves 30-50% tokens by not loading irrelevant skills.
+
+### Format
+
+```yaml
+---
+name: ai-pipeline-debugging-skill
+description: "Debug AI pipeline issues..."
+globs:
+  - src/services/ai/**
+  - src/prompts/tiers/**
+user-invocable: false
+---
+```
+
+### When to Add Globs
+
+| Condition               | Glob Pattern                          |
+| ----------------------- | ------------------------------------- |
+| AI/ML-specific skill    | `src/services/ai/**`, `src/models/**` |
+| Database-specific skill | `src/database/**`, `migrations/**`    |
+| Frontend-specific skill | `src/components/**`, `public/**`      |
+| Deploy-specific skill   | `Dockerfile`, `.github/workflows/**`  |
+| Test-specific skill     | `tests/**`, `scripts/baselines/**`    |
+
+### Impact
+
+In a project with 180+ skills, adding globs to domain-specific skills reduced per-session token usage by ~35%. Skills without globs load every session (good for universal skills like "session-protocol").
+
+**Rule**: Universal skills (session, git, quality) = no globs. Domain-specific skills (AI, DB, deploy) = add globs.
+
+---
+
+## 15. Common Anti-Patterns to Avoid
 
 | Anti-Pattern                      | Correct Approach                        |
 | --------------------------------- | --------------------------------------- |
@@ -211,7 +376,7 @@ Always self-test before asking the user to test:
 
 ---
 
-## 11. Rules System Reference
+## 16. Rules System Reference
 
 Claude Code loads rules from two locations:
 
@@ -226,7 +391,7 @@ Claude Code loads rules from two locations:
 
 ---
 
-## 12. Context Optimization
+## 17. Context Optimization
 
 - Keep CLAUDE.md focused and scannable (under 2 minutes to read)
 - Use `@` imports for external context files instead of inlining everything
