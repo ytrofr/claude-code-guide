@@ -1,20 +1,22 @@
 # Agent Teams Status — Claude Code 2.1.77
 
-**Investigated**: 2026-03-20 | **Status**: NOT AVAILABLE as a formal feature
+**Investigated**: 2026-03-21 | **Status**: Research Preview (shipped in v2.1.32)
 
 ---
 
-## Findings (v2.1.77)
+## Current Status
 
-| Check | Result |
-|-------|--------|
-| `claude --help \| grep team` | No matches |
-| `claude config list \| grep team` | No matches |
-| `settings.json` team references | None |
-| `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` env var | Not set, not documented |
-| `claude agents` command | Lists 37 configured agents (existing feature) |
+Agent Teams shipped as a **research preview** in Claude Code v2.1.32. Enable with:
 
-**"Agent Teams" does not exist as a named feature in Claude Code 2.1.77.**
+```bash
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+```
+
+This allows defining named teams of agents that coordinate on tasks. The feature is experimental and may change in future releases.
+
+## Historical Findings (v2.1.77)
+
+At the time of initial investigation (v2.1.77), the feature was not discoverable via CLI help or settings. It required the experimental env var above.
 
 ---
 
