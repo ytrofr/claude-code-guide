@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Re-read CLAUDE.md after compaction. Key: Jekyll site, docs/guide/ entries, best-practices/rules/.'"
+          }
+        ]
+      }
+    ]
+  }
+}
