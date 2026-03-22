@@ -100,3 +100,24 @@ Task(subagent_type: "general-purpose",
 - Orchestrator stays lean -- can handle 10+ task plans without quality loss
 - Filesystem is the source of truth -- verify via git and file checks, not context
 - Matches Anthropic's Orchestrator-Workers pattern
+
+---
+
+## Concurrency Guidance
+
+- Prefer **max 3 parallel subagents** per turn
+- For 4+ tasks: batch into groups of 3, dispatch sequentially
+- Why: Prevents context explosion when parallel results converge simultaneously
+- Source: DeerFlow (bytedance/deer-flow) uses max 3 with 15-min timeout
+
+---
+
+## Result Offloading
+
+When a subagent returns large output (>50 lines):
+
+1. **Summarize**: "Generated 150-line auth module → src/auth.js"
+2. **Write** full output to project file if persistent storage needed
+3. **Reference** path in main context, not full content
+
+Why: 10x token savings on multi-agent coordination. The orchestrator needs the summary, not the full implementation details.
