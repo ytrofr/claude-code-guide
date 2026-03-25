@@ -20,7 +20,7 @@
 #     --skills         Install starter skills to ~/.claude/skills/
 #     --commands       Install slash commands to .claude/commands/
 #     --hooks          Install hooks to .claude/hooks/ + settings.json
-#     --all-rules      Install all 19 rules (not just core 6)
+#     --all-rules      Install all 35 rules (not just core 6)
 #
 #   Other options:
 #     --rules-only     Only install core rules, skip everything else
@@ -67,14 +67,14 @@ USAGE:
 
 TIERS:
   (default)        Core: 6 rules + BEST-PRACTICES.md + CLAUDE.md import
-  --full           Full: Core + skills + commands + all 19 rules
+  --full           Full: Core + skills + commands + all 35 rules
   --with-hooks     Full + hooks + settings.json
 
 COMPONENT FLAGS (composable):
   --skills         Install starter skills to ~/.claude/skills/
   --commands       Install slash commands to .claude/commands/
   --hooks          Install hooks to .claude/hooks/ + settings.json
-  --all-rules      Install all 19 rules (not just core 6)
+  --all-rules      Install all 35 rules (not just core 6)
 
 OPTIONS:
   --global         Install to ~/.claude/ (applies to all projects)
@@ -106,7 +106,7 @@ WHAT GETS INSTALLED (by tier):
     .claude/commands/                5 slash commands (/session-start, etc.)
 
   --all-rules:
-    .claude/rules/                   All 19 rules (global, planning, quality, etc.)
+    .claude/rules/                   All 35 rules (global, planning, quality, debugging, etc.)
 
   --hooks:
     .claude/hooks/                   4 hook scripts (pre-prompt, session, etc.)
@@ -253,7 +253,7 @@ install_all_rules() {
   fetch_file "$TEMPLATE_DIR/.claude/rules/domain/patterns.md" "$rules_base/domain/patterns.md"
   fetch_file "$TEMPLATE_DIR/.claude/rules/projects/registry.md" "$rules_base/projects/registry.md"
 
-  success "Installed 19 rules across 9 categories to .claude/rules/"
+  success "Installed 35 rules across 10 categories to .claude/rules/"
   dim "    Customize: domain/patterns.md and projects/registry.md for your project"
 }
 
@@ -700,7 +700,7 @@ do_install() {
 
   # --- Core: Rules ---
   if [ "$install_all_rules_flag" = "true" ]; then
-    info "Installing all 19 rules..."
+    info "Installing all 35 rules..."
     install_all_rules "$target"
   else
     info "Installing core rules..."
@@ -746,7 +746,7 @@ do_install() {
   echo ""
   echo "  What was installed:"
   if [ "$install_all_rules_flag" = "true" ]; then
-    echo "    .claude/rules/               -- 19 rules across 9 categories (auto-loaded)"
+    echo "    .claude/rules/               -- 35 rules across 10 categories (auto-loaded)"
   else
     echo "    .claude/rules/best-practices/ -- 6 core rules (auto-loaded)"
   fi

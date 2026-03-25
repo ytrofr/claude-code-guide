@@ -400,6 +400,159 @@ Claude Code loads rules from two locations:
 
 ---
 
+## 18. Frontmatter Format
+
+**All YAML frontmatter in skills and commands MUST use hyphenated field names and comma-separated values.**
+
+This is the most common silent failure in Claude Code configurations. The wrong format causes tool restrictions to be silently ignored.
+
+### Correct Format
+```yaml
+allowed-tools: Read, Bash, Grep
+disable-model-invocation: true
+user-invocable: false
+```
+
+### Wrong Format (Silently Ignored)
+```yaml
+allowed_tools: ["Read", "Bash", "Grep"]  # Underscored + JSON array
+```
+
+### Quick Diagnostic
+```bash
+# Find wrong field names
+grep -rl 'allowed_tools' ~/.claude/commands/ ~/.claude/skills/*/SKILL.md 2>/dev/null
+# Should return 0 results
+```
+
+### Description Best Practices
+- MUST start with action verb (Apply, Audit, Create, Debug, Execute, Fetch, Fix...)
+- MUST include "Use when..." clause
+- Under 1024 characters
+
+**Evidence**: 7/9 commands found with wrong format during production audit -- tool restrictions silently disabled for months.
+
+---
+
+## 19. Debugging Methodology
+
+**When multiple failures occur, build a diagnostic tracer BEFORE fixing anything. When a fix doesn't work on first attempt, STOP fixing and START tracing.**
+
+### Diagnostic-First Rule
+When 2+ failures come from the same pipeline, don't patch symptoms. Build a tracer that shows every event, and identify the actual root cause.
+
+### No Band-Aid Rule
+If a fix involves "tell the LLM to do X", "reorder tools hoping the LLM picks differently", or "clear session/cache" -- it's a band-aid. Stop and trace the actual data flow.
+
+### Mandatory Fix Workflow
+```
+1. TRACE   -- Read actual logs/data
+2. ISOLATE -- Reproduce with smallest test
+3. PINPOINT -- Identify the EXACT line
+4. FIX     -- One fix, one root cause
+5. VERIFY  -- Run the same trace
+```
+
+### Escalation Gate
+**2 failed attempts on the same bug → MANDATORY STOP.** Build a diagnostic tracer, read actual data flow, present root cause before writing more code.
+
+---
+
+## 20. Task Tracking
+
+**Claude MUST proactively create a task list BEFORE starting work** when any of these conditions are met:
+
+- Task has 2+ distinct implementation steps
+- User provides a list of work items
+- Multi-file changes are needed
+- Work spans significant context
+
+### Task Hygiene
+1. Create upfront after understanding scope
+2. Mark `in_progress` BEFORE starting work
+3. Mark `completed` ONLY after verification passes
+4. Add follow-up tasks as discovered -- don't ignore them
+5. Work in order (lowest ID first unless dependencies say otherwise)
+
+**Anti-pattern**: Creating a task, doing the work, marking complete without testing.
+
+---
+
+## 21. External API Safety
+
+**When an external API returns 429 (rate limited), use exponential backoff with a circuit breaker. Never retry in a tight loop.**
+
+### Exponential Backoff
+```
+Attempt 1: wait 1s
+Attempt 2: wait 2s
+Attempt 3: wait 4s
+Attempt 4: wait 8s
+Max: 3-4 retries, then fail gracefully
+```
+
+Add jitter (random 0-500ms) to prevent thundering herd.
+
+### Circuit Breaker
+After the FIRST 429 in a batch operation, stop ALL pending requests -- don't fire remaining calls just to get more 429s.
+
+### Rate Limit Ratio Check
+```javascript
+remaining = headers['x-ratelimit-remaining']
+limit = headers['x-ratelimit-limit']
+if (remaining / limit < 0.05) pause until reset
+```
+
+---
+
+## 22. Environment Hygiene
+
+### API Keys: Never in Shell Profiles
+**NEVER export API keys in `.bashrc`, `.profile`, or `.zshrc`.** Shell profile exports pollute every child process.
+
+| Where Keys Belong | When |
+|-------------------|------|
+| `.env.local` | Local development |
+| Secret Manager | Production/staging |
+| CI/CD env vars | Pipelines |
+
+### No Hardcoded URLs
+**NEVER hardcode base URLs, ports, or API endpoints.** Always read from environment variables.
+
+| Item | Bad | Good |
+|------|-----|------|
+| API URL | `fetch('https://api.prod.example.com')` | `fetch(\`\${API_BASE_URL}\`)` |
+| Port | `app.listen(8080)` | `app.listen(process.env.PORT)` |
+| OAuth redirect | `redirect_uri: 'https://...'` | `redirect_uri: process.env.OAUTH_REDIRECT_URI` |
+
+### Feature Toggles
+Every optional feature MUST have a `{FEATURE}_ENABLED` env var, defaulting to `true`, checked at the feature's entry point.
+
+---
+
+## 23. Test Preflight
+
+**Before running integration/E2E tests, verify infrastructure is up in <30 seconds.**
+
+A 30-second preflight saves 5-10 minutes of confusing test failures.
+
+### Preflight Checklist
+
+| Check | How | Fail Action |
+|-------|-----|-------------|
+| Server running | `curl -sf localhost:$PORT/health` | Start server first |
+| Database connected | `SELECT 1` via health endpoint | Start DB |
+| Required env vars set | Check for empty vars | Warn and abort |
+| External APIs reachable | `curl -sf $API_URL` (timeout 5s) | Skip external tests |
+| Ports not conflicting | `lsof -i :$PORT` | Kill stale process |
+
+### When to Skip
+- Unit tests with no external dependencies
+- Linting / formatting / type checking
+- Tests that spin up their own infrastructure
+
+---
+
 ## Full Guide Reference
 
 For deeper coverage of any topic, see the complete documentation:

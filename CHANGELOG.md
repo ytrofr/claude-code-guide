@@ -4,6 +4,29 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [4.0.0] - 2026-03-25
+
+### Added
+- Chapter 60: Claude Code 2.1.82-2.1.83 features (CwdChanged/FileChanged hooks, TaskOutput deprecation, MEMORY.md cap, transcript search, env scrub, managed-settings.d)
+- Chapter 61: Stack Audit & Maintenance Patterns (frontmatter compliance, /document v3 three-level analysis, /retrospective skill pipeline, four-area audit methodology)
+- 11 new universal rules in best-practices: frontmatter-format, diagnostic-first, no-band-aids, autonomous-fixing, task-tracking, retry-circuit-breaker, test-preflight, feature-toggle-principle, api-key-hygiene, no-hardcoded-urls, bash-filename-iteration
+- Debugging rules category (diagnostic-first, no-band-aids) — prevents patch-on-patch cycles
+- 6 new BEST-PRACTICES.md sections (18-23): Frontmatter Format, Debugging Methodology, Task Tracking, External API Safety, Environment Hygiene, Test Preflight
+
+### Changed
+- Template commands: Fixed frontmatter format in all 7 commands (`allowed_tools` → `allowed-tools`, JSON arrays → comma-separated)
+- Best practices rules: 12 → 23 universal rules
+- Template rules: 24 → 35 rules across debugging/, process/, technical/ categories
+- Session protocol rule: Updated for Claude Code 2.1.83 features
+- Plan checklist rule: Updated to 13 mandatory sections with KPI dashboard format
+- BEST-PRACTICES.md: 17 → 23 sections
+- docs/index.md: Updated stats (2.1.83, 21 hooks, 23 rules, 240+ patterns)
+- Best practices version: 1.2.0 → 2.0.0
+
+### Removed
+- Archived 7 deprecated pre-prompt hook chapters to docs/archive/ (16, 17, 20, 21, 24, 29b, pre-prompt-hook-complete-guide)
+- Pre-prompt hook skill matching system fully superseded by Claude Code native skill loading (v2.1.76+)
+
 ## [3.5.0] - 2026-03-06
 
 ### Changed

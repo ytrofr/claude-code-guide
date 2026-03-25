@@ -453,6 +453,60 @@ A production project with 26 rule files discovered 15 were identical duplicates:
 
 **Never duplicate a rule across locations.** Use `INDEX.txt` (not `.md`) in each location to document what lives where.
 
+## Auto-Classification: How /document Routes Rules
+
+When using `/document` (see [Chapter 32](32-document-automation.md)), the pattern analysis engine automatically classifies each discovered pattern to the correct rule level using a 3-step process:
+
+### Step 1: Discover What Exists
+
+Before suggesting any rule, `/document` scans all 3 levels:
+
+```bash
+# Machine-level: what universal rules exist?
+find ~/.claude/rules/ -name "*.md" | wc -l
+
+# Project-level: what project rules exist?
+find .claude/rules/ -name "*.md" 2>/dev/null | wc -l
+
+# Branch-level: any sprint-specific rules?
+ls .claude/rules/branch/ 2>/dev/null
+```
+
+### Step 2: Classify Each Pattern
+
+```
+Pattern discovered
+    │
+    ├─ Applies to ANY project? (tech-agnostic, universal)
+    │  → MACHINE RULE: ~/.claude/rules/{category}/
+    │
+    ├─ Applies to ALL branches of THIS project?
+    │  → PROJECT RULE: .claude/rules/
+    │
+    ├─ Sprint/feature-specific?
+    │  → BRANCH RULE: roadmap or .claude/rules/branch/
+    │
+    └─ None → Not a rule
+```
+
+### Step 3: Suggest NEW or UPDATE
+
+- **Pattern already exists at the right level** → suggest UPDATE with diff
+- **Pattern exists at the wrong level** → suggest MOVE (e.g., project → machine)
+- **Pattern is new** → suggest NEW with draft content and target path
+
+### Classification Quick Reference
+
+| If the pattern... | Level | Example |
+|-------------------|-------|---------|
+| Is a universal NEVER/ALWAYS | Machine | "Never use `killall node` on WSL" |
+| Is tech-agnostic best practice | Machine | "Use barrel exports for 5+ file directories" |
+| Is project tech stack convention | Project | "Always use pgvector for vector search" |
+| Is domain-specific to this project | Project | "Hebrew text requires RTL containers" |
+| Is temporary for this sprint | Branch | "Feature flag X must stay enabled until release" |
+
+For the full rule suggestion format and decision matrix, see [Chapter 32: Document Automation](32-document-automation.md).
+
 ## Example: Complete Rules Setup
 
 See the `template/.claude/rules/` directory for a complete working example.
@@ -478,5 +532,7 @@ grep -c "Sacred Commandment" CLAUDE.md  # Should be < 3
 - [Official Memory Documentation](https://code.claude.com/docs/en/memory)
 - Chapter 12: Memory Bank Hierarchy
 - Chapter 25: Best Practices Reference
+- Chapter 31b: Per-Branch Rules (branch-level rule loading)
+- Chapter 32: Document Automation (auto-classification of rules during /document)
 - Entry #245: Implementation example (15 rule files)
 - Entry #247: Context optimization patterns

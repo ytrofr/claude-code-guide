@@ -1,6 +1,6 @@
 ---
 description: "Create a skill from session learnings - GUIDED mode"
-allowed_tools: ["Read", "Write", "Bash", "Grep", "Edit"]
+allowed-tools: Read, Write, Bash, Grep, Edit
 ---
 
 # Retrospective - Guided Skill Creation

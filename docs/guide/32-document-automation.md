@@ -37,6 +37,26 @@ The 13-step workflow:
 
 ## Pattern Analysis Engine (Steps 5-8)
 
+### Smart Discovery (Step 5 — runs BEFORE suggestions)
+
+Before suggesting anything, `/document` scans existing artifacts at all 3 levels to prevent duplicates and correctly flag NEW vs UPDATE:
+
+```bash
+# Machine-level: scan categories and rule names
+find ~/.claude/rules/ -name "*.md" -exec basename {} .md \; | sort
+
+# Project-level: scan project rules
+find .claude/rules/ -name "*.md" -exec basename {} .md \; 2>/dev/null | sort
+
+# Branch-level: check for branch-specific rules/roadmap
+ls .claude/rules/*$(git branch --show-current 2>/dev/null)* 2>/dev/null
+
+# Skills and blueprints
+ls ~/.claude/commands/ .claude/commands/ 2>/dev/null
+```
+
+This discovery step is critical — without it, `/document` would suggest creating rules that already exist, leading to duplication across the hierarchy.
+
 ### Decision Tree (AND Logic - Multiple Can Apply)
 
 ```yaml
@@ -45,11 +65,8 @@ Pattern detected → Check ALL conditions:
   ✓ Repeatable (20+/year) + Saves >1h?
     → ADD: SKILL SUGGESTION
 
-  ✓ Universal enforcement needed?
-    → ADD: PROJECT RULE
-
-  ✓ Branch-specific pattern?
-    → ADD: BRANCH RULE + MANIFEST UPDATE
+  ✓ Enforcement needed? → CLASSIFY RULE LEVEL (see below)
+    → ADD: MACHINE / PROJECT / BRANCH RULE
 
   ✓ Quick reference (<5 lines)?
     → ADD: CORE-PATTERNS update
@@ -60,15 +77,70 @@ Pattern detected → Check ALL conditions:
 Result: 0-5 suggestions can be generated simultaneously
 ```
 
+### Rule Level Classification (3-Level Decision Tree)
+
+When a pattern warrants a rule, classify it to the correct level:
+
+```
+Pattern discovered
+    │
+    ├─ Applies to ANY project on this machine?
+    │  (tech-agnostic, universal NEVER/ALWAYS)
+    │  YES → MACHINE RULE (~/.claude/rules/{category}/)
+    │
+    ├─ Applies to ALL branches of THIS project?
+    │  (project conventions, tech stack rules)
+    │  YES → PROJECT RULE (.claude/rules/)
+    │
+    ├─ Specific to current sprint/branch/feature?
+    │  YES → BRANCH RULE (roadmap or .claude/rules/branch/)
+    │
+    └─ None of the above → Skip (not a rule)
+```
+
+**Classification examples**:
+
+| Pattern | Level | Why |
+|---------|-------|-----|
+| "Never kill all node processes on WSL" | Machine | OS-specific, all projects |
+| "Use barrel exports for 5+ file dirs" | Machine | Universal code organization |
+| "Always use pgvector for embeddings" | Project | Project-specific tech choice |
+| "Hebrew text must use RTL containers" | Project | Only relevant to this project |
+| "Feature X requires flag Y this sprint" | Branch | Temporary, sprint-scoped |
+
+### Rule Suggestion Format
+
+Each rule suggestion includes full context for review:
+
+```
+[N]. [NEW|UPDATE] RULE — [level]: [category]/[name]
+    Target: [exact file path]
+    Exists: [yes — update needed | no — new rule]
+    Pattern: [the lesson in 1 sentence]
+    Why: [what happened this session that surfaced it]
+    Draft:
+    ---
+    # [Rule Title]
+    **Scope**: [what it applies to]
+    **Authority**: MANDATORY
+    ---
+    ## Core Rule
+    [1-2 sentence rule]
+    ## When to Apply
+    [conditions]
+    ---
+```
+
 ### 5 Suggestion Types
 
-| Type              | When                       | Template                |
-| ----------------- | -------------------------- | ----------------------- |
-| **SKILL**         | ROI >100%, used 20+/year   | SKILL-TEMPLATE.md       |
-| **PROJECT RULE**  | Universal enforcement      | rules/domain/pattern.md |
-| **BRANCH RULE**   | Branch-specific pattern    | CONTEXT-MANIFEST update |
-| **CORE-PATTERNS** | Quick reference (<5 lines) | Add to CORE-PATTERNS.md |
-| **BLUEPRINT**     | 3+ files, system change    | BLUEPRINT-TEMPLATE.md   |
+| Type              | When                       | Level | Template                |
+| ----------------- | -------------------------- | ----- | ----------------------- |
+| **SKILL**         | ROI >100%, used 20+/year   | Machine or Project | SKILL-TEMPLATE.md       |
+| **MACHINE RULE**  | Universal NEVER/ALWAYS     | Machine | `~/.claude/rules/{cat}/` |
+| **PROJECT RULE**  | Project-wide enforcement   | Project | `.claude/rules/`         |
+| **BRANCH RULE**   | Sprint-specific pattern    | Branch | Roadmap or `.claude/rules/branch/` |
+| **CORE-PATTERNS** | Quick reference (<5 lines) | Project | Add to CORE-PATTERNS.md |
+| **BLUEPRINT**     | 3+ files, system change    | Project | BLUEPRINT-TEMPLATE.md   |
 
 ---
 
@@ -122,11 +194,24 @@ user-invocable: true
 - [ ] ROI >100%
 - [ ] Not foundational (foundational → rules)
 
-### Create RULE if:
+### Create MACHINE RULE if:
 - [ ] MANDATORY enforcement needed
-- [ ] Prevents critical bugs/issues
-- [ ] Universal across all branches
+- [ ] Applies to ALL projects (tech-agnostic, universal)
+- [ ] Prevents critical bugs/issues across any codebase
 - [ ] <300 lines
+- [ ] Location: `~/.claude/rules/{category}/`
+
+### Create PROJECT RULE if:
+- [ ] MANDATORY enforcement needed
+- [ ] Applies to all branches of THIS project (not universal)
+- [ ] Project-specific tech stack, conventions, or compliance
+- [ ] <300 lines
+- [ ] Location: `.claude/rules/`
+
+### Create BRANCH RULE if:
+- [ ] Sprint-specific or feature-flag tracking
+- [ ] Temporary — will be removed or promoted after the sprint
+- [ ] Location: Branch roadmap or `.claude/rules/branch/`
 
 ### Update CORE-PATTERNS if:
 - [ ] Quick reference needed (<5 lines)
@@ -141,53 +226,52 @@ user-invocable: true
 ## Example Output
 
 ```
+## PATTERN ANALYSIS — 4 suggestions
 
-## 📋 DOCUMENTATION COMPLETE
+MACHINE-LEVEL (all projects):
+  1. SKILL — gap-detection-workflow-skill: ROI 40+ hrs/year (20 uses x 2h)
 
-Entry #282 created
+PROJECT-LEVEL (all branches):
+  2. NEW RULE — database/gap-detection-patterns.md: enforce gap query patterns
+     Target: .claude/rules/database/gap-detection-patterns.md
+     Exists: no — new rule
+  3. CORE-PATTERNS — gap workflow quick reference (3 lines)
 
-## 🎯 PATTERN ANALYSIS (3 suggestions detected)
+BRANCH-LEVEL (current branch):
+  4. UPDATE RULE — branch/sprint-3-tracking.md: mark gap detection complete
+     Target: .claude/rules/branch/sprint-3-tracking.md
+     Exists: yes — update task status
 
-### 1. SKILL SUGGESTION ✓
-
-Name: gap-detection-workflow-skill
-ROI: 40+ hrs/year (20 uses × 2 hours)
-Triggers: gap detection, missing data, investigate gaps
-
-### 2. RULE SUGGESTION ✓
-
-Name: database/gap-detection-patterns.md
-Scope: PROJECT (applies to all branches)
-Reason: Universal enforcement needed
-
-### 3. CORE-PATTERNS UPDATE ✓
-
-Pattern: Gap workflow quick reference (3 lines)
-
----
-
-Select options (1-3 comma-separated, 'all', or 'none'): 1,3
-
-```
-
+Select (numbers / all / none): 1,2
 ```
 
 ---
 
-## Overlap Detection
+## Overlap Detection (3-Level Scan)
 
-Before suggesting, check for existing:
+Before suggesting, scan all 3 rule levels to prevent duplicates:
 
 ```bash
-# Check if skill already exists
-grep -r "Use when" ~/.claude/skills/ | grep -i "[keywords]"
+# Machine-level rules (universal)
+find ~/.claude/rules/ -name "*.md" -exec basename {} .md \; | sort
 
-# Check if rule already exists
-grep -r "[pattern]" .claude/rules/
+# Project-level rules
+find .claude/rules/ -name "*.md" -exec basename {} .md \; 2>/dev/null | sort
 
-# Check if in CORE-PATTERNS
-grep "[pattern]" memory-bank/always/CORE-PATTERNS.md
+# Branch-level rules
+ls .claude/rules/branch/ 2>/dev/null
+
+# Skills (machine + project)
+ls ~/.claude/commands/ .claude/commands/ 2>/dev/null
+
+# CORE-PATTERNS
+grep "[pattern]" memory-bank/always/CORE-PATTERNS.md 2>/dev/null
 ```
+
+**If an existing rule covers the same pattern**: suggest UPDATE (not NEW).
+**If the rule exists at the wrong level**: suggest MOVE (e.g., project rule that should be machine-level).
+
+See also: [Chapter 26 — Global vs Project Rule Deduplication](26-claude-code-rules-system.md#global-vs-project-rule-deduplication)
 
 ---
 
@@ -239,8 +323,11 @@ echo '{"prompt": "/document"}' | bash .claude/hooks/pre-prompt.sh
 **Related Chapters**:
 
 - Chapter 23: Session Documentation (basic workflow)
+- Chapter 26: Rules System (rule hierarchy, deduplication, placement)
 - Chapter 29: Branch Context System
 - Chapter 31: Branch-Aware Development
+- Chapter 31b: Per-Branch Rules (branch-level rule loading)
+- Chapter 55: /document v3 (production evidence of 3-level analysis)
 
 ---
 

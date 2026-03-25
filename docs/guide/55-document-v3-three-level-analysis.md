@@ -160,7 +160,8 @@ Hardcoded paths like `memory-bank/learned/` only work for OGAS. Other projects u
 ## References
 
 - Chapter 23: Original `/document` (Entry creation only)
-- Chapter 32: v2 with pattern analysis (13 steps, no pause)
-- Chapter 26: Rules system
+- Chapter 32: Enhanced with smart discovery, 3-level rule classification, and draft format
+- Chapter 26: Rules system (auto-classification, deduplication)
 - Chapter 16: Skills activation
 - Chapter 29: Branch context system
+- Chapter 31b: Per-branch rules (branch-level rule loading)

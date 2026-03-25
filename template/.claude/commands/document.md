@@ -1,6 +1,6 @@
 ---
 description: "Document session work - Creates Entry files and analyzes patterns for skills/rules"
-allowed_tools: ["Read", "Write", "Bash", "Grep", "Edit", "Glob"]
+allowed-tools: Read, Write, Bash, Grep, Edit, Glob
 model: sonnet
 ---
 

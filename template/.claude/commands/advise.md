@@ -1,6 +1,6 @@
 ---
 description: "Search skills registry before starting new work"
-allowed_tools: ["Read", "Bash", "Grep"]
+allowed-tools: Read, Bash, Grep
 ---
 
 # /advise - Search Skills Before Starting Work
