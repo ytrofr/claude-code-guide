@@ -1,3 +1,5 @@
+> **ARCHIVED**: This chapter documents the custom pre-prompt hook skill matching system, which was superseded by Claude Code's native skill loading (v2.1.76+). Kept for historical reference only. See [Skills Activation System](/docs/skill-activation-system) for the current approach.
+
 # Chapter 20: Skills Filtering Optimization (Entry #229)
 
 > **DEPRECATED (Feb 2026)**: The pre-prompt hook filtering described here is no longer needed. Claude Code now natively discovers and loads skills from `~/.claude/skills/` using the `description:` field. The scoring principles (relevance thresholds, branch priority) may still inform how to write effective skill descriptions. Kept for historical reference.

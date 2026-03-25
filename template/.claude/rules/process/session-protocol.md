@@ -1,63 +1,68 @@
-# Session Protocol - Anthropic Best Practice
+# Session Protocol - Claude Code 2.1.83
 
-**Source**: Anthropic's Claude Best Practices + Agent Harness patterns
-
----
-
-## Quick Summary
-
-**Start**: `git status` -> check status -> select ONE incomplete task
-**End**: Update status -> checkpoint commit -> never stop mid-feature
-**Compaction**: On fresh context, discover state from filesystem
+**Scope**: ALL projects
+**Authority**: Session lifecycle management
+**Updated**: 2026-03-25
 
 ---
 
-## Session Start Protocol
+## Session Start
 
-Run at beginning of EVERY session:
+1. `/session-start` or manual state discovery (git status, system-status.json)
+2. Use `--name <name>` flag to label sessions by branch/feature for easy resume
+3. Use `/effort` to set model effort level (low for routine, high for complex)
 
-```bash
-# Use slash command (preferred)
-/session-start
+## During Session
 
-# Or manual:
-git status && git log --oneline -5
-```
+- **1M context**: Opus 4.6 has 1M context by default (Max/Team/Enterprise)
+- **PostCompact hook**: After compaction, re-read critical files listed in the hook output
+- **75% rule**: Checkpoint at 75% context — quality degrades past this point
+- **`/context`**: Use to audit context usage and get optimization suggestions
+- **Transcript search**: Press `/` in transcript mode (Ctrl+O) to search, `n`/`N` to step through matches
+- **Ctrl+L**: Full screen clear + redraw — recovery when UI goes blank
 
-**Steps**:
+## Session End
 
-1. `git status` -> Check current branch and changes
-2. Check project status -> Find incomplete work
-3. Select ONE incomplete task
-4. Focus on incremental progress
+- `/session-end` or manual checkpoint commit
+- `SessionEnd` hooks have 5s timeout (configured via `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`)
 
----
+## Worktree Usage
 
-## Session End Protocol
+- Use `--worktree` for parallel agent work on large repos
+- Stale worktrees from interrupted runs are auto-cleaned (2.1.76+)
+- Worktree names must NOT contain forward slashes (caused hangs pre-2.1.83)
 
-Run before ending ANY session:
+## Hook Events
 
-```bash
-# Use slash command (preferred)
-/session-end
+- `CwdChanged` / `FileChanged` — reactive environment management (e.g., direnv)
+- `PostCompact` — fires after compaction, reload context
+- Agents can declare `initialPrompt` in frontmatter to auto-submit first turn
 
-# Or manual:
-git status --short
-git add -A && git commit -m "checkpoint: [work description]"
-```
+## Environment Variables
 
-**Checklist**:
+| Variable | Purpose |
+|----------|---------|
+| `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS=5000` | Extend SessionEnd hook timeout |
+| `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` | Strip API credentials from subprocesses (Bash, hooks, MCP stdio) |
+| `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK` | Disable non-streaming fallback |
 
-- [ ] All work committed or checkpointed
-- [ ] Status updated with progress
-- [ ] No features left in unknown state
+## Settings
 
----
+| Setting | Purpose |
+|---------|---------|
+| `sandbox.failIfUnavailable` | Exit with error when sandbox can't start (instead of running unsandboxed) |
+| `managed-settings.d/` | Drop-in directory for modular policy fragments (merge alphabetically) |
+| `disableDeepLinkRegistration` | Prevent `claude-cli://` protocol handler registration |
 
-## Key Principles
+## Key Features by Version
 
-- **Incremental Progress**: One feature at a time
-- **Verify Before Complete**: Test before marking done
-- **Compaction Awareness**: Discover state from filesystem on fresh context
-- **Never Stop Mid-Feature**: Complete or create checkpoint
-- **75% Context Rule**: Stop at 75% context usage, commit, start fresh session
+| Feature | Version | Usage |
+|---------|---------|-------|
+| `/effort` | 2.1.76 | Set effort level per-session |
+| `--name` | 2.1.76 | Label session at startup |
+| `worktree.sparsePaths` | 2.1.76 | Sparse checkout for large repos |
+| Deferred tools fix | 2.1.76 | ToolSearch survives compaction |
+| Background agent fix | 2.1.83 | No longer invisible after compaction |
+| `TaskOutput` deprecated | 2.1.83 | Use `Read` on task's output file path instead |
+| MEMORY.md cap | 2.1.83 | Truncates at 25KB + 200 lines |
+| Transcript search | 2.1.83 | `/` in Ctrl+O, `n`/`N` to navigate |

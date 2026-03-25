@@ -1,3 +1,5 @@
+> **ARCHIVED**: This chapter documents the custom pre-prompt hook skill matching system, which was superseded by Claude Code's native skill loading (v2.1.76+). Kept for historical reference only. See [Skills Activation System](/docs/skill-activation-system) for the current approach.
+
 # Chapter 21: Pre-prompt Optimization (Entry #228)
 
 > **DEPRECATED (Feb 2026)**: The UserPromptSubmit pre-prompt hook is no longer needed. Claude Code now natively discovers and loads skills from `~/.claude/skills/`. The optimization techniques described here are historical. This chapter is kept for reference.

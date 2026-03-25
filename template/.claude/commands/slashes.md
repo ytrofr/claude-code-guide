@@ -1,5 +1,7 @@
 ---
-description: Complete overview of all slash commands with usage examples
+description: Show all available slash commands with usage examples. Use when user asks about available commands.
+allowed-tools: Read, Grep, Glob
+user-invocable: true
 ---
 
 # Complete Slash Commands Reference

@@ -1,14 +1,14 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: Complete guide to Claude Code (Opus 4.6, Sonnet 4.6, Haiku 4.5). 1M token context window. 18 hook events. 226+ native skills. Agent teams and task management. Production-tested.
+description: Complete guide to Claude Code (Opus 4.6, Sonnet 4.6, Haiku 4.5). 1M token context window. 21 hook events. 240+ native skills. Agent teams and task management. Production-tested.
 ---
 
 # Claude Code Guide
 
 **What is Claude Code?** Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a **1M token context window**. It provides an interactive terminal experience where you can collaborate with Claude directly in your development environment -- including agent teams, task management, and coordinated parallel execution.
 
-**What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 226+ proven patterns from production use.
+**What does this guide cover?** Complete setup, skills system, hooks, MCP integration, and 240+ proven patterns from production use.
 
 **How long to set up?** 30 minutes for basic setup, 2-4 hours for full optimization.
 
@@ -22,7 +22,7 @@ Claude Code is installed via the official installer: `curl -fsSL https://claude.
 
 ### What are Claude Code skills?
 
-Skills are reusable Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clauses). Claude Code natively discovers all skills from `~/.claude/skills/` and activates them based on your query. No custom hooks needed. Our guide documents 226+ production-tested skills. Learn more in our [Skill Activation System](skill-activation-system.md) documentation.
+Skills are reusable Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clauses). Claude Code natively discovers all skills from `~/.claude/skills/` and activates them based on your query. No custom hooks needed. Our guide documents 240+ production-tested skills. Learn more in our [Skill Activation System](skill-activation-system.md) documentation.
 
 ### What is the pre-prompt hook?
 
@@ -34,7 +34,7 @@ MCP (Model Context Protocol) extends Claude Code with external tools like databa
 
 ### How do skills work?
 
-Skills are Markdown files with YAML frontmatter (`name:` and `description:` fields). Claude Code natively discovers all skills in `~/.claude/skills/` and matches them to your queries using the `description:` field. The key to good activation is writing clear "Use when..." clauses in your descriptions. 226+ skills documented in this guide.
+Skills are Markdown files with YAML frontmatter (`name:` and `description:` fields). Claude Code natively discovers all skills in `~/.claude/skills/` and matches them to your queries using the `description:` field. The key to good activation is writing clear "Use when..." clauses in your descriptions. 240+ skills documented in this guide.
 
 ### What is the memory bank?
 
@@ -42,7 +42,7 @@ The memory bank is a hierarchical knowledge system that stores project context, 
 
 ### What are Claude Code hooks?
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 18 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 21 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, CwdChanged, FileChanged, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
 
 ### What are Claude Code agents?
 
@@ -71,22 +71,22 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 - [MCP Integration](guide/06-mcp-integration.md) - External tool connections (PostgreSQL, GitHub, Playwright)
 - [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md) - 4-tier context management
-- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 18 hook events, 3 hook types
+- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 21 hook events, 3 hook types
 - [Git vs Claude Hooks](guide/14-git-vs-claude-hooks-distinction.md) - When to use which
 - [Progressive Disclosure](guide/15-progressive-disclosure.md) - Token-efficient context loading
 - [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) - Historical (deprecated Feb 2026)
 
 ### Skills System
 
-- [Skill Activation System](skill-activation-system.md) - 226+ production skills (native loading)
-- [Skills Activation Breakthrough](guide/16-skills-activation-breakthrough.md) - How activation works
-- [Skill Detection Enhancement](guide/17-skill-detection-enhancement.md) - Improving match rates
-- [Skill Keyword Methodology](guide/24-skill-keyword-enhancement-methodology.md) - Trigger optimization
-- [Skills Filtering Optimization](guide/20-skills-filtering-optimization.md) - Token reduction
+- [Skill Activation System](skill-activation-system.md) - 240+ production skills (native loading)
+- [Skills Activation Breakthrough](guide/16-skills-activation-breakthrough.md) - How activation works (archived)
+- [Skill Detection Enhancement](guide/17-skill-detection-enhancement.md) - Improving match rates (archived)
+- [Skill Keyword Methodology](guide/24-skill-keyword-enhancement-methodology.md) - Trigger optimization (archived)
+- [Skills Filtering Optimization](guide/20-skills-filtering-optimization.md) - Token reduction (archived)
 - [Skill Optimization Patterns](guide/28-skill-optimization-patterns.md) - Maintenance workflows
 - [Skill Optimization & Maintenance](guide/35-skill-optimization-maintenance.md) - 6-step audit workflow
 - [Session Documentation Skill](guide/23-session-documentation-skill.md) - Auto-document sessions
-- [Document Automation](guide/32-document-automation.md) - Pattern analysis engine
+- [Document Automation](guide/32-document-automation.md) - Pattern analysis engine with 3-level rule classification
 
 ### Agents & Teams
 
@@ -97,7 +97,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 - [Playwright E2E Testing](guide/19-playwright-e2e-testing.md) - End-to-end browser testing
 - [Playwright MCP Integration](guide/19b-playwright-mcp-integration.md) - MCP-based browser automation
-- [Comprehensive Skill Activation Testing](guide/29b-comprehensive-skill-activation-testing.md) - 170-query test suite
+- [Comprehensive Skill Activation Testing](guide/29b-comprehensive-skill-activation-testing.md) - 170-query test suite (archived)
 - [Test Priority Best Practices](guide/30b-test-priority-best-practices.md) - P0/P1/P2 guidelines
 
 ### Branch & Context Management
@@ -105,6 +105,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Branch Context System](guide/29-branch-context-system.md) - Multi-branch workflows
 - [Blueprint Auto-Loading](guide/30-blueprint-auto-loading.md) - Automatic context injection
 - [Branch-Aware Development](guide/31-branch-aware-development.md) - Branch-specific patterns
+- [Per-Branch Rules](guide/31b-per-branch-rules.md) - Branch-specific rule files that only load on their branch
 - [Branch-Specific Skill Curation](guide/33-branch-specific-skill-curation.md) - Per-branch skill sets
 
 ### Planning & Quality
@@ -117,12 +118,11 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 ### Advanced Topics
 
 - [Advanced Configuration Patterns](guide/46-advanced-configuration-patterns.md) - Path-specific rules, agent memory, scope
-
 - [MCP Cost Control](guide/18-perplexity-cost-optimization.md) - Cache-first research with hook enforcement
-- [Pre-Prompt Optimization](guide/21-pre-prompt-optimization.md) - Performance tuning
+- [Pre-Prompt Optimization](guide/21-pre-prompt-optimization.md) - Performance tuning (archived)
 - [Marketplace Integration](guide/22-wshobson-marketplace-integration.md) - Third-party agent integration
 - [Best Practices Reference](guide/25-best-practices-reference.md) - Anthropic-aligned patterns
-- [Rules System](guide/26-claude-code-rules-system.md) - Project-level enforcement, global vs project deduplication
+- [Rules System](guide/26-claude-code-rules-system.md) - 3-level rule hierarchy, auto-classification, deduplication
 - [Fast Cloud Run Deployment](guide/27-fast-cloud-run-deployment.md) - GCP deployment patterns
 - [Basic Memory MCP Integration](guide/34-basic-memory-mcp-integration.md) - Persistent knowledge
 - [Context Costs & Skill Budget](guide/38-context-costs-and-skill-budget.md) - Token optimization
@@ -132,6 +132,20 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Session Memory & Compaction](guide/42-session-memory-compaction.md) - Context recovery
 - [Claude Agent SDK](guide/43-claude-agent-sdk.md) - Building custom agents
 - [Skill Design Principles](guide/44-skill-design-principles.md) - Degrees of freedom framework
+- [Workflow Resilience Patterns](guide/49-workflow-resilience-patterns.md) - Recovery from failures
+- [Verification Feedback Loop](guide/50-verification-feedback-loop.md) - Automated verification patterns
+- [Persistent Memory Patterns](guide/51-persistent-memory-patterns.md) - Cross-session memory strategies
+- [UI/UX Best Practices Rules](guide/52-ui-ux-best-practices-rules.md) - Accessibility and design standards
+- [/document v3 — Three-Level Analysis](guide/55-document-v3-three-level-analysis.md) - Machine/project/branch rule classification
+- [Context Optimization for Mature Projects](guide/56-context-optimization-mature-projects.md) - Condensation and archival
+
+### Release Notes
+
+- [Claude Code 2.1.73-2.1.76](guide/54-claude-code-2176-new-features.md) - Effort levels, PostCompact hooks, worktrees
+- [Claude Code 2.1.77-2.1.81](guide/57-claude-code-2177-2181-features.md) - Background agents, env scrub, transcript search
+- [Skills Cookbook](guide/58-claude-skills-cookbook-patterns.md) - Official skill patterns from Anthropic
+- [Claude Code 2.1.82-2.1.83](guide/60-claude-code-2182-2183-features.md) - CwdChanged/FileChanged hooks, MEMORY.md cap, background agent fix
+- [Stack Audit & Maintenance Patterns](guide/61-stack-audit-maintenance-patterns.md) - Frontmatter compliance, rule hygiene, Hub auto-fetch
 
 ---
 
@@ -143,14 +157,14 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | Models            | Opus 4.6, Sonnet 4.6, Haiku 4.5 |
 | Time Saved        | 100+ hours/year                 |
 | Hook Optimization | 370x faster                     |
-| Hook Events       | 18 documented                   |
+| Hook Events       | 21 documented                   |
 | Hook Types        | 3 (command, prompt, agent)      |
 | Skill Activation  | 88.2% accuracy                  |
 | Agent Patterns    | 5 workflow architectures        |
 | Token Savings     | 47-70% per branch               |
-| Production Skills | 226+ documented                 |
+| Production Skills | 240+ documented                 |
 | MCP Integrations  | 13 servers, 70+ tools           |
-| Chapters          | 51 comprehensive                |
+| Chapters          | 57 comprehensive                |
 
 ---
 
@@ -166,14 +180,14 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "Claude Code Guide - Complete Implementation Guide",
-  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. Opus 4.6, Sonnet 4.6, Haiku 4.5. 1M token context window. 18 hook events, 3 hook types, agent teams, task management. Production-tested patterns.",
+  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. Opus 4.6, Sonnet 4.6, Haiku 4.5. 1M token context window. 21 hook events, 3 hook types, agent teams, task management. Production-tested patterns.",
   "author": {
     "@type": "Person",
     "name": "ytrofr",
     "url": "https://github.com/ytrofr"
   },
   "datePublished": "2024-12-14",
-  "dateModified": "2026-02-24",
+  "dateModified": "2026-03-25",
   "publisher": {
     "@type": "Organization",
     "name": "Claude Code Guide",
@@ -204,7 +218,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What are Claude Code skills?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. This guide documents 226+ production-tested skills with 88.2% activation accuracy."
+        "text": "Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. This guide documents 240+ production-tested skills with 88.2% activation accuracy."
       }
     },
     {
@@ -244,7 +258,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What are Claude Code hooks?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 18 hook events (PreToolUse, PostToolUse, UserPromptSubmit, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
+        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 21 hook events (PreToolUse, PostToolUse, UserPromptSubmit, CwdChanged, FileChanged, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
       }
     },
     {
@@ -303,7 +317,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "@type": "HowToStep",
       "position": 4,
       "name": "Set up hooks",
-      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 18 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
+      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 21 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
     },
     {
       "@type": "HowToStep",

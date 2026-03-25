@@ -1,3 +1,8 @@
+---
+description: Generate comprehensive feature documentation. Use when documenting new features, APIs, or system components.
+allowed-tools: Read, Write, Bash, Grep, Glob
+---
+
 # /blueprint - Feature Documentation Generator
 
 **Purpose**: Generate comprehensive feature documentation for complex features

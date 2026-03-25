@@ -1,3 +1,5 @@
+> **ARCHIVED**: This chapter documents the custom pre-prompt hook skill matching system, which was superseded by Claude Code's native skill loading (v2.1.76+). Kept for historical reference only. See [Skills Activation System](/docs/skill-activation-system) for the current approach.
+
 # Chapter 16: Skills Activation Breakthrough - Scott Spence Pattern
 
 > **DEPRECATED (Feb 2026)**: Claude Code now natively loads all skills from `~/.claude/skills/` and matches them using the `description:` field. The custom pre-prompt hook described here is no longer needed. This chapter is kept for historical reference. See [Skill Activation System](../skill-activation-system.md) for the current approach.

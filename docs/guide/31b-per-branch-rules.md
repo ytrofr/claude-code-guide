@@ -283,9 +283,11 @@ Adding 15 universal rule files on `dev-Knowledge` and merging to 5 other branche
 
 **Related Chapters**:
 
+- Chapter 26: Rules System (rule hierarchy, deduplication, auto-classification)
 - Chapter 29: Branch Context System (CONTEXT-MANIFEST.json)
 - Chapter 30: Blueprint Auto-Loading (per-branch blueprints)
 - Chapter 31: Branch-Aware Development (branch-variables.json)
+- Chapter 32: Document Automation (auto-classifies patterns to machine/project/branch)
 - Chapter 39: Context Separation (global vs project-level)
 
 ---

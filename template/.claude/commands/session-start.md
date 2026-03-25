@@ -1,6 +1,6 @@
 ---
 description: "Initialize session following Anthropic best practices"
-allowed_tools: ["Bash", "Read"]
+allowed-tools: Read, Bash
 ---
 
 # Session Start Protocol (Anthropic Best Practice)

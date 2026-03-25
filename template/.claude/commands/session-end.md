@@ -1,6 +1,6 @@
 ---
 description: "End session following Anthropic best practices"
-allowed_tools: ["Bash", "Read"]
+allowed-tools: Read, Bash
 ---
 
 # Session End Protocol (Anthropic Best Practice)

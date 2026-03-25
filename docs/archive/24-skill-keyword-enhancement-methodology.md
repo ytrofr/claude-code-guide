@@ -1,3 +1,5 @@
+> **ARCHIVED**: This chapter documents the custom pre-prompt hook skill matching system, which was superseded by Claude Code's native skill loading (v2.1.76+). Kept for historical reference only. See [Skills Activation System](/docs/skill-activation-system) for the current approach.
+
 # Chapter 24: Skill Keyword Enhancement Methodology
 
 **Created**: 2026-01-05

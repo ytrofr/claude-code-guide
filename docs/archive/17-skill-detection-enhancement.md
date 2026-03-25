@@ -1,3 +1,5 @@
+> **ARCHIVED**: This chapter documents the custom pre-prompt hook skill matching system, which was superseded by Claude Code's native skill loading (v2.1.76+). Kept for historical reference only. See [Skills Activation System](/docs/skill-activation-system) for the current approach.
+
 # Chapter 17: Skill Detection Enhancement
 
 > **DEPRECATED (Feb 2026)**: Claude Code now natively matches skills using the `description:` field with "Use when..." clauses. The custom 4-phase detection system described here is no longer needed. Focus on writing clear `description:` fields instead. This chapter is kept for historical reference.
