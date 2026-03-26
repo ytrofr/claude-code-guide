@@ -75,7 +75,7 @@ grep -rl '2\.1\.[0-6]' ~/.claude/rules/ 2>/dev/null
 
 ```bash
 # Count skills
-ls -d ~/.claude/skills/*-skill/ 2>/dev/null | wc -l
+ls -d ~/.claude/skills/*/ 2>/dev/null | wc -l
 
 # Check for skills without proper description
 for d in ~/.claude/skills/*/; do
@@ -201,6 +201,36 @@ Sessions often produce reusable patterns that should become skills. The `/retros
 - [ ] Deprecated patterns removed or updated
 ```
 
+## 5. Security Scanning
+
+The four areas above check structural correctness. Security scanning checks for active risks:
+
+```bash
+# Run AgentShield (zero install, 102 rules)
+npx ecc-agentshield scan ~/.claude/
+
+# Save results
+npx ecc-agentshield scan ~/.claude/ | tee ~/.claude/logs/agentshield-$(date +%Y-%m-%d).log
+```
+
+**What it catches:**
+- Hardcoded API keys in CLAUDE.md, skills, or settings
+- Overly broad permissions (`Bash(docker *)`, `Bash(curl *)`)
+- Hook scripts with `rm -f`, `git config --global`, or output suppression
+- MCP servers inheriting full environment (secret leakage)
+- Unversioned MCP packages (`@latest` = supply chain risk)
+
+**Add to your monthly audit checklist:**
+```markdown
+### Security
+- [ ] Run `npx ecc-agentshield scan ~/.claude/`
+- [ ] All critical/high findings resolved
+- [ ] Deny list covers `chmod 777`, `ssh`, `> /dev/*`
+- [ ] No MCP servers using `@latest`
+```
+
+See [Chapter 62 — Security Scanning](62-security-scanning) for full details.
+
 ## Anti-Patterns
 
 | Anti-Pattern | Why It's Bad | Fix |
@@ -213,4 +243,4 @@ Sessions often produce reusable patterns that should become skills. The `/retros
 
 ---
 
-*Previous: [Chapter 60 — Claude Code 2.1.82-2.1.83 Features](60-claude-code-2182-2183-features)*
+*Previous: [Chapter 60 — Claude Code 2.1.82-2.1.83 Features](60-claude-code-2182-2183-features)* | *Next: [Chapter 62 — Security Scanning](62-security-scanning)*
