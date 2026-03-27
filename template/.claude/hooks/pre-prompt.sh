@@ -165,7 +165,7 @@ match_skills() {
 }
 
 # Read user message
-JSON_INPUT=$(cat)
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || true)
 USER_MESSAGE=$(echo "$JSON_INPUT" | jq -r '.prompt // empty' 2>/dev/null)
 if [ -z "$USER_MESSAGE" ]; then
     USER_MESSAGE="$JSON_INPUT"
