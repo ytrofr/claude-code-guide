@@ -455,11 +455,16 @@ Hooks that read JSON from stdin **must** use `timeout` to prevent infinite hangs
 # WRONG — can hang forever if stdin pipe not closed
 JSON_INPUT=$(cat)
 
-# CORRECT — exits after 2 seconds max, hook continues safely
+# BETTER — exits after 2 seconds max
 JSON_INPUT=$(timeout 2 cat)
+
+# BEST — timeout + suppress stderr + fallback on failure
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || true)
 ```
 
-**Affected hook types**: Any hook that reads stdin — `PostToolUse`, `PreCompact`, `Stop`, `UserPromptSubmit`. The `SessionStart` hook typically doesn't read stdin so is unaffected.
+**Affected hook types**: Any hook that reads stdin — `PreToolUse`, `PostToolUse`, `PreCompact`, `Stop`, `UserPromptSubmit`. The `SessionStart` hook typically doesn't read stdin so is unaffected.
+
+**Cascading errors**: When a `PreToolUse` hook hangs or errors, the `PostToolUse` hooks for the same tool call can also error — even if they use `timeout` correctly. Fix the root cause (the hanging hook) and the cascade disappears.
 
 **How to test**:
 
@@ -476,6 +481,8 @@ kill $BG; rm /tmp/test-fifo
 ```
 
 **Evidence**: Feb 2026 — Production. `PostToolUse:Read` hook hung during multi-file implementation session. Root cause: `$(cat)` in `skill-access-monitor.sh`. Fix: `$(timeout 2 cat)`. Verified: 2016ms completion vs infinite hang.
+
+**Evidence**: Mar 2026 — `PreToolUse:Edit hook error` and two cascading `PostToolUse:Edit hook error` messages on every Edit during a heavy API test session. Root cause: a `PreToolUse` hook for Sacred pattern checking used bare `$(cat)` without timeout. Under load (57 concurrent Gemini API calls), stdin pipe closure was delayed, `cat` hung, and Claude Code killed the hook. The PostToolUse hooks (which used `timeout 2 cat` correctly) also errored as a cascade. Fix: `$(timeout 2 cat 2>/dev/null || true)` in the PreToolUse hook. Verified: zero hook errors after fix.
 
 **Related**: Even with `timeout`, the `timeout` command itself can write to stderr on signal delivery (e.g., "Terminated"). See [Suppress stderr](#suppress-stderr-prevents-hook-error-display) in Best Practices.
 
