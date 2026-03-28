@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/*.{js,ts,jsx,tsx}"
+  - "**/*.py"
+---
+
 # No Hardcoded URLs or Ports — Environment Config Only
 
 **Scope**: ALL projects with staging/production environments or external services

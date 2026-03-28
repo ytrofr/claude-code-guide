@@ -1,3 +1,8 @@
+---
+paths:
+  - "**/*.sh"
+---
+
 # Bash Filename Iteration — Never Word-Split
 
 **Scope**: ALL bash scripts, hooks, and shell automation

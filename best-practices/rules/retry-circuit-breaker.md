@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/*.{js,ts,jsx,tsx}"
+  - "**/*.py"
+---
+
 # Rate Limit Retry + Circuit Breaker — External API Safety
 
 **Scope**: ALL projects calling external APIs (REST, GraphQL, LLM providers)

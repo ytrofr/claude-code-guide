@@ -1,3 +1,8 @@
+---
+paths:
+  - "**/*.{js,ts,jsx,tsx,py}"
+---
+
 # Feature Toggle Principle — Every Optional Feature Needs a Kill Switch
 
 **Scope**: ALL projects with optional or toggleable features

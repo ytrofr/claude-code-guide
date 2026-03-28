@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/test*/**/*"
+  - "**/*test*.{js,ts,py}"
+  - "**/*spec*.{js,ts,py}"
+---
+
 # Test Preflight Check — Validate Infrastructure Before Running Tests
 
 **Scope**: ALL projects with integration or E2E tests
