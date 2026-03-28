@@ -4,6 +4,18 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [4.1.0] - 2026-03-28
+
+### Added
+- Chapter 64: Claude Code 2.1.84-2.1.86 features (conditional `if` hooks, skill description 250-char cap, Read compact format, paths YAML lists, idle-return prompt, system-prompt caching with ToolSearch, code intelligence plugins, verification hook pattern)
+- Verification hook template: task-verification-gate.sh (advisory PreToolUse hook for TaskUpdate)
+- `paths:` frontmatter added to 9 domain-specific best-practices rules for conditional loading
+
+### Changed
+- Best practices rules: Added `paths:` frontmatter to 9 domain-specific rules (api-key-hygiene, bash-filename-iteration, doctor-command, feature-toggle-principle, frontmatter-format, no-hardcoded-urls, primacy-recency, retry-circuit-breaker, test-preflight)
+- Template hooks: Updated post-tool-use example with `if` conditional field
+- Best practices version: 2.0.0 → 2.1.0
+
 ## [4.0.0] - 2026-03-25
 
 ### Added

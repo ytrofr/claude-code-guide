@@ -1,3 +1,8 @@
+---
+paths:
+  - "**/CLAUDE.md"
+---
+
 # Primacy-Recency Pattern for CLAUDE.md
 
 **Scope**: ALL projects with CLAUDE.md

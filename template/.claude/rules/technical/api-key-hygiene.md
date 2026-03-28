@@ -1,3 +1,12 @@
+---
+paths:
+  - "**/.bashrc"
+  - "**/.zshrc"
+  - "**/.profile"
+  - "**/*.env*"
+  - "**/docker-compose*"
+---
+
 # API Key Hygiene — NEVER in Shell Profiles
 
 **Scope**: ALL projects using API keys

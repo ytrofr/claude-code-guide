@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/.claude/skills/**/*.md"
+  - "**/.claude/commands/*.md"
+---
+
 # Frontmatter Format — Hyphenated Keys, Comma-Separated Values
 
 **Scope**: ALL skills and commands in `~/.claude/skills/` and `~/.claude/commands/`

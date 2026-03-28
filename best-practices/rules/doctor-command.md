@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/package.json"
+  - "**/pyproject.toml"
+  - "**/scripts/**/*"
+---
+
 # Doctor Command Pattern — Self-Diagnosing Health Check
 
 **Scope**: ALL projects with >5 config knobs, env vars, or external dependencies
