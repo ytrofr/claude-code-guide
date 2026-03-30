@@ -229,7 +229,7 @@ Task(
 )
 ```
 
-Check later with `TaskOutput(task_id: "...")` or `Read` the output file.
+Check later with `Read` on the task's output file path. (Note: `TaskOutput` was deprecated in v2.1.83.)
 
 ---
 
