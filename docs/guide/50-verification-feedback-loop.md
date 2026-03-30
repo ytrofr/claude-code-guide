@@ -172,11 +172,7 @@ The `/verify` command is for interactive use -- the user types it. The `verify-a
 ````markdown
 ---
 model: sonnet
-allowed_tools:
-  - Bash
-  - Read
-  - Grep
-  - Glob
+allowed-tools: Bash, Read, Grep, Glob
 permissionMode: auto
 memory: project
 ---
@@ -414,11 +410,7 @@ Save to `~/.claude/agents/verify-app.md`:
 ```markdown
 ---
 model: sonnet
-allowed_tools:
-  - Bash
-  - Read
-  - Grep
-  - Glob
+allowed-tools: Bash, Read, Grep, Glob
 permissionMode: auto
 memory: project
 ---
