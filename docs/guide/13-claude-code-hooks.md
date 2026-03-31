@@ -1,21 +1,21 @@
 ---
 layout: default
-title: "Claude Code Hooks - Complete Guide to 19 Hook Events"
+title: "Claude Code Hooks - Complete Guide to 20 Hook Events"
 description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 17 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
 ---
 
 # Chapter 13: Claude Code Hooks
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 19 hook events, 3 hook types, async execution, and production-tested patterns.
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 25 hook events, 3 hook types, async execution, and production-tested patterns.
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: 19 hooks in production, 96% test validation
-**Updated**: Mar 6, 2026 — Added InstructionsLoaded hook (19th), agent_id/agent_type fields in hook events, worktree status line field, TeammateIdle/TaskCompleted continue:false support
+**Evidence**: 20 hooks in production, 96% test validation
+**Updated**: Mar 31, 2026 — Added PermissionDenied hook (20th). Mar 6, 2026 — Added InstructionsLoaded hook (19th), agent_id/agent_type fields in hook events, worktree status line field, TeammateIdle/TaskCompleted continue:false support
 
 ---
 
-## Hook Events (19 Available)
+## Hook Events (20 Available)
 
 | Hook                    | Trigger                                    | Use For                                |
 | ----------------------- | ------------------------------------------ | -------------------------------------- |
@@ -25,6 +25,7 @@ Claude Code hooks are customizable scripts that run at specific points in the AI
 | **PostToolUse**         | After tool runs                            | Auto-format, logging, monitoring       |
 | **PreCompact**          | Before context compaction                  | Backup transcripts, save state         |
 | **PermissionRequest**   | Permission dialog appears                  | Auto-approve safe commands             |
+| **PermissionDenied**    | Auto mode classifier denies a command      | Log denials, custom retry logic, observability |
 | **Notification**        | Claude sends a notification                | Custom alerts, logging, integrations   |
 | **Stop**                | Response ends                              | Suggest skill creation, cleanup        |
 | **SessionEnd**          | Session closes                             | Save summaries, final checkpoint       |
@@ -1020,7 +1021,7 @@ Use this to detect worktree sessions and apply worktree-specific behavior.
 
 ---
 
-## Complete settings.json Example (All 19 Events)
+## Complete settings.json Example (All 20 Events)
 
 ```json
 {
