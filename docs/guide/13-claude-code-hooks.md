@@ -1744,5 +1744,26 @@ See: `examples/production-claude-hooks/`
 
 ---
 
+## Hook Trust Verification (Source Pattern)
+
+Claude Code's source code verifies workspace trust before executing ANY hook. The `shouldSkipHookDueToTrust()` function (utils/hooks.ts:286-296) checks workspace trust for ALL hooks, preventing hook execution in untrusted workspaces as a defense-in-depth measure. Non-interactive mode (SDK) skips this check.
+
+**Takeaway**: If you're building custom hook systems, consider adding a trust check that verifies the hook is running in a known workspace before executing side effects.
+
+## Complete Hook Event List (27 Events)
+
+As of v2.1.88, Claude Code supports 27 hook events (up from the 18 commonly documented):
+
+**Tool Events**: PreToolUse, PostToolUse, PostToolUseFailure, PermissionDenied, PermissionRequest
+**Session Events**: SessionStart, SessionEnd, Stop, StopFailure
+**Agent Events**: SubagentStart, SubagentStop
+**Compaction Events**: PreCompact, PostCompact
+**User Events**: UserPromptSubmit, Notification
+**Infrastructure Events**: Setup, ConfigChange, CwdChanged, FileChanged, WorktreeCreate, WorktreeRemove, InstructionsLoaded
+**Collaboration Events**: TeammateIdle, TaskCreated, TaskCompleted
+**Elicitation Events**: Elicitation, ElicitationResult
+
+---
+
 **Previous**: [12: Memory Bank](12-memory-bank-hierarchy.md)
 **Next**: [14: Git vs Claude Hooks](14-git-vs-claude-hooks-distinction.md)

@@ -244,5 +244,21 @@ Check your context usage to know when to checkpoint:
 
 ---
 
+## Post-Compact File Restoration Budget (Source Pattern)
+
+After compaction, Claude Code restores recently-relevant files to prevent losing critical working context. The restoration has strict budgets:
+
+| Parameter | Value |
+|-----------|-------|
+| Max files restored | 5 |
+| Total token budget | 50,000 |
+| Per-file token cap | 5,000 |
+| Skills token budget | 25,000 |
+| Per-skill token cap | 5,000 |
+
+This is an internal optimization — not configurable by users — but understanding it helps explain why Claude sometimes "remembers" files after compaction and sometimes doesn't. Files that exceed the per-file cap are skipped entirely.
+
+---
+
 **Previous**: [41: Evaluation Patterns](41-evaluation-patterns.md)
 **Next**: [43: Claude Agent SDK](43-claude-agent-sdk.md)

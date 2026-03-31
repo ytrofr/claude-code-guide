@@ -696,5 +696,25 @@ Task(
 
 ---
 
+## Source-Derived Agent Patterns (v2.1.88)
+
+These patterns come from analyzing Claude Code's internal agent architecture.
+
+### Cancellation Hierarchy
+
+Claude Code implements a parent-child AbortController hierarchy for agent management. When a parent agent aborts, all child agents cascade-abort automatically. Each child gets its own AbortController linked to the parent via `signal.addEventListener('abort', () => child.abort())`.
+
+**Key rule**: Never share a single AbortController across independent agents. Each child gets its own linked controller.
+
+### Message Capping
+
+In-memory message arrays are capped at 50 entries per agent. Full history persists to disk transcripts. Without this cap, Claude Code's BQ analysis showed 292 concurrent agents consuming 36.8GB peak memory.
+
+### Cache-Preserving Fork
+
+When forking a subagent, Claude Code copies the EXACT parent message history with identical placeholder tool results. Only the final directive differs. This means forked children share the parent's prompt cache — significant cost savings for parallel agents.
+
+---
+
 **Previous**: [35: Skill Optimization](35-skill-optimization-maintenance.md)
 **Next**: [37: Agent Teams](37-agent-teams.md)
