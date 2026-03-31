@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Claude Code Guide - Complete Setup & Best Practices
-description: Complete guide to Claude Code (Opus 4.6, Sonnet 4.6, Haiku 4.5). 1M token context window. 21 hook events. 240+ native skills. Agent teams and task management. Production-tested.
+description: Complete guide to Claude Code (Opus 4.6, Sonnet 4.6, Haiku 4.5). 1M token context window. 25 hook events. 240+ native skills. Agent teams and task management. Production-tested.
 ---
 
 # Claude Code Guide
@@ -42,7 +42,7 @@ The memory bank is a hierarchical knowledge system that stores project context, 
 
 ### What are Claude Code hooks?
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 21 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, CwdChanged, FileChanged, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 25 hook events (PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, CwdChanged, FileChanged, and more) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics. See our [Complete Hooks Guide](guide/13-claude-code-hooks.md).
 
 ### What are Claude Code agents?
 
@@ -71,7 +71,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 - [MCP Integration](guide/06-mcp-integration.md) - External tool connections (PostgreSQL, GitHub, Playwright)
 - [Memory Bank Hierarchy](guide/12-memory-bank-hierarchy.md) - 4-tier context management
-- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 21 hook events, 3 hook types
+- [Claude Code Hooks](guide/13-claude-code-hooks.md) - 25 hook events, 3 hook types
 - [Git vs Claude Hooks](guide/14-git-vs-claude-hooks-distinction.md) - When to use which
 - [Progressive Disclosure](guide/15-progressive-disclosure.md) - Token-efficient context loading
 - [Pre-Prompt Hook Guide](pre-prompt-hook-complete-guide.md) - Historical (deprecated Feb 2026)
@@ -146,6 +146,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [Skills Cookbook](guide/58-claude-skills-cookbook-patterns.md) - Official skill patterns from Anthropic
 - [Claude Code 2.1.82-2.1.83](guide/60-claude-code-2182-2183-features.md) - CwdChanged/FileChanged hooks, MEMORY.md cap, background agent fix
 - [Stack Audit & Maintenance Patterns](guide/61-stack-audit-maintenance-patterns.md) - Frontmatter compliance, rule hygiene, Hub auto-fetch
+- [Claude Code 2.1.87-2.1.88](guide/66-claude-code-2187-2188-features.md) - PermissionDenied hook, flicker-free rendering, computer use, nested CLAUDE.md fix
 
 ---
 
@@ -157,14 +158,14 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | Models            | Opus 4.6, Sonnet 4.6, Haiku 4.5 |
 | Time Saved        | 100+ hours/year                 |
 | Hook Optimization | 370x faster                     |
-| Hook Events       | 21 documented                   |
+| Hook Events       | 22 documented                   |
 | Hook Types        | 3 (command, prompt, agent)      |
 | Skill Activation  | 88.2% accuracy                  |
 | Agent Patterns    | 5 workflow architectures        |
 | Token Savings     | 47-70% per branch               |
 | Production Skills | 240+ documented                 |
 | MCP Integrations  | 13 servers, 70+ tools           |
-| Chapters          | 57 comprehensive                |
+| Chapters          | 58 comprehensive                |
 
 ---
 
@@ -180,14 +181,14 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "Claude Code Guide - Complete Implementation Guide",
-  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. Opus 4.6, Sonnet 4.6, Haiku 4.5. 1M token context window. 21 hook events, 3 hook types, agent teams, task management. Production-tested patterns.",
+  "description": "Complete guide to Claude Code hooks, skills, agents, and MCP integration. Opus 4.6, Sonnet 4.6, Haiku 4.5. 1M token context window. 25 hook events, 3 hook types, agent teams, task management. Production-tested patterns.",
   "author": {
     "@type": "Person",
     "name": "ytrofr",
     "url": "https://github.com/ytrofr"
   },
   "datePublished": "2024-12-14",
-  "dateModified": "2026-03-25",
+  "dateModified": "2026-03-31",
   "publisher": {
     "@type": "Organization",
     "name": "Claude Code Guide",
@@ -258,7 +259,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What are Claude Code hooks?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 21 hook events (PreToolUse, PostToolUse, UserPromptSubmit, CwdChanged, FileChanged, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
+        "text": "Claude Code hooks are customizable scripts that run at specific points in the AI workflow. There are 25 hook events (PreToolUse, PostToolUse, UserPromptSubmit, CwdChanged, FileChanged, etc.) and 3 hook types (command, prompt, agent). Hooks can validate inputs, block dangerous operations, inject context, and run background analytics."
       }
     },
     {
@@ -317,7 +318,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "@type": "HowToStep",
       "position": 4,
       "name": "Set up hooks",
-      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 21 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
+      "text": "Configure hooks in .claude/settings.json. Use PostToolUse for auto-formatting, PreToolUse for safety validation, and SessionStart for environment setup. 25 hook events available with 3 hook types (command, prompt, agent). Skills are loaded natively without hooks."
     },
     {
       "@type": "HowToStep",

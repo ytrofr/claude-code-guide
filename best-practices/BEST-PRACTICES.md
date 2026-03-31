@@ -326,9 +326,9 @@ Put your 5 most critical rules as HTML comments at the very top and bottom:
 
 ---
 
-## 14. Path-Scoped Skills with Globs
+## 14. Path-Scoped Skills
 
-Skills can include `globs:` in their frontmatter so they only load when Claude touches matching files. This saves 30-50% tokens by not loading irrelevant skills.
+Skills can include `paths:` in their frontmatter so they only load when Claude touches matching files. This saves 30-50% tokens by not loading irrelevant skills.
 
 ### Format
 
@@ -336,16 +336,16 @@ Skills can include `globs:` in their frontmatter so they only load when Claude t
 ---
 name: ai-pipeline-debugging-skill
 description: "Debug AI pipeline issues..."
-globs:
+paths:
   - src/services/ai/**
   - src/prompts/tiers/**
 user-invocable: false
 ---
 ```
 
-### When to Add Globs
+### When to Add Path Scoping
 
-| Condition               | Glob Pattern                          |
+| Condition               | Path Pattern                          |
 | ----------------------- | ------------------------------------- |
 | AI/ML-specific skill    | `src/services/ai/**`, `src/models/**` |
 | Database-specific skill | `src/database/**`, `migrations/**`    |
@@ -355,9 +355,9 @@ user-invocable: false
 
 ### Impact
 
-In a project with 180+ skills, adding globs to domain-specific skills reduced per-session token usage by ~35%. Skills without globs load every session (good for universal skills like "session-protocol").
+In a project with 180+ skills, adding `paths:` to domain-specific skills reduced per-session token usage by ~35%. Skills without `paths:` load every session (good for universal skills like "session-protocol").
 
-**Rule**: Universal skills (session, git, quality) = no globs. Domain-specific skills (AI, DB, deploy) = add globs.
+**Rule**: Universal skills (session, git, quality) = no `paths:`. Domain-specific skills (AI, DB, deploy) = add `paths:`.
 
 ---
 
@@ -389,6 +389,17 @@ Claude Code loads rules from two locations:
 - Project rules override global rules on conflict
 - Use `paths:` YAML frontmatter for conditional loading on specific file patterns
 
+### Commands → Skills Migration
+
+As of Claude Code 2.1.88, **custom commands have been merged into skills**. Both locations work:
+
+| Location | Format | Status |
+|----------|--------|--------|
+| `.claude/commands/deploy.md` | Single file | Legacy (still works) |
+| `.claude/skills/deploy/SKILL.md` | Directory with SKILL.md | **Recommended** |
+
+Skills add: supporting files (templates, scripts), `disable-model-invocation` control, automatic discovery by Claude, and `paths:` scoping. Migrate existing commands by moving `commands/name.md` to `skills/name/SKILL.md`.
+
 ---
 
 ## 17. Context Optimization
@@ -418,12 +429,33 @@ user-invocable: false
 allowed_tools: ["Read", "Bash", "Grep"]  # Underscored + JSON array
 ```
 
+### YAML Bracket Gotcha
+Values containing `[...]` MUST be quoted. YAML interprets unquoted `[foo]` as an array, corrupting frontmatter and making the skill invisible:
+
+```yaml
+# WRONG -- skill disappears from listing
+argument-hint: [topic-name]
+
+# CORRECT
+argument-hint: "[topic-name]"
+```
+
 ### Quick Diagnostic
 ```bash
 # Find wrong field names
-grep -rl 'allowed_tools' ~/.claude/commands/ ~/.claude/skills/*/SKILL.md 2>/dev/null
+grep -rl 'allowed_tools' ~/.claude/skills/*/SKILL.md 2>/dev/null
 # Should return 0 results
 ```
+
+### Key Frontmatter Fields
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| `allowed-tools` | Tools allowed without permission | `Read, Bash, Grep` |
+| `disable-model-invocation` | Prevent Claude auto-invoking | `true` |
+| `user-invocable` | Hide from `/` menu | `false` |
+| `paths` | Only load for matching files | `["src/api/**/*.ts"]` |
+| `argument-hint` | Autocomplete hint (MUST quote brackets) | `"[environment]"` |
 
 ### Description Best Practices
 - MUST start with action verb (Apply, Audit, Create, Debug, Execute, Fetch, Fix...)
@@ -553,13 +585,61 @@ A 30-second preflight saves 5-10 minutes of confusing test failures.
 
 ---
 
+## 24. Skills System Reference
+
+Skills are the primary way to extend Claude Code with custom slash commands and background knowledge.
+
+### Directory Structure
+
+```
+my-skill/
+├── SKILL.md           # Main instructions (required)
+├── reference.md       # Detailed docs (loaded on demand)  
+└── scripts/           # Executed, not loaded into context
+```
+
+### Key Frontmatter Fields
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| `description` | When to use (under 250 chars) | `"Deploy to staging. Use when ready to ship."` |
+| `allowed-tools` | Tools allowed without permission | `Read, Bash, Grep` |
+| `disable-model-invocation` | Prevent Claude auto-invoking | `true` (for deploy, commit) |
+| `user-invocable` | Hide from `/` menu | `false` (for background knowledge) |
+| `paths` | Only load for matching files | `["src/api/**/*.ts"]` |
+| `argument-hint` | Autocomplete hint (MUST quote brackets) | `"[environment]"` |
+| `context` | Run in isolated subagent | `fork` |
+| `model` | Override model | `sonnet`, `haiku`, `opus` |
+| `effort` | Override effort level | `low`, `medium`, `high`, `max` |
+
+### Invocation Control
+
+| Setting | User invokes | Claude invokes |
+|---------|-------------|----------------|
+| (default) | Yes | Yes |
+| `disable-model-invocation: true` | Yes | **No** |
+| `user-invocable: false` | **No** | Yes |
+
+**Use `disable-model-invocation: true`** for side-effect operations (deploy, commit, send messages).
+**Use `user-invocable: false`** for background knowledge Claude should know but users don't invoke.
+
+### Best Practices
+
+- Keep SKILL.md under 500 lines -- move reference material to supporting files
+- Front-load description with the key use case (Claude uses it for auto-discovery)
+- Descriptions over 250 characters are truncated in the `/skills` listing
+- Use `paths:` to scope domain-specific skills and save context
+- Set `$ARGUMENTS` for user-provided input, `${CLAUDE_SKILL_DIR}` for file references
+
+---
+
 ## Full Guide Reference
 
 For deeper coverage of any topic, see the complete documentation:
 
 - **Quick Start**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/quick-start.md
-- **Hooks (18 events)**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/13-claude-code-hooks.md
-- **Skills System**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/skill-activation-system.md
+- **Hooks (25 events)**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/13-claude-code-hooks.md
+- **Skills System**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/14-claude-code-skills.md
 - **MCP Integration**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/06-mcp-integration.md
 - **Rules System**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/26-claude-code-rules-system.md
 - **Branch Context (47-70% token savings)**: https://github.com/ytrofr/claude-code-guide/blob/master/docs/guide/29-branch-context-system.md

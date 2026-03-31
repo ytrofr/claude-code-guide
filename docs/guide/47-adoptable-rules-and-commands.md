@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Adoptable Rules, Commands & Configuration Templates"
-description: "15 universal rules, 7 slash commands, and configuration templates that any Claude Code project can adopt. Covers agent-first workflow, validation gates, session protocol, anti-overengineering, and quality standards."
+description: "15 universal rules, 7 slash skills, and configuration templates that any Claude Code project can adopt. Covers agent-first workflow, validation gates, session protocol, anti-overengineering, and quality standards."
 ---
 
 # Chapter 47: Adoptable Rules, Commands & Configuration Templates
@@ -11,7 +11,7 @@ This chapter provides a complete set of production-tested rules and commands tha
 **Purpose**: Give any project a battle-tested Claude Code configuration in minutes
 **Difficulty**: Beginner (copy and customize)
 **Time**: 15-30 minutes to adopt, ongoing value
-**Template**: All files available in `template/.claude/rules/` and `template/.claude/commands/`
+**Template**: All files available in `template/.claude/rules/` and `template/.claude/skills/`
 
 ---
 
@@ -25,7 +25,7 @@ Most Claude Code projects start with a blank `.claude/` directory and build rule
 - No quality standards (mock data, skipped tests, direct execution)
 - Inconsistent patterns across team members
 
-These 15 rules and 7 commands solve all of these problems. They were developed over 14+ months of production use across 5 projects and refined through 360+ documented entries.
+These 15 rules and 7 skills (formerly commands) solve all of these problems. They were developed over 14+ months of production use across 5 projects and refined through 360+ documented entries.
 
 ---
 
@@ -111,11 +111,11 @@ Claude Code loads rules from two locations:
 
 ---
 
-## The 7 Slash Commands
+## The 7 Slash Skills
 
-Commands live in `.claude/commands/` and are invoked with `/command-name` in Claude Code.
+Skills live in `.claude/skills/{name}/SKILL.md`. (Previously, commands used `.claude/commands/{name}.md` -- both formats still work, but skills are recommended as the canonical location since Claude Code 2.1.88 merged commands into skills.)
 
-| #   | Command          | Purpose                                                         | When to Use                         |
+| #   | Skill            | Purpose                                                         | When to Use                         |
 | --- | ---------------- | --------------------------------------------------------------- | ----------------------------------- |
 | 1   | `/session-start` | Initialize session: git status, feature discovery, select task  | Beginning of every session          |
 | 2   | `/session-end`   | Checkpoint: verify commits, update status, create handoff       | End of every session                |
@@ -123,9 +123,9 @@ Commands live in `.claude/commands/` and are invoked with `/command-name` in Cla
 | 4   | `/document`      | Full documentation workflow: Entry + Skill + Blueprint + Memory | After completing meaningful work    |
 | 5   | `/advise`        | Search skills registry before starting new work                 | Before implementing anything        |
 | 6   | `/blueprint`     | Generate comprehensive feature documentation templates          | When documenting complex features   |
-| 7   | `/slashes`       | List all available slash commands with descriptions             | When you forget what commands exist |
+| 7   | `/slashes`       | List all available slash skills with descriptions               | When you forget what skills exist   |
 
-### Command Details
+### Skill Details
 
 **`/session-start`** runs `git status`, checks for incomplete features, and displays recent commits. It ensures you always know the current state before doing work.
 
@@ -133,7 +133,7 @@ Commands live in `.claude/commands/` and are invoked with `/command-name` in Cla
 
 **`/retrospective`** walks you through 5 questions to capture session learnings as a reusable skill file. It follows the Sionic AI pattern for high-activation-rate skills.
 
-**`/document`** is the most comprehensive command -- a 13-step workflow that creates entry files, analyzes patterns, suggests skills/rules/blueprints, updates status files, and stores memory notes.
+**`/document`** is the most comprehensive skill -- a 13-step workflow that creates entry files, analyzes patterns, suggests skills/rules/blueprints, updates status files, and stores memory notes.
 
 **`/advise`** searches your skills directory for solutions that already exist before you start building from scratch. It prevents reinventing solutions.
 
@@ -188,7 +188,7 @@ These are valuable but more situational:
 ```bash
 # From the claude-code-guide repository:
 cp -r template/.claude/rules/ /path/to/your-project/.claude/rules/
-cp -r template/.claude/commands/ /path/to/your-project/.claude/commands/
+cp -r template/.claude/skills/ /path/to/your-project/.claude/skills/
 
 # Then customize:
 # 1. Edit projects/registry.md with YOUR projects
@@ -202,8 +202,8 @@ cp -r template/.claude/commands/ /path/to/your-project/.claude/commands/
 # Copy rules to your global config:
 cp -r template/.claude/rules/* ~/.claude/rules/
 
-# Copy commands:
-cp -r template/.claude/commands/* ~/.claude/commands/
+# Copy skills:
+cp -r template/.claude/skills/* ~/.claude/skills/
 
 # These now apply to ALL your projects
 ```
@@ -229,7 +229,7 @@ Week 1: Install the 6 HIGH priority rules. See how they change your workflow.
 
 Week 2: Add the MEDIUM priority rules. Customize agent routing and standards.
 
-Week 3: Add commands. `/session-start` and `/session-end` alone save significant context.
+Week 3: Add skills. `/session-start` and `/session-end` alone save significant context.
 
 ---
 
@@ -413,11 +413,11 @@ ls -R .claude/rules/
 # Ask: "What rules are you loading from .claude/rules/?"
 ```
 
-After adopting commands:
+After adopting skills:
 
 ```bash
-# List available commands
-ls .claude/commands/*.md
+# List available skills
+ls .claude/skills/*/SKILL.md
 
 # Test in Claude Code session:
 # Type: /session-start
@@ -432,7 +432,7 @@ ls .claude/commands/*.md
 - [Chapter 45: Plan Mode Quality Checklist](45-plan-mode-checklist.md) -- Deep dive on plan checklist
 - [Chapter 46: Advanced Configuration Patterns](46-advanced-configuration-patterns.md) -- Global vs project scope, path-specific rules
 - [Official Rules Docs](https://docs.anthropic.com/en/docs/claude-code/memory#rules) -- Anthropic's rules documentation
-- Template directory: `template/.claude/rules/` and `template/.claude/commands/`
+- Template directory: `template/.claude/rules/` and `template/.claude/skills/`
 
 ---
 
