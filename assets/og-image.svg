@@ -96,35 +96,35 @@
       <rect x="0" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
       <rect x="0" y="0" width="265" height="4" rx="2" fill="url(#metric1)"/>
       <text x="132" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric1)" text-anchor="middle">240+</text>
-      <text x="132" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Proven Patterns</text>
-      <text x="132" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">from production systems</text>
+      <text x="132" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Production Patterns</text>
+      <text x="132" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">battle-tested in real systems</text>
     </g>
 
-    <!-- Card 2: Hooks -->
+    <!-- Card 2: Token Savings -->
     <g filter="url(#cardShadow)">
       <rect x="290" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
       <rect x="290" y="0" width="265" height="4" rx="2" fill="url(#metric2)"/>
-      <text x="422" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric2)" text-anchor="middle">25</text>
-      <text x="422" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Hook Events</text>
-      <text x="422" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">full workflow automation</text>
+      <text x="422" y="65" font-family="'Inter', system-ui, sans-serif" font-size="44" font-weight="800" fill="url(#metric2)" text-anchor="middle">47-70%</text>
+      <text x="422" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Token Savings</text>
+      <text x="422" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">per branch context</text>
     </g>
 
-    <!-- Card 3: Chapters -->
+    <!-- Card 3: Time Saved -->
     <g filter="url(#cardShadow)">
       <rect x="580" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
       <rect x="580" y="0" width="265" height="4" rx="2" fill="url(#metric3)"/>
-      <text x="712" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric3)" text-anchor="middle">59</text>
-      <text x="712" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Guide Chapters</text>
-      <text x="712" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">deep technical coverage</text>
+      <text x="712" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric3)" text-anchor="middle">10+</text>
+      <text x="712" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Hours Saved</text>
+      <text x="712" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">every month, per developer</text>
     </g>
 
-    <!-- Card 4: Time Saved -->
+    <!-- Card 4: Setup Time -->
     <g filter="url(#cardShadow)">
       <rect x="870" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
       <rect x="870" y="0" width="265" height="4" rx="2" fill="url(#metric4)"/>
-      <text x="1002" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric4)" text-anchor="middle">100+</text>
-      <text x="1002" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Hours Saved</text>
-      <text x="1002" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">per year, per developer</text>
+      <text x="1002" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric4)" text-anchor="middle">5 min</text>
+      <text x="1002" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Quick Setup</text>
+      <text x="1002" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">one command install</text>
     </g>
   </g>
 
