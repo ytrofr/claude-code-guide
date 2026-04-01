@@ -2,7 +2,7 @@
 
 **Hooks**: 6 (SessionStart, UserPromptSubmit, PostToolUse x2, PreCompact, PermissionRequest, Stop)
 **Success**: 100% skill accuracy (44/44 scenarios validated)
-**Performance**: 370x faster (50s → 136ms) via hybrid caching
+**Performance**: 370x faster (50s → 136ms) via hybrid caching (historical — pre-prompt hook deprecated Feb 2026)
 **ROI**: 253 hours/year saved (8,400% ROI)
 
 ## Files

@@ -31,13 +31,13 @@
 
     <!-- Box 2 -->
     <rect x="320" y="0" width="280" height="120" rx="12" fill="#252547"/>
-    <text x="460" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">370x</text>
-    <text x="460" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">hook optimization</text>
+    <text x="460" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">240+</text>
+    <text x="460" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">proven patterns</text>
 
     <!-- Box 3 -->
     <rect x="640" y="0" width="280" height="120" rx="12" fill="#252547"/>
-    <text x="780" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">88.2%</text>
-    <text x="780" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">skill activation</text>
+    <text x="780" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">25</text>
+    <text x="780" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">hook events</text>
   </g>
 
   <!-- Footer -->

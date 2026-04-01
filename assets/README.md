@@ -2,7 +2,7 @@
 
 Create a 1280x640px image with:
 - Title: "Claude Code Guide"
-- Key metrics: 100+ hours saved, 370x optimization, 88.2% accuracy
+- Key metrics: 100+ hours saved, 240+ patterns, 25 hook events
 - Save as: og-image.png
 
 Recommended tools:

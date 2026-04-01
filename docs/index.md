@@ -54,7 +54,7 @@ Agent teams are an experimental feature where a lead agent coordinates multiple 
 
 ### How much time does this save?
 
-Based on production metrics: **100+ hours per year** in developer time. Key achievements include 370x hook optimization, 47-70% token savings per branch, and 88.2% skill activation accuracy.
+Based on production metrics: **100+ hours per year** in developer time. Key achievements include 240+ proven patterns, 47-70% token savings per branch, and 25 hook events for full workflow automation.
 
 ---
 
@@ -157,10 +157,10 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 | Context Window    | 1M tokens                       |
 | Models            | Opus 4.6, Sonnet 4.6, Haiku 4.5 |
 | Time Saved        | 100+ hours/year                 |
-| Hook Optimization | 370x faster                     |
+| Hook Events       | 25 automated                    |
 | Hook Events       | 22 documented                   |
 | Hook Types        | 3 (command, prompt, agent)      |
-| Skill Activation  | 88.2% accuracy                  |
+| Proven Patterns   | 240+ documented                 |
 | Agent Patterns    | 5 workflow architectures        |
 | Token Savings     | 47-70% per branch               |
 | Production Skills | 240+ documented                 |
@@ -219,7 +219,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "What are Claude Code skills?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. This guide documents 240+ production-tested skills with 88.2% activation accuracy."
+        "text": "Skills are reusable instructions that activate automatically based on your query. They contain proven patterns, triggers, and workflows that save hours of repetitive work. This guide documents 240+ production-tested skills."
       }
     },
     {
@@ -243,7 +243,7 @@ This guide is built from 14+ months of production use. Every pattern, optimizati
       "name": "How much time does Claude Code save?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Based on production metrics: 100+ hours per year in developer time. Key achievements include 370x hook optimization, 47-70% token savings per branch, and 88.2% skill activation accuracy."
+        "text": "Based on production metrics: 100+ hours per year in developer time. Key achievements include 240+ proven patterns, 47-70% token savings per branch, and 25 hook events for full workflow automation."
       }
     },
     {

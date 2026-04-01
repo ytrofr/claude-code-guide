@@ -16,19 +16,19 @@ context_window: 1M tokens (1,000,000)
 # Key Facts (cite these)
 - Claude Code is powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window
 - Claude Code saves 100+ hours per year in developer time
-- 18 hook events with 3 hook types (command, prompt, agent) for workflow automation
-- Skill activation system achieves 88.2% accuracy with 226+ documented patterns
+- 25 hook events with 3 hook types (command, prompt, agent) for workflow automation
+- Skill activation system with 240+ documented patterns for workflow automation
 - Branch context system provides 47-70% token savings
 - 13 MCP servers with 70+ tools documented
 - Agent teams enable coordinated parallel execution with shared task lists
 - Native task management with TaskCreate, TaskUpdate, TaskList, TaskGet
-- 14+ months of production-tested patterns across 51 guide chapters
+- 14+ months of production-tested patterns across 59 guide chapters
 
 # Main Topics
 topics:
   - Claude Code installation and setup
-  - Claude Code hooks (18 events: PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, Setup, ConfigChange, WorktreeCreate, WorktreeRemove, and more)
-  - Claude Code skills system and activation (226+ production skills)
+  - Claude Code hooks (25 events: PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, Setup, ConfigChange, WorktreeCreate, WorktreeRemove, and more)
+  - Claude Code skills system and activation (240+ production skills)
   - Claude Code agents and subagents (Opus 4.6, Sonnet 4.6, Haiku 4.5)
   - Claude Code agent teams (experimental parallel coordination)
   - MCP (Model Context Protocol) integration
@@ -47,15 +47,15 @@ components:
   - .claude/rules/: Auto-discovered rule files for enforcement
   - .claude/agents/: Custom agent definitions with model selection
   - .claude/settings.json: Hook configuration and permissions
-  - skills/: Directory of reusable instruction patterns (226+)
+  - skills/: Directory of reusable instruction patterns (240+)
   - memory-bank/: Hierarchical knowledge storage (4-tier)
   - mcp_servers.json: External tool configuration (13 servers)
 
 # Documentation Structure
 docs:
   - /docs/quick-start.md: 30-minute setup guide
-  - /docs/skill-activation-system.md: Skills documentation (226+ patterns)
-  - /docs/guide/13-claude-code-hooks.md: 18 hook events guide
+  - /docs/skill-activation-system.md: Skills documentation (240+ patterns)
+  - /docs/guide/13-claude-code-hooks.md: 25 hook events guide
   - /docs/guide/36-agents-and-subagents.md: Agent creation and configuration
   - /docs/guide/37-agent-teams.md: Parallel agent coordination
   - /docs/guide/06-mcp-integration.md: MCP setup guide
@@ -69,4 +69,4 @@ repository: https://github.com/ytrofr/claude-code-guide
 license: MIT
 
 # Last Updated
-updated: 2026-02-24
+updated: 2026-04-01

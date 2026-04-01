@@ -12,6 +12,8 @@ description: "Build Claude Code skills with 88% activation accuracy. Frontmatter
 
 The Claude Code skill activation system matches user queries to reusable skill files using keyword scoring, achieving 88.2% accuracy across 170 test queries and 13 domains. This guide covers the complete architecture: YAML frontmatter standards, trigger keyword optimization, cache management, P0-P3 test priorities, and weekly monitoring workflows.
 
+> **Note (April 2026)**: The 88.2% accuracy metric and custom pre-prompt hook architecture described below are historical. Claude Code v2.1.76+ loads skills natively — no custom hook needed. This document is preserved as a reference for the skill design patterns (YAML frontmatter, keyword optimization) which remain relevant for native loading.
+
 **Source**: Production Project - Entries #271, #272
 **Achievement**: 61.1% -> 88.2% accuracy in 170-query test suite
 **Created**: 2026-01-14
@@ -81,7 +83,7 @@ Ranked Skills (✅ Top 5)
 
 ### Components
 
-1. **Skills** (~/.claude/skills/) - 226+ standalone workflows
+1. **Skills** (~/.claude/skills/) - 240+ standalone workflows
 2. **Frontmatter** - name + description with "Use when..." (critical for native matching)
 3. **Test Suite** (tests/skills/) - 170-query validation (optional, for quality assurance)
 4. **Cache** (~/.claude/cache/) - No longer needed (was for custom hook)
