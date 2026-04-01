@@ -1,48 +1,157 @@
 <svg width="1280" height="640" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Deep dark gradient background -->
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1a2e"/>
-      <stop offset="100%" style="stop-color:#16213e"/>
+      <stop offset="0%" style="stop-color:#0a0a1a"/>
+      <stop offset="50%" style="stop-color:#0f1129"/>
+      <stop offset="100%" style="stop-color:#0a0a1a"/>
     </linearGradient>
+
+    <!-- Accent gradient (warm amber to coral) -->
     <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#e94560"/>
-      <stop offset="100%" style="stop-color:#ff6b6b"/>
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#ef4444"/>
     </linearGradient>
+
+    <!-- Subtle glow for the title -->
+    <linearGradient id="titleGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#f1f5f9"/>
+      <stop offset="100%" style="stop-color:#ffffff"/>
+    </linearGradient>
+
+    <!-- Card background gradient -->
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a3e"/>
+      <stop offset="100%" style="stop-color:#12122a"/>
+    </linearGradient>
+
+    <!-- Metric number gradients -->
+    <linearGradient id="metric1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="metric2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="metric3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="metric4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399"/>
+      <stop offset="100%" style="stop-color:#10b981"/>
+    </linearGradient>
+
+    <!-- Subtle grid pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+    </pattern>
+
+    <!-- Glow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft shadow for cards -->
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
   </defs>
 
   <!-- Background -->
   <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
 
-  <!-- Accent line top -->
-  <rect x="0" y="0" width="1280" height="6" fill="url(#accent)"/>
+  <!-- Decorative orbs (subtle ambient light) -->
+  <circle cx="200" cy="100" r="200" fill="#3b82f6" opacity="0.03"/>
+  <circle cx="1080" cy="540" r="250" fill="#8b5cf6" opacity="0.03"/>
+  <circle cx="640" cy="320" r="300" fill="#f59e0b" opacity="0.015"/>
+
+  <!-- Top accent bar -->
+  <rect x="0" y="0" width="1280" height="4" fill="url(#accent)"/>
+
+  <!-- Anthropic-style badge -->
+  <rect x="490" y="60" width="300" height="32" rx="16" fill="#1e1e3a" stroke="#333366" stroke-width="1"/>
+  <text x="640" y="82" font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', monospace" font-size="13" fill="#94a3b8" text-anchor="middle" letter-spacing="2">CLAUDE CODE ECOSYSTEM</text>
 
   <!-- Main title -->
-  <text x="640" y="200" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#ffffff" text-anchor="middle">Claude Code Guide</text>
+  <text x="640" y="165" font-family="'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="url(#titleGlow)" text-anchor="middle" letter-spacing="-1">Claude Code Guide</text>
 
   <!-- Subtitle -->
-  <text x="640" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#a0a0a0" text-anchor="middle">Complete Setup &amp; Best Practices</text>
+  <text x="640" y="215" font-family="'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif" font-size="24" fill="#64748b" text-anchor="middle" letter-spacing="0.5">Production-tested patterns for skills, hooks, agents &amp; MCP</text>
 
-  <!-- Metrics boxes -->
-  <g transform="translate(140, 340)">
-    <!-- Box 1 -->
-    <rect x="0" y="0" width="280" height="120" rx="12" fill="#252547"/>
-    <text x="140" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">100+</text>
-    <text x="140" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">hours saved/year</text>
+  <!-- Divider line -->
+  <line x1="440" y1="245" x2="840" y2="245" stroke="url(#accent)" stroke-width="2" opacity="0.3"/>
 
-    <!-- Box 2 -->
-    <rect x="320" y="0" width="280" height="120" rx="12" fill="#252547"/>
-    <text x="460" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">240+</text>
-    <text x="460" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">proven patterns</text>
+  <!-- 4 Metric Cards -->
+  <g transform="translate(65, 280)">
+    <!-- Card 1: Patterns -->
+    <g filter="url(#cardShadow)">
+      <rect x="0" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
+      <rect x="0" y="0" width="265" height="4" rx="2" fill="url(#metric1)"/>
+      <text x="132" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric1)" text-anchor="middle">240+</text>
+      <text x="132" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Proven Patterns</text>
+      <text x="132" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">from production systems</text>
+    </g>
 
-    <!-- Box 3 -->
-    <rect x="640" y="0" width="280" height="120" rx="12" fill="#252547"/>
-    <text x="780" y="55" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#e94560" text-anchor="middle">25</text>
-    <text x="780" y="95" font-family="system-ui, sans-serif" font-size="20" fill="#a0a0a0" text-anchor="middle">hook events</text>
+    <!-- Card 2: Hooks -->
+    <g filter="url(#cardShadow)">
+      <rect x="290" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
+      <rect x="290" y="0" width="265" height="4" rx="2" fill="url(#metric2)"/>
+      <text x="422" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric2)" text-anchor="middle">25</text>
+      <text x="422" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Hook Events</text>
+      <text x="422" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">full workflow automation</text>
+    </g>
+
+    <!-- Card 3: Chapters -->
+    <g filter="url(#cardShadow)">
+      <rect x="580" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
+      <rect x="580" y="0" width="265" height="4" rx="2" fill="url(#metric3)"/>
+      <text x="712" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric3)" text-anchor="middle">59</text>
+      <text x="712" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Guide Chapters</text>
+      <text x="712" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">deep technical coverage</text>
+    </g>
+
+    <!-- Card 4: Time Saved -->
+    <g filter="url(#cardShadow)">
+      <rect x="870" y="0" width="265" height="140" rx="14" fill="url(#cardBg)" stroke="#2a2a5a" stroke-width="1"/>
+      <rect x="870" y="0" width="265" height="4" rx="2" fill="url(#metric4)"/>
+      <text x="1002" y="65" font-family="'Inter', system-ui, sans-serif" font-size="48" font-weight="800" fill="url(#metric4)" text-anchor="middle">100+</text>
+      <text x="1002" y="100" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">Hours Saved</text>
+      <text x="1002" y="122" font-family="'Inter', system-ui, sans-serif" font-size="12" fill="#475569" text-anchor="middle">per year, per developer</text>
+    </g>
+  </g>
+
+  <!-- Tech stack pills -->
+  <g transform="translate(640, 480)">
+    <rect x="-330" y="0" width="100" height="28" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="-280" y="19" font-family="'SF Mono', monospace" font-size="12" fill="#f59e0b" text-anchor="middle">Opus 4.6</text>
+
+    <rect x="-215" y="0" width="110" height="28" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="-160" y="19" font-family="'SF Mono', monospace" font-size="12" fill="#60a5fa" text-anchor="middle">Sonnet 4.6</text>
+
+    <rect x="-90" y="0" width="100" height="28" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="-40" y="19" font-family="'SF Mono', monospace" font-size="12" fill="#a78bfa" text-anchor="middle">Haiku 4.5</text>
+
+    <rect x="25" y="0" width="120" height="28" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="85" y="19" font-family="'SF Mono', monospace" font-size="12" fill="#34d399" text-anchor="middle">1M Context</text>
+
+    <rect x="160" y="0" width="70" height="28" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="195" y="19" font-family="'SF Mono', monospace" font-size="12" fill="#f472b6" text-anchor="middle">MCP</text>
+
+    <rect x="245" y="0" width="85" height="28" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="287" y="19" font-family="'SF Mono', monospace" font-size="12" fill="#fbbf24" text-anchor="middle">Agents</text>
   </g>
 
   <!-- Footer -->
-  <text x="640" y="560" font-family="system-ui, sans-serif" font-size="24" fill="#666666" text-anchor="middle">Production-tested patterns</text>
+  <text x="640" y="565" font-family="'Inter', system-ui, sans-serif" font-size="15" fill="#475569" text-anchor="middle" letter-spacing="1">github.com/ytrofr/claude-code-guide</text>
 
-  <!-- Bottom accent -->
-  <rect x="0" y="634" width="1280" height="6" fill="url(#accent)"/>
+  <!-- Bottom accent bar -->
+  <rect x="0" y="636" width="1280" height="4" fill="url(#accent)"/>
 </svg>
