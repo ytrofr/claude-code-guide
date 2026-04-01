@@ -6,9 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns. 226+ documented patterns, 100+ hours saved per year.
+Production-tested Claude Code patterns. 240+ documented patterns, 100+ hours saved per year.
 
-**Models**: Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **18 hook events** -- **Agent teams & task management**
+**Models**: Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **25 hook events** -- **Agent teams & task management**
 
 ---
 
@@ -65,10 +65,10 @@ See [install.sh](install.sh) for all options including `--update`, `--uninstall`
 | Context Window    | **1M tokens**                       |
 | Models            | **Opus 4.6, Sonnet 4.6, Haiku 4.5** |
 | Time Saved        | **100+ hours/year**                 |
-| Hooks             | **18 events automated**             |
-| Skills            | **226+ native loading**             |
+| Hooks             | **25 events automated**             |
+| Skills            | **240+ native loading**             |
 | Token Savings     | **47-70% per branch**               |
-| Production Skills | **226+ documented**                 |
+| Production Skills | **240+ documented**                 |
 | MCP Integrations  | **13 servers, 70+ tools**           |
 
 **Source**: 14+ months of production use with 97 components validated.
@@ -112,7 +112,7 @@ Install via the official installer: `curl -fsSL https://claude.ai/install.sh | s
 
 ### What are Claude Code hooks?
 
-Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 18 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
+Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 25 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
 
 ### What is MCP integration?
 
@@ -120,7 +120,7 @@ MCP (Model Context Protocol) extends Claude Code with external tools. Connect to
 
 ### How do Claude Code skills work?
 
-Skills are Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clause). Claude Code natively discovers all skills from `~/.claude/skills/` and matches them to queries using the description field. No custom hooks needed -- skills are built into Claude Code. Our system runs **226+ production skills** with native activation.
+Skills are Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clause). Claude Code natively discovers all skills from `~/.claude/skills/` and matches them to queries using the description field. No custom hooks needed -- skills are built into Claude Code. Our system runs **240+ production skills** with native activation.
 
 ### What is the memory bank?
 
@@ -128,7 +128,7 @@ The memory bank is a hierarchical knowledge system using a 4-tier structure: alw
 
 ### How much time does this save?
 
-Based on production metrics: **100+ hours per year** in developer time. Key achievements include 370x hook optimization (38s→103ms), 47-70% token savings per branch, 88.2% skill activation accuracy, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
+Based on production metrics: **100+ hours per year** in developer time. Key achievements include 240+ proven patterns, 47-70% token savings per branch, 25 hook events for automation, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
 
 ---
 
@@ -142,7 +142,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ### Claude Code Hooks
 
-- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 18 hook events
+- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 25 hook events
 - [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) - Clear distinction
 - [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md) - Historical reference (deprecated Feb 2026)
 
@@ -193,7 +193,7 @@ claude-code-guide/
 ├── docs/                    # Complete documentation
 │   ├── quick-start.md      # 30-minute setup
 │   ├── skill-activation-system.md
-│   └── guide/              # 47+ detailed guides
+│   └── guide/              # 59 detailed guides
 ├── template/                # Clone-and-go starter (full setup)
 │   ├── .claude/            # Pre-configured setup
 │   │   ├── CLAUDE.md       # Project context
@@ -248,8 +248,8 @@ claude-code-guide/
 ## Key Features
 
 - **Claude Code Setup**: Complete project configuration with templates
-- **Claude Code Hooks**: 18 hook events for workflow automation
-- **Claude Code Skills**: 226+ production-tested patterns (native loading)
+- **Claude Code Hooks**: 25 hook events for workflow automation
+- **Claude Code Skills**: 240+ production-tested patterns (native loading)
 - **Claude Code MCP**: 13 servers, 70+ tools integrated
 - **Context Optimization**: 47-70% token savings per branch
 - **Best Practices**: Anthropic-aligned patterns from production
@@ -266,7 +266,7 @@ claude-code-guide/
 
 | Aspect                | This Guide                       |
 | --------------------- | -------------------------------- |
-| **Production-Tested** | 226+ patterns from real systems  |
+| **Production-Tested** | 240+ patterns from real systems  |
 | **Evidence-Based**    | Every claim backed by metrics    |
 | **Team-Ready**        | Shared vs personal configuration |
 | **Phased Approach**   | Value in 30 minutes              |
@@ -281,7 +281,7 @@ claude-code-guide/
 **Marketplace**: [wshobson/agents](https://github.com/wshobson/agents) - 273 components
 **Official Docs**: [code.claude.com/docs](https://code.claude.com/docs/en/memory)
 **Created**: December 2024
-**Updated**: February 2026
+**Updated**: April 2026
 
 ---
 

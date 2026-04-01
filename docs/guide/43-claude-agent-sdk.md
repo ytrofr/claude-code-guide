@@ -256,7 +256,7 @@ const agent = new Agent({
 });
 ```
 
-All 18 hook events are supported. See [Chapter 13: Hooks](13-claude-code-hooks.md) for event details.
+All 25 hook events are supported. See [Chapter 13: Hooks](13-claude-code-hooks.md) for event details.
 
 ---
 

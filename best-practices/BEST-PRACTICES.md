@@ -1,6 +1,6 @@
 # Claude Code Best Practices (Auto-Installed)
 
-**Source**: [claude-code-guide](https://github.com/ytrofr/claude-code-guide) -- 226+ production-tested patterns
+**Source**: [claude-code-guide](https://github.com/ytrofr/claude-code-guide) -- 240+ production-tested patterns
 **Scope**: Universal -- applies to ALL projects regardless of stack or domain
 **Authority**: These rules are MANDATORY in every Claude Code session
 

@@ -1736,7 +1736,7 @@ echo "{\"tool_input\":{\"file_path\":\"/tmp/test.js\",\"content\":\"$CONTENT\"}}
 
 ## Real Example
 
-**Production**: 18 hooks, 6-8 hours/year ROI
+**Production**: 25 hooks, 6-8 hours/year ROI
 
 See: `examples/production-claude-hooks/`
 
