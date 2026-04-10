@@ -153,9 +153,25 @@ The probe's value comes from what you do when it produces bad news.
 
 ## Integration with Plan Mode
 
-The Pre-Validation Probe is Section 0.1 in the [Plan Mode Quality Checklist](45-plan-mode-checklist.md). It sits between Section 0 (Requirements Clarification) and Section 1 (Existing Code Check).
+The Pre-Validation Probe is Section 0.1 in the [Plan Mode Quality Checklist](45-plan-mode-checklist.md). It sits before Section 1 (Requirements Clarification).
 
-The probe is **optional** -- the [ExitPlanMode hook](45-plan-mode-checklist.md#enforcement-pretooluse-hook-on-exitplanmode) does not block submission for a missing probe. This is intentional: trivial plans and plans with all-confirmed assumptions should not be forced to include an empty probe section. But for any plan where the developer said "I think..." or "probably..." about the current state, the probe converts guesswork into evidence.
+The probe is **optional for trivial changes** -- skip for <10 lines with no assumptions. But for any plan where the developer said "I think..." or "probably..." about the current state, the probe converts guesswork into evidence.
+
+**v5 enhancement**: After the probe, ALL KPIs in the Section 12 KPI Dashboard must have `Confidence: MEASURED`. No UNKNOWN or ESTIMATED values allowed at plan approval time. The probe's job is to fill the "Before" column with real numbers.
+
+### Post-Validation: Closing the Loop (Section 13)
+
+The Pre-Validation Probe has a counterpart: **Section 13 (Post-Validation)**. After implementation, re-measure the same KPIs from Section 12 and compare:
+
+```markdown
+## 13. Post-Validation
+
+| KPI            | Before (Measured) | After (Actual) | Target | Verdict |
+|----------------|-------------------|----------------|--------|---------|
+| [from Sec 12]  | [from Sec 0.1]    | [re-measured]  | [goal] | PASS    |
+```
+
+This closes the loop: Section 0.1 grounds the plan in data before approval; Section 13 confirms the data changed as expected after implementation. Without it, success is claimed without re-measuring.
 
 ### Adding to the Rules File
 

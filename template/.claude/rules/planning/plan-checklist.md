@@ -1,35 +1,20 @@
 # Plan Mode Checklist - MANDATORY for Every Plan
 
 **Authority**: Universal plan quality enforcement
-**Updated**: 2026-03-03 (v4: Condensed — full templates in /plan-checklist skill)
+**Updated**: 2026-04-10 (v5: TL;DR always last, KPI tables mandatory, before/after per fix, post-validation gate)
 **Scope**: ALL plans in ALL projects
 
 ---
 
 ## Rule
 
-Every plan (via EnterPlanMode, /plan, or plan permission mode) MUST contain ALL 13 sections (0, 0.1, 1-11). No placeholders. Write Section 0 FIRST.
+Every plan (via EnterPlanMode, /plan, or plan permission mode) MUST contain ALL 14 sections (0.1, 1-11, 12, 13). No placeholders. Write Section 12 (TL;DR) LAST — after all detail sections are complete. Section 12 MUST be the last content section, followed only by Section 13 (post-validation template).
 
 For full section templates and examples, invoke `/plan-checklist`.
 
 ---
 
-## 13 Mandatory Sections
-
-### Section 0: TL;DR + KPIs (WRITE FIRST)
-
-Executive summary — reader understands FULL plan in <10 seconds. Must include:
-
-- **Problem -> Solution**: Pain point + fix in plain language
-- **Scope line**: Files changed + lines + architectural or contained
-- **KPI Dashboard** with columns: Status | KPI | Before | Source | Confidence | Target | Green | Yellow | Red
-
-**KPI Rules**:
-- Status: emoji only, NEVER text words
-- Pick 2-5 KPIs per plan, all need Green/Yellow/Red thresholds
-- Source: WHERE the Before number came from (DB query, baseline file, log grep)
-- Confidence: `MEASURED` (real data, cite source), `ESTIMATED` (partial data, state basis), `UNKNOWN` (plan must include measurement step)
-- At least 1 KPI MUST be MEASURED. ALL UNKNOWN = plan rejected.
+## 14 Mandatory Sections
 
 ### Section 0.1: Pre-Validation Probe (BLOCKING GATE)
 
@@ -42,31 +27,9 @@ Executive summary — reader understands FULL plan in <10 seconds. Must include:
 **On DISPROVED**: Adjust plan. >50% disproved = REJECT and re-plan.
 **On NO-GO feasibility**: STOP. Redesign.
 
-Output format in plan file:
+**All KPIs MUST be MEASURED after the probe.** No UNKNOWN or ESTIMATED allowed at ExitPlanMode time.
 
-```
-## 0.1 Pre-Validation Probe
-**Status**: PASSED / FAILED / PARTIAL
-**Run at**: YYYY-MM-DD HH:MM UTC
-
-### Assumptions Tested
-| # | Assumption | Test | Result | Verdict |
-|---|-----------|------|--------|---------|
-| 1 | [assumed true] | [how checked] | [found] | CONFIRMED/DISPROVED |
-
-### KPI Baselines (UNKNOWN/ESTIMATED -> MEASURED)
-| KPI | Was | Now | Source | Value |
-|-----|-----|-----|--------|-------|
-
-### Feasibility
-| Check | Result | Go/No-Go |
-|-------|--------|----------|
-
-### Probe Verdict
-- **VERDICT**: GO / NO-GO
-```
-
-### Sections 1-11 (invoke `/plan-checklist` for full templates)
+### Sections 1-11
 
 | Section | Name | Key Requirement |
 |---------|------|----------------|
@@ -82,21 +45,43 @@ Output format in plan file:
 | 10 | File Change Summary | Columns: File, Action, Before, After, Why. Each row is a mini-story. |
 | 11 | Modularity Enforcement | BLOCKING GATE. File <500L, function <50L, layer separation, no god files. |
 
+### Per-Fix BEFORE/AFTER (MANDATORY in implementation details)
+
+Every fix MUST start with:
+```
+### Fix N: Title
+**BEFORE**: One sentence — current broken behavior.
+**AFTER**: One sentence — fixed behavior.
+```
+
+### Section 12: TL;DR + KPIs (WRITE LAST — ALWAYS the final content section)
+
+Must include Problem (Before) table + Solution (After) table + KPI Dashboard table.
+
+**KPI Dashboard** — ALWAYS a pipe-delimited table:
+```
+| Status | KPI | Before | After (Target) | Source | Confidence | Green | Yellow | Red |
+```
+
+KPI Rules: emoji status only, 2-5 KPIs, all MEASURED, Source cited.
+
+### Section 13: Post-Validation (template at plan time, filled after implementation)
+
+Re-measures the SAME KPIs from Section 12 after implementation. Include template with empty rows at plan time.
+
 ---
 
 ## Quick Validation
 
-- [ ] All 13 sections present with real content (0, 0.1, 1-11)
-- [ ] TL;DR is Section 0 (reader understands plan in <10 seconds)
-- [ ] Pre-Validation Probe ran (Section 0.1) — or justified skip
-- [ ] All KPIs are MEASURED (probe converted UNKNOWN/ESTIMATED)
-- [ ] At least 1 KPI MEASURED with cited source
+- [ ] All 14 sections present with real content (0.1, 1-11, 12, 13)
+- [ ] TL;DR is Section 12 — ALWAYS the last content section, written LAST
+- [ ] Section 12 has Problem (Before) table + Solution (After) table + KPI Dashboard table
+- [ ] KPI Dashboard is a pipe-delimited table (never prose)
+- [ ] Every fix has **BEFORE**: and **AFTER**: one-liners
+- [ ] Section 13 Post-Validation template present
+- [ ] All KPIs are MEASURED after Section 0.1 probe
 - [ ] Existing code searched (not building from scratch)
-- [ ] Simplest approach chosen
-- [ ] Files Affected has Before/After/Why columns
 - [ ] Modularity enforcement passed
-- [ ] Testing strategy defined
-- [ ] /document planned
 
 ---
 
