@@ -1,21 +1,21 @@
 ---
 layout: default
-title: "Claude Code Hooks - Complete Guide to 20 Hook Events"
+title: "Claude Code Hooks - Complete Guide to 27 Hook Events"
 description: "Configure Claude Code hooks for PreToolUse, PostToolUse, and 17 more events. Command, prompt, and agent hook types. Async hooks. Decision control patterns."
 ---
 
 # Chapter 13: Claude Code Hooks
 
-Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 25 hook events, 3 hook types, async execution, and production-tested patterns.
+Claude Code hooks are customizable scripts that run at specific points in the AI workflow, enabling automation, validation, and context injection. This guide covers all 27 hook events, 4 hook types, async execution, and production-tested patterns.
 
 **Purpose**: Automate workflows with event-driven hooks
 **Source**: Anthropic blog "How to Configure Hooks"
-**Evidence**: 20 hooks in production, 96% test validation
+**Evidence**: 27 hooks in production, 96% test validation
 **Updated**: Mar 31, 2026 — Added PermissionDenied hook (20th). Mar 6, 2026 — Added InstructionsLoaded hook (19th), agent_id/agent_type fields in hook events, worktree status line field, TeammateIdle/TaskCompleted continue:false support
 
 ---
 
-## Hook Events (20 Available)
+## Hook Events (27 Available)
 
 | Hook                    | Trigger                                    | Use For                                |
 | ----------------------- | ------------------------------------------ | -------------------------------------- |
@@ -441,6 +441,29 @@ exit 0
 ```
 
 **Evidence**: Feb 7, 2026 — Production branch stuck on "✨ Formatting file..." during AI Training System implementation. Root cause: `$CLAUDE_TOOL_INPUT_FILE_PATH` was empty → prettier scanned 99+ files. Fix: stdin JSON parsing with jq.
+
+### ❌ WRONG Pattern (Silent Failure + "hook error" Noise)
+
+Another common mistake: reading a `$CLAUDE_TOOL_INPUT` environment variable instead of stdin. This variable doesn't exist — Claude Code only passes JSON on stdin.
+
+```bash
+#!/bin/bash
+# ❌ WRONG — $CLAUDE_TOOL_INPUT is always empty, jq errors on every call
+COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+```
+
+**What happens**: `$CLAUDE_TOOL_INPUT` is empty → jq receives empty input → jq writes an error to stderr → Claude Code displays "PreToolUse:Bash hook error" on every Bash call. The hook never blocks anything because `$COMMAND` is always empty. The hook appears to work (no crashes, exit 0) but provides zero protection while generating error noise in every session.
+
+**Why it's insidious**: The hook "fails open" — it never blocks dangerous commands because the pattern match runs against an empty string. You only discover it when you check why "hook error" appears on safe commands like `ls` or `grep`.
+
+```bash
+#!/bin/bash
+# ✅ CORRECT — read stdin, same as all other hooks
+INPUT=$(timeout 2 cat 2>/dev/null || true)
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+```
+
+**Evidence**: Apr 2026 — `block-dangerous-kills.sh` hook showed "PreToolUse:Bash hook error" on every Bash call for months. Hook used `$CLAUDE_TOOL_INPUT` env var. jq stderr leaked on every invocation. The hook never actually blocked `killall node`. Fix: read from stdin + `exec 2>/dev/null`.
 
 ---
 
@@ -1541,6 +1564,108 @@ Local hooks merge with project hooks (they don't replace them). This is useful f
 - Debug logging hooks during development
 - Experimental hooks before promoting to project-level
 
+### Use `$CLAUDE_PROJECT_DIR` Instead of Hardcoded Paths
+
+Claude Code sets `$CLAUDE_PROJECT_DIR` for every hook invocation. Use it instead of hardcoding project paths — this makes hooks portable across projects.
+
+```bash
+#!/bin/bash
+# ❌ WRONG — only works for one project
+PROJECT_ROOT="/home/ytr/my-project"
+
+# ✅ CORRECT — works for any project
+PROJECT_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+```
+
+**Evidence**: Apr 2026 — `block-root-file-creation.sh` had hardcoded `PROJECT_ROOT="/home/ytr/LimorAI-Knowledge"` (a stale path from a renamed branch). The hook silently failed to protect any project. Fix: `${CLAUDE_PROJECT_DIR:-$PWD}`. Verified: now blocks root file creation in any project directory.
+
+### Use Absolute Paths for Hook Commands
+
+Hook command paths in settings files are resolved **relative to the project root** (where `.claude/` lives). This works fine when your session starts in the project root — but if you start a session in a **subdirectory** (e.g., `project/backend/`), relative paths can break because Claude Code may resolve them from the working directory instead.
+
+```json
+// ❌ FRAGILE — breaks when session starts in a subdirectory
+{
+  "hooks": [{
+    "type": "command",
+    "command": ".claude/hooks/my-hook.sh"
+  }]
+}
+
+// ✅ SAFE — works regardless of session working directory
+{
+  "hooks": [{
+    "type": "command",
+    "command": "/home/user/project/.claude/hooks/my-hook.sh"
+  }]
+}
+```
+
+**Symptoms**: Intermittent `PreToolUse:Bash hook error` (or similar) that appears in some sessions but not others — depending on which directory the session was started from. The hook returns exit code 127 (command not found) because the relative path resolves to a non-existent location.
+
+**When this matters most**: Monorepos or projects with subdirectory workspaces (e.g., `adk-agent/`, `frontend/`, `backend/`) where you routinely start sessions from subdirectories rather than the project root.
+
+**Tip**: Before adding a hook with a relative path, check whether the same protection is already provided by the deny list in `settings.json`. Permission deny patterns (e.g., `Bash(killall node)*`) block commands at the permission layer — before hooks even fire — and are immune to path resolution issues.
+
+**Evidence**: Apr 2026 — `block-dangerous-kills.sh` hook in `settings.local.json` used relative path `.claude/hooks/block-dangerous-kills.sh`. Sessions started from `project/adk-agent/` resolved it as `adk-agent/.claude/hooks/...` (exit 127). Every Bash call showed `PreToolUse:Bash hook error`. Fix: removed the hook entirely — the global deny list already blocked the same commands.
+
+### Inline Hooks Must Read stdin (Not `$CLAUDE_HOOK_INPUT`)
+
+Inline hooks in settings.json have the same stdin requirement as script hooks. The `$CLAUDE_HOOK_INPUT` environment variable does not exist.
+
+```json
+{
+  "InstructionsLoaded": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "INPUT=$(cat); echo \"$(echo \"$INPUT\" | jq -r '.file_path')\" >> ~/.claude/logs/loaded.log",
+          "async": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Evidence**: Apr 2026 — `InstructionsLoaded` and `PermissionDenied` inline hooks used `$CLAUDE_HOOK_INPUT`. All 1,022 log entries showed `file= reason=` (empty). Fix: `INPUT=$(cat)` before jq parsing. Verified: logs now populate correctly.
+
+### Read `hook_event_name` from stdin (Not `$CLAUDE_HOOK_EVENT`)
+
+When a single script handles multiple events (e.g., `SubagentStart` and `SubagentStop`), extract the event type from stdin JSON — not from environment variables.
+
+```bash
+#!/bin/bash
+INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+
+# ❌ WRONG — $CLAUDE_HOOK_EVENT doesn't exist
+EVENT_TYPE="${CLAUDE_HOOK_EVENT:-unknown}"
+
+# ✅ CORRECT — read from stdin JSON
+EVENT_TYPE=$(echo "$INPUT" | jq -r '.hook_event_name // "unknown"' 2>/dev/null)
+```
+
+**Evidence**: Apr 2026 — `subagent-monitor.sh` logged `unknown: Explore` for all 20 entries because `$CLAUDE_HOOK_EVENT` was empty. Fix: read `hook_event_name` from stdin. Verified: logs now show `SubagentStart: Explore` / `SubagentStop: Plan`.
+
+### PermissionRequest Output Format
+
+The `PermissionRequest` hook must return a specific nested JSON structure. The decision value must be `"allow"` or `"deny"` (not "approve").
+
+```bash
+# ❌ WRONG — "approve" is not a valid value, wrong nesting
+echo '{"decision": "approve", "reason": "Safe command"}'
+
+# ✅ CORRECT — nested structure with "allow"
+echo '{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
+```
+
+### Avoid Duplicate Hooks Between Global and Project
+
+Hooks from all scopes run in parallel — they don't replace each other. If the same hook exists in both `~/.claude/settings.json` (global) and `.claude/settings.json` (project), it runs twice. This causes duplicate output (e.g., two checkpoint banners on Stop).
+
+**Fix**: Put universal hooks (gcloud guard, perplexity block, observation logger) in global settings only. Put project-specific hooks (sacred patterns, prettier, file size) in project settings only.
+
 ---
 
 ## Real-World Production Example: File Size / Modularity Enforcement
@@ -1762,6 +1887,137 @@ As of v2.1.88, Claude Code supports 27 hook events (up from the 18 commonly docu
 **Infrastructure Events**: Setup, ConfigChange, CwdChanged, FileChanged, WorktreeCreate, WorktreeRemove, InstructionsLoaded
 **Collaboration Events**: TeammateIdle, TaskCreated, TaskCompleted
 **Elicitation Events**: Elicitation, ElicitationResult
+
+---
+
+## Real-World Production Example: GCP Project Guard (Cross-Project Safety)
+
+This example demonstrates a **blocking** PreToolUse hook that prevents deploying to the wrong GCP project — a critical safety gate when working across multiple GCP projects from the same machine.
+
+**Problem**: gcloud named configurations share a single global active state file (`~/.config/gcloud/properties`). When two Claude Code sessions run concurrently (e.g., one for project A, one for project B), activating different configs races on the same file. A deploy command in session A may execute against project B's config if session B activated last.
+
+**Solution**: A PreToolUse hook that maps the current working directory to an expected GCP project ID and blocks any dangerous gcloud command that is missing `--project` or targets the wrong project.
+
+### Hook: `~/.claude/hooks/gcloud-project-guard.sh`
+
+```bash
+#!/bin/bash
+# PreToolUse hook: Block gcloud deploys targeting wrong GCP project
+# Reads JSON from stdin, validates --project flag against cwd mapping
+
+JSON_INPUT=$(timeout 2 cat 2>/dev/null || echo '{}')
+COMMAND=$(echo "$JSON_INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+
+# Only check gcloud commands
+echo "$COMMAND" | grep -q 'gcloud' || exit 0
+
+# Skip safe/read-only commands
+echo "$COMMAND" | grep -qE "config |auth |logging read|--help|services list|services describe" && exit 0
+
+# Only gate dangerous commands
+echo "$COMMAND" | grep -qE "deploy|delete |update |create " || exit 0
+
+# --- Directory → Project mapping (customize for your projects) ---
+CWD=$(pwd)
+case "$CWD" in
+  /home/user/project-a*) EXPECTED="project-a-id"; LABEL="Project A" ;;
+  /home/user/project-b*) EXPECTED="project-b-id"; LABEL="Project B" ;;
+  *) exit 0 ;;  # Unknown directory — allow
+esac
+
+# Block if --project is missing
+if ! echo "$COMMAND" | grep -qE '\-\-project[= ]'; then
+  cat <<EOF
+{"decision":"block","reason":"GCLOUD SAFETY: Add --project=$EXPECTED (expected for $LABEL in $CWD)"}
+EOF
+  exit 0
+fi
+
+# Block if --project is wrong
+ACTUAL=$(echo "$COMMAND" | grep -oP '\-\-project[= ]\K[a-z0-9-]+')
+if [ -n "$ACTUAL" ] && [ "$ACTUAL" != "$EXPECTED" ]; then
+  cat <<EOF
+{"decision":"block","reason":"GCLOUD SAFETY: Wrong project $ACTUAL, expected $EXPECTED for $LABEL"}
+EOF
+  exit 0
+fi
+
+exit 0
+```
+
+### Settings Configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{
+          "type": "command",
+          "command": "~/.claude/hooks/gcloud-project-guard.sh",
+          "if": "Bash(gcloud *)",
+          "statusMessage": "Validating gcloud project..."
+        }]
+      }
+    ]
+  }
+}
+```
+
+### Key Design Decisions
+
+1. **Blocking, not advisory**: Returns `{"decision":"block"}` — the command never executes. This is critical for deploy safety where a wrong-project deploy can take 5+ minutes and costs money to undo.
+2. **Directory-based mapping**: Uses `pwd` to infer which project the developer intends to target. No configuration files needed — the mapping is in the hook itself.
+3. **Allowlist for safe commands**: `services list`, `config`, `auth` are read-only and pass through without `--project` validation.
+4. **`--project` flag is atomic**: Unlike config activation (which writes to a shared file), `--project` on the command line is per-invocation and immune to race conditions.
+
+**Evidence**: In production, this hook prevented a LimorAI staging deploy from targeting the wrong GCP project (ogas-479916 instead of limor-ai) when two Claude Code sessions were running concurrently.
+
+### Complementary Fix: `CLOUDSDK_ACTIVE_CONFIG_NAME` in Deploy Scripts
+
+The hook catches ad-hoc `gcloud` commands typed in Claude Code, but it **cannot** protect `gcloud` calls made inside deploy scripts (those run as Bash subprocesses). For full coverage, deploy scripts should also set `CLOUDSDK_ACTIVE_CONFIG_NAME` — a gcloud env var that overrides the global active config per-process:
+
+```bash
+#!/bin/bash
+set -e
+# Process-scoped config — immune to concurrent sessions mutating global state
+export CLOUDSDK_ACTIVE_CONFIG_NAME=my-project-config
+# All gcloud calls in this script (and children) use this config
+gcloud run deploy my-service --source . --region us-central1
+```
+
+This is gcloud's official mechanism for concurrent usage. Unlike `gcloud config configurations activate` (which writes to `~/.config/gcloud/properties` — a shared file), the env var is inherited only by child processes and never touches disk. Two deploy scripts running in parallel with different `CLOUDSDK_ACTIVE_CONFIG_NAME` values will never interfere.
+
+**Defense in depth**: Use both the PreToolUse hook (catches interactive commands) and `CLOUDSDK_ACTIVE_CONFIG_NAME` in scripts (catches scripted commands). Together they eliminate cross-project deployment errors.
+
+---
+
+## 2026-04 Updates (Claude Code 2.1.97-2.1.99)
+
+### Settings Resilience (2.1.99)
+
+Previously, an unrecognized hook event name in `settings.json` caused the **entire settings file to be silently ignored**. All hooks, permissions, and other settings stopped working — with no error message.
+
+After 2.1.99, only the individual bad entry is skipped. All other hooks and settings continue to function normally.
+
+**Action item**: After upgrading past 2.1.99, audit your hooks. Any hook that was silently dead for months (due to a typo in a sibling handler's event name) may now start firing for the first time.
+
+### `permissions.deny` Overrides PreToolUse "ask" (2.1.99)
+
+If you have both:
+- A `permissions.deny` rule (e.g., `Bash(killall node)*`)
+- A PreToolUse hook that returns `permissionDecision: "ask"`
+
+The deny rule now takes precedence. Previously, the hook could downgrade a deny into a prompt — allowing the user to approve a command that should have been unconditionally blocked.
+
+### Per-Project Hook Path Resolution Fix (2.1.97)
+
+Hook scripts that used relative paths or `$CLAUDE_PLUGIN_ROOT` now resolve correctly when the plugin is installed from a marketplace source versus a local directory. This fix is transparent — no action needed unless you saw "No such file or directory" errors from plugin hooks.
+
+### Hook Event Count Note
+
+The hook system now supports **27+ events** (up from the 25 documented at launch). The exact count varies by version as new events are added. All events documented in this chapter remain current; new events added in 2.1.94-2.1.99 are covered in [Chapter 71](71-claude-code-2193-2194-features.md), [Chapter 72](72-claude-code-2195-2197-features.md), and [Chapter 73](73-claude-code-2198-2199-features.md).
 
 ---
 

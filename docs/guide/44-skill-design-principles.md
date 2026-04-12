@@ -310,7 +310,9 @@ Claude Code enforces a 500-line limit on skill files. But even within 500 lines,
 
 ## Advanced Skill Frontmatter Fields
 
-Beyond the basics (`name`, `description`, `user-invocable`), several fields give fine-grained control:
+All SKILL.md frontmatter fields are optional. Only `description` is recommended so Claude knows when to use the skill. The `name` field is optional -- if omitted, Claude Code uses the directory name as the skill name (lowercase letters, numbers, and hyphens only, max 64 characters).
+
+Beyond the common fields (`name`, `description`, `user-invocable`), several fields give fine-grained control:
 
 ### model: — Control Which Model Runs the Skill
 

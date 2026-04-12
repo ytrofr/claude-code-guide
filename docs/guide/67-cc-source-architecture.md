@@ -390,6 +390,51 @@ Understanding these internals helps with practical optimization:
 
 ---
 
+## Community Reimplementation Patterns
+
+The open-source Rust reimplementation [claw-code](https://github.com/ultraworkers/claw-code) (180K+ stars) provides additional architectural insights. While not affiliated with Anthropic, the project's clean-room approach to replicating Claude Code's behavior surfaces patterns worth understanding:
+
+### Recovery Recipes (claw-code `recovery_recipes.rs`)
+
+Instead of ad-hoc retry logic, failure types are enumerated as a typed taxonomy. Each maps to an ordered sequence of recovery steps with a strict invariant: **one automatic recovery attempt, then escalate**.
+
+| Failure Type | Recovery Steps | Escalation |
+|---|---|---|
+| TrustPromptUnresolved | Auto-resolve from allowlist → send trust text | Alert human |
+| PromptMisdelivery | Detect shell error → replay prompt | Log and continue |
+| StaleBranch | Check base commit → rebase or warn | Block merge |
+| CompileRedCrossCrate | Targeted rebuild → workspace rebuild | Alert human |
+| McpHandshakeFailure | Restart server → degraded mode | Log and continue |
+| ProviderFailure | Fallback model → circuit breaker | Abort |
+
+**What makes this different from retry loops**: Recovery is modeled as a sequence of distinct typed steps that can partially succeed. The system tracks which steps ran and which remain, enabling structured incident reporting.
+
+### Compaction Boundary Guard (claw-code `compact.rs`)
+
+When compacting session history, the implementation ensures it never splits a tool-use/tool-result pair. A boundary walker scans backwards from the cut point to the nearest complete exchange. Without this, orphaned tool messages cause validation errors on OpenAI-compatible endpoints and confused routing in multi-agent setups.
+
+This is the same class of bug as persisting a state-clearing tool's exchange into an empty history -- any orphaned tool message in conversation history is invalid.
+
+### Context Window Preflight (claw-code `providers/mod.rs`)
+
+Before every API call, input tokens are estimated (JSON byte count / 4) and compared against the model's context window. Requests that would overflow are blocked before sending. This prevents wasted API calls and cryptic provider errors.
+
+### Multi-Provider Model Routing
+
+Model names are resolved through a prefix-based routing chain:
+- `claude*` routes to Anthropic
+- `grok*` routes to xAI  
+- `openai/*` or `gpt-*` routes to OpenAI-compatible
+- `qwen/*` routes to DashScope
+
+When authentication fails, the system checks for other provider credentials and suggests the correct model prefix -- e.g., "I see OPENAI_API_KEY is set; if you meant OpenAI-compat, prefix your model with `openai/`."
+
+### Policy Engine (claw-code `policy_engine.rs`)
+
+A declarative rule engine with composable conditions (`And`, `Or`, `GreenAt`, `StaleBranch`, `TimedOut`) mapped to actions (`MergeToDev`, `RecoverOnce`, `Escalate`, `Block`). Priority-sorted evaluation -- all matching rules fire, producing a flat action list. This replaces imperative if-else chains in CI/CD automation with readable, testable policy declarations.
+
+---
+
 *Previous: [Chapter 66 -- Claude Code 2.1.87-2.1.88 Features](66-claude-code-2187-2188-features)*
 
-*Updated: 2026-04-01*
+*Updated: 2026-04-10*

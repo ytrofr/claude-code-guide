@@ -260,18 +260,63 @@ Pre-warm the cache with context you'll use repeatedly:
 
 ---
 
-## 6. Key Takeaways
+## 6. Progressive Disclosure Split (Cookbook Recipe)
+
+### When to Use
+
+Apply this pattern when a skill exceeds 300 lines. Large skills consume ~500 tokens on every activation — splitting moves rarely-needed detail to on-demand loading.
+
+### The Pattern
+
+Keep the decision tree and quick reference in SKILL.md (the body). Move detailed examples, full API docs, and edge cases to a `references/` subdirectory. Claude reads references only when it needs more detail.
+
+```
+~/.claude/skills/my-skill/
+├── SKILL.md              # Decision tree + quick reference (< 300 lines)
+└── references/
+    ├── detailed-patterns.md   # Full examples, edge cases
+    └── api-reference.md       # Complete API documentation
+```
+
+### Before/After
+
+| Skill | Before (body) | After (body) | References | Reduction |
+|-------|--------------|-------------|------------|-----------|
+| context-engineering | 504 lines | 85 lines | 216 lines | 83% |
+| mcp-usage-patterns | 401 lines | 77 lines | 180 lines | 81% |
+| anthropic-best-practices | 399 lines | 100 lines | 195 lines | 75% |
+
+### Three-Level Loading Cost
+
+| Level | Token Cost | When Loaded |
+|-------|-----------|-------------|
+| Description | ~37 tokens/message | Every turn (skill routing) |
+| Body (SKILL.md) | ~500 tokens | On skill activation |
+| References | ~2000 tokens | On demand (Claude reads when needed) |
+
+The description loads every message for routing decisions — keep it under 250 characters. The body loads once when the skill activates. References load only when Claude decides it needs more detail for the current task.
+
+### Key Rules
+
+- Body must be self-sufficient for the 80% case — references are for edge cases
+- Never put the decision tree in references (it is needed on every activation)
+- Each reference file should be independently useful (not fragments of one document)
+
+---
+
+## 7. Key Takeaways
 
 1. **Skills are lazy-loaded** — only descriptions load at startup; full content loads on-demand
 2. **Use `effort:` frontmatter** — reduces token usage for simple skills (new in 2.1.80)
 3. **Use `context: fork`** for heavy analysis skills — keeps main context clean
 4. **Use `disable-model-invocation: true`** for side-effect skills (deploy, send, delete)
 5. **Keep SKILL.md under 500 lines** — split to reference.md for detailed docs
-6. **Orchestrator stays lean** — delegate to subagents, don't accumulate their outputs
-7. **Use Haiku for cheap operations** — classification, routing, simple lookups
-8. **PostCompact hooks** — re-inject critical context after compaction on every project
-9. **CLAUDE.md stability** — frequent changes invalidate prompt cache
-10. **Plugin structure** — skills/agents/hooks at root, NOT inside .claude-plugin/
+6. **Progressive disclosure split** — skills over 300 lines: body < 300L, details in references/ (75-83% reduction)
+7. **Orchestrator stays lean** — delegate to subagents, don't accumulate their outputs
+8. **Use Haiku for cheap operations** — classification, routing, simple lookups
+9. **PostCompact hooks** — re-inject critical context after compaction on every project
+10. **CLAUDE.md stability** — frequent changes invalidate prompt cache
+11. **Plugin structure** — skills/agents/hooks at root, NOT inside .claude-plugin/
 
 ---
 
