@@ -213,6 +213,20 @@ Here is a summary from an actual 10-repo research sprint, with quality ratings b
 | **RuView** | 2/10 | Minimal Claude Code content, mostly project documentation |
 | **Heretic** | 1/10 | No meaningful Claude Code patterns found |
 
+### Later Addition: claw-code (April 2026)
+
+| Repo | Rating | Key Patterns Found |
+|------|--------|--------------------|
+| **[claw-code](https://github.com/ultraworkers/claw-code)** | 7.5/10 | Recovery recipes (typed failure taxonomy), compaction boundary guard, multi-provider model routing, context window preflight, declarative policy engine, worker boot state machine |
+
+**Context**: claw-code is a clean-room Rust reimplementation of a Claude Code-like CLI harness (180K+ stars). It is NOT affiliated with or endorsed by Anthropic. Its value is architectural -- it makes visible internal patterns and adds novel approaches (recovery recipes, policy engine) not present in the original.
+
+**What's unique**: Most community repos add configuration on top of Claude Code. claw-code reimplements the internals, surfacing patterns at a deeper level -- tool execution pipelines, session compaction algorithms, provider routing chains, and typed failure recovery.
+
+**Caution**: The broader "Claw" ecosystem (ClawHub/OpenClaw skill marketplace) had significant security issues in early 2026, including malicious skills distributing malware. The claw-code repository itself is a Rust codebase without a skill marketplace, but validate any ecosystem tooling carefully. See [Chapter 62: Security Scanning](62-security-scanning.md) for guidance.
+
+**Patterns adopted**: See [Chapter 67: CC Source Architecture](67-cc-source-architecture.md) for detailed analysis of claw-code patterns.
+
 **Yield**: From 10 repos, 4 were highly valuable, 3 were moderately useful, and 3 were not worth the scan time. This is typical -- expect a 40-50% hit rate on repos that surface actionable patterns.
 
 ---

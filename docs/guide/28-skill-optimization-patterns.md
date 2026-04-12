@@ -263,15 +263,17 @@ ls ~/.claude/skills/ | grep -E "(master|deployment|sync|gap|parity)"
 # Validate settings.json
 jq . ~/.claude/settings.json > /dev/null && echo "✅ Valid JSON"
 
-# Validate skill frontmatter
+# Validate skill frontmatter (check for --- delimiters and description)
 for skill in ~/.claude/skills/*/SKILL.md; do
-  if grep -q "^---" "$skill" && grep -q "name:" "$skill"; then
+  if grep -q "^---" "$skill" && grep -q "description:" "$skill"; then
     echo "✅ $(basename $(dirname $skill))"
   else
     echo "❌ $(basename $(dirname $skill))"
   fi
 done
 ```
+
+> **Note**: The `name` field is optional. If omitted, Claude Code uses the directory name as the skill name. Use lowercase letters, numbers, and hyphens only (max 64 characters). The `description` field is recommended so Claude knows when to use the skill.
 
 ---
 

@@ -4,6 +4,32 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [4.3.0] - 2026-04-12
+
+### Added
+- Chapter 71: Claude Code 2.1.93-2.1.94 features (Mantle on Bedrock, default effort high, plugin skill YAML hooks, Slack MCP)
+- Chapter 72: Claude Code 2.1.95-2.1.97 features (Focus view Ctrl+O, statusline refreshInterval, workspace.git_worktree, Accept Edits safe-env, /agents running indicator)
+- Chapter 73: Claude Code 2.1.98-2.1.99 features (Monitor tool, settings resilience, 6 permission bypass fixes, subagent MCP inheritance, worktree Read/Edit, PID namespace sandbox, OTEL TRACEPARENT, /agents tabbed UI, /team-onboarding, OS CA cert trust)
+- Chapter 74: Claude Code Monitor Tool — standalone reference with ScheduleWakeup decision matrix
+- Chapter 75: Claude Code Statusline Patterns — workspace.git_worktree, refreshInterval, 3 example scripts
+- Chapter 70: Claude Code 2.1.89-2.1.92 features (bundled from WIP)
+- Chapter 69: Knowledge Harvest Adoption (bundled from WIP)
+- 3 new best-practices rules: concurrency-partitioning, fail-closed-defaults, source-validation (bundled from WIP)
+
+### Changed
+- Ch.13 hooks: appended 2026-04 Updates section (settings resilience, permissions.deny precedence, hook path fix, 27+ events)
+- README: "25 hook events" → "27+ hook events", "60 chapters" → "65 chapters", "26 rules" → "29 rules", added "CC 2.1.99 compatible"
+- CITATION.cff: bumped to v1.3.0, updated date-released, synced abstract counters (27+ hooks, 65 chapters, 29 rules)
+- llms.txt: added chapters 69-75
+- docs/index.md: updated TOC and stats
+- 14 chapters refreshed with minor updates (bundled from WIP)
+
+## [4.2.0] - 2026-04-01
+
+### Added
+- Chapter 69: Knowledge Harvest Adoption — validation protocol for community articles (3-step: CLI check, guide search, reject unvalidated), progressive disclosure splits (80%+ body reduction), 2 new skills (`/iterative-review`, `/fix-ci`), spec-first TDD gate
+- Chapter 58: Added "Progressive Disclosure Split" cookbook recipe (Section 6) — when to split skills over 300 lines, three-level loading cost, before/after line counts
+
 ## [4.1.0] - 2026-03-28
 
 ### Added
@@ -271,6 +297,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                                  |
 | ------- | ---------- | --------------------------------------------------------------------------- |
+| 4.2.0   | 2026-04-01 | Knowledge harvest adoption: validation protocol, progressive disclosure splits, 2 new skills |
 | 3.3.0   | 2026-02-24 | 1M context, Opus 4.6/Sonnet 4.6/Haiku 4.5, 18 hooks, task mgmt, agents      |
 | 3.2.0   | 2026-02-24 | File size/modularity enforcement hooks (PreToolUse + PostToolUse paired)    |
 | 3.1.0   | 2026-02-23 | Persistent memory patterns (auto-observation, session summary, taxonomy)    |

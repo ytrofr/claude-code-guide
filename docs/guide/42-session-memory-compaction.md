@@ -244,6 +244,22 @@ Check your context usage to know when to checkpoint:
 
 ---
 
+## Compaction Boundary Guard (Source Pattern)
+
+When compaction summarizes older messages, it must never split a tool-use / tool-result pair. Internally, the compaction boundary walker scans backwards from the cut point to find the nearest complete exchange. If the cut falls between a tool call and its result, it backs up to include both.
+
+**Why this matters**: An orphaned tool-use message (call without result) or orphaned tool-result (result without call) in conversation history causes:
+
+- **Gemini/ADK**: Confused agent routing -- `_find_agent_to_run()` reads the orphaned call as the last-speaking agent
+- **OpenAI-compatible endpoints**: 400 validation error rejecting the malformed message sequence
+- **Claude**: May attempt to re-execute the orphaned tool call
+
+**Practical implication**: If you build custom compaction logic (e.g., a PreCompact hook that manually truncates history), always check that your truncation point doesn't land between paired tool messages. The safe approach: walk backwards from your proposed cut until you find a user message that isn't a tool-result.
+
+*Source: claw-code `compact.rs` -- boundary walker for tool-use/tool-result pair preservation*
+
+---
+
 ## Post-Compact File Restoration Budget (Source Pattern)
 
 After compaction, Claude Code restores recently-relevant files to prevent losing critical working context. The restoration has strict budgets:

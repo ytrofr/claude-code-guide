@@ -440,6 +440,77 @@ Each session feeds the next. After a few weeks, Basic Memory becomes a reliable 
 
 ---
 
+## MEMORY.md Size Limits
+
+Claude Code's auto-memory system (`~/.claude/projects/<project>/memory/MEMORY.md`) has strict loading limits:
+
+- **200 lines** or **25KB**, whichever comes first
+- Content beyond these thresholds is **silently dropped** at session start
+- This limit applies to `MEMORY.md` only — `CLAUDE.md` files are loaded in full
+
+When MEMORY.md grows past the cap, you get no warning — Claude simply starts sessions without the truncated content.
+
+### Topic Files Pattern
+
+When MEMORY.md approaches the limit, move detailed content to **topic files** in the same directory:
+
+```
+~/.claude/projects/<project>/memory/
+├── MEMORY.md          ← Index (loaded at startup, under 200 lines)
+├── infrastructure.md  ← Detail (loaded on demand)
+├── decisions.md       ← Detail (loaded on demand)
+└── patterns.md        ← Detail (loaded on demand)
+```
+
+Topic files are NOT loaded at startup. Claude reads them on demand using file tools when the content is relevant. This gives you effectively unlimited memory — the index is always available, and details are a file read away.
+
+### Compression Strategies
+
+When MEMORY.md exceeds the cap:
+
+1. **Archive to Basic Memory**: Move historical sections (completed audits, past sprints, infrastructure state) to Basic Memory notes with proper observation taxonomy
+2. **Replace with pointers**: Each archived section becomes a 1-line summary pointing to the Basic Memory note or topic file
+3. **Keep only active context**: Feedback links, in-progress work, and frequently-referenced state stay in MEMORY.md
+4. **Target 60-70% of cap**: Leave room for future entries (~120-140 lines)
+
+### Example: Before and After
+
+Before (210 lines, over cap):
+
+```markdown
+## Infrastructure State
+### Docker PostgreSQL (LimorAI)
+- **Image**: pgvector/pgvector:0.8.1-pg17
+- **Volume**: limor_postgres_data_pg17
+- **Compose**: ~/docker-compose.limor.yml
+... (40 more lines of Docker details)
+
+### Comprehensive Audit (2026-03-28)
+... (30 lines of completed audit results)
+```
+
+After (2 lines):
+
+```markdown
+## Infrastructure State
+- [infrastructure.md](infrastructure.md) — Docker, PostgreSQL, MCP, CLI tools
+- [project_audit_2026_03_28.md](project_audit_2026_03_28.md) — Security, context, plugins
+```
+
+### Subagent Memory
+
+Subagents with the `memory` frontmatter field get their own MEMORY.md:
+
+| Scope     | Location                              |
+| --------- | ------------------------------------- |
+| `user`    | `~/.claude/agent-memory/<name>/`      |
+| `project` | `.claude/agent-memory/<name>/`        |
+| `local`   | `.claude/agent-memory-local/<name>/`  |
+
+The same 200-line / 25KB cap applies to subagent memory files. Use the same topic file pattern if a subagent's memory grows large.
+
+---
+
 **See Also**:
 
 - [Chapter 13: Claude Code Hooks](13-claude-code-hooks.md)

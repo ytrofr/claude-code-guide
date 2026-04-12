@@ -6,9 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns. 240+ documented patterns, 100+ hours saved per year.
+Production-tested Claude Code patterns. 240+ documented patterns, 29 universal rules, 65 chapters. **CC 2.1.99 compatible.**
 
-**Models**: Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **25 hook events** -- **Agent teams & task management**
+**Models**: Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **27+ hook events** -- **Agent teams & task management**
 
 ---
 

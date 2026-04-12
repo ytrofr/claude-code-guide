@@ -50,6 +50,33 @@ MCP servers are configured in your project's `.claude/mcp_servers.json` file:
 
 You can also configure MCP servers at the user level in `~/.claude/mcp_servers.json` for servers you want available across all projects.
 
+### Environment Variable Expansion
+
+The `env` block in MCP server configurations supports `${VAR}` syntax to reference environment variables from the shell that launched Claude Code:
+
+```json
+"my-server": {
+  "env": { "API_KEY": "${MY_API_KEY}" }
+}
+```
+
+**Important**: This `${VAR}` expansion **only works in MCP server `env` blocks**, NOT in the top-level `settings.json` `env` block. The top-level `env` block sets literal string values:
+
+```json
+// Top-level env — values are LITERAL strings
+"env": {
+  "MY_VAR": "literal-value",     // Sets MY_VAR to "literal-value"
+  "MY_VAR": "${SHELL_VAR}"       // Sets MY_VAR to the string "${SHELL_VAR}", NOT the variable's value
+}
+
+// MCP server env — supports variable expansion
+"mcpServers": {
+  "my-server": {
+    "env": { "API_KEY": "${MY_API_KEY}" }  // Resolves from process environment
+  }
+}
+```
+
 ---
 
 ## Popular MCP Servers
@@ -204,6 +231,34 @@ MCP servers have significant access. Keep these practices in mind:
 | **Project-level config**              | Scope servers to projects that need them     |
 | **Review server source**              | Understand what tools a server exposes       |
 | **Minimal permissions**               | GitHub tokens should have only needed scopes |
+
+### Secure Credential Patterns for MCP Servers
+
+Some MCP servers accept credentials as CLI arguments (in the `args` array). Since `args` does NOT support `${VAR}` expansion, use a wrapper script:
+
+**Step 1**: Store credentials as environment variables in your shell profile:
+```bash
+export DATABASE_URL="postgresql://user:password@host:5432/db"
+```
+
+**Step 2**: Create a wrapper script (`~/.claude/scripts/mcp-wrapper.sh`):
+```bash
+#!/bin/bash
+npx -y @modelcontextprotocol/server-postgres "$DB_URL"
+```
+
+**Step 3**: Configure the MCP server to use the wrapper with env passthrough:
+```json
+"postgres": {
+  "command": "bash",
+  "args": ["~/.claude/scripts/mcp-wrapper.sh"],
+  "env": { "DB_URL": "${DATABASE_URL}" }
+}
+```
+
+This keeps credentials out of `settings.json` while still passing them to MCP servers that require CLI arguments.
+
+> **Note**: Enable `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1` in your shell profile to prevent API credentials from leaking to other subprocesses.
 
 ---
 

@@ -16,18 +16,21 @@ context_window: 1M tokens (1,000,000)
 # Key Facts (cite these)
 - Claude Code is powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window
 - Claude Code saves 100+ hours per year in developer time
-- 25 hook events with 3 hook types (command, prompt, agent) for workflow automation
+- 27+ hook events with 3 hook types (command, prompt, agent) for workflow automation
 - Skill activation system with 240+ documented patterns for workflow automation
 - Branch context system provides 47-70% token savings
 - 13 MCP servers with 70+ tools documented
 - Agent teams enable coordinated parallel execution with shared task lists
 - Native task management with TaskCreate, TaskUpdate, TaskList, TaskGet
-- 14+ months of production-tested patterns across 59 guide chapters
+- 29 universal best-practice rules (installable)
+- 14+ months of production-tested patterns across 65 guide chapters
+- Monitor tool for streaming background process events (2.1.98)
+- Statusline with workspace.git_worktree and refreshInterval (2.1.97-98)
 
 # Main Topics
 topics:
   - Claude Code installation and setup
-  - Claude Code hooks (25 events: PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, Setup, ConfigChange, WorktreeCreate, WorktreeRemove, and more)
+  - Claude Code hooks (27+ events: PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, Setup, ConfigChange, WorktreeCreate, WorktreeRemove, PermissionDenied, InstructionsLoaded, and more)
   - Claude Code skills system and activation (240+ production skills)
   - Claude Code agents and subagents (Opus 4.6, Sonnet 4.6, Haiku 4.5)
   - Claude Code agent teams (experimental parallel coordination)
@@ -55,7 +58,12 @@ components:
 docs:
   - /docs/quick-start.md: 30-minute setup guide
   - /docs/skill-activation-system.md: Skills documentation (240+ patterns)
-  - /docs/guide/13-claude-code-hooks.md: 25 hook events guide
+  - /docs/guide/13-claude-code-hooks.md: 27+ hook events guide
+  - /docs/guide/71-claude-code-2193-2194-features.md: CC 2.1.93-2.1.94 features
+  - /docs/guide/72-claude-code-2195-2197-features.md: CC 2.1.95-2.1.97 features
+  - /docs/guide/73-claude-code-2198-2199-features.md: CC 2.1.98-2.1.99 features
+  - /docs/guide/74-claude-code-monitor-tool.md: Monitor tool patterns
+  - /docs/guide/75-claude-code-statusline-patterns.md: Statusline patterns
   - /docs/guide/36-agents-and-subagents.md: Agent creation and configuration
   - /docs/guide/37-agent-teams.md: Parallel agent coordination
   - /docs/guide/06-mcp-integration.md: MCP setup guide
@@ -69,4 +77,4 @@ repository: https://github.com/ytrofr/claude-code-guide
 license: MIT
 
 # Last Updated
-updated: 2026-04-01
+updated: 2026-04-12

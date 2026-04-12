@@ -585,7 +585,55 @@ A 30-second preflight saves 5-10 minutes of confusing test failures.
 
 ---
 
-## 24. Skills System Reference
+## 24. Source Validation
+
+**Before adopting ANY feature or pattern from a community source, verify it exists in official documentation.**
+
+Community articles fabricate features, misquote creators, and conflate unreleased previews with GA features. Treat all community claims as unvalidated until proven.
+
+### 3-Step Protocol
+
+1. **CLI check**: `claude --help | grep <feature>` -- is the flag real?
+2. **Docs check**: Search official documentation for the feature
+3. **Memory check**: Have you validated this before?
+
+If not found: **do not adopt**. Label as "unvalidated community claim."
+
+---
+
+## 25. Concurrency Partitioning
+
+**Read-only operations run in parallel. Write operations run serially. Context-modifying operations run alone.**
+
+| Tier | Execution | Examples |
+|------|-----------|---------|
+| **Read-only** | Parallel (max 10) | search, lookup, get_* |
+| **Write** | Serial | create_*, update_*, delete_* |
+| **Context-modifier** | Barrier (alone) | switch_session, clear_cache |
+
+Default to write (fail-closed) when unsure.
+
+---
+
+## 26. Fail-Closed Defaults
+
+**Factory functions must spread fail-closed defaults first, then override with user values.**
+
+```javascript
+function createConfig(overrides = {}) {
+  return {
+    allowPublicAccess: false,  // safe default
+    requireAuth: true,         // safe default
+    ...overrides               // user values win
+  };
+}
+```
+
+Missing fields default to `undefined` (falsy) — always the permissive choice. Spreading safe defaults first ensures every security field has a value.
+
+---
+
+## 27. Skills System Reference
 
 Skills are the primary way to extend Claude Code with custom slash commands and background knowledge.
 

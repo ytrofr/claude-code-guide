@@ -281,9 +281,68 @@ Anti-pattern: Pushing through a failing approach hoping it will work.
 
 ---
 
+## Pattern 5: Typed Failure Recovery
+
+*Source: claw-code `recovery_recipes.rs`*
+
+Instead of generic retry logic, enumerate your known failure types and pair each with a specific recovery recipe. The invariant: **one automatic recovery attempt per failure, then escalate to a human**.
+
+### Why Not Just Retry?
+
+A retry loop treats all failures the same. But "rate limit exceeded" and "instruction corrupted by meta-agent" require completely different recovery steps. Typed recovery means:
+
+- Each failure type has an ordered sequence of recovery steps
+- Steps can partially succeed (you know which steps ran and which remain)
+- One auto-attempt before escalation prevents infinite loops
+- Structured event emission enables incident reporting
+
+### Example Failure Taxonomy
+
+```
+FailureType → RecoverySteps → EscalationPolicy
+
+RateLimit       → backoff → retry → circuit_breaker    → LogAndContinue
+ProviderDown    → fallback_model → circuit_breaker      → AlertHuman
+EmptyResponse   → nudge → retry_with_tools → error_msg  → LogAndContinue
+SessionPoisoned → scrub_refusals → re-inject_tools      → AlertHuman
+InstructionLost → structural_reload → verify_routing     → BlockAndAlert
+ContextOverflow → compact → degrade_features → error     → LogAndContinue
+```
+
+### How to Apply
+
+1. **List your known failures** -- check logs, incident reports, user complaints
+2. **Define recovery steps** for each -- specific, ordered, testable
+3. **Set max attempts to 1** -- if the recipe doesn't fix it, escalate
+4. **Track partial recovery** -- "steps 1-2 succeeded, step 3 failed" is useful diagnostic data
+5. **Emit structured events** -- every recovery attempt gets logged with scenario, steps tried, and outcome
+
+### Anti-Pattern
+
+```python
+# WRONG -- generic retry, treats all failures the same
+for attempt in range(3):
+    try:
+        result = await llm_call()
+        break
+    except Exception:
+        await asyncio.sleep(30 * attempt)
+
+# BETTER -- typed recovery with specific steps per failure
+recipe = get_recovery_recipe(classify_failure(error))
+for step in recipe.steps:
+    result = await execute_step(step)
+    if result.recovered:
+        break
+if not result.recovered:
+    escalate(recipe.escalation_policy)
+```
+
+---
+
 ## How These Patterns Work Together
 
-The four patterns form a resilience loop:
+The five patterns form a resilience loop:
 
 ```
 Normal work
@@ -297,8 +356,11 @@ Normal work
     ├── Multi-step work → Pattern 3 (Task Tracking)
     │       └── Create tasks, track progress, verify before completing
     │
-    └── Plan going sideways → Pattern 4 (Sideways Detection)
-            └── Detect trigger, stop, re-plan with failure context
+    ├── Plan going sideways → Pattern 4 (Sideways Detection)
+    │       └── Detect trigger, stop, re-plan with failure context
+    │
+    └── Known failure type → Pattern 5 (Typed Recovery)
+            └── Classify, execute recipe, escalate if unrecovered
 ```
 
 Each pattern handles a different failure mode. Together they cover the most common ways sessions go wrong.
@@ -311,7 +373,8 @@ Each pattern handles a different failure mode. Together they cover the most comm
 2. **Capture every correction** -- a correction that isn't persisted will be repeated. Use Basic Memory MCP or `.claude/rules/` files.
 3. **Use TaskCreate for 3+ step work** -- mark `in_progress` before starting, `completed` only after verification. Never mark complete with failing tests.
 4. **Detect sideways early** -- 3 failed attempts, 50% scope expansion, or a false assumption all trigger re-planning. Don't push through a failing approach.
-5. **These are rules, not guidelines** -- add them to `.claude/rules/` so they're enforced every session, not just remembered sometimes.
+5. **Classify failures, don't just retry** -- enumerate known failure types with specific recovery steps. One auto-attempt, then escalate. Generic retry loops hide root causes.
+6. **These are rules, not guidelines** -- add them to `.claude/rules/` so they're enforced every session, not just remembered sometimes.
 
 ---
 
