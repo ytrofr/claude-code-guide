@@ -112,7 +112,7 @@ Install via the official installer: `curl -fsSL https://claude.ai/install.sh | s
 
 ### What are Claude Code hooks?
 
-Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 25 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
+Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 27+ hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
 
 ### What is MCP integration?
 
@@ -128,7 +128,7 @@ The memory bank is a hierarchical knowledge system using a 4-tier structure: alw
 
 ### How much time does this save?
 
-Based on production metrics: **100+ hours per year** in developer time. Key achievements include 240+ proven patterns, 47-70% token savings per branch, 25 hook events for automation, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
+Based on production metrics: **100+ hours per year** in developer time. Key achievements include 240+ proven patterns, 47-70% token savings per branch, 27+ hook events for automation, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
 
 ---
 
@@ -142,7 +142,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ### Claude Code Hooks
 
-- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 25 hook events
+- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 27+ hook events
 - [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) - Clear distinction
 - [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md) - Historical reference (deprecated Feb 2026)
 
@@ -248,7 +248,7 @@ claude-code-guide/
 ## Key Features
 
 - **Claude Code Setup**: Complete project configuration with templates
-- **Claude Code Hooks**: 25 hook events for workflow automation
+- **Claude Code Hooks**: 27+ hook events for workflow automation
 - **Claude Code Skills**: 240+ production-tested patterns (native loading)
 - **Claude Code MCP**: 13 servers, 70+ tools integrated
 - **Context Optimization**: 47-70% token savings per branch
