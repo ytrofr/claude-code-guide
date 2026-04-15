@@ -138,6 +138,7 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 - [UI/UX Best Practices Rules](guide/52-ui-ux-best-practices-rules.md) - Accessibility and design standards
 - [/document v3 — Three-Level Analysis](guide/55-document-v3-three-level-analysis.md) - Machine/project/branch rule classification
 - [Context Optimization for Mature Projects](guide/56-context-optimization-mature-projects.md) - Condensation and archival
+- [Inter-Agent Coordination](guide/76-inter-agent-coordination.md) - Shared bus for cross-project Claude sessions (pointer-not-content, draft-confirm, 3-tier storage)
 
 ### Release Notes
 
