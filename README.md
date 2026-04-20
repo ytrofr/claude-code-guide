@@ -12,49 +12,44 @@ Production-tested Claude Code patterns. 240+ documented patterns, 29 universal r
 
 ---
 
-## Install Best Practices (Any Project)
+## Install (Any Project)
 
-One command to install production-tested best practices into any project:
+Three install tiers driven by `best-practices/manifest.json`:
 
 ```bash
-# Core install (rules + best practices doc)
+# Core (newcomer): 8 rules, 3 skills, 1 hook
 curl -sL https://raw.githubusercontent.com/ytrofr/claude-code-guide/master/install.sh | bash
 
-# Full install (rules + skills + commands + all 19 rules)
+# Recommended (working developer): 30 rules, 16 skills, 7 hooks
 git clone https://github.com/ytrofr/claude-code-guide.git
 cd claude-code-guide
+./install.sh --recommended /path/to/your-project
+
+# Full (power user): 64 rules, 44 skills, 12 hooks + 4 governance scripts
 ./install.sh --full /path/to/your-project
 
-# Everything including hooks + settings.json
-./install.sh --with-hooks /path/to/your-project
+# Install globally (~/.claude)
+./install.sh --recommended --global
 
-# Install globally (applies to ALL your projects)
-./install.sh --global
+# Dry-run (see what would install)
+./install.sh --dry-run --full
 
-# Update to latest version
-bash .claude/best-practices/update.sh
+# Update
+./install.sh --update
+
+# Uninstall (manifest-aware)
+./install.sh --uninstall
 ```
 
-### Installation Tiers
+### Tier contents
 
-| Tier           | Command        | What's Installed                               |
-| -------------- | -------------- | ---------------------------------------------- |
-| **Core**       | `./install.sh` | 6 rules + BEST-PRACTICES.md + CLAUDE.md import |
-| **Full**       | `--full`       | Core + 19 rules + 3 skills + 5 slash commands  |
-| **With Hooks** | `--with-hooks` | Full + 4 hooks + settings.json                 |
+| Tier | Flag | Rules | Skills | Hooks | Extras |
+|---|---|---|---|---|---|
+| Core | (default) | 8 | 3 | 1 | CLAUDE.md + BEST-PRACTICES.md |
+| Recommended | `--recommended` | 30 | 16 | 7 | + Basic Memory MCP template |
+| Full | `--full` | 64 | 44 | 12 | + 4 governance scripts, baseline tag, AI DNA rules |
 
-### Component Flags (composable)
-
-| Flag          | What it Installs                                                   |
-| ------------- | ------------------------------------------------------------------ |
-| `--skills`    | 3 starter skills to `~/.claude/skills/` (global, auto-discovered)  |
-| `--commands`  | 5 slash commands (`/session-start`, `/advise`, etc.)               |
-| `--hooks`     | 4 hook scripts + `settings.json` (formatting, skill detection)     |
-| `--all-rules` | All 19 rules across 9 categories (global, planning, quality, etc.) |
-
-Claude Code will immediately apply all best practices in every session after installation.
-
-See [install.sh](install.sh) for all options including `--update`, `--uninstall`, `--global`.
+See [`best-practices/manifest.json`](best-practices/manifest.json) for the authoritative tier definitions. Remote one-liner (`curl | bash`) installs Core only; Recommended/Full require cloning the repo.
 
 ---
 
