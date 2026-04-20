@@ -1,20 +1,24 @@
 ---
 layout: default
-title: "Ch 78: Self-Telemetry for Claude Code"
-permalink: /docs/guide/78-self-telemetry-for-claude-code/
+title: "Self-Telemetry for Claude Code"
+parent: "Part V — Advanced"
+nav_order: 3
+redirect_from:
+  - /docs/guide/78-self-telemetry-for-claude-code.html
+  - /docs/guide/78-self-telemetry-for-claude-code/
 ---
 
-# Chapter 78: Self-Telemetry for Claude Code
+# Self-Telemetry for Claude Code
 
 **Scope**: how to measure *your own* Claude Code usage — tool calls, subagent dispatches, skill invocations, session KPIs — using only hooks and `jsonl` append logs. No external services, no OTLP collector, no OTEL setup. Grounded in CC 2.1.111 official docs + live-probed payload schemas.
 
-**Why this chapter exists**: CC 2.1.108's `ENABLE_PROMPT_CACHING_1H` and 2.1.98's `TRACEPARENT` auto-propagation gave you Anthropic-blessed *trace* observability. But for the plain question *"how am I actually using Claude Code this week?"* — the answer requires a handful of `async: true` hooks, a FIFO correlation queue, and one weekly aggregator script. This chapter ships a reference implementation and the validated facts that made it possible.
+**Why this chapter exists**: CC 2.1.108's `ENABLE_PROMPT_CACHING_1H` and 2.1.98's `TRACEPARENT` auto-propagation gave you Anthropic-blessed *trace* observability. CC 2.1.111 adds `OTEL_LOG_RAW_API_BODIES` for raw body capture when you need it. But for the plain question *"how am I actually using Claude Code this week?"* — the answer requires a handful of `async: true` hooks, a FIFO correlation queue, and one weekly aggregator script. This chapter ships a reference implementation and the validated facts that made it possible.
 
 ---
 
 ## 1. What the stack measures
 
-Five `jsonl` append streams under `~/.claude/metrics/`:
+Five `jsonl` append streams under `$HOME/.claude/metrics/`:
 
 | Stream | Written by | Event | Key fields |
 |---|---|---|---|
@@ -48,7 +52,7 @@ The docs list the events but under-specify the stdin schema. Live-probed payload
 ```json
 {
   "session_id": "a6a72754-3eaa-4a0c-b282-4915b23d7c34",
-  "transcript_path": "~/.claude/projects/<proj>/<session>.jsonl",
+  "transcript_path": "$HOME/.claude/projects/<proj>/<session>.jsonl",
   "cwd": "/some/working/dir",
   "agent_id": "a0ad066750581698a",
   "agent_type": "Explore",
@@ -62,7 +66,7 @@ The docs list the events but under-specify the stdin schema. Live-probed payload
 {
   "permission_mode": "bypassPermissions",
   "stop_hook_active": false,
-  "agent_transcript_path": "~/.claude/projects/<proj>/<session>/subagents/agent-<agent_id>.jsonl",
+  "agent_transcript_path": "$HOME/.claude/projects/<proj>/<session>/subagents/agent-<agent_id>.jsonl",
   "last_assistant_message": "<full agent output — privacy-sensitive>"
 }
 ```
@@ -115,13 +119,13 @@ All four telemetry hooks wire via `"async": true` so they cannot block a tool ca
 }
 ```
 
-Use `$CLAUDE_PROJECT_DIR` (not relative paths) per Ch 13 § "Use `$CLAUDE_PROJECT_DIR` Instead of Hardcoded Paths".
+Use `$CLAUDE_PROJECT_DIR` (not relative paths) per the hook patterns chapter.
 
 ## 5. Duration correlation without `tool_use_id` — the FIFO pattern
 
 Since `PostToolUse` stdin has no `tool_use_id` and no `duration_ms`, pair `PreToolUse` and `PostToolUse` manually. A per-session FIFO queue on disk works because **Claude Code serialises tool calls per turn** — at any moment, for a given session, there is at most one tool of a given name in-flight.
 
-Queue file: `~/.claude/tmp/tool-queue/<session_id>.queue`
+Queue file: `$HOME/.claude/tmp/tool-queue/<session_id>.queue`
 Format: one line per pending tool, `<start_ns>|<tool_name>`
 
 **`PreToolUse(.*)` enqueues**:
@@ -205,7 +209,7 @@ Extend your existing `SessionEnd` hook (if you have one for Basic Memory / sessi
 One Python script reads all five streams, produces a markdown report:
 
 ```
-~/.claude/scripts/weekly-review.py          → ~/.claude/reports/weekly-YYYY-WNN.md
+$HOME/.claude/scripts/weekly-review.py  → $HOME/.claude/reports/weekly-YYYY-WNN.md
 ```
 
 Suggested sections:
@@ -218,11 +222,11 @@ Suggested sections:
 6. **Sessions** — last 10 rollups
 7. **Telemetry health (meta)** — any logger with zero rows in the window = silent-failure flag
 
-Wrap the script in a user-invocable skill (`user-invocable: true`) so `/weekly-review` runs the report without a flag.
+Wrap the script in a user-invocable skill (`user-invocable: true`) so `/weekly-review` runs the report without a flag. The `weekly-review` skill is available in the Full install tier.
 
 ## 10. Telemetry health as meta-observability
 
-Section 7 of the report is the feature that catches silent hook failures the moment they happen: if the logger script exists in `~/.claude/hooks/` but its output stream has zero rows in the window, the report flags it. This has a known false-positive window — a newly-wired logger will warn for one week until real data accumulates — but after that every warning is a real signal of a broken hook.
+Section 7 of the report is the feature that catches silent hook failures the moment they happen: if the logger script exists in `$HOME/.claude/hooks/` but its output stream has zero rows in the window, the report flags it. This has a known false-positive window — a newly-wired logger will warn for one week until real data accumulates — but after that every warning is a real signal of a broken hook.
 
 ## 11. What you cannot measure (yet)
 
@@ -237,17 +241,17 @@ Section 7 of the report is the feature that catches silent hook failures the mom
 
 A minimal working set (sanitize paths before distribution):
 
-- `~/.claude/hooks/tool-call-logger.sh` — ~100 LOC, PreToolUse+PostToolUse FIFO pairing, emits `tool-calls.jsonl`
-- `~/.claude/hooks/subagent-logger.sh` — ~90 LOC, `agent_id`-keyed pairing, emits `subagent-dispatches.jsonl`
-- `~/.claude/hooks/telemetry-probe.sh` — ~25 LOC disposable probe for schema discovery
-- `~/.claude/scripts/weekly-review.py` — ~300 LOC aggregator
-- `~/.claude/skills/weekly-review/SKILL.md` — user-invocable wrapper
+- `$HOME/.claude/hooks/tool-call-logger.sh` — ~100 LOC, PreToolUse+PostToolUse FIFO pairing, emits `tool-calls.jsonl`
+- `$HOME/.claude/hooks/subagent-logger.sh` — ~90 LOC, `agent_id`-keyed pairing, emits `subagent-dispatches.jsonl`
+- `$HOME/.claude/hooks/telemetry-probe.sh` — ~25 LOC disposable probe for schema discovery
+- `$HOME/.claude/scripts/weekly-review.py` — ~300 LOC aggregator
+- `$HOME/.claude/skills/weekly-review/SKILL.md` — user-invocable wrapper
 
 Each hook follows three conventions enforced elsewhere in the guide:
 
-1. `INPUT=$(timeout 1 cat 2>/dev/null || exit 0)` — safe stdin read (Ch 13 § "Hook Safety: stdin Timeout")
-2. `"async": true` in settings — fire-and-forget, never blocks (Ch 13 § "Async Hooks")
-3. `$CLAUDE_PROJECT_DIR/.claude/hooks/<name>.sh` paths — portable across sessions (Ch 13 § "Use `$CLAUDE_PROJECT_DIR`")
+1. `INPUT=$(timeout 1 cat 2>/dev/null || exit 0)` — safe stdin read.
+2. `"async": true` in settings — fire-and-forget, never blocks.
+3. `$CLAUDE_PROJECT_DIR/.claude/hooks/<name>.sh` paths — portable across sessions.
 
 ## 13. Rollout order (probe-first)
 
@@ -257,19 +261,32 @@ Do not ship the full stack in one go. The schema of `SubagentStart` / `SubagentS
 2. Let it run for ~1 day of normal use (rate-limit to ≤ 3 samples per `<event>-<tool>` combo to avoid flooding).
 3. Inspect the captured raw JSON to confirm field names in your CC version.
 4. Replace the probe with the real loggers once the schema is confirmed.
-5. Delete the probe script and purge `~/.claude/tmp/probes/`.
+5. Delete the probe script and purge `$HOME/.claude/tmp/probes/`.
 
-This is the same pattern as [Ch 13's "Hook Trust Verification"](./13-claude-code-hooks.md) — observe before you commit to behavior.
+Observe before you commit to behavior.
 
 ## 14. Privacy and retention
 
 - **Hard cap `input_preview` at 200 chars** — enough to disambiguate, not enough to leak `file_path` contents, passwords, or API keys.
 - **Never persist `tool_response` body** — drop it entirely, even truncated. A stored snippet is still a leak.
 - **`last_assistant_message.length` only**, never the text.
-- **Retention**: 90 days of raw `jsonl` + archive to `~/.claude/metrics/archive/YYYY-MM/` afterwards. Weekly reports summarise the old data before archival so the dashboards remain navigable.
+- **Retention**: 90 days of raw `jsonl` + archive to `$HOME/.claude/metrics/archive/YYYY-MM/` afterwards. Weekly reports summarise the old data before archival so the dashboards remain navigable.
 - **Audit before committing** — the first week's `tool-calls.jsonl` usually has surprises. Grep for `api_key|secret|token|bearer|AIza[A-Za-z0-9]{30,}|sk-[A-Za-z0-9]{30,}` before declaring the pipeline safe.
 
-## 15. Takeaways
+## 15. Tracing hooks vs telemetry hooks
+
+CC 2.1.98+ auto-propagates `TRACEPARENT` into Bash subprocesses when OTEL tracing is enabled — child spans chain to the parent correctly in Honeycomb/Jaeger. CC 2.1.111 adds `OTEL_LOG_RAW_API_BODIES` for raw request/response body capture.
+
+These are complementary to the hook-based telemetry described here:
+
+| Layer | Tool | Question answered |
+|---|---|---|
+| OTEL traces | `TRACEPARENT`, `OTEL_LOG_*` | "What happened inside this one request?" (span waterfall, timing) |
+| Hook telemetry | `jsonl` streams | "How am I using Claude Code over time?" (counts, p95s, session rollups) |
+
+If you run both, the OTEL collector catches every API-level detail and the hook logs catch every session-level aggregation. Neither subsumes the other.
+
+## 16. Takeaways
 
 - Every Anthropic-blessed observability feature (OTEL, `TRACEPARENT`, `/cost`) answers a different question than "how am I using Claude Code *this week*." For that, hooks + `jsonl` + a Python aggregator is the right shape.
 - `PostToolUse` stdin gives you `tool_name` and `tool_input`, but not `tool_use_id` or `duration_ms` — plan the correlation strategy accordingly.
@@ -280,9 +297,10 @@ This is the same pattern as [Ch 13's "Hook Trust Verification"](./13-claude-code
 
 ## See Also
 
-- [Ch 13: Claude Code Hooks](./13-claude-code-hooks.md) — events, `async: true`, `$CLAUDE_PROJECT_DIR`, stdin patterns
-- [Ch 73: Claude Code 2.1.98-2.1.99 Features](./73-claude-code-2198-2199-features.md) — `TRACEPARENT` auto-propagation, Monitor tool
-- [Ch 74: Claude Code Monitor Tool](./74-claude-code-monitor-tool.md) — Monitor vs `ScheduleWakeup` decision matrix
+- [Hook event catalog](../part6-reference/03-hook-event-catalog.html) — events, `async: true`, `$CLAUDE_PROJECT_DIR`, stdin patterns
+- [CC version history](../part6-reference/01-cc-version-history.html) — `TRACEPARENT` auto-propagation, `OTEL_LOG_RAW_API_BODIES`, Monitor tool
+- [Monitor tool](04-monitor-tool.html) — Monitor vs `ScheduleWakeup` decision matrix
+- [Skill catalog](../part6-reference/04-skill-catalog.html) — `weekly-review` skill in the Full install tier
 - Anthropic docs: [Monitoring usage](https://docs.anthropic.com/en/docs/claude-code/monitoring-usage) — official OTEL setup
 
 ---
