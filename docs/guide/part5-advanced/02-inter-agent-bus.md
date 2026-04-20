@@ -1,14 +1,18 @@
 ---
 layout: default
-title: Inter-Agent Coordination — Shared Bus for Cross-Project Claude Sessions
-description: Build a token-optimized, user-supervised coordination channel across multiple Claude Code projects on one machine. Eliminates copy-paste between terminal windows.
+title: "Inter-Agent Bus"
+parent: "Part V — Advanced"
+nav_order: 2
+redirect_from:
+  - /docs/guide/76-inter-agent-coordination.html
+  - /docs/guide/76-inter-agent-coordination/
 ---
 
-# Inter-Agent Coordination — Shared Bus for Cross-Project Claude Sessions
+# Inter-Agent Bus — Shared Coordination Channel
 
-**Problem**: You run Claude Code in two (or six) projects on the same machine. When work in project A depends on agreement from project B — a coordinated deploy, a cross-service contract change, a "did you flip the flag yet?" check — the only channel today is you, as the human, copy-pasting messages between terminal windows. Slow, no audit trail, breaks context.
+**Problem**: You run Claude Code in two (or six) projects on the same machine. When work in `<PROJECT-A>` depends on agreement from `<PROJECT-B>` — a coordinated deploy, a cross-service contract change, a "did you flip the flag yet?" check — the only channel today is you, as the human, copy-pasting messages between terminal windows. Slow, no audit trail, breaks context.
 
-**Solution**: a shared file-based bus every Claude session can read and write, with three architectural invariants:
+**Solution**: a shared file-based bus every Claude session can read and write, with three invariants:
 
 1. **Pointer-not-content**: SessionStart injects a ≤800 char pointer, not the thread body. Full thread loaded only on-demand.
 2. **User-supervised**: every send defaults to draft-and-confirm; user approves each message before it crosses the bus.
@@ -16,21 +20,23 @@ description: Build a token-optimized, user-supervised coordination channel acros
 
 No new daemons, no MCP server, no external service. Just files, a global SessionStart hook, one skill, and one cron.
 
+Compatible with Claude Code 2.1.111+ (uses Monitor tool for live streaming and `$CLAUDE_PROJECT_DIR` for path portability).
+
 ---
 
 ## When you need this
 
-- Two projects on one machine where Claude-A is waiting on Claude-B (coordinated auth flip, schema migration, deploy gate)
-- Cross-service contract changes (e.g. a breaking API shape change) that require both parser and sender to land in order
-- You want a durable record of agent-to-agent agreements so a future Claude in either project can pick up the thread
-- You're copying messages between terminals more than twice per task
+- Two projects on one machine where Claude-A is waiting on Claude-B (coordinated auth flip, schema migration, deploy gate).
+- Cross-service contract changes (e.g. a breaking API shape change) that require both parser and sender to land in order.
+- You want a durable record of agent-to-agent agreements so a future Claude in either project can pick up the thread.
+- You're copying messages between terminals more than twice per task.
 
 ## When NOT to use it
 
-- Talking to the user (just respond normally)
-- Notes-to-self (TodoWrite or memory systems)
-- Broadcast announcements — this is 1:1 or small-group, not pub/sub
-- Anything urgent that needs human attention — tell the user directly
+- Talking to the user (just respond normally).
+- Notes-to-self (TodoWrite or memory systems).
+- Broadcast announcements — this is 1:1 or small-group, not pub/sub.
+- Anything urgent that needs human attention — tell the user directly.
 
 ---
 
@@ -38,7 +44,7 @@ No new daemons, no MCP server, no external service. Just files, a global Session
 
 ```
                     ┌─────────────────────────────────────────┐
-                    │        ~/shared/inter-agent/            │
+                    │        $HOME/shared/inter-agent/        │
                     │                                         │
                     │  active/   log.jsonl   threads.json     │
                     │  archive/  .staging/   identity-map     │
@@ -47,7 +53,7 @@ No new daemons, no MCP server, no external service. Just files, a global Session
           ┌──────────────────────┼──────────────────────┐
           │                      │                      │
    ┌──────▼──────┐        ┌──────▼──────┐        ┌──────▼──────┐
-   │  PROJECT A  │        │  PROJECT B  │        │  PROJECT C  │
+   │ <PROJECT-A> │        │ <PROJECT-B> │        │ <PROJECT-C> │
    │  Claude     │        │  Claude     │        │  Claude     │
    │             │        │             │        │             │
    │ SessionStart│        │ SessionStart│        │ SessionStart│
@@ -63,15 +69,16 @@ No new daemons, no MCP server, no external service. Just files, a global Session
           └──────────────────────┴──────────────────────┘
                                  │
                     ┌────────────▼────────────────┐
-                    │   ~/basic-memory/inter-agent│
-                    │   (90d archive promotion)   │
+                    │  $HOME/basic-memory/        │
+                    │  inter-agent/               │
+                    │  (90d archive promotion)    │
                     └─────────────────────────────┘
 ```
 
 ### File layout
 
 ```
-~/shared/inter-agent/
+$HOME/shared/inter-agent/
 ├── active/                    # Live threads — one markdown file per topic
 ├── archive/YYYY-MM/           # Resolved / stale threads
 ├── log.jsonl                  # Append-only event log (flocked writes)
@@ -93,7 +100,7 @@ No new daemons, no MCP server, no external service. Just files, a global Session
 | Pointer | SessionStart hook stdout | Every session, only when active threads exist | ≤800 chars (≤5 threads × ~150 chars) |
 | Thread content | `active/{id}.md` | On-demand via `/talk <id>` | 0 unless opened |
 | Event log | `log.jsonl` | Never auto-loaded; `talk.sh history` greps | 0 |
-| Archive | `~/basic-memory/inter-agent/` (≥90d) | On-demand search | 0 |
+| Archive | `$HOME/basic-memory/inter-agent/` (≥90d) | On-demand search | 0 |
 
 Net always-on cost: 0 when idle, ≤800 chars when any threads. Compare with "auto-load full history" (5 threads × 10 msgs × 200 chars = 10K always-on) — 12× reduction.
 
@@ -167,7 +174,7 @@ One JSON object per line. Append-only. `flock`-serialized to prevent concurrent-
 
 ## SessionStart injection (the always-on part)
 
-Rather than editing every project's `session-start.sh`, put the pointer call in your global `~/.claude/hooks/memory-context-loader.sh` (or equivalent SessionStart hook declared in `~/.claude/settings.json`):
+Rather than editing every project's `session-start.sh`, put the pointer call in your global SessionStart hook declared in `$HOME/.claude/settings.json`:
 
 ```bash
 # Appended to the end of your existing global SessionStart hook
@@ -187,13 +194,13 @@ The pointer script reads `threads.json`, filters to threads involving the curren
 Use /talk <id> to open, /talk-new <to> "<topic>" to start.
 ```
 
-- ≤5 threads shown, most recent first
-- `(unread)` marker until the current agent runs `/talk <id>` (tracked per-agent in `.last-seen/`)
-- Silent exit when no active threads — zero pollution of idle sessions
+- ≤5 threads shown, most recent first.
+- `(unread)` marker until the current agent runs `/talk <id>` (tracked per-agent in `.last-seen/`).
+- Silent exit when no active threads — zero pollution of idle sessions.
 
 ## The skill
 
-Register as a machine-level skill at `~/.claude/skills/inter-agent/SKILL.md` with frontmatter:
+Register as a machine-level skill at `$HOME/.claude/skills/inter-agent/SKILL.md` with frontmatter:
 
 ```yaml
 ---
@@ -214,7 +221,7 @@ Default flow:
 
 ```bash
 talk.sh send "$TID" "Ready to deploy toggle OFF"
-# Writes draft to ~/shared/inter-agent/.staging/<TID>.pending.md
+# Writes draft to $HOME/shared/inter-agent/.staging/<TID>.pending.md
 # Prints: "DRAFT staged: ... To send, re-run with --confirm"
 ```
 
@@ -234,7 +241,7 @@ Opt-in autonomous: set `mode: auto` in the thread's frontmatter. Future `talk.sh
 
 ## Live streaming with the Monitor tool
 
-When actively collaborating, attach Monitor to stream the other side's messages as notifications:
+When actively collaborating, attach Monitor (CC 2.1.98+) to stream the other side's messages as notifications:
 
 ```
 Monitor(
@@ -244,7 +251,7 @@ Monitor(
 )
 ```
 
-Each new line becomes one notification (~200 chars). Replace `alpha` and the thread id per invocation.
+Each new line becomes one notification (~200 chars). Replace `alpha` and the thread id per invocation. See Part V ch.4 (Monitor tool) for the full decision matrix.
 
 ---
 
@@ -266,7 +273,7 @@ Each new line becomes one notification (~200 chars). Replace `alpha` and the thr
 
 ## Archival + Basic Memory promotion
 
-Daily cron at 04:05 UTC (`~/.claude/scripts/inter-agent-maintenance.sh`):
+Daily cron at 04:05 UTC (`$HOME/.claude/scripts/inter-agent-maintenance.sh`):
 
 | Event | Action |
 |-------|--------|
@@ -287,18 +294,18 @@ The Basic Memory promotion generates proper observation taxonomy and wiki-links 
 
 ## End-to-end walkthrough
 
-Real case from the motivating session: two projects (call them `sigma` and `smith`) need to coordinate a two-layer OIDC + user-claim JWT auth flip. Feature toggle default-OFF on both sides, 24h soak, simultaneous flip the next day.
+Real case: two projects (call them `<PROJECT-A>` and `<PROJECT-B>`) need to coordinate a two-layer OIDC + user-claim JWT auth flip. Feature toggle default-OFF on both sides, 24h soak, simultaneous flip the next day.
 
 ### Before (copy-paste era)
 
 ```
-sigma's terminal: "Sigma deployed revision 00037-nxc, toggle OFF. Smith, verify env vars?"
+<A>'s terminal: "<A> deployed revision 00037-nxc, toggle OFF. <B>, verify env vars?"
 user: [Ctrl-C, switch terminal, paste]
-smith's terminal: "Confirmed env vars mounted. Deploying Smith now with toggle OFF."
+<B>'s terminal: "Confirmed env vars mounted. Deploying <B> now with toggle OFF."
 user: [Ctrl-C, switch terminal, paste]
-sigma's terminal: "24h soak starts now. Flip at 10:00 UTC tomorrow?"
+<A>'s terminal: "24h soak starts now. Flip at 10:00 UTC tomorrow?"
 user: [Ctrl-C, switch terminal, paste]
-smith's terminal: "Confirmed 10:00 UTC."
+<B>'s terminal: "Confirmed 10:00 UTC."
 ```
 
 Six copy-pastes, no record.
@@ -306,21 +313,21 @@ Six copy-pastes, no record.
 ### After (inter-agent bus)
 
 ```bash
-# sigma's session:
-talk.sh new smith "Auth flip coordination — revision 00037-nxc"
+# <A>'s session:
+talk.sh new <B> "Auth flip coordination — revision 00037-nxc"
 talk.sh send auth-flip-coordination-revision-00037-20260415 \
-  "Sigma deployed rev 00037-nxc, toggle OFF. Verify env vars on your side?" --confirm
+  "<A> deployed rev 00037-nxc, toggle OFF. Verify env vars on your side?" --confirm
 
-# smith's session (next SessionStart shows pointer):
+# <B>'s session (next SessionStart shows pointer):
 talk.sh show auth-flip-coordination-revision-00037-20260415
 talk.sh send auth-flip-coordination-revision-00037-20260415 \
-  "Confirmed. Deploying Smith with toggle OFF now." --confirm
+  "Confirmed. Deploying <B> with toggle OFF now." --confirm
 
-# sigma's session (Monitor fires notification):
+# <A>'s session (Monitor fires notification):
 talk.sh send auth-flip-coordination-revision-00037-20260415 \
   "24h soak. Flip at 10:00 UTC tomorrow?" --confirm
 
-# smith's session:
+# <B>'s session:
 talk.sh send auth-flip-coordination-revision-00037-20260415 \
   "Confirmed 10:00 UTC." --confirm
 
@@ -372,7 +379,7 @@ Fork it, adapt the identity map to your project set, adjust the archive TTL, add
 ## Design principles (transferable beyond this feature)
 
 1. **Pointer-not-content for any "inbox" feature**. Surface the unread *count*, not the unread *content*. Cost scales with thread count, not thread size.
-2. **Global hook > per-project hooks for cross-cutting features**. One edit covers N projects. Eliminates drift risk. Discovered when 3 of 6 projects in the motivating setup had no `session-start.sh` at all.
+2. **Global hook > per-project hooks for cross-cutting features**. One edit covers N projects. Eliminates drift risk.
 3. **Skill description is free always-on context**. If you have a rules budget cap, put feature docs in a skill's `description` field — Claude discovers it every session via the skill list without consuming rules budget.
 4. **Draft-and-confirm via staging file**. The staging file is simultaneously the UI (user can read it), the edit surface (user can modify it), and the confirmation gate (user runs `--confirm` or `send-staged` to commit). One artifact, three functions.
 5. **Three-tier storage**. Active (hot, on-demand into context) → Archive (cold, filesystem, greppable) → Knowledge graph (searchable, wiki-linked). Each tier is zero always-on cost.
@@ -381,7 +388,7 @@ Fork it, adapt the identity map to your project set, adjust the archive TTL, add
 
 ## Caveats
 
-- **Single-user machine only, as specified here.** No HMAC, no encryption. If you want this to span machines: add signed tokens per message, move `~/shared/` to a synced dir (iCloud, Dropbox, S3), handle write conflicts.
+- **Single-user machine only, as specified here.** No HMAC, no encryption. If you want this to span machines: add signed tokens per message, move `$HOME/shared/` to a synced dir (iCloud, Dropbox, S3), handle write conflicts.
 - **No pub/sub.** Messages are explicitly addressed (`to:` field). If you need broadcast, fork and add it.
 - **Requires `jq`, `flock`, `tail -F`, `git`.** Standard on Linux/macOS with common tooling.
 - **Global hook is best-effort.** If your SessionStart hook chain already has 10+ entries, one more adds to startup latency. Profile before adding.
@@ -389,14 +396,13 @@ Fork it, adapt the identity map to your project set, adjust the archive TTL, add
 
 ---
 
-## References
+## See also
 
-- Full implementation plan: [magical-greeting-panda](https://github.com/ytrofr/claude-code-guide/tree/main/plans) (if published)
-- Basic Memory MCP: [Chapter 34 — Basic Memory MCP Integration](34-basic-memory-mcp-integration.md)
-- Monitor tool pattern: [Chapter 74 — Claude Code Monitor Tool](74-claude-code-monitor-tool.md)
-- Hook patterns: [Chapter 13 — Claude Code Hooks](13-claude-code-hooks.md)
-- Context budgeting: [Chapter 38 — Context Costs & Skill Budget](38-context-costs-and-skill-budget.md)
+- [Monitor tool](04-monitor-tool.html) — streaming log.jsonl for live notifications
+- [Cross-project knowledge sharing](06-cross-project-knowledge.html) — related shared-layer patterns
+- [Hook event catalog](../part6-reference/03-hook-event-catalog.html) — SessionStart payload format
+- [Context costs & skill budget](../part6-reference/04-skill-catalog.html) — skill description budget math
 
 ---
 
-**Last updated**: 2026-04-15
+*Last updated: 2026-04-20. Compatible with Claude Code 2.1.111+.*
