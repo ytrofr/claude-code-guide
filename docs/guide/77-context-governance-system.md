@@ -369,6 +369,124 @@ Time per file: 5-15 minutes. Twenty-one files in one session, with batched commi
 
 ---
 
+## Skill Lifecycle Extension (D0-D4)
+
+The 6-layer model above governs **rules** (always-on context). The same pattern extends to **skills** (on-demand context), with one critical asymmetry: rules load every turn (measurable by size), skills load when invoked (measurable only by *activation*). That asymmetry means skill governance needs a signal the rule governance doesn't — invocation telemetry.
+
+### D0 — Invocation Logging (PostToolUse Hook)
+
+A `PostToolUse` hook matching the `Skill` tool appends one JSONL row per invocation to `~/.claude/metrics/skill-activations.jsonl`:
+
+```bash
+#!/bin/bash
+# ~/.claude/hooks/skill-activation-logger.sh
+INPUT=$(timeout 1 cat 2>/dev/null || exit 0)
+SKILL=$(echo "$INPUT" | jq -r '.tool_input.skill // empty' 2>/dev/null)
+SESSION=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
+[ -z "$SKILL" ] && exit 0
+
+METRICS_DIR="${HOME}/.claude/metrics"
+mkdir -p "$METRICS_DIR" 2>/dev/null
+printf '{"timestamp":"%s","epoch":%s,"matched_skills":"%s","session_id":"%s","hour":%s}\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(date +%s)" "$SKILL" "$SESSION" "$(date -u +%H)" \
+  >> "$METRICS_DIR/skill-activations.jsonl" 2>/dev/null
+exit 0
+```
+
+Register in `settings.json` as a `PostToolUse` matcher on `"Skill"` — **before** any `.*` catch-all. The Skill tool's `tool_input` contains a single string field `skill` (plus optional `args`), so `jq -r '.tool_input.skill'` is the authoritative source.
+
+**Why PostToolUse, not PreToolUse**: logging an invocation that succeeded is more useful than logging one that was attempted. PostToolUse fires after the skill returns; failures are self-evident in the transcript.
+
+**Atomic append pattern**: `printf ... >> file` is atomic for small writes on Linux ext4/btrfs. No file-locking needed for a fire-and-forget log.
+
+### D1 — Skill Lifecycle SLA (Rule Extension)
+
+Extend your knowledge-lifecycle rule with concrete thresholds:
+
+| Age (no invocation) | Action |
+|---|---|
+| 90 days | Archive candidate — scope to single project OR mark deprecated |
+| 180 days | Delete candidate — hard-delete unless reference-only purpose |
+
+**Promotion criteria** (project skill → global):
+- Used in 2+ projects for 30+ days (D0 data confirms)
+- No project-specific file paths in body
+- Description contains explicit trigger clause ("Use when…")
+
+**Description-quality gate**: `description` OR `when_to_use:` field MUST contain trigger text (combined cap: 1536 chars). Without trigger text, Claude Code cannot auto-invoke the skill.
+
+### D2 — Integration into Existing Measurement Skills
+
+Extend `/context-audit` with a Check 10 (skill freshness) that reads the D0 jsonl:
+
+```python
+# Inline Python block inside the audit skill
+from pathlib import Path
+import json, time
+from collections import Counter
+
+JSONL = Path.home() / '.claude' / 'metrics' / 'skill-activations.jsonl'
+if not JSONL.exists():
+    print('NOT-ACTIVATED: D0 hook not installed yet')
+else:
+    now = time.time()
+    recent = Counter()
+    with JSONL.open() as f:
+        for line in f:
+            row = json.loads(line)
+            if now - row['epoch'] < 30 * 86400:
+                recent[row['matched_skills']] += 1
+    # Report top 10 + any skill missing from past 90d vs disk
+```
+
+Extend `memory-defrag` with an **orphan skill reference** scan — Memory notes referencing deleted skill names. Filter to notes with ≥2 refs to cut noise.
+
+### D3 — Monthly Skill-Health Cron
+
+```bash
+# crontab entry
+15 5 1 * * ~/.claude/scripts/skill-health-monthly.sh \
+    >> ~/.claude/logs/skill-health-cron.log 2>&1
+```
+
+The script generates a markdown report: top 10 invocations (30d), archive candidates (>90d no activity), delete candidates (>180d). First fire is a dry-run output only; second fire acts on the archive list.
+
+### D4 — ai-dna Promotion Workflow
+
+If you maintain cross-project AI knowledge (see [Chapter 65](65-cross-project-ai-knowledge-sharing.md)), add a **skill promotion section** distinct from pattern promotion:
+
+- **Pattern promotion**: project rule → global rule (always-on)
+- **Skill promotion**: project skill → global skill (on-demand)
+
+The reverse flow (demote global skill back to a single project): rename `<skill>` → `<skill>-<project>` in that project's `.claude/skills/`; delete from global; update Memory notes referencing the old global name.
+
+### D0-D4 Extension Summary
+
+| Layer | Extends | Adds |
+|---|---|---|
+| D0 | Layer 1 (Enforcement) | PostToolUse(Skill) hook → activation JSONL |
+| D1 | Layer 4+7 (Git tags + Methodology) | Skill lifecycle SLA thresholds |
+| D2 | Layer 2 (Measurement) | Check 10 + orphan scan |
+| D3 | Layer 6 (Monitoring) | Monthly cron report |
+| D4 | Layer 7 (Methodology) | Promotion workflow in ai-dna skill |
+
+D0 blocks D1-D4 — no lifecycle SLA can fire without activation data. Deploy in strict order.
+
+### Real Numbers from a Governance Rollout
+
+One session closed the skill governance loop end-to-end:
+
+| Metric | Before | After |
+|---|---|---|
+| Skill invocation logging | None | D0 hook live, jsonl writing per invocation |
+| Skill lifecycle SLA | None | Documented thresholds (90d/180d), promotion gates |
+| Monthly skill-health report | None | Cron-driven, markdown output |
+| Project skills (one repo) | 187 | 184 (3 genuinely-obsolete deleted via hand-verify) |
+
+The headline: the **cleanup loop replaced bulk delete**. An earlier plan targeted 192 → 70 via agent-classified batches. Hand-verify of the classifier's output showed ~20% disagreement on random samples — meaning ~40 skills would have been mis-deleted. The pivot: ship the governance loop (D0-D4), let invocation telemetry surface dead skills over 90d/180d, delete on cadence. Three surgical deletes today; the rest is now self-healing.
+
+---
+
 ## When to Adopt This System
 
 Not every project needs the full stack. A rough sizing guide:
@@ -417,4 +535,4 @@ A future revision of this chapter will add concrete numbers from a multi-project
 
 ---
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-20 (+Skill Lifecycle Extension D0-D4)
