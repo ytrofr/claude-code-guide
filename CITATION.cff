@@ -7,8 +7,8 @@ authors:
 url: "https://github.com/ytrofr/claude-code-guide"
 repository-code: "https://github.com/ytrofr/claude-code-guide"
 license: MIT
-version: "1.4.0"
-date-released: "2026-04-16"
+version: "5.0.0"
+date-released: "2026-04-20"
 keywords:
   - claude-code
   - ai-coding-assistant
@@ -23,4 +23,4 @@ keywords:
   - context-engineering
   - monitor-tool
   - statusline
-abstract: "The complete guide to Claude Code setup, skills, hooks, and MCP integration. 240+ proven patterns. 27+ hook events. 68 chapters. 29 rules. CC 2.1.99 compatible. Production-tested."
+abstract: "Production-tested Claude Code patterns reorganized into 6 topical Parts (Foundation, Workflow, Extension, Context Engineering, Advanced, Reference). Three install tiers: Core (8 rules, 3 skills, 1 hook), Recommended (30/16/7), Full (64/44/12 + 4 governance scripts). CC 2.1.111+ compatible."
