@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "5.0.0",
+  "repo": "https://github.com/ytrofr/claude-code-guide",
+  "raw_base": "https://raw.githubusercontent.com/ytrofr/claude-code-guide/master",
+  "tiers": {
+    "core": {
+      "description": "Newcomer-friendly starter: 8 rules, 3 skills, 1 hook",
+      "rules": [
+        "global/context-checking.md",
+        "global/validation-workflow.md",
+        "process/safety-rules.md",
+        "process/session-protocol.md",
+        "process/task-tracking.md",
+        "quality/no-mock-data.md",
+        "quality/standards.md",
+        "technical/patterns.md"
+      ],
+      "skills": ["verify", "session-start", "troubleshooting-decision-tree"],
+      "hooks": [
+        {"event": "SessionStart", "script": "memory-context-loader.sh"}
+      ],
+      "docs": ["BEST-PRACTICES.md"],
+      "templates": ["CLAUDE.md.template"]
+    },
+    "recommended": {
+      "extends": "core",
+      "description": "Working developer: +debugging, planning, TDD, MCP patterns",
+      "rules": [],
+      "skills": [],
+      "hooks": [],
+      "mcp_config_templates": []
+    },
+    "full": {
+      "extends": "recommended",
+      "description": "Power user: governance scaffolding, AI DNA, self-telemetry",
+      "rules": [],
+      "skills": [],
+      "hooks": [],
+      "scripts": [],
+      "creates_baseline_tag": true
+    }
+  }
+}
