@@ -4,6 +4,14 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [4.4.0] - 2026-04-20
+
+### Added
+- Chapter 78: Self-Telemetry for Claude Code — hooks + jsonl pattern for measuring your own CC usage (tool calls, subagent dispatches, skill invocations, session KPIs) without OTEL. First-published `SubagentStart` / `SubagentStop` stdin payload schema for CC 2.1.111 (validated by live probe). Documents the FIFO correlation pattern for duration measurement without `tool_use_id`, the `grep -c ... || echo 0` double-output gotcha + `_safe_count` fix, and the `event:` discriminator convention for multi-event jsonl streams. Covers what is NOT measurable via hooks (OTEL file exporter unsupported, `PermissionGranted` event absent, no `claude metrics` CLI).
+
+### Changed
+- Ch.13 hooks: harmonized the "Use Absolute Paths for Hook Commands" example to use `$CLAUDE_PROJECT_DIR/.claude/hooks/...` instead of a hardcoded `/home/user/project/...` path, aligning with the `$CLAUDE_PROJECT_DIR` section immediately above.
+
 ## [4.3.0] - 2026-04-12
 
 ### Added
