@@ -1,38 +1,41 @@
 ---
 layout: default
-title: "Cross-Project AI Knowledge Sharing with Claude Code"
-parent: Guide
-nav_order: 65
+title: "Cross-Project Knowledge Sharing"
+parent: "Part V — Advanced"
+nav_order: 6
+redirect_from:
+  - /docs/guide/65-cross-project-ai-knowledge-sharing.html
+  - /docs/guide/65-cross-project-ai-knowledge-sharing/
 ---
 
-# Cross-Project AI Knowledge Sharing with Claude Code
+# Cross-Project Knowledge Sharing
 
-*Published: March 2026*
+## The problem
 
-## The Problem
+If you maintain multiple AI projects, each accumulates hard-won production knowledge independently. `<PROJECT-A>` discovers a circuit breaker pattern after a 3-hour outage. `<PROJECT-B>` hits the same issue two months later and loses another 3 hours. `<PROJECT-C>` never learns from either.
 
-If you maintain multiple AI projects, each accumulates hard-won production knowledge independently. Project A discovers a circuit breaker pattern after a 3-hour outage. Project B hits the same issue two months later and loses another 3 hours. Project C never learns from either.
+Claude Code's rules, skills, hooks, and crons can solve this — but only if you design a **shared knowledge layer** that grows automatically across sessions and projects.
 
-Claude Code's rules, skills, hooks, and crons can solve this -- but only if you design a **shared knowledge layer** that grows automatically across sessions and projects.
+This chapter shows how to build a self-sustaining shared-layer system using every Claude Code ability. The architecture is generic — adapt the content to your own AI stack.
 
-This chapter shows how to build a self-sustaining "AI DNA" system using every Claude Code ability. The architecture is generic -- adapt the content to your own AI stack.
+For a deeper treatment of the AI DNA pattern (the meta-methodology behind this), see the [AI DNA shared layer chapter](01-ai-dna-shared-layer.html).
 
 ---
 
-## Architecture Overview
+## Architecture overview
 
 The system has 6 layers, each using a different Claude Code capability:
 
 ```
 Layer 1: Shared Rules     (~/.claude/rules/ai/)        Always loaded, every session
-Layer 2: Shared Skills    (~/.claude/skills/shared-*/)  On-demand, triggered by keywords
-Layer 3: Persistent Memory (Basic Memory MCP or files)  Searchable knowledge graph
-Layer 4: Project Context  (CLAUDE.md + MEMORY.md)       Per-project pointers
-Layer 5: Automation       (hooks + crons)               Zero-manual-effort capture
-Layer 6: Lifecycle        (freshness SLAs + review)      Prevents knowledge rot
+Layer 2: Shared Skills    (~/.claude/skills/shared-*/) On-demand, triggered by keywords
+Layer 3: Persistent Memory (Basic Memory MCP or files) Searchable knowledge graph
+Layer 4: Project Context  (CLAUDE.md + MEMORY.md)      Per-project pointers
+Layer 5: Automation       (hooks + crons)              Zero-manual-effort capture
+Layer 6: Lifecycle        (freshness SLAs + review)    Prevents knowledge rot
 ```
 
-### Why 6 Layers?
+### Why 6 layers?
 
 Each layer serves a different purpose with different token costs:
 
@@ -47,18 +50,18 @@ Each layer serves a different purpose with different token costs:
 
 ---
 
-## Layer 1: Shared Rules
+## Layer 1: Shared rules
 
-**Location**: `~/.claude/rules/ai/`
+**Location**: `$HOME/.claude/rules/ai/`
 **Cost**: Always loaded (~500 tokens per rule)
-**Use for**: Universal patterns that apply to ALL your AI projects
+**Use for**: Universal patterns that apply to ALL your AI projects.
 
 ### Structure
 
 Create a dedicated `ai/` subdirectory in your global rules:
 
 ```
-~/.claude/rules/ai/
+$HOME/.claude/rules/ai/
 ├── core-patterns.md          # Framework-specific patterns
 ├── model-optimization.md     # Model selection, caching, cost reduction
 ├── resilience.md             # Circuit breaker, fallback, retry
@@ -67,12 +70,12 @@ Create a dedicated `ai/` subdirectory in your global rules:
 └── methodology.md            # The DNA system's own rules
 ```
 
-### Rule Template
+### Rule template
 
 Each rule should be concise (60-120 lines) with clear scope:
 
 ```markdown
-# [Domain] Patterns -- Universal
+# [Domain] Patterns — Universal
 
 **Scope**: ALL projects using [framework/tool]
 **Authority**: MANDATORY for [what it enforces]
@@ -99,36 +102,36 @@ Each rule should be concise (60-120 lines) with clear scope:
 **Last Updated**: YYYY-MM-DD
 ```
 
-### Key Principles
+### Key principles
 
-- **Keep rules short** -- they load every message. 60-120 lines max.
-- **Universal only** -- if a pattern applies to only one project, use project-level `.claude/rules/`
-- **Patterns, not implementation** -- describe WHAT to do, not project-specific HOW
-- **Source attribution** -- note which project(s) discovered each pattern
+- **Keep rules short** — they load every message. 60-120 lines max.
+- **Universal only** — if a pattern applies to only one project, use project-level `.claude/rules/`.
+- **Patterns, not implementation** — describe WHAT to do, not project-specific HOW.
+- **Source attribution** — note which project(s) discovered each pattern.
 
-### Budget Management
+### Budget management
 
 Global rules consume ~500 tokens each. Track your budget:
 
 ```bash
 # Count total global rules
-find ~/.claude/rules -name "*.md" | wc -l
+find $HOME/.claude/rules -name "*.md" | wc -l
 
 # Rough token estimate (5 tokens/line)
-find ~/.claude/rules -name "*.md" -exec wc -l {} + | tail -1
+find $HOME/.claude/rules -name "*.md" -exec wc -l {} + | tail -1
 ```
 
 Stay under 85% of the skill budget (~16K chars for descriptions). Use `paths:` frontmatter for rules that only apply to specific file types.
 
 ---
 
-## Layer 2: Shared Skills
+## Layer 2: Shared skills
 
-**Location**: `~/.claude/skills/shared-*/`
+**Location**: `$HOME/.claude/skills/shared-*/`
 **Cost**: ~40 tokens per skill (description only, full content on-demand)
-**Use for**: Detailed guides that are too long for rules
+**Use for**: Detailed guides that are too long for rules.
 
-### When to Use a Skill vs a Rule
+### When to use a skill vs a rule
 
 | Content | Use |
 |---------|-----|
@@ -137,7 +140,7 @@ Stay under 85% of the skill budget (~16K chars for descriptions). Use `paths:` f
 | Step-by-step workflow | **Skill** (on-demand) |
 | One-liner enforcement | **Rule** (always loaded) |
 
-### Skill Template
+### Skill template
 
 ```markdown
 ---
@@ -170,32 +173,32 @@ description: "[Action verb] [what it does]. Use when [trigger scenarios]."
 [Point to relevant code locations per project]
 ```
 
-### Naming Convention
+### Naming convention
 
 - Directory: `shared-[domain]/SKILL.md` (e.g., `shared-rag-architecture/`)
-- No `-skill` suffix on directory names
-- `name:` field must match directory name exactly
-- Description must start with an action verb and include "Use when..."
+- No `-skill` suffix on directory names.
+- `name:` field must match directory name exactly.
+- Description must start with an action verb and include "Use when...".
 
 ---
 
-## Layer 3: Persistent Memory
+## Layer 3: Persistent memory
 
 **Location**: Dedicated folder in your knowledge system (e.g., Basic Memory MCP, or plain files)
 **Cost**: Zero tokens until searched
-**Use for**: Architecture decisions, production gotchas, model selection history
+**Use for**: Architecture decisions, production gotchas, model selection history.
 
-### What to Store
+### What to store
 
 | Note Type | Content | Example |
 |-----------|---------|---------|
 | Architecture Decisions | ADRs with status lifecycle | "Why we chose framework X over Y" |
-| Cross-Project Patterns | Patterns validated in 2+ projects | "Budget enforcement works in projects A and B" |
+| Cross-Project Patterns | Patterns validated in 2+ projects | "Budget enforcement works in <PROJECT-A> and <PROJECT-B>" |
 | Production Gotchas | Bugs, traps, and fixes from all projects | "Model X returns empty on Hebrew input" |
 | Model Selection History | What models you tried, results, costs | "Flash+pipeline beats Pro standalone" |
 | Knowledge Growth Log | Track new learnings over time | Weekly entries of discoveries |
 
-### ADR Status Lifecycle
+### ADR status lifecycle
 
 Every architecture decision should have a status:
 
@@ -205,28 +208,28 @@ PROPOSED → ACCEPTED → ACTIVE → DEPRECATED → SUPERSEDED
 
 This prevents acting on outdated decisions. When a pattern is replaced, mark it `DEPRECATED` with a pointer to the replacement.
 
-### Growth Log Format
+### Growth log format
 
 Track discoveries as they happen:
 
 ```markdown
 | Date | Project | Domain | Pattern | Shareable? |
 |------|---------|--------|---------|------------|
-| 2026-03-30 | ProjectA | Resilience | Circuit breaker 120s cooldown optimal | YES |
-| 2026-03-30 | ProjectB | RAG | kNN K=20 outperforms K=10 | YES |
+| 2026-03-30 | <PROJECT-A> | Resilience | Circuit breaker 120s cooldown optimal | YES |
+| 2026-03-30 | <PROJECT-B> | RAG | kNN K=20 outperforms K=10 | YES |
 ```
 
 This log feeds the weekly consolidation (Layer 5).
 
 ---
 
-## Layer 4: Project Context
+## Layer 4: Project context
 
 **Location**: Each project's `CLAUDE.md` and `MEMORY.md`
 **Cost**: ~200 tokens per project
-**Use for**: Pointers from each project to the shared layer
+**Use for**: Pointers from each project to the shared layer.
 
-### CLAUDE.md Addition
+### CLAUDE.md addition
 
 Add a section to each project's CLAUDE.md:
 
@@ -238,7 +241,7 @@ This project shares universal AI patterns with [other projects]:
 - **Memory**: [path to shared knowledge notes]
 ```
 
-### MEMORY.md Addition
+### MEMORY.md addition
 
 Add a section to each project's auto-memory:
 
@@ -254,9 +257,9 @@ Add a section to each project's auto-memory:
 ## Layer 5: Automation
 
 **Cost**: Zero tokens (hooks and crons run externally)
-**Use for**: Automatic capture and maintenance with zero manual effort
+**Use for**: Automatic capture and maintenance with zero manual effort.
 
-### Hook: Auto-Save Research Results
+### Hook: auto-save research results
 
 If you use a research MCP (like Perplexity), auto-save results to your knowledge system:
 
@@ -265,8 +268,9 @@ If you use a research MCP (like Perplexity), auto-save results to your knowledge
 # PostToolUse hook — saves research results automatically
 # Matcher: mcp__perplexity__search
 
-QUERY=$(echo "$1" | jq -r '.tool_input.query // "unknown"')
-RESULT=$(echo "$1" | jq -r '.tool_result.content // ""')
+INPUT=$(timeout 1 cat 2>/dev/null || exit 0)
+QUERY=$(echo "$INPUT" | jq -r '.tool_input.query // "unknown"')
+RESULT=$(echo "$INPUT" | jq -r '.tool_response.content // ""')
 
 # Skip if empty
 [[ -z "$RESULT" || "$RESULT" == "null" ]] && exit 0
@@ -290,7 +294,7 @@ $RESULT
 EOF
 ```
 
-### Hook: Pre-Compact Recovery
+### Hook: pre-compact recovery
 
 Save critical context before compaction so you can recover:
 
@@ -299,12 +303,12 @@ Save critical context before compaction so you can recover:
 # PreCompact hook — lists loaded AI rules for post-compact reference
 
 echo "### AI Rules Loaded (for post-compact reload)"
-for f in ~/.claude/rules/ai/*.md; do
+for f in $HOME/.claude/rules/ai/*.md; do
   [[ -f "$f" ]] && echo "- $(basename "$f")"
 done
 ```
 
-### Hook: Session Start Context
+### Hook: session start context
 
 Load shared knowledge status on session start:
 
@@ -312,13 +316,13 @@ Load shared knowledge status on session start:
 #!/usr/bin/env bash
 # SessionStart hook — check for stale knowledge
 
-STALE=$(find ~/knowledge/ai/ -name "*.md" -mtime +60 2>/dev/null | wc -l)
+STALE=$(find $HOME/knowledge/ai/ -name "*.md" -mtime +60 2>/dev/null | wc -l)
 if [[ $STALE -gt 0 ]]; then
   echo "### Warning: $STALE AI knowledge notes older than 60 days"
 fi
 ```
 
-### Cron: Weekly Consolidation
+### Cron: weekly consolidation
 
 Review the growth log and check freshness:
 
@@ -341,7 +345,7 @@ for dir in decisions investigations research-cache; do
 done
 ```
 
-### Cron: Monthly Health Check
+### Cron: monthly health check
 
 A smoke test script that verifies the entire system:
 
@@ -350,19 +354,19 @@ A smoke test script that verifies the entire system:
 # Monthly cron (1st of month, 5 AM)
 
 echo "=== AI Knowledge Smoke Test ==="
-echo "1. Rules: $(ls ~/.claude/rules/ai/*.md 2>/dev/null | wc -l) files"
-echo "2. Skills: $(ls -d ~/.claude/skills/shared-*/ 2>/dev/null | wc -l) dirs"
-echo "3. Knowledge notes: $(ls ~/knowledge/ai/*.md 2>/dev/null | wc -l) files"
+echo "1. Rules: $(ls $HOME/.claude/rules/ai/*.md 2>/dev/null | wc -l) files"
+echo "2. Skills: $(ls -d $HOME/.claude/skills/shared-*/ 2>/dev/null | wc -l) dirs"
+echo "3. Knowledge notes: $(ls $HOME/knowledge/ai/*.md 2>/dev/null | wc -l) files"
 
-BUDGET=$(find ~/.claude/skills -name SKILL.md -exec grep -m1 'description:' {} \; | wc -c)
+BUDGET=$(find $HOME/.claude/skills -name SKILL.md -exec grep -m1 'description:' {} \; | wc -c)
 echo "4. Skill budget: $((BUDGET * 100 / 16000))%"
 ```
 
 ---
 
-## Layer 6: Knowledge Lifecycle
+## Layer 6: Knowledge lifecycle
 
-**Use for**: Preventing knowledge rot over time
+**Use for**: Preventing knowledge rot over time.
 
 ### Freshness SLAs
 
@@ -375,7 +379,7 @@ Different note types decay at different rates:
 | Log | 30 days | Auto-archive |
 | Research cache | 90 days | Re-search if technology changed |
 
-### Promotion Flow
+### Promotion flow
 
 When a pattern appears in 2+ projects, promote it:
 
@@ -388,53 +392,65 @@ Project discovers pattern
     → NO: Keep in project-level rules
 ```
 
-### The `/document` Integration
+### The `/document` integration
 
 If you use a documentation command, add two checks:
 
-1. **Research Lookup**: Before documenting, search your knowledge system for related prior findings
-2. **Cross-Project Detection**: When documenting an AI pattern, check if similar patterns exist in other projects and suggest promotion
+1. **Research Lookup**: Before documenting, search your knowledge system for related prior findings.
+2. **Cross-Project Detection**: When documenting an AI pattern, check if similar patterns exist in other projects and suggest promotion.
+
+### Skill lifecycle SLA
+
+| Age (no invocation) | Action |
+|---------------------|--------|
+| 90 days | Archive candidate — scope to single project OR mark deprecated |
+| 180 days | Delete candidate — hard-delete unless reference-only purpose |
+
+Promotion criteria (project → global):
+- Used in 2+ projects for 30+ days.
+- No project-specific file paths in content.
+- Description contains explicit trigger clause ("Use when...").
 
 ---
 
-## Putting It All Together
+## Putting it all together
 
-### Initial Setup (One-Time)
+### Initial setup (one-time)
 
-1. Create `~/.claude/rules/ai/` with 3-7 universal rules extracted from your projects
-2. Create `~/.claude/skills/shared-*/` with 2-4 detailed guides
-3. Create knowledge notes directory with initial ADRs and gotchas
-4. Add shared knowledge section to each project's CLAUDE.md
-5. Wire hooks (research auto-save, pre-compact, session start)
-6. Add crons (weekly consolidation, monthly smoke test)
+1. Create `$HOME/.claude/rules/ai/` with 3-7 universal rules extracted from your projects.
+2. Create `$HOME/.claude/skills/shared-*/` with 2-4 detailed guides.
+3. Create knowledge notes directory with initial ADRs and gotchas.
+4. Add shared knowledge section to each project's CLAUDE.md.
+5. Wire hooks (research auto-save, pre-compact, session start).
+6. Add crons (weekly consolidation, monthly smoke test).
 
-### Ongoing (Automatic)
+### Ongoing (automatic)
 
 Once set up, the system is self-sustaining:
 
-- **Every session**: Rules load automatically, skills trigger on keywords
-- **Every research query**: Results auto-saved by hook
-- **Every week**: Consolidation cron checks freshness, flags cross-project patterns
-- **Every month**: Smoke test verifies system health
-- **When you discover a pattern**: Growth log → weekly review → promote if universal
+- **Every session**: Rules load automatically, skills trigger on keywords.
+- **Every research query**: Results auto-saved by hook.
+- **Every week**: Consolidation cron checks freshness, flags cross-project patterns.
+- **Every month**: Smoke test verifies system health.
+- **When you discover a pattern**: Growth log → weekly review → promote if universal.
 
-### Token Budget Tracking
+### Token budget tracking
 
 Monitor your budget monthly:
 
 ```bash
 # Skills budget (descriptions only)
-find ~/.claude/skills -name SKILL.md -exec grep -m1 'description:' {} \; | wc -c
+find $HOME/.claude/skills -name SKILL.md -exec grep -m1 'description:' {} \; | wc -c
 # Target: under 13,600 chars (85% of 16K)
 
 # Rules count
-find ~/.claude/rules -name "*.md" | wc -l
+find $HOME/.claude/rules -name "*.md" | wc -l
 # Each rule costs ~500 tokens in every message
 ```
 
 ---
 
-## Common Pitfalls
+## Common pitfalls
 
 | Pitfall | Fix |
 |---------|-----|
@@ -447,7 +463,7 @@ find ~/.claude/rules -name "*.md" | wc -l
 
 ---
 
-## Example: Dedup After Sharing
+## Example: dedup after sharing
 
 After creating shared rules, your project-level rules may overlap. Audit and remove duplicates:
 
@@ -455,15 +471,15 @@ After creating shared rules, your project-level rules may overlap. Audit and rem
 # Find potential overlaps between project rules and global AI rules
 for f in .claude/rules/*.md; do
   TOPIC=$(head -1 "$f" | sed 's/^# //')
-  MATCH=$(grep -rl "$TOPIC" ~/.claude/rules/ai/ 2>/dev/null)
+  MATCH=$(grep -rl "$TOPIC" $HOME/.claude/rules/ai/ 2>/dev/null)
   [[ -n "$MATCH" ]] && echo "OVERLAP: $(basename $f) ↔ $(basename $MATCH)"
 done
 ```
 
 For each overlap:
-1. Compare content -- is the project rule 90%+ covered by the global rule?
-2. If yes: update cross-references, then delete the project rule
-3. If partial: keep project-specific details, reference global rule for universal patterns
+1. Compare content — is the project rule 90%+ covered by the global rule?
+2. If yes: update cross-references, then delete the project rule.
+3. If partial: keep project-specific details, reference global rule for universal patterns.
 
 ---
 
@@ -479,3 +495,16 @@ For each overlap:
 | Freshness checks | Weekly/monthly crons | 0 | Automatic |
 
 The key insight: **every layer has a different token cost and loading strategy**. Rules are expensive but always available. Skills are cheap but on-demand. Memory is free but requires search. Hooks and crons are invisible. Use each layer for what it does best.
+
+---
+
+## See also
+
+- [AI DNA shared layer](01-ai-dna-shared-layer.html) — meta-methodology behind the shared-layer approach
+- [Inter-agent bus](02-inter-agent-bus.html) — live coordination channel between projects
+- [Self-telemetry](03-self-telemetry.html) — measure how the shared layer is being used
+- [Hook event catalog](../part6-reference/03-hook-event-catalog.html) — hook event reference
+
+---
+
+*Published: March 2026. Last updated: 2026-04-20. Compatible with Claude Code 2.1.111+.*
