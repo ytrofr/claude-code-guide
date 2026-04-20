@@ -18,6 +18,7 @@ repository: ytrofr/claude-code-guide
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-redirect-from
 
 # SEO - Twitter
 twitter:
