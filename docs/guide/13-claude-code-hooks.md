@@ -1596,7 +1596,7 @@ Hook command paths in settings files are resolved **relative to the project root
 {
   "hooks": [{
     "type": "command",
-    "command": "/home/user/project/.claude/hooks/my-hook.sh"
+    "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/my-hook.sh"
   }]
 }
 ```
