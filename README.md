@@ -6,9 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns. 240+ documented patterns, 29 universal rules, 68 chapters. **CC 2.1.99 compatible.**
+Production-tested Claude Code patterns in 6 topical Parts (~42 chapters). Three install tiers. **CC 2.1.111+ compatible.**
 
-**Models**: Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **27+ hook events** -- **Agent teams & task management**
+**Models**: Opus 4.7 | Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **27 hook events** -- **Agent teams & task management**
 
 ---
 
@@ -53,45 +53,37 @@ See [`best-practices/manifest.json`](best-practices/manifest.json) for the autho
 
 ---
 
-## Why This Guide?
+## What's inside
 
-| Metric            | Result                              |
-| ----------------- | ----------------------------------- |
-| Context Window    | **1M tokens**                       |
-| Models            | **Opus 4.6, Sonnet 4.6, Haiku 4.5** |
-| Time Saved        | **100+ hours/year**                 |
-| Hooks             | **25 events automated**             |
-| Skills            | **240+ native loading**             |
-| Token Savings     | **47-70% per branch**               |
-| Production Skills | **240+ documented**                 |
-| MCP Integrations  | **13 servers, 70+ tools**           |
+The guide is organized into six topical Parts. Each Part has its own index page with a reading order and a table of chapters.
 
-**Source**: 14+ months of production use with 97 components validated.
+| Part | Focus | Chapters |
+|---|---|---|
+| [I — Foundation](docs/guide/part1-foundation/) | Install, CLAUDE.md, project structure, first session | 5 |
+| [II — Workflow](docs/guide/part2-workflow/) | Plan mode, TDD, brainstorming, verify, commit/PR | 6 |
+| [III — Extension](docs/guide/part3-extension/) | Hooks, MCP, agents, skills authoring, plugins, slash commands, Cloud Run | 9 |
+| [IV — Context Engineering](docs/guide/part4-context-engineering/) | Memory bank, rules, Basic Memory, budget, governance, skill lifecycle | 7 |
+| [V — Advanced](docs/guide/part5-advanced/) | AI DNA, inter-agent bus, self-telemetry, Monitor, statusline, defrag | 7 |
+| [VI — Reference](docs/guide/part6-reference/) | CC version history, CLI flags + env, hook catalog, skill catalog, MCP catalog | 6 |
+
+Roadmap and release phases: [`ROADMAP-v5.md`](ROADMAP-v5.md).
 
 ---
 
-## Quick Start (30 minutes)
+## Quick Start
 
 ```bash
-# 1. Clone the template
-cp -r template/ ~/my-project/.claude
-cd ~/my-project
+# 1. Install into an existing project
+git clone https://github.com/ytrofr/claude-code-guide.git
+cd claude-code-guide
+./install.sh --recommended /path/to/your-project
 
-# 2. Validate structure
-./scripts/validate-setup.sh
-
-# 3. Add skills (Claude Code discovers them automatically)
-cp -r template/.claude/skills/ ~/.claude/skills/
-
-# 4. Configure MCP servers
-cp .claude/mcp_servers.json.template .claude/mcp_servers.json
-# Add your GitHub token
-
-# 5. Start Claude Code
+# 2. Open the project in Claude Code
+cd /path/to/your-project
 claude
 ```
 
-**Detailed walkthrough**: [Quick Start Guide](docs/quick-start.md) | [Skills System](docs/skill-activation-system.md)
+Then start with [Part I chapter 01 — Installation](docs/guide/part1-foundation/01-installation.md) and [Part I chapter 04 — First session](docs/guide/part1-foundation/04-first-session.md).
 
 ---
 
@@ -99,80 +91,89 @@ claude
 
 ### What is Claude Code?
 
-Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window. It provides an interactive terminal experience where Claude can read files, write code, run commands, manage tasks, and coordinate agent teams. Claude Code understands your project context through CLAUDE.md files and can be extended with hooks, skills, and MCP servers.
+Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window. It provides an interactive terminal experience where Claude can read files, write code, run commands, manage tasks, and coordinate agent teams. Claude Code understands your project context through CLAUDE.md files and can be extended with hooks, skills, and MCP servers.
 
 ### How do I set up Claude Code?
 
-Install via the official installer: `curl -fsSL https://claude.ai/install.sh | sh` (or `claude update` if already installed). Create a `CLAUDE.md` file in your project root with project-specific instructions. Optionally add hooks in `.claude/hooks/` for automation, skills in `~/.claude/skills/` for reusable workflows, and MCP servers for database/API access. Our template provides all these pre-configured.
+Install via the official installer: `curl -fsSL https://claude.ai/install.sh | sh` (or `claude update` if already installed). Create a `CLAUDE.md` file in your project root with project-specific instructions. Optionally add hooks in `.claude/hooks/` for automation, skills in `~/.claude/skills/` for reusable workflows, and MCP servers for database/API access. Our installer tiers provide these pre-configured — see [Part I — Foundation](docs/guide/part1-foundation/).
 
 ### What are Claude Code hooks?
 
-Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 27+ hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, etc.) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See our [Complete Hooks Guide](docs/guide/13-claude-code-hooks.md).
+Hooks are shell scripts that run automatically at specific points in the Claude Code lifecycle. There are 27 hook events (PreToolUse, PostToolUse, SessionStart, SessionEnd, UserPromptSubmit, and many more) that can validate inputs, block dangerous operations, auto-format code, and run background analytics. See [Part III chapter 01 — Hooks](docs/guide/part3-extension/01-hooks.md) and [Part VI chapter 03 — Hook event catalog](docs/guide/part6-reference/03-hook-event-catalog.md).
 
 ### What is MCP integration?
 
-MCP (Model Context Protocol) extends Claude Code with external tools. Connect to PostgreSQL databases, GitHub repositories, memory systems, and APIs. This guide covers 13 MCP servers with 70+ tools including PostgreSQL, GitHub, Perplexity, Playwright, and Basic Memory for persistent knowledge storage.
+MCP (Model Context Protocol) extends Claude Code with external tools. Connect to PostgreSQL databases, GitHub repositories, memory systems, and APIs. See [Part III chapter 02 — MCP integration](docs/guide/part3-extension/02-mcp-integration.md) and [Part VI chapter 05 — MCP server catalog](docs/guide/part6-reference/05-mcp-server-catalog.md). Note: MCP servers register via `claude mcp add` (stored in `~/.claude.json`) — the `settings.json mcpServers` block is silently ignored.
 
 ### How do Claude Code skills work?
 
-Skills are Markdown files with YAML frontmatter (`name:` and `description:` with "Use when..." clause). Claude Code natively discovers all skills from `~/.claude/skills/` and matches them to queries using the description field. No custom hooks needed -- skills are built into Claude Code. Our system runs **240+ production skills** with native activation.
+Skills are Markdown files with YAML frontmatter (`name:` and `description:` with an explicit trigger clause). Claude Code natively discovers all skills from `~/.claude/skills/` and `.claude/skills/` and matches them to queries using the description field. No custom hooks needed — skills are built into Claude Code since v2.1.76. See [Part III chapter 04 — Skills authoring](docs/guide/part3-extension/04-skills-authoring.md).
 
 ### What is the memory bank?
 
-The memory bank is a hierarchical knowledge system using a 4-tier structure: always (auto-loaded), learned (patterns), ondemand (blueprints), and reference (archives). It stores project context, decisions, and patterns for efficient token usage. Properly configured, it provides **34-62% token reduction** while maintaining full context access.
-
-### How much time does this save?
-
-Based on production metrics: **100+ hours per year** in developer time. Key achievements include 240+ proven patterns, 47-70% token savings per branch, 27+ hook events for automation, and 80%+ research cost savings with Perplexity caching. ROI scales with project complexity.
+The memory bank is a hierarchical knowledge system: always-loaded files, learned patterns, on-demand blueprints, and reference archives. It stores project context, decisions, and patterns for efficient token usage. See [Part IV chapter 01 — Memory bank](docs/guide/part4-context-engineering/01-memory-bank.md) and [Part IV chapter 04 — Context budget](docs/guide/part4-context-engineering/04-context-budget.md).
 
 ---
 
 ## Core Documentation
 
-### Getting Started
+### Part I — Foundation
 
-- [Quick Start Guide](docs/quick-start.md) - 30-minute basic setup
-- [Minimal Setup](docs/guide/02-minimal-setup.md) - Essential configuration
-- [Interactive Checklist](web/index.html) - Track your progress
+- [01 Installation](docs/guide/part1-foundation/01-installation.md)
+- [02 CLAUDE.md primer](docs/guide/part1-foundation/02-claude-md-primer.md)
+- [03 Project structure](docs/guide/part1-foundation/03-project-structure.md)
+- [04 First session](docs/guide/part1-foundation/04-first-session.md)
+- [05 Setup troubleshooting](docs/guide/part1-foundation/05-setup-troubleshooting.md)
 
-### Claude Code Hooks
+### Part II — Workflow
 
-- [Claude Code Hooks](docs/guide/13-claude-code-hooks.md) - 27+ hook events
-- [Git vs Claude Hooks](docs/guide/14-git-vs-claude-hooks-distinction.md) - Clear distinction
-- [Pre-Prompt Hook Guide](docs/pre-prompt-hook-complete-guide.md) - Historical reference (deprecated Feb 2026)
+- [01 Plan mode](docs/guide/part2-workflow/01-plan-mode.md)
+- [02 TDD](docs/guide/part2-workflow/02-tdd.md)
+- [03 Brainstorming](docs/guide/part2-workflow/03-brainstorming.md)
+- [04 Verify & canary](docs/guide/part2-workflow/04-verify-canary.md)
+- [05 Session lifecycle](docs/guide/part2-workflow/05-session-lifecycle.md)
+- [06 Commit and PR](docs/guide/part2-workflow/06-commit-and-pr.md)
 
-### Skills System
+### Part III — Extension
 
-- [Skill Activation System](docs/skill-activation-system.md) - 162+ production skills
-- [Skill Detection Enhancement](docs/guide/17-skill-detection-enhancement.md) - 100% accuracy
-- [Skills Filtering Optimization](docs/guide/20-skills-filtering-optimization.md) - 93% noise reduction
-- [Skill Keyword Enhancement](docs/guide/24-skill-keyword-enhancement-methodology.md) - 20+ patterns
+- [01 Hooks](docs/guide/part3-extension/01-hooks.md)
+- [02 MCP integration](docs/guide/part3-extension/02-mcp-integration.md)
+- [03 Agents and subagents](docs/guide/part3-extension/03-agents-and-subagents.md)
+- [03b Claude Agent SDK](docs/guide/part3-extension/03b-claude-agent-sdk.md)
+- [04 Skills authoring](docs/guide/part3-extension/04-skills-authoring.md)
+- [05 Skills maintenance](docs/guide/part3-extension/05-skills-maintenance.md)
+- [06 Plugins and marketplace](docs/guide/part3-extension/06-plugins-and-marketplace.md)
+- [07 Slash commands](docs/guide/part3-extension/07-slash-commands.md)
+- [08 Cloud Run deploy patterns](docs/guide/part3-extension/08-cloud-run-deploy-patterns.md)
 
-### MCP Integration
+### Part IV — Context Engineering
 
-- [MCP Integration Guide](docs/guide/06-mcp-integration.md) - PostgreSQL, GitHub, Memory
-- [Basic Memory MCP](docs/guide/34-basic-memory-mcp-integration.md) - Semantic knowledge
-- [Perplexity Cost Optimization](docs/guide/18-perplexity-cost-optimization.md) - 80%+ savings
-- [Playwright E2E Testing](docs/guide/19-playwright-e2e-testing.md) - Browser automation
+- [01 Memory bank](docs/guide/part4-context-engineering/01-memory-bank.md)
+- [02 Rules system](docs/guide/part4-context-engineering/02-rules-system.md)
+- [03 Basic Memory MCP](docs/guide/part4-context-engineering/03-basic-memory-mcp.md)
+- [04 Context budget](docs/guide/part4-context-engineering/04-context-budget.md)
+- [05 Progressive disclosure](docs/guide/part4-context-engineering/05-progressive-disclosure.md)
+- [06 Context governance](docs/guide/part4-context-engineering/06-context-governance.md)
+- [07 Skill lifecycle](docs/guide/part4-context-engineering/07-skill-lifecycle.md)
 
-### Context Optimization
+### Part V — Advanced
 
-- [Memory Bank Hierarchy](docs/guide/12-memory-bank-hierarchy.md) - 4-tier structure
-- [Branch Context System](docs/guide/29-branch-context-system.md) - **47-70% token savings**
-- [Branch-Specific Skills](docs/guide/33-branch-specific-skill-curation.md) - Two-tier display
-- [Pre-Prompt Optimization](docs/guide/21-pre-prompt-optimization.md) - Historical (deprecated)
+- [01 AI DNA shared layer](docs/guide/part5-advanced/01-ai-dna-shared-layer.md)
+- [02 Inter-agent bus](docs/guide/part5-advanced/02-inter-agent-bus.md)
+- [03 Self-telemetry](docs/guide/part5-advanced/03-self-telemetry.md)
+- [04 Monitor tool](docs/guide/part5-advanced/04-monitor-tool.md)
+- [05 Statusline patterns](docs/guide/part5-advanced/05-statusline-patterns.md)
+- [06 Cross-project knowledge](docs/guide/part5-advanced/06-cross-project-knowledge.md)
+- [07 Session end and defrag](docs/guide/part5-advanced/07-session-end-and-defrag.md)
 
-### Best Practices
+### Part VI — Reference
 
-- [Claude Code Rules System](docs/guide/26-claude-code-rules-system.md) - `.claude/rules/`
-- [Best Practices Reference](docs/guide/25-best-practices-reference.md) - 33 Anthropic articles
-- [Skill Optimization Patterns](docs/guide/28-skill-optimization-patterns.md) - Advanced patterns
-- [Skill Optimization Maintenance](docs/guide/35-skill-optimization-maintenance.md) - 6-step workflow
-
-### Agents & Teams
-
-- [Agents and Subagents](docs/guide/36-agents-and-subagents.md) - Create and configure custom agents
-- [Agent Teams](docs/guide/37-agent-teams.md) - Coordinate parallel agent teammates (experimental)
+- [01 CC version history](docs/guide/part6-reference/01-cc-version-history.md)
+- [02 CLI flags and env](docs/guide/part6-reference/02-cli-flags-and-env.md)
+- [03 Hook event catalog](docs/guide/part6-reference/03-hook-event-catalog.md)
+- [04 Skill catalog](docs/guide/part6-reference/04-skill-catalog.md)
+- [05 MCP server catalog](docs/guide/part6-reference/05-mcp-server-catalog.md)
+- [06 Security checklist](docs/guide/part6-reference/06-security-checklist.md)
 
 ---
 
@@ -180,109 +181,83 @@ Based on production metrics: **100+ hours per year** in developer time. Key achi
 
 ```
 claude-code-guide/
-├── install.sh               # One-command best practices installer
-├── best-practices/          # Installable best practices package
-│   ├── BEST-PRACTICES.md   # Universal best practices document
-│   ├── rules/              # 6 universal rules (project-agnostic)
-│   └── VERSION             # Version tracking for updates
-├── docs/                    # Complete documentation
-│   ├── quick-start.md      # 30-minute setup
-│   ├── skill-activation-system.md
-│   └── guide/              # 59 detailed guides
-├── template/                # Clone-and-go starter (full setup)
-│   ├── .claude/            # Pre-configured setup
-│   │   ├── CLAUDE.md       # Project context
-│   │   ├── hooks/          # 9 automation scripts
-│   │   ├── rules/          # 19 rules across 9 categories
-│   │   └── skills/         # Starter skills
-│   └── memory-bank/        # Knowledge hierarchy
-├── skills-library/          # 20+ proven workflows
-├── mcp-configs/             # MCP server configs
-├── scripts/                 # Setup & validation
-├── examples/                # Real-world examples
-└── web/                     # Interactive checklist
+├── install.sh                   # Manifest-driven installer (Core/Recommended/Full)
+├── best-practices/              # Installable best practices package
+│   ├── BEST-PRACTICES.md       # Universal best practices document
+│   ├── manifest.json           # Authoritative tier definitions
+│   ├── rules/                  # Rule files referenced by the manifest
+│   ├── skills/                 # Skill files referenced by the manifest
+│   ├── hooks/                  # Hook scripts referenced by the manifest
+│   ├── scripts/                # Governance scripts (Full tier only)
+│   ├── test-manifest-resolve.sh
+│   └── VERSION                 # 5.0.0
+├── docs/
+│   ├── index.md                # Landing page
+│   └── guide/
+│       ├── part1-foundation/
+│       ├── part2-workflow/
+│       ├── part3-extension/
+│       ├── part4-context-engineering/
+│       ├── part5-advanced/
+│       ├── part6-reference/
+│       └── _redirect-plan.md   # Internal redirect map (nav-excluded)
+├── ROADMAP-v5.md                # Public roadmap
+├── CHANGELOG.md                 # Release notes
+├── CITATION.cff                 # Citation metadata
+└── README.md
 ```
 
 ---
 
-## Phased Implementation
+## Release phases
 
-### Phase 0: Minimal (30 min)
-
-- CLAUDE.md + core patterns
-- 3 starter skills
-- GitHub MCP only
-- **Value**: Consistent responses, safe operations
-
-### Phase 1: Essential (Week 1)
-
-- Skills library (native activation)
-- Memory Bank MCP
-- 5 troubleshooting skills
-- Perplexity with caching
-- **Value**: 3x faster debugging, 80%+ research savings
-
-### Phase 2: Productive (Week 2-3)
-
-- PostgreSQL MCP (database visibility)
-- Playwright MCP (E2E testing)
-- Branch context system
-- 8 workflow skills
-- **Value**: 47-70% token savings, full automation
-
-### Phase 3: Advanced (Month 2+)
-
-- Custom MCP servers
-- 20-30 skill library
-- Complete memory bank
-- Monthly maintenance
-- **Value**: 100+ hours/year saved
+v5.0 shipped across phases B2-B7. See [`ROADMAP-v5.md`](ROADMAP-v5.md) for the phase tracker and known gaps.
 
 ---
 
 ## Key Features
 
-- **Claude Code Setup**: Complete project configuration with templates
-- **Claude Code Hooks**: 27+ hook events for workflow automation
-- **Claude Code Skills**: 240+ production-tested patterns (native loading)
-- **Claude Code MCP**: 13 servers, 70+ tools integrated
-- **Context Optimization**: 47-70% token savings per branch
-- **Best Practices**: Anthropic-aligned patterns from production
+- **Claude Code Setup**: Manifest-driven install with three tiers (Core/Recommended/Full)
+- **Claude Code Hooks**: 27 hook events documented with examples
+- **Claude Code Skills**: Native loading since v2.1.76 — authoring, maintenance, and lifecycle chapters
+- **Claude Code MCP**: Full server catalog + integration patterns
+- **Context Engineering**: Memory bank, rules system, governance, skill lifecycle
+- **Best Practices**: Anthropic-aligned patterns, debugged against production
 
 ---
 
 ## Related Projects
 
-- **[AI Intelligence Hub](https://github.com/ytrofr/ai-intelligence-hub)** — Track 12 AI sources (GitHub, HuggingFace, MCP, Claude Code) with full-text search. Port 4444.
+- **[AI Intelligence Hub](https://github.com/ytrofr/ai-intelligence-hub)** — Track 12 AI sources (GitHub, HuggingFace, MCP, Claude Code) with full-text search.
 
 ---
 
 ## What Makes This Different
 
-| Aspect                | This Guide                       |
-| --------------------- | -------------------------------- |
-| **Production-Tested** | 240+ patterns from real systems  |
-| **Evidence-Based**    | Every claim backed by metrics    |
-| **Team-Ready**        | Shared vs personal configuration |
-| **Phased Approach**   | Value in 30 minutes              |
-| **Validation-First**  | Scripts catch 90% of mistakes    |
+| Aspect                | This Guide                                              |
+| --------------------- | ------------------------------------------------------- |
+| **Production-Tested** | Patterns extracted from real systems, not hypothetical  |
+| **Evidence-Based**    | Claims cite CC version, file paths, and settings keys   |
+| **Modular Install**   | Three tiers match three user profiles                   |
+| **Current**           | CC 2.1.111+ compatible, updated through April 2026      |
+| **Validation-First**  | Installer has `--dry-run`; manifest has self-test       |
 
 ---
 
 ## Credits
 
-**Source Project**: Production system (97 components)
-**Research**: Anthropic Claude 4 Best Practices + Sionic AI Skills Framework
-**Marketplace**: [wshobson/agents](https://github.com/wshobson/agents) - 273 components
+**Research**: Anthropic Claude Code documentation + production use across multiple projects
+**Marketplace**: [wshobson/agents](https://github.com/wshobson/agents)
 **Official Docs**: [code.claude.com/docs](https://code.claude.com/docs/en/memory)
 **Created**: December 2024
 **Updated**: April 2026
+**Version**: 5.0.0
 
 ---
 
 ## License
 
-MIT License - See [LICENSE](LICENSE)
+MIT License — see [LICENSE](LICENSE)
 
 ---
 
@@ -290,22 +265,22 @@ MIT License - See [LICENSE](LICENSE)
 
 **Getting Started**
 
-- [Quick Start Guide](docs/quick-start.md)
-- [Skills System](docs/skill-activation-system.md)
-- [Template Repository](template/)
+- [Part I — Foundation index](docs/guide/part1-foundation/)
+- [Installation chapter](docs/guide/part1-foundation/01-installation.md)
+- [First session walkthrough](docs/guide/part1-foundation/04-first-session.md)
 
 **Core Systems**
 
-- [Skills Library](skills-library/)
-- [MCP Configs](mcp-configs/)
-- [Interactive Checklist](web/index.html)
+- [Hooks (Part III/01)](docs/guide/part3-extension/01-hooks.md)
+- [MCP integration (Part III/02)](docs/guide/part3-extension/02-mcp-integration.md)
+- [Skills authoring (Part III/04)](docs/guide/part3-extension/04-skills-authoring.md)
 
-**Advanced Topics**
+**Reference**
 
-- [Branch Context System](docs/guide/29-branch-context-system.md)
-- [Rules System](docs/guide/26-claude-code-rules-system.md)
-- [Complete Guide Index](docs/guide/)
+- [CC version history (Part VI/01)](docs/guide/part6-reference/01-cc-version-history.md)
+- [Hook event catalog (Part VI/03)](docs/guide/part6-reference/03-hook-event-catalog.md)
+- [Roadmap](ROADMAP-v5.md)
 
 ---
 
-_Built with lessons from 14+ months of production Claude Code usage._
+_Built from production Claude Code usage across multiple projects, refreshed for CC 2.1.111+._
