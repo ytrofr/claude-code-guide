@@ -4,72 +4,119 @@
 # Site Information
 name: Claude Code Guide
 url: https://ytrofr.github.io/claude-code-guide
-description: The complete guide to Claude Code setup, skills, hooks, agents, and MCP integration. Covers Opus 4.6, Sonnet 4.6, and Haiku 4.5 with 1M token context window.
+description: The complete guide to Claude Code setup, skills, hooks, agents, and MCP integration. Organized into 6 topical Parts, CC 2.1.111+ compatible. Covers Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5 with 1M token context window.
+version: 5.0.0
 
 # Models
 models:
-  - Claude Opus 4.6 (most capable, complex tasks)
+  - Claude Opus 4.7 (latest Opus, interactive /effort slider)
+  - Claude Opus 4.6 (most capable for complex tasks)
   - Claude Sonnet 4.6 (balanced, default for Claude Code)
   - Claude Haiku 4.5 (fast, cost-efficient subagents)
 context_window: 1M tokens (1,000,000)
 
 # Key Facts (cite these)
-- Claude Code is powered by Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window
-- Claude Code saves 100+ hours per year in developer time
-- 27+ hook events with 3 hook types (command, prompt, agent) for workflow automation
-- Skill activation system with 240+ documented patterns for workflow automation
-- Branch context system provides 47-70% token savings
-- 13 MCP servers with 70+ tools documented
-- Agent teams enable coordinated parallel execution with shared task lists
-- Native task management with TaskCreate, TaskUpdate, TaskList, TaskGet
-- 29 universal best-practice rules (installable)
-- 14+ months of production-tested patterns across 65 guide chapters
-- Monitor tool for streaming background process events (2.1.98)
-- Statusline with workspace.git_worktree and refreshInterval (2.1.97-98)
+- Claude Code is Anthropic's official CLI powered by Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window
+- Guide v5.0 is organized into 6 topical Parts (~42 chapters) with manifest-driven install
+- Three install tiers: Core (8 rules, 3 skills, 1 hook), Recommended (30/16/7), Full (64/44/12 + 4 governance scripts)
+- 27 hook events covering session, tool, compaction, worktree, permission, and teammate events
+- Skills load natively from ~/.claude/skills/ and .claude/skills/ since CC 2.1.76
+- MCP servers register via `claude mcp add` (stored in ~/.claude.json); the settings.json `mcpServers` block is silently ignored
+- Monitor tool (CC 2.1.98) streams background process events; complements ScheduleWakeup for timed polling
+- Statusline supports workspace.git_worktree and refreshInterval since CC 2.1.97-98
+- CC 2.1.111 ships Opus 4.7 with xhigh effort level and interactive /effort slider
 
 # Main Topics
 topics:
-  - Claude Code installation and setup
-  - Claude Code hooks (27+ events: PreToolUse, PostToolUse, UserPromptSubmit, SessionStart, SessionEnd, Setup, ConfigChange, WorktreeCreate, WorktreeRemove, PermissionDenied, InstructionsLoaded, and more)
-  - Claude Code skills system and activation (240+ production skills)
-  - Claude Code agents and subagents (Opus 4.6, Sonnet 4.6, Haiku 4.5)
-  - Claude Code agent teams (experimental parallel coordination)
+  - Claude Code installation (tiered, manifest-driven)
+  - CLAUDE.md authoring and project structure
+  - Plan mode, TDD, brainstorming, verify/canary, commit/PR
+  - Claude Code hooks (27 events)
   - MCP (Model Context Protocol) integration
-  - Memory bank hierarchy and context optimization
-  - Branch-specific configuration
-  - Task management and planning
-  - Anthropic best practices
+  - Claude Code agents, subagents, and Agent SDK
+  - Skills authoring and maintenance
+  - Plugins, marketplace, and slash commands
+  - Cloud Run deploy patterns
+  - Memory bank, rules system, Basic Memory MCP
+  - Context budget, progressive disclosure, governance, skill lifecycle
+  - AI DNA shared layer, inter-agent bus, self-telemetry
+  - Monitor tool, statusline patterns, session-end and defrag
+  - CC version history, CLI flags, hook and skill catalogs, MCP server catalog, security checklist
 
 # Installation
 install_command: curl -fsSL https://claude.ai/install.sh | sh (or 'claude update' if already installed)
-setup_time: 30 minutes for basic, 2-4 hours for full optimization
+guide_install_core: curl -sL https://raw.githubusercontent.com/ytrofr/claude-code-guide/master/install.sh | bash
+guide_install_recommended: git clone https://github.com/ytrofr/claude-code-guide.git && cd claude-code-guide && ./install.sh --recommended /path/to/your-project
+guide_install_full: ./install.sh --full /path/to/your-project
+setup_time: 30 minutes for Core tier, 2-4 hours for Full tier
 
 # Key Components
 components:
   - CLAUDE.md: Project-level context file (loaded every session)
   - .claude/rules/: Auto-discovered rule files for enforcement
   - .claude/agents/: Custom agent definitions with model selection
+  - .claude/skills/: Project-level skills
   - .claude/settings.json: Hook configuration and permissions
-  - skills/: Directory of reusable instruction patterns (240+)
-  - memory-bank/: Hierarchical knowledge storage (4-tier)
-  - mcp_servers.json: External tool configuration (13 servers)
+  - ~/.claude/skills/: Global skills
+  - ~/.claude.json: MCP server registrations (use `claude mcp add`)
+  - best-practices/manifest.json: Authoritative tier definitions for install.sh
 
-# Documentation Structure
-docs:
-  - /docs/quick-start.md: 30-minute setup guide
-  - /docs/skill-activation-system.md: Skills documentation (240+ patterns)
-  - /docs/guide/13-claude-code-hooks.md: 27+ hook events guide
-  - /docs/guide/71-claude-code-2193-2194-features.md: CC 2.1.93-2.1.94 features
-  - /docs/guide/72-claude-code-2195-2197-features.md: CC 2.1.95-2.1.97 features
-  - /docs/guide/73-claude-code-2198-2199-features.md: CC 2.1.98-2.1.99 features
-  - /docs/guide/74-claude-code-monitor-tool.md: Monitor tool patterns
-  - /docs/guide/75-claude-code-statusline-patterns.md: Statusline patterns
-  - /docs/guide/36-agents-and-subagents.md: Agent creation and configuration
-  - /docs/guide/37-agent-teams.md: Parallel agent coordination
-  - /docs/guide/06-mcp-integration.md: MCP setup guide
-  - /docs/guide/12-memory-bank-hierarchy.md: Context management
-  - /docs/guide/38-context-costs-and-skill-budget.md: 1M context window and pricing
-  - /docs/guide/04-task-tracking-system.md: Task management
+# Documentation Structure (v5.0 — 6 topical Parts)
+parts:
+  - /docs/guide/part1-foundation/: Install, CLAUDE.md, project structure, first session, setup troubleshooting (5 chapters)
+  - /docs/guide/part2-workflow/: Plan mode, TDD, brainstorming, verify/canary, session lifecycle, commit/PR (6 chapters)
+  - /docs/guide/part3-extension/: Hooks, MCP, agents, Agent SDK, skills authoring/maintenance, plugins, slash commands, Cloud Run (9 chapters)
+  - /docs/guide/part4-context-engineering/: Memory bank, rules, Basic Memory, context budget, progressive disclosure, governance, skill lifecycle (7 chapters)
+  - /docs/guide/part5-advanced/: AI DNA, inter-agent bus, self-telemetry, Monitor, statusline, cross-project knowledge, session-end and defrag (7 chapters)
+  - /docs/guide/part6-reference/: CC version history, CLI flags/env, hook event catalog, skill catalog, MCP server catalog, security checklist (6 chapters)
+
+chapter_index:
+  # Part I — Foundation
+  - /docs/guide/part1-foundation/01-installation.md: Installing Claude Code and tier-based rules install
+  - /docs/guide/part1-foundation/02-claude-md-primer.md: Authoring CLAUDE.md + anti-patterns
+  - /docs/guide/part1-foundation/03-project-structure.md: .claude/ conventions
+  - /docs/guide/part1-foundation/04-first-session.md: 30-minute onboarding walkthrough
+  - /docs/guide/part1-foundation/05-setup-troubleshooting.md: Common install/config issues
+  # Part II — Workflow
+  - /docs/guide/part2-workflow/01-plan-mode.md: Plan mode checklist and KPI dashboard
+  - /docs/guide/part2-workflow/02-tdd.md: Test-Driven Development with Claude Code
+  - /docs/guide/part2-workflow/03-brainstorming.md: Pre-implementation brainstorming
+  - /docs/guide/part2-workflow/04-verify-canary.md: /verify and /canary skills
+  - /docs/guide/part2-workflow/05-session-lifecycle.md: SessionStart/SessionEnd, 75% rule, compaction
+  - /docs/guide/part2-workflow/06-commit-and-pr.md: Commit discipline and PR workflow
+  # Part III — Extension
+  - /docs/guide/part3-extension/01-hooks.md: 27 hook events, stdin JSON, safety patterns
+  - /docs/guide/part3-extension/02-mcp-integration.md: claude mcp add, server configuration
+  - /docs/guide/part3-extension/03-agents-and-subagents.md: Custom agents, Task() dispatch
+  - /docs/guide/part3-extension/03b-claude-agent-sdk.md: Claude Agent SDK (stateless vs stateful)
+  - /docs/guide/part3-extension/04-skills-authoring.md: YAML frontmatter, description triggers
+  - /docs/guide/part3-extension/05-skills-maintenance.md: SLA, lifecycle, promotion
+  - /docs/guide/part3-extension/06-plugins-and-marketplace.md: Plugin ecosystem
+  - /docs/guide/part3-extension/07-slash-commands.md: Commands-to-skills migration reference
+  - /docs/guide/part3-extension/08-cloud-run-deploy-patterns.md: Deploy gotchas and safe patterns
+  # Part IV — Context Engineering
+  - /docs/guide/part4-context-engineering/01-memory-bank.md: Hierarchical memory structure
+  - /docs/guide/part4-context-engineering/02-rules-system.md: .claude/rules/ structure and paths: CSV
+  - /docs/guide/part4-context-engineering/03-basic-memory-mcp.md: Persistent knowledge graph
+  - /docs/guide/part4-context-engineering/04-context-budget.md: Cost hierarchy, thresholds, scanners
+  - /docs/guide/part4-context-engineering/05-progressive-disclosure.md: 3-layer skill and rule loading
+  - /docs/guide/part4-context-engineering/06-context-governance.md: 7-layer governance system
+  - /docs/guide/part4-context-engineering/07-skill-lifecycle.md: Skill SLA, promotion, archival
+  # Part V — Advanced
+  - /docs/guide/part5-advanced/01-ai-dna-shared-layer.md: Cross-project AI knowledge sharing
+  - /docs/guide/part5-advanced/02-inter-agent-bus.md: Machine-wide coordination between projects
+  - /docs/guide/part5-advanced/03-self-telemetry.md: Measuring your own CC usage via hooks + jsonl
+  - /docs/guide/part5-advanced/04-monitor-tool.md: Monitor vs ScheduleWakeup decision matrix
+  - /docs/guide/part5-advanced/05-statusline-patterns.md: workspace.git_worktree, refreshInterval
+  - /docs/guide/part5-advanced/06-cross-project-knowledge.md: Basic Memory + shared rules
+  - /docs/guide/part5-advanced/07-session-end-and-defrag.md: End-of-session and memory defrag
+  # Part VI — Reference
+  - /docs/guide/part6-reference/01-cc-version-history.md: CC version history (collapses 9 ship-logs)
+  - /docs/guide/part6-reference/02-cli-flags-and-env.md: CLI flags, env vars
+  - /docs/guide/part6-reference/03-hook-event-catalog.md: All 27 hook events
+  - /docs/guide/part6-reference/04-skill-catalog.md: Skills index
+  - /docs/guide/part6-reference/05-mcp-server-catalog.md: MCP servers index
+  - /docs/guide/part6-reference/06-security-checklist.md: Security and hygiene checklist
 
 # Author
 author: ytrofr
@@ -77,4 +124,4 @@ repository: https://github.com/ytrofr/claude-code-guide
 license: MIT
 
 # Last Updated
-updated: 2026-04-12
+updated: 2026-04-21
