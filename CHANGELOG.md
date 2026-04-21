@@ -4,6 +4,22 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.1] - 2026-04-21
+
+Patch release: Section 0 (verbatim user prompt) added as first mandatory section across plan-mode docs, template rules, and the `ExitPlanMode` hook.
+
+### Changed
+
+- **Chapter 01 (Plan Mode)**: now describes 15 mandatory sections (was 14). New Section 0 — "Original User Prompt (verbatim, preserved)" — is the immutable, first section of every plan. Hook-enforced as blocking: `ExitPlanMode` refuses to submit without it, and soft-warns if the heading exists but no blockquote body is present.
+- **Chapter 03 (Brainstorming)**: updated cross-reference from "14 sections" to "15 sections (starting with the verbatim user prompt)".
+- **Template `.claude/rules/planning/plan-checklist.md`**: added Section 0 template + Quick Validation checkbox; bumped to v8.
+- **Template `.claude/rules/planning/plan-link.md`**: header template now includes Section 0 blockquote immediately after metadata.
+- **Template `.claude/hooks/plan-sections-gate.sh`**: detects Section 0 heading + blockquote content; `MISSING` list now `/12`; version reference bumped to v8.
+
+### Rationale
+
+Plans drift across revisions. The most common failure mode wasn't wrong tests or missing observability — it was paraphrased prompts. Freezing the original user prompt at the top gives every reviewer a reference point for detecting drift.
+
 ## [5.0.0] - 2026-04-21
 
 Major release: the guide is reorganized around 6 topical Parts, installation is now manifest-driven with three tiers, and compatibility is refreshed for Claude Code 2.1.111+.

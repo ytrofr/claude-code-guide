@@ -2,7 +2,7 @@
 # PreToolUse hook (GLOBAL): Block ExitPlanMode if mandatory plan sections are missing
 # Fires BEFORE: ExitPlanMode
 # Location: ~/.claude/hooks/ (applies to ALL projects)
-# Reference: ~/.claude/rules/planning/plan-checklist.md (14 mandatory sections, v5)
+# Reference: ~/.claude/rules/planning/plan-checklist.md (15 mandatory sections, v8)
 
 # Read stdin safely (hook receives tool input as JSON)
 JSON_INPUT=$(timeout 2 cat 2>/dev/null || true)
@@ -30,6 +30,7 @@ fi
 # Section 0.1 is optional per plan-checklist.md rules
 declare -A SECTIONS
 SECTIONS=(
+  ["0: Original User Prompt"]="original user prompt|verbatim.*preserve"
   ["1: Existing Code Check"]="existing code|reuse check|searched.*found|reuse plan"
   ["2: Over-Engineering Prevention"]="over.engineering|simplif.*alternative|complexity|can this be solved"
   ["3: Best Practices"]="best practice|KISS|DRY|SOLID|YAGNI"
@@ -46,7 +47,8 @@ SECTIONS=(
 MISSING=()
 FOUND=()
 
-for section in "1: Existing Code Check" "2: Over-Engineering Prevention" "3: Best Practices" \
+for section in "0: Original User Prompt" \
+               "1: Existing Code Check" "2: Over-Engineering Prevention" "3: Best Practices" \
                "4: Architecture" "5: Documentation Plan" "6: Testing" \
                "7: Debugging & Observability" "8: Files Affected" "9: TL;DR" \
                "10: Modularity" "11: Post-Validation"; do
@@ -82,7 +84,16 @@ if [ "$FIX_COUNT" -gt 0 ]; then
   fi
 fi
 
-ALL_WARNINGS=("${KPI_WARNINGS[@]}" "${FIX_WARNINGS[@]}")
+# --- NEW v8: Section 0 blockquote content check ---
+SECTION0_WARNINGS=()
+if grep -qiE '^##.*original user prompt' "$PLAN_FILE" 2>/dev/null; then
+  S0_BLOCK=$(awk 'tolower($0) ~ /^##.*original user prompt/{flag=1; next} flag && /^## /{flag=0} flag' "$PLAN_FILE" 2>/dev/null)
+  if ! echo "$S0_BLOCK" | grep -qE '^>' 2>/dev/null; then
+    SECTION0_WARNINGS+=("Section 0 heading found but no blockquote content — paste user prompt verbatim with '> ' prefix on every line")
+  fi
+fi
+
+ALL_WARNINGS=("${KPI_WARNINGS[@]}" "${FIX_WARNINGS[@]}" "${SECTION0_WARNINGS[@]}")
 
 if [ ${#MISSING[@]} -gt 0 ] || [ ${#ALL_WARNINGS[@]} -gt 0 ]; then
   echo ""
@@ -95,7 +106,7 @@ if [ ${#MISSING[@]} -gt 0 ] || [ ${#ALL_WARNINGS[@]} -gt 0 ]; then
   echo "======================================================================="
   echo ""
   echo "Plan file: $PLAN_NAME"
-  echo "Found: ${#FOUND[@]}/11 mandatory sections"
+  echo "Found: ${#FOUND[@]}/12 mandatory sections"
 
   if [ ${#MISSING[@]} -gt 0 ]; then
     echo ""
@@ -114,7 +125,7 @@ if [ ${#MISSING[@]} -gt 0 ] || [ ${#ALL_WARNINGS[@]} -gt 0 ]; then
   fi
 
   echo ""
-  echo "Reference: ~/.claude/rules/planning/plan-checklist.md (v5)"
+  echo "Reference: ~/.claude/rules/planning/plan-checklist.md (v8)"
   echo "To bypass: add <!-- skip-plan-sections --> to the plan file."
   echo "======================================================================="
 
@@ -125,5 +136,5 @@ if [ ${#MISSING[@]} -gt 0 ] || [ ${#ALL_WARNINGS[@]} -gt 0 ]; then
   exit 0
 fi
 
-echo "Plan sections check passed (11/11 sections found in $PLAN_NAME)"
+echo "Plan sections check passed (12/12 sections found in $PLAN_NAME)"
 exit 0
