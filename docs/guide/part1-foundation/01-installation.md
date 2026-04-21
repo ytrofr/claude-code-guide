@@ -6,6 +6,20 @@ nav_order: 1
 redirect_from:
   - /docs/guide/02-minimal-setup.html
   - /docs/guide/02-minimal-setup/
+howto:
+  name: "Install Claude Code Best Practices"
+  description: "Install the Claude Code Guide best-practices package in three tiers: Core, Recommended, or Full."
+  steps:
+    - name: "Pick your tier"
+      text: "Core (8 rules, 3 skills, 1 hook) — newcomer starter. Recommended (30/16/7) — working developer. Full (64/44/12 + governance scripts) — power user."
+    - name: "Install Core via one-liner"
+      text: "Run: curl -sL https://raw.githubusercontent.com/ytrofr/claude-code-guide/master/install.sh | bash"
+    - name: "Install Recommended or Full"
+      text: "Clone the repo: git clone https://github.com/ytrofr/claude-code-guide.git && cd claude-code-guide. Then run ./install.sh --recommended /path/to/project or ./install.sh --full /path/to/project"
+    - name: "Verify install"
+      text: "Check that rules landed: ls ~/.claude/rules/ (global install) or ls .claude/rules/ (project install). Run /skills inside Claude Code to confirm skills are active."
+    - name: "Configure CLAUDE.md"
+      text: "The installer imports best-practices into your CLAUDE.md automatically via @.claude/best-practices/BEST-PRACTICES.md. Add project-specific rules below the import."
 ---
 
 # Installation
