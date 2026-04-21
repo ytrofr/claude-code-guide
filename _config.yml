@@ -1,6 +1,6 @@
 title: Claude Code Guide
 tagline: "Complete Setup & Best Practices for Claude Code"
-description: "The complete guide to Claude Code setup (Opus 4.6, Sonnet 4.6, Haiku 4.5). 1M token context window. 100+ hours saved. 25 hook events. Agent teams and task management. Production-tested patterns for skills, hooks, and MCP integration."
+description: "The complete guide to Claude Code. Opus 4.7, Sonnet 4.6, Haiku 4.5. 1M token context window. 27 hook events. 42 production-tested chapters across 6 topical Parts (Foundation, Workflow, Extension, Context Engineering, Advanced, Reference). Three install tiers. CC 2.1.111+ compatible."
 url: "https://ytrofr.github.io"
 baseurl: "/claude-code-guide"
 theme: jekyll-theme-minimal
@@ -39,21 +39,26 @@ keywords:
   - claude code hooks
   - claude code skills
   - claude code mcp
+  - claude code agents
+  - claude code plan mode
+  - claude code 2.1.111
+  - claude opus 4.7
   - claude opus 4.6
   - claude sonnet 4.6
+  - claude haiku 4.5
   - 1m context window
-  - agent teams
-  - task management
-  - anthropic cli
-  - ai coding assistant
-  - developer tools
-  - code automation
-  - mcp integration
-  - context optimization
-  - agentic coding
+  - install tiers
+  - manifest driven installer
   - context engineering
   - claude code rules
-  - claude code agents
+  - claude code context governance
+  - ai dna shared layer
+  - inter-agent bus
+  - anthropic cli
+  - ai coding assistant
+  - code automation
+  - mcp integration
+  - agentic coding
 
 # Google verification (add your code if needed)
 # google_site_verification: YOUR_CODE_HERE
