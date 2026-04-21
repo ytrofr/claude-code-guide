@@ -1,9 +1,52 @@
 # Claude Code Implementation Guide - Project Status
 
 **Created**: 2025-12-14
-**Updated**: 2026-04-01
-**Status**: Phase 1 Complete + 59 Guide Chapters + Plan Mode Quality Checklist + Persistent Memory Patterns
-**Progress**: 95% of planned work complete
+**Updated**: 2026-04-21
+**Status**: v5.0.0 released — 6 topical Parts, manifest-driven install, CC 2.1.111+ compatible
+**Progress**: v5.0 content work complete; template/ realignment tracked as next workstream
+
+---
+
+## 2026-04-21 — v5.0.0 Release
+
+### What landed
+
+- **Structural restructure**: 68 flat numbered chapters collapsed into **6 topical Parts** (~42 chapters) with per-Part index pages:
+  - Part I — Foundation (5 chapters)
+  - Part II — Workflow (6 chapters)
+  - Part III — Extension (9 chapters)
+  - Part IV — Context Engineering (7 chapters)
+  - Part V — Advanced (7 chapters)
+  - Part VI — Reference (6 chapters)
+- **Manifest-driven installer**: `install.sh` rewritten to read `best-practices/manifest.json`. Three tiers:
+  - Core: 8 rules, 3 skills, 1 hook
+  - Recommended: 30 rules, 16 skills, 7 hooks
+  - Full: 64 rules, 44 skills, 12 hooks + 4 governance scripts
+- **New flags**: `--recommended`, `--full`, `--dry-run`, `--uninstall` (manifest-aware)
+- **Removed flags**: `--commands`, `--all-rules`, `--with-hooks` (v4.x legacy)
+- **CC version floor**: 2.1.99 → **2.1.111+** across hero, FAQ, and touched chapters
+- **Redirects**: `jekyll-redirect-from` plugin enabled; `docs/guide/_redirect-plan.md` maps 51 old→new URLs
+- **Public roadmap**: `ROADMAP-v5.md` shipped with B2-B7 phase tracker
+
+### Content work
+
+- **42 absorbed chapters** deleted with redirect coverage (02, 04, 06, 12, 13, 14, 15, 18, 19, 19b, 22, 23, 25, 26, 27, 28, 29, 32, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 50, 51, 53, 58, 61, 62, 63, 65, 74, 75, 76, 77, 78)
+- **9 ship-logs** (54, 57, 60, 64, 66, 70, 71, 72, 73) consolidated into `part6/01-cc-version-history.md`
+- **Out-of-scope chapters** pruned: 05, 17, 20, 21, 24, 30, 30b, 31, 31b, 33, 41, 46, 47, 48, 49, 52, 55, 56, 59, 67, 68, 69
+
+### Docs refreshed
+
+- `README.md` — tier install table, Part structure, honest counts, CC 2.1.111+, Opus 4.7 model
+- `CHANGELOG.md` — 5.0.0 entry with Added / Changed / Removed / Fixed sections
+- `llms.txt` — regenerated with per-Part and per-chapter index
+- `CITATION.cff` — version 5.0.0, date 2026-04-20, abstract with tier counts
+- `STATUS.md` — this entry
+- `ROADMAP-v5.md` — B2-B7 marked shipped; `template/` gap recorded as next workstream
+
+### Known gaps (tracked)
+
+- `template/` directory at repo root has not yet been repopulated to match manifest contents. Installer is mechanically correct but most Recommended/Full fetches will 404 until `template/` is refilled. Separate sub-plan.
+- A few pruned chapter files may still physically exist under `docs/guide/` numbered names. They are excluded from navigation; residual cleanup can happen opportunistically.
 
 ---
 
