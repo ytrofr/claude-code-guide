@@ -210,7 +210,7 @@ Once the design is approved, the next step is **not** code. It's a plan.
 - The **design** answers "what and why"
 - The **plan** answers "in what order, with what checkpoints, with what KPIs"
 
-The plan pulls from the design. It does not replace the design. See [Chapter 01 — Plan Mode](/docs/guide/part2-workflow/01-plan-mode/) for the plan structure; the superpowers `writing-plans` skill turns a design into a plan with the required 14 sections.
+The plan pulls from the design. It does not replace the design. See [Chapter 01 — Plan Mode](/docs/guide/part2-workflow/01-plan-mode/) for the plan structure; the superpowers `writing-plans` skill turns a design into a plan with the required 15 sections (starting with the verbatim user prompt).
 
 ---
 

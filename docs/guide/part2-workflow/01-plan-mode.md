@@ -14,7 +14,7 @@ redirect_from:
 
 Plan mode is Claude Code's design-before-implementation primitive. The model produces a written plan -- no edits, no commits -- and waits for you to approve it before touching any files. Used well, it catches wrong assumptions, missing requirements, and over-engineering before a single line of code is written. Used poorly, it produces verbose essays that still miss the parts that matter: testing, observability, file scope, and measured KPIs.
 
-This chapter defines **what a complete plan looks like**: the 14 mandatory sections, the pre-validation probe that grounds plans in data, the TL;DR with an explicit KPI dashboard, and the post-validation template that closes the loop after implementation.
+This chapter defines **what a complete plan looks like**: the 15 mandatory sections (starting with the verbatim user prompt), the pre-validation probe that grounds plans in data, the TL;DR with an explicit KPI dashboard, and the post-validation template that closes the loop after implementation.
 
 **Purpose**: One reference for every plan in every project
 **Difficulty**: Beginner (to read) / Intermediate (to enforce)
@@ -38,12 +38,13 @@ Skip plan mode for trivial single-file edits, doc typos, or fixes where the root
 
 ---
 
-## The 14 Mandatory Sections
+## The 15 Mandatory Sections
 
-Every plan contains these sections, in this order, with no placeholders. Section 0.1 runs first because everything else depends on what it discovers. Section 12 (TL;DR) is written **last** but always appears as the final content section, immediately before Section 13.
+Every plan contains these sections, in this order, with no placeholders. Section 0 (the verbatim user prompt) is the frozen record of what was asked — written first, never edited. Section 0.1 runs next because everything downstream depends on what the pre-validation probe discovers. Section 12 (TL;DR) is written **last** but always appears as the final content section, immediately before Section 13.
 
 | # | Section | Purpose | Blocking? |
 |---|---------|---------|-----------|
+| 0 | Original User Prompt (verbatim, preserved) | Frozen record of what was asked — immutable during revisions | YES |
 | 0.1 | Pre-Validation Probe | Verify assumptions with real evidence | YES |
 | 1 | Requirements Clarification | Confirm scope and expected behavior | NO |
 | 2 | Existing Code Check | Don't rebuild what's already there | NO |
@@ -59,7 +60,36 @@ Every plan contains these sections, in this order, with no placeholders. Section
 | 12 | TL;DR with KPI Dashboard | Confidence + Before/After + Scope + KPIs | NO |
 | 13 | Post-Validation | Template filled after implementation | NO |
 
-Two sections are **blocking gates**: 0.1 and 11. If the pre-validation probe shows >50% of assumptions disproved, reject the plan and re-plan. If the modularity check shows a file will exceed 500 lines or business logic leaks into a route, redesign before proceeding.
+Three sections are **blocking gates**: 0, 0.1, and 11. Section 0 must include the verbatim user prompt as a blockquote — the `ExitPlanMode` hook blocks submission without it. If the pre-validation probe shows >50% of assumptions disproved, reject the plan and re-plan. If the modularity check shows a file will exceed 500 lines or business logic leaks into a route, redesign before proceeding.
+
+---
+
+## Section 0 — Original User Prompt (verbatim, preserved)
+
+Every plan starts with the exact message that triggered plan mode, preserved as a blockquote. No paraphrasing, no cleanup, no sanitization — typos, casing, emoji, and non-English text all stay intact.
+
+The reason is anchoring. Plans drift. Scope negotiations, clarifying questions, and implementation discoveries all change the working understanding of the task. Without a frozen record of what was originally asked, every later decision quietly re-interprets the request. Six iterations in, "the thing we're building" often bears only passing resemblance to the user's actual prompt. A verbatim record gives every reviewer a fixed reference point for detecting drift.
+
+### Template
+
+```markdown
+## Section 0 — Original User Prompt (verbatim, preserved)
+
+> {user's original prompt goes here, verbatim — every line gets `> ` prefix}
+> {multi-line messages keep their line breaks; each gets its own `> ` prefix}
+> {if the prompt itself contains a blockquote, nest with `>>`}
+```
+
+### Rules
+
+- **Scope**: the single message that triggered plan mode. Later clarifications and scope negotiations go in Section 1, not here.
+- **Verbatim**: no edits to content, casing, typos, emoji, punctuation, or language.
+- **Immutable**: never rewritten during plan revisions — the whole point is a stable reference.
+- **Placement**: first section in the plan body, immediately after the metadata header.
+
+### Enforcement
+
+The `ExitPlanMode` hook blocks plan submission if the Section 0 heading is missing, and emits a quality warning if the heading is present but the blockquote body is empty. See the Enforcement section below for the full hook logic.
 
 ---
 
@@ -366,7 +396,7 @@ There is no hook for plan mode *entry*, but there is one for plan *submission*. 
 The hook script:
 
 1. Finds the most recently modified `.md` file in the plan directory
-2. Checks for all 14 sections via flexible keyword matching
+2. Checks for all 15 sections via flexible keyword matching (including Section 0 blockquote content)
 3. Validates the KPI dashboard is a pipe-delimited table
 4. Validates each fix has `**BEFORE**:` and `**AFTER**:` lines
 5. If missing or malformed, exits 2 (blocks submission) and prints what's wrong
@@ -392,7 +422,9 @@ Without metadata, plan files with random slug names (`wild-tickling-pretzel.md`)
 
 ## Design Decisions
 
-**Why 14 sections?** Fewer sections miss one of the common failure modes (missing tests, missing observability, missing file scope). More sections become unreadable and get skipped.
+**Why 15 sections?** Fewer sections miss one of the common failure modes (missing tests, missing observability, missing file scope, paraphrased prompts). More sections become unreadable and get skipped.
+
+**Why Section 0 verbatim?** Across months of plans, the most common failure mode wasn't wrong tests or missing observability — it was paraphrased prompts. A user asks for X with specific nuance; three revisions later the plan targets X' with the nuance sanded off. Freezing the original prompt at the top gives every reviewer a reference point for detecting drift.
 
 **Why is 0.1 blocking?** Plans built on wrong assumptions are the most expensive class of failure. A 2-minute probe catches them before implementation.
 
@@ -410,7 +442,7 @@ Without metadata, plan files with random slug names (`wild-tickling-pretzel.md`)
 
 ## Key Takeaways
 
-1. **14 mandatory sections**: 0.1, 1-11, 12, 13. Section 12 written last but positioned last; Section 13 template present at plan time.
+1. **15 mandatory sections**: 0, 0.1, 1-11, 12, 13. Section 0 (verbatim user prompt) written FIRST and never edited; Section 12 written LAST but positioned last; Section 13 template present at plan time.
 2. **Pre-validation probe is blocking.** Convert all KPIs from UNKNOWN / ESTIMATED to MEASURED before approval.
 3. **KPI dashboard is a pipe-delimited table, always.** Emoji status only. 2-5 KPIs, each with green/yellow/red thresholds.
 4. **Modularity is blocking.** File < 500L, function < 50L, layer separation. Redesign during planning, not after merge.

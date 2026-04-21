@@ -1,20 +1,31 @@
 # Plan Mode Checklist - MANDATORY for Every Plan
 
 **Authority**: Universal plan quality enforcement
-**Updated**: 2026-04-10 (v5: TL;DR always last, KPI tables mandatory, before/after per fix, post-validation gate)
+**Updated**: 2026-04-21 (v8: Section 0 verbatim user prompt added as first mandatory section)
 **Scope**: ALL plans in ALL projects
 
 ---
 
 ## Rule
 
-Every plan (via EnterPlanMode, /plan, or plan permission mode) MUST contain ALL 14 sections (0.1, 1-11, 12, 13). No placeholders. Write Section 12 (TL;DR) LAST — after all detail sections are complete. Section 12 MUST be the last content section, followed only by Section 13 (post-validation template).
+Every plan (via EnterPlanMode, /plan, or plan permission mode) MUST contain ALL 15 sections (0, 0.1, 1-11, 12, 13). No placeholders. Section 0 (verbatim user prompt) written FIRST and never edited during revisions. Write Section 12 (TL;DR) LAST — after all detail sections are complete. Section 12 MUST be the last content section, followed only by Section 13 (post-validation template).
 
 For full section templates and examples, invoke `/plan-checklist`.
 
 ---
 
-## 14 Mandatory Sections
+## 15 Mandatory Sections
+
+### Section 0: Original User Prompt (verbatim, preserved) — MANDATORY FIRST
+
+Paste the single user message that triggered plan mode as a blockquote. No edits, no paraphrase, no cleanup. Section 0 is the immutable record of "what was asked" — never rewritten during plan revisions. Clarifications and scope negotiations go in Section 1, NOT here.
+
+```markdown
+## Section 0 — Original User Prompt (verbatim, preserved)
+
+> {user's original message, `> ` prefixed on every line}
+> {preserve typos, casing, emoji, non-English text, line breaks}
+```
 
 ### Section 0.1: Pre-Validation Probe (BLOCKING GATE)
 
@@ -73,7 +84,8 @@ Re-measures the SAME KPIs from Section 12 after implementation. Include template
 
 ## Quick Validation
 
-- [ ] All 14 sections present with real content (0.1, 1-11, 12, 13)
+- [ ] All 15 sections present with real content (0, 0.1, 1-11, 12, 13)
+- [ ] Section 0 present with verbatim user prompt as blockquote (no paraphrase)
 - [ ] TL;DR is Section 12 — ALWAYS the last content section, written LAST
 - [ ] Section 12 has Problem (Before) table + Solution (After) table + KPI Dashboard table
 - [ ] KPI Dashboard is a pipe-delimited table (never prose)

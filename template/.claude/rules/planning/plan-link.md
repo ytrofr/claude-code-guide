@@ -6,7 +6,7 @@
 
 ## Rule
 
-When writing a plan file, ALWAYS include the metadata header immediately after the title:
+When writing a plan file, ALWAYS include the metadata header AND Section 0 (verbatim user prompt) immediately after the title:
 
 ```
 # Plan: Title Here
@@ -14,7 +14,15 @@ When writing a plan file, ALWAYS include the metadata header immediately after t
 > **Branch**: {current-branch} | **Created**: YYYY-MM-DD HH:MM UTC
 > **Topic**: Short description of what this plan is about (1 sentence)
 > **Keywords**: keyword1, keyword2, keyword3 (3-6 searchable terms)
+
+---
+
+## Section 0 — Original User Prompt (verbatim, preserved)
+
+> {user's original message verbatim, `> ` prefixed on every line — no edits}
 ```
+
+**Section 0**: the single message that triggered plan mode. Verbatim, immutable during revisions. Later clarifications go in Section 1.
 
 ### Example
 
