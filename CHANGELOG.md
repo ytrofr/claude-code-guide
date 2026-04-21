@@ -4,6 +4,73 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.0] - 2026-04-21
+
+Major release: the guide is reorganized around 6 topical Parts, installation is now manifest-driven with three tiers, and compatibility is refreshed for Claude Code 2.1.111+.
+
+### Added
+
+**New structure: 6 topical Parts**
+- Part I — Foundation (5 chapters)
+- Part II — Workflow (6 chapters)
+- Part III — Extension (9 chapters)
+- Part IV — Context Engineering (7 chapters)
+- Part V — Advanced (7 chapters)
+- Part VI — Reference (6 chapters)
+
+**New install tiers in `best-practices/manifest.json`**
+- Core: 8 rules, 3 skills, 1 hook — newcomer-friendly
+- Recommended: +22 rules, +13 skills, +6 hooks — working developer
+- Full: +34 rules, +28 skills, +5 hooks + governance scaffolding — power user
+
+**New chapters** (either brand new or synthesizing across multiple old chapters):
+- Part I: 01 Installation, 02 CLAUDE.md primer, 03 Project structure, 04 First session, 05 Setup troubleshooting
+- Part II: 02 TDD, 03 Brainstorming, 06 Commit and PR
+- Part III: 03b Claude Agent SDK (ported+modernized from old ch.43), 07 Slash commands (commands→skills migration reference)
+- Part IV: 06 Context Governance (7-layer system), 07 Skill lifecycle
+- Part V: 01 AI DNA shared-layer, 07 Session-end and defrag
+- Part VI: 01 CC version history (collapses 9 ship-logs), 02 CLI flags + env, 03 Hook event catalog (27 events), 04 Skill catalog, 05 MCP server catalog
+
+**Other additions**
+- `jekyll-redirect-from` plugin for URL stability across the restructure
+- `best-practices/manifest.json` as authoritative tier definition
+- `best-practices/test-manifest-resolve.sh` self-test (12 assertions)
+- `ROADMAP-v5.md` public roadmap
+- `docs/guide/_redirect-plan.md` internal redirect mapping (51 entries)
+
+### Changed
+
+- `install.sh` rewritten to be manifest-driven (replaces hardcoded file lists from v4.x)
+- New install flags: `--recommended`, `--full`, `--dry-run`
+- CC compatibility updated from 2.1.99 to 2.1.111+
+- README hero metrics restated with honest counts
+- All chapters verified against current CC flags, hooks (27 events), skills, MCP patterns
+
+### Removed
+
+Hardcoded installer flags (v4.x legacy):
+- `--commands` (commands migrated to skills at CC 2.1.88)
+- `--all-rules` (folded into `--recommended`)
+- `--with-hooks` (folded into tier composition)
+
+Pruned chapters (content obsolete or superseded):
+- 9 version ship-logs (54, 57, 60, 64, 66, 70, 71, 72, 73) → consolidated into part6/01
+- Pre-native-skill-loading content (05, 30, 30b)
+- Branch-context chapters (31, 31b, 33) — replaced by path-scoped rules
+- Scattered orchestration/config chapters (41, 46, 47, 48, 49) — absorbed into relevant Parts
+- UI/UX rules (52) — out of CC guide scope
+- Research logs (55, 56, 59, 67, 68, 69)
+
+Absorbed + deleted with redirects:
+- 02, 04, 06, 12, 13, 14, 15, 18, 19, 19b, 22, 23, 25, 26, 27, 28, 29, 32, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 50, 51, 53, 58, 61, 62, 63, 65, 74, 75, 76, 77, 78
+
+### Fixed
+
+- `install.sh` comments now honestly state tier counts (old comments claimed "35 rules" while installing 19)
+- CC version references updated across all chapters (no more "CC 2.1.99 compatible" on chapters describing 2.1.111 features)
+- Hero metrics no longer cite unsourced performance claims
+- `settings.json mcpServers` myth debunked — MCP servers register via `claude mcp add` stored in `~/.claude.json`
+
 ## [4.4.0] - 2026-04-20
 
 ### Added
@@ -305,6 +372,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 | Version | Date       | Highlights                                                                  |
 | ------- | ---------- | --------------------------------------------------------------------------- |
+| 5.0.0   | 2026-04-21 | 6 topical Parts (~42 chapters), manifest-driven install (Core/Recommended/Full), CC 2.1.111+ |
+| 4.4.0   | 2026-04-20 | Ch.78 self-telemetry, SubagentStart/Stop payload schema, hook path harmonization |
+| 4.3.0   | 2026-04-12 | CC 2.1.93-2.1.99 features, Monitor tool, statusline patterns, 3 new rules   |
 | 4.2.0   | 2026-04-01 | Knowledge harvest adoption: validation protocol, progressive disclosure splits, 2 new skills |
 | 3.3.0   | 2026-02-24 | 1M context, Opus 4.6/Sonnet 4.6/Haiku 4.5, 18 hooks, task mgmt, agents      |
 | 3.2.0   | 2026-02-24 | File size/modularity enforcement hooks (PreToolUse + PostToolUse paired)    |
