@@ -2,7 +2,7 @@
 # PreToolUse hook (GLOBAL): Block ExitPlanMode if mandatory plan sections are missing
 # Fires BEFORE: ExitPlanMode
 # Location: ~/.claude/hooks/ (applies to ALL projects)
-# Reference: ~/.claude/rules/planning/plan-checklist.md (15 mandatory sections, v8)
+# Reference: ~/.claude/rules/planning/plan-checklist.md (15 mandatory sections, v9)
 
 # Read stdin safely (hook receives tool input as JSON)
 JSON_INPUT=$(timeout 2 cat 2>/dev/null || true)
@@ -84,7 +84,7 @@ if [ "$FIX_COUNT" -gt 0 ]; then
   fi
 fi
 
-# --- NEW v8: Section 0 blockquote content check ---
+# --- NEW v9: Section 0 blockquote content check ---
 SECTION0_WARNINGS=()
 if grep -qiE '^##.*original user prompt' "$PLAN_FILE" 2>/dev/null; then
   S0_BLOCK=$(awk 'tolower($0) ~ /^##.*original user prompt/{flag=1; next} flag && /^## /{flag=0} flag' "$PLAN_FILE" 2>/dev/null)
@@ -93,7 +93,17 @@ if grep -qiE '^##.*original user prompt' "$PLAN_FILE" 2>/dev/null; then
   fi
 fi
 
-ALL_WARNINGS=("${KPI_WARNINGS[@]}" "${FIX_WARNINGS[@]}" "${SECTION0_WARNINGS[@]}")
+# --- NEW v9: Section 12 Problem/Solution soft-warn ---
+# Per plan-checklist.md v9: Section 12 TL;DR must open with **Problem**: and **Solution**: one-liners
+SECTION12_WARNINGS=()
+if ! grep -qE '^\*\*Problem\*\*:' "$PLAN_FILE" 2>/dev/null; then
+  SECTION12_WARNINGS+=("Section 12 missing **Problem**: one-sentence line (v9) — anchors why the plan exists")
+fi
+if ! grep -qE '^\*\*Solution\*\*:' "$PLAN_FILE" 2>/dev/null; then
+  SECTION12_WARNINGS+=("Section 12 missing **Solution**: one-sentence line (v9) — anchors what the plan does")
+fi
+
+ALL_WARNINGS=("${KPI_WARNINGS[@]}" "${FIX_WARNINGS[@]}" "${SECTION0_WARNINGS[@]}" "${SECTION12_WARNINGS[@]}")
 
 if [ ${#MISSING[@]} -gt 0 ] || [ ${#ALL_WARNINGS[@]} -gt 0 ]; then
   echo ""
@@ -125,7 +135,7 @@ if [ ${#MISSING[@]} -gt 0 ] || [ ${#ALL_WARNINGS[@]} -gt 0 ]; then
   fi
 
   echo ""
-  echo "Reference: ~/.claude/rules/planning/plan-checklist.md (v8)"
+  echo "Reference: ~/.claude/rules/planning/plan-checklist.md (v9)"
   echo "To bypass: add <!-- skip-plan-sections --> to the plan file."
   echo "======================================================================="
 

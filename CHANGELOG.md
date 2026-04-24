@@ -4,6 +4,20 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.2] - 2026-04-22
+
+Patch release: Problem/Solution sub-section added at the top of Section 12 (TL;DR) across plan-mode docs, template rules, and the `ExitPlanMode` hook.
+
+### Changed
+
+- **Chapter 01 (Plan Mode)**: Section 12 now describes **five** mandatory sub-sections (was four). New 12a — "Problem / Solution" — is two one-sentence lines (`**Problem**: …` / `**Solution**: …`) that anchor why the plan exists. Remaining sub-sections reletter: 12b Overall Plan Confidence, 12c Problem (Before) / Solution (After) tables, 12d Scope, 12e KPI Dashboard.
+- **Template `.claude/rules/planning/plan-checklist.md`**: Section 12 opens with Problem/Solution one-liners; Quick Validation gets a new checkbox; bumped to v9.
+- **Template `.claude/hooks/plan-sections-gate.sh`**: soft-warns when `**Problem**:` or `**Solution**:` lines are missing from the plan file (non-blocking); version reference bumped to v9.
+
+### Rationale
+
+Every reviewer should see WHY a plan exists before reading confidence, KPIs, or per-fix tables. Section 0 preserves the raw user prompt; Section 12's new Problem/Solution distills it into one sentence each, in user-outcome terms. Writing Problem first catches scope creep: if either line spills to a second sentence, the plan is too broad or the intent isn't clear yet.
+
 ## [5.0.1] - 2026-04-21
 
 Patch release: Section 0 (verbatim user prompt) added as first mandatory section across plan-mode docs, template rules, and the `ExitPlanMode` hook.

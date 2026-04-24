@@ -1,7 +1,7 @@
 # Plan Mode Checklist - MANDATORY for Every Plan
 
 **Authority**: Universal plan quality enforcement
-**Updated**: 2026-04-21 (v8: Section 0 verbatim user prompt added as first mandatory section)
+**Updated**: 2026-04-22 (v9: Problem/Solution sub-section added at top of Section 12 TL;DR)
 **Scope**: ALL plans in ALL projects
 
 ---
@@ -67,7 +67,17 @@ Every fix MUST start with:
 
 ### Section 12: TL;DR + KPIs (WRITE LAST — ALWAYS the final content section)
 
-Must include Problem (Before) table + Solution (After) table + KPI Dashboard table.
+Must include, in this order: **Problem / Solution** (one sentence each), Overall Plan Confidence, Problem (Before) table + Solution (After) table, Scope, and KPI Dashboard table.
+
+**Problem / Solution** — the one-line anchor for why the plan exists. Opens Section 12:
+```markdown
+### Problem / Solution
+
+**Problem**: [one sentence — what's broken, missing, or painful that triggered this plan]
+**Solution**: [one sentence — what this plan does to resolve it]
+```
+
+Rules: one sentence each, Problem names the primary pain (not symptoms/tasks), Solution states the resolution (not HOW — that's in Sections 3-10), both should reconcile with Section 0.
 
 **KPI Dashboard** — ALWAYS a pipe-delimited table:
 ```
@@ -87,7 +97,7 @@ Re-measures the SAME KPIs from Section 12 after implementation. Include template
 - [ ] All 15 sections present with real content (0, 0.1, 1-11, 12, 13)
 - [ ] Section 0 present with verbatim user prompt as blockquote (no paraphrase)
 - [ ] TL;DR is Section 12 — ALWAYS the last content section, written LAST
-- [ ] Section 12 has Problem (Before) table + Solution (After) table + KPI Dashboard table
+- [ ] Section 12 opens with **Problem / Solution** one-sentence lines (v9), then has Problem (Before) table + Solution (After) table + KPI Dashboard table
 - [ ] KPI Dashboard is a pipe-delimited table (never prose)
 - [ ] Every fix has **BEFORE**: and **AFTER**: one-liners
 - [ ] Section 13 Post-Validation template present
