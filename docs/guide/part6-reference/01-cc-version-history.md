@@ -26,7 +26,7 @@ redirect_from:
 
 # CC Version History
 
-A curated reference of Claude Code releases. Each entry highlights features that still matter in the current 2.1.111 line. Superseded features are noted once with their replacement.
+A curated reference of Claude Code releases. Each entry highlights features that still matter in the current 2.1.118 line. Superseded features are noted once with their replacement.
 
 For the definitive changelog, run `/release-notes` inside CC or see `claude update` output.
 
@@ -34,7 +34,59 @@ For the definitive changelog, run `/release-notes` inside CC or see `claude upda
 
 ## Latest
 
-### 2.1.111 (current)
+### 2.1.118 (current)
+
+- **Hooks can invoke MCP tools directly** via `type: "mcp_tool"` with `${tool_input.*}` / `${cwd}` templating. Replaces subprocess plumbing for MCP-writing hooks. Non-blocking on server disconnect; 60s default timeout; avoid on `SessionStart` (MCP servers typically not yet connected).
+- `/cost` and `/stats` merged into `/usage`. Both remain as typing shortcuts that open the relevant tab.
+- **Custom named themes**: create from `/theme` or hand-edit `~/.claude/themes/*.json`. Plugins can ship themes via a `themes/` directory.
+- `DISABLE_UPDATES` env var blocks all update paths including manual `claude update` — stricter than `DISABLE_AUTOUPDATER`.
+- WSL on Windows can inherit Windows-side managed settings via the `wslInheritsWindowsSettings` policy key.
+- Auto mode `"$defaults"` placeholder — include in `autoMode.allow` / `soft_deny` / `environment` to extend the built-in list instead of replacing it.
+- `claude plugin tag` creates release git tags for plugins with version validation.
+- Vim visual mode (`v`) and visual-line mode (`V`) with selection, operators, and visual feedback.
+- `--continue` / `--resume` finds sessions that added the current directory via `/add-dir`.
+- Fixed `/fork` writing the full parent conversation to disk per fork (now writes a pointer and hydrates on read).
+- Fixed agent-type hooks failing with "Messages are required" for events other than `Stop` / `SubagentStop`.
+
+### 2.1.117
+
+- **Native builds on macOS and Linux: embedded `bfs` and `ugrep` replace Glob and Grep tools** (available through the Bash tool). Faster searches without a separate tool round-trip. Windows and npm-installed builds unchanged.
+- **Opus 4.7 `/context` 1M-window bug fixed** — CC was computing `/context %` against a 200K window, inflating usage and triggering early autocompact. If you measured context baselines during 2.1.111–2.1.116 on Opus 4.7, re-measure.
+- `cleanupPeriodDays` retention sweep extended to `~/.claude/tasks/`, `~/.claude/shell-snapshots/`, and `~/.claude/backups/` (previously only `todos/`).
+- `CLAUDE_CODE_FORK_SUBAGENT=1` enables forked subagents on external builds.
+- Agent frontmatter `mcpServers` loads for main-thread agent sessions via `--agent`.
+- `/resume` offers to summarize stale, large sessions before re-reading them.
+- Faster MCP startup when both local and claude.ai servers are configured (concurrent connect now default).
+- **Default effort for Pro/Max subscribers on Opus 4.6 and Sonnet 4.6 is now `high`** (was `medium`).
+- OpenTelemetry: `user_prompt` events include `command_name` and `command_source` for slash commands. `cost.usage`, `token.usage`, `api_request`, `api_error` include an `effort` attribute when the model supports effort levels. Custom/MCP command names redacted unless `OTEL_LOG_TOOL_DETAILS=1`.
+
+### 2.1.116
+
+- `/resume` up to **67% faster on 40MB+ sessions**; handles sessions with many dead-fork entries more efficiently.
+- Faster MCP startup when multiple stdio servers are configured; `resources/templates/list` deferred to first `@`-mention.
+- `/doctor` can be opened while Claude is responding (previously had to wait for turn).
+- `/reload-plugins` and background auto-update now auto-install missing plugin dependencies from already-added marketplaces.
+- Bash tool surfaces a hint when `gh` commands hit GitHub's API rate limit.
+- **Sandbox auto-allow dangerous-path safety** — no longer bypasses the dangerous-path check for `rm` / `rmdir` targeting `/`, `$HOME`, or other critical system directories.
+- Releases URL moved to `https://downloads.claude.ai/claude-code-releases`.
+
+### 2.1.113
+
+- **CLI now spawns a native Claude Code binary** (via a per-platform optional dependency) instead of bundled JavaScript.
+- `sandbox.network.deniedDomains` setting blocks specific domains even when a broader `allowedDomains` wildcard would permit them.
+- Ctrl+A and Ctrl+E move to the start/end of the current logical line (readline behavior for multiline input).
+- Windows: Ctrl+Backspace deletes the previous word.
+- Long URLs stay clickable when they wrap across lines (in terminals with OSC 8 hyperlinks).
+- `/loop`: pressing Esc cancels pending wakeups. Wakeups display as "Claude resuming /loop wakeup".
+- Subagents that stall mid-stream fail with a clear error after **10 minutes** instead of hanging silently.
+- **Bash security hardening**:
+  - Multi-line commands whose first line is a comment now show the full command in the transcript (closes a UI-spoofing vector).
+  - Deny rules now match commands wrapped in `env` / `sudo` / `watch` / `ionice` / `setsid` and similar exec wrappers.
+  - `Bash(find:*)` allow rules no longer auto-approve `find -exec` / `-delete`.
+  - `dangerouslyDisableSandbox` respects permissions (no silent bypass).
+  - macOS: `/private/{etc,var,tmp,home}` paths treated as dangerous removal targets under `Bash(rm:*)` allow rules.
+
+### 2.1.111
 
 - Opus 4.7 `xhigh` effort level, between `high` and `max`.
 - Interactive `/effort` slider for setting reasoning depth.
@@ -335,6 +387,7 @@ Features that shipped but have since been replaced or deprecated:
 | 2.1.86 | 250-char skill description cap | Raised to 1536 in 2.1.105 |
 | 2.1.88 | Ctrl+O = focus view | `/focus` command (2.1.110); Ctrl+O is verbose-only |
 | 2.1.76 | `/fork` | `/branch` |
+| 2.1.118 | `/cost`, `/stats` commands | `/usage` (both remain as typing shortcuts) |
 
 ---
 
