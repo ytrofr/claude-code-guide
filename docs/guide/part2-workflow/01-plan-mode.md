@@ -221,9 +221,25 @@ The reviewer instantly sees what's broken and what the fix achieves without read
 
 ## Section 12 — TL;DR with KPI Dashboard
 
-Section 12 is written **last** and always appears as the final content section, immediately before Section 13. It has four mandatory sub-sections:
+Section 12 is written **last** and always appears as the final content section, immediately before Section 13. It has five mandatory sub-sections:
 
-### 12a. Overall Plan Confidence
+### 12a. Problem / Solution
+
+The one-line anchor for why the plan exists. Opens Section 12 so every reader sees WHY before anything else.
+
+```markdown
+**Problem**: [one sentence — what's broken, missing, or painful that triggered this plan]
+**Solution**: [one sentence — what this plan does to resolve it]
+```
+
+Rules:
+
+- **One sentence each.** If either spills to a second sentence, you have scope creep or aren't clear on intent yet.
+- **Problem** names the primary pain — not a symptom, not a task, not a list. If multiple problems exist, name the main one and enumerate the rest in 12c.
+- **Solution** states the resolution in user-outcome terms — not HOW (that's Sections 3-10).
+- Should reconcile with Section 0 (the verbatim prompt). If they disagree, clarify intent before `ExitPlanMode`.
+
+### 12b. Overall Plan Confidence
 
 One line: **HIGH / MEDIUM / LOW**, one-line rationale, and the biggest risk.
 
@@ -233,7 +249,7 @@ Honest confidence rules:
 - `HIGH` is forbidden if any KPI in the dashboard is `UNKNOWN`
 - Anything below `HIGH` must cite a one-line rationale
 
-### 12b. Problem (Before) / Solution (After) tables
+### 12c. Problem (Before) / Solution (After) tables
 
 One row per fix. The transformation shown as two tables side-by-side:
 
@@ -253,11 +269,11 @@ One row per fix. The transformation shown as two tables side-by-side:
 | 2 | TTL-based cleanup cron             | Stale sessions auto-cleaned   |
 ```
 
-### 12c. Scope
+### 12d. Scope
 
 One sentence: approximate lines, files, new services, new dependencies. For example: *~45 lines across 3 files. 1 new service, no new deps.*
 
-### 12d. KPI Dashboard (pipe-delimited table, never prose)
+### 12e. KPI Dashboard (pipe-delimited table, never prose)
 
 ```markdown
 | Status | KPI                | Before    | After (Target) | Source      | Confidence | Green | Yellow | Red   |
