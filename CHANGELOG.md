@@ -4,6 +4,21 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.3] - 2026-04-24
+
+Patch release: CC version history catches up on releases 2.1.113 through 2.1.118.
+
+### Added
+
+- **Chapter 01 (CC Version History)**: Four new release entries — 2.1.118, 2.1.117, 2.1.116, 2.1.113 — covering hooks invoking MCP tools directly (`type: "mcp_tool"`), native binary spawn, `bfs`+`ugrep` replacing Glob/Grep, Opus 4.7 `/context` 1M-window fix, `cleanupPeriodDays` extended sweep, `sandbox.network.deniedDomains`, `/cost`+`/stats`→`/usage` merger, `DISABLE_UPDATES` env var, custom named themes, vim visual mode, Bash security hardening, and `/resume` performance gains.
+- **Superseded features table**: `/cost` and `/stats` commands (2.1.118) → merged into `/usage` (both remain as typing shortcuts).
+
+### Changed
+
+- **Chapter 01 intro**: "current 2.1.111 line" → "current 2.1.118 line".
+- **"(current)" label** moved from 2.1.111 to 2.1.118 in the Latest section.
+- **CITATION.cff**: `CC 2.1.111+ compatible` → `CC 2.1.118+ compatible`.
+
 ## [5.0.2] - 2026-04-22
 
 Patch release: Problem/Solution sub-section added at the top of Section 12 (TL;DR) across plan-mode docs, template rules, and the `ExitPlanMode` hook.
