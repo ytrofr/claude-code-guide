@@ -26,7 +26,7 @@ redirect_from:
 
 # CC Version History
 
-A curated reference of Claude Code releases. Each entry highlights features that still matter in the current 2.1.118 line. Superseded features are noted once with their replacement.
+A curated reference of Claude Code releases. Each entry highlights features that still matter in the current 2.1.121 line. Superseded features are noted once with their replacement.
 
 For the definitive changelog, run `/release-notes` inside CC or see `claude update` output.
 
@@ -34,7 +34,64 @@ For the definitive changelog, run `/release-notes` inside CC or see `claude upda
 
 ## Latest
 
-### 2.1.118 (current)
+### 2.1.121 (current)
+
+- **`alwaysLoad: true` MCP server config** — opt a server out of `ENABLE_TOOL_SEARCH` deferral so its tools are always loaded. Use sparingly; each always-loaded tool consumes context every turn. Per-tool opt-in also available via `_meta.anthropic/alwaysLoad: true` in the tool definition.
+- **`claude plugin prune`** (alias `autoremove`) removes auto-installed plugin dependencies that no longer have a parent. Flags: `--dry-run` (preview), `--scope user|project|local` (default `user`), `-y` (skip confirm — required when stdin is not a TTY). `claude plugin uninstall --prune` cascades the cleanup.
+- **PostToolUse `hookSpecificOutput.updatedToolOutput`** now works for **all** tools (previously MCP-only). Hooks can rewrite or redact Bash, Read, Write, etc. output before it reaches the model.
+- `/skills` gains a **type-to-filter search box** for long lists.
+- Fullscreen mode: typing into the prompt no longer jumps scroll back to the bottom after you scrolled up.
+- Dialogs that overflow the terminal are now scrollable with arrow keys, PgUp/PgDn, home/end, mouse wheel — both fullscreen and non-fullscreen.
+- Long URLs that wrap across rows in fullscreen are clickable on any wrapped line.
+- `CLAUDE_CODE_FORK_SUBAGENT=1` works in non-interactive `-p` and SDK sessions.
+- `--dangerously-skip-permissions` no longer prompts for writes to `.claude/skills/`, `.claude/agents/`, `.claude/commands/`.
+- MCP servers that hit a transient error during startup auto-retry up to **3 times** instead of staying disconnected.
+- Vertex AI: support **X.509 certificate-based Workload Identity Federation** (mTLS ADC).
+- LSP diagnostic summaries expand on click / Ctrl+O.
+- SDK `mcp_authenticate` accepts `redirectUri` for custom scheme completion and claude.ai connectors.
+- OpenTelemetry: LLM request spans add `stop_reason`, `gen_ai.response.finish_reasons`, and `user_system_prompt` (gated behind `OTEL_LOG_USER_PROMPTS`).
+- **Memory fixes**: unbounded RSS growth on image-heavy sessions, up to ~2 GB leak in `/usage` on machines with large transcript histories, leak when long-running tools fail to emit progress events.
+- Fixed Bash tool becoming permanently unusable when the directory CC was started in is deleted/moved mid-session.
+- Fixed `--resume` failing on large/corrupt session transcripts; corrupt lines are now skipped.
+- Fixed scrollback duplication on tmux, GNOME Terminal, Windows Terminal, Konsole when redrawing in non-fullscreen.
+
+### 2.1.120
+
+- **Windows: Git for Windows (Git Bash) no longer required** — when absent, CC uses PowerShell as the shell tool. Pairs with the PowerShell auto-approve rules added in 2.1.119.
+- **`claude ultrareview [target]`** non-interactive CLI subcommand. Runs cloud multi-agent review on the current branch, a PR number, or a base branch. Flags: `--json` (raw `bugs.json` payload), `--timeout <minutes>` (default 30). Exits 0 on completion, 1 on failure. Suitable for CI gating; **billed**, so wire to manual triggers, not pre-push.
+- **`${CLAUDE_EFFORT}`** substitution in skill content — skills can reference the active effort level (`low|medium|high|xhigh|max`) to weight their guidance.
+- **`AI_AGENT` env var** set on subprocesses spawned by the Bash tool, so `gh` and similar tools can attribute traffic to Claude Code.
+- Spinner tips that recommend installing the desktop app or creating skills/agents are hidden when you already have them.
+- "Use PgUp/PgDn to scroll" hint shown when the terminal sends arrow keys instead of scroll events.
+- Faster session start when many claude.ai connectors are configured but not authorized.
+- `claude plugin validate` accepts `$schema`, `version`, `description` at the top level of `marketplace.json` and `$schema` in `plugin.json`.
+- Fixed pressing Esc during a stdio MCP tool call closing the entire server connection (regression from 2.1.105).
+- Fixed `/rewind` and other interactive overlays not responding to keyboard input after `claude --resume`.
+- Fixed `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` not suppressing usage metrics for API/enterprise users.
+- Fixed false-positive "Dangerous rm operation" prompts in auto mode for multi-line bash commands containing both a pipe and a redirect.
+- Fixed `find` in the Bash tool exhausting open file descriptors on large trees, causing host-wide crashes (macOS/Linux native builds).
+
+### 2.1.119
+
+- **`/config` settings persist to `~/.claude/settings.json`** (theme, editor mode, verbose, etc.) and now participate in project/local/policy override precedence. Project `.claude/settings.json` still wins.
+- **`prUrlTemplate` setting** points the footer PR badge at a custom code-review URL instead of github.com. Supports `{host}`, `{owner}`, `{repo}`, `{number}`, `{url}` placeholders.
+- **`CLAUDE_CODE_HIDE_CWD`** env var hides the working directory in the startup logo (privacy/screencast). Does NOT affect statusline, OTEL spans, or hook stdin paths.
+- `--from-pr` now accepts **GitLab merge-request, Bitbucket pull-request, and GitHub Enterprise** PR URLs. Auth inherits per-provider CLI credentials.
+- `--print` mode honors the agent's `tools:` / `disallowedTools:` frontmatter, matching interactive-mode behavior.
+- `--agent <name>` honors the agent definition's `permissionMode` for built-in agents.
+- **PowerShell tool commands now auto-approvable in permission mode** (same rules as Bash). Patterns like `PowerShell(Get-ChildItem:*)` allow, `PowerShell(Remove-Item:*)` deny.
+- **Hooks**: `PostToolUse` and `PostToolUseFailure` receive **`duration_ms`** in their JSON input (tool execution time only — excludes permission prompts and PreToolUse hooks).
+- Subagent and SDK MCP server reconfiguration connect servers in **parallel** instead of serially.
+- Plugins pinned by another plugin's version constraint auto-update to the highest satisfying git tag.
+- Vim mode: Esc in INSERT no longer pulls a queued message back into the input; press Esc again to interrupt.
+- Slash command picker highlights matching characters and wraps long descriptions onto a second line.
+- `owner/repo#N` shorthand links now use your git remote's host (not always github.com).
+- Security: `blockedMarketplaces` correctly enforces `hostPattern` and `pathPattern` entries.
+- OpenTelemetry: `tool_result` and `tool_decision` events include `tool_use_id`; `tool_result` adds `tool_input_size_bytes`.
+- Statusline stdin JSON includes `effort.level` and `thinking.enabled`.
+- Many UX bug fixes: pasting CRLF inserting blank lines, kitty keyboard losing newlines on multi-line paste, Glob/Grep disappearing when Bash denied (native builds), MCP HTTP OAuth on non-JSON discovery responses, Rewind showing "(no prompt)" for image messages, async PostToolUse hook empty-payload writes.
+
+### 2.1.118
 
 - **Hooks can invoke MCP tools directly** via `type: "mcp_tool"` with `${tool_input.*}` / `${cwd}` templating. Replaces subprocess plumbing for MCP-writing hooks. Non-blocking on server disconnect; 60s default timeout; avoid on `SessionStart` (MCP servers typically not yet connected).
 - `/cost` and `/stats` merged into `/usage`. Both remain as typing shortcuts that open the relevant tab.
@@ -388,6 +445,7 @@ Features that shipped but have since been replaced or deprecated:
 | 2.1.88 | Ctrl+O = focus view | `/focus` command (2.1.110); Ctrl+O is verbose-only |
 | 2.1.76 | `/fork` | `/branch` |
 | 2.1.118 | `/cost`, `/stats` commands | `/usage` (both remain as typing shortcuts) |
+| Pre-2.1.120 | Git for Windows requirement on Windows | PowerShell fallback when Git Bash absent (2.1.120) |
 
 ---
 
