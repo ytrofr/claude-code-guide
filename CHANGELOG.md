@@ -4,6 +4,33 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.4] - 2026-04-28
+
+Patch release: CC version history catches up on releases 2.1.119, 2.1.120, and 2.1.121.
+
+### Added
+
+- **Chapter 01 (CC Version History)**: Three new release entries — 2.1.121, 2.1.120, 2.1.119 — covering:
+  - `alwaysLoad: true` MCP server config (per-server tool-search opt-out).
+  - `claude plugin prune` / `autoremove` subcommand with `--dry-run`, `--scope`, `-y` flags; `plugin uninstall --prune` cascade.
+  - PostToolUse `updatedToolOutput` extended from MCP-only to **all tools**.
+  - `claude ultrareview [target]` non-interactive CLI subcommand for CI/scripts (`--json`, exit 0/1).
+  - `${CLAUDE_EFFORT}` substitution in skill content; `AI_AGENT` env var on subprocesses.
+  - Windows PowerShell fallback when Git Bash absent (paired with 2.1.119 PowerShell auto-approve rules).
+  - `/config` settings persistence (theme/editor/verbose) into `~/.claude/settings.json` with normal scope precedence.
+  - `prUrlTemplate` setting and `CLAUDE_CODE_HIDE_CWD` env var.
+  - `--from-pr` URL support extended to GitLab MR / Bitbucket PR / GitHub Enterprise.
+  - PostToolUse / PostToolUseFailure hooks receive `duration_ms`.
+  - Memory leak fixes: image RSS, `/usage` 2GB on large transcripts, Bash unusable when start dir deleted, `--resume` on corrupt sessions.
+- **Superseded features table**: Git for Windows requirement (pre-2.1.120) → PowerShell fallback.
+
+### Changed
+
+- **Chapter 01 intro**: "current 2.1.118 line" → "current 2.1.121 line".
+- **"(current)" label** moved from 2.1.118 to 2.1.121 in the Latest section.
+- **CITATION.cff**: `CC 2.1.118+ compatible` → `CC 2.1.121+ compatible`; version 5.0.3 → 5.0.4.
+- **`_config.yml`**: `CC 2.1.111+ compatible` → `CC 2.1.121+ compatible` in site description; SEO keyword `claude code 2.1.111` → `claude code 2.1.121`.
+
 ## [5.0.3] - 2026-04-24
 
 Patch release: CC version history catches up on releases 2.1.113 through 2.1.118.
