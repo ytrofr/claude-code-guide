@@ -61,6 +61,68 @@ Inline hooks configured in `settings.json` follow the same pattern:
 
 ---
 
+## Output channels — stdout vs stderr
+
+PreToolUse hooks that block (`exit 2`) **must** write the user-visible reason to **stderr** (`>&2`). CC reads stderr and shows it to the model as the block reason. Stdout is reserved for hook JSON protocol output (e.g. `hookSpecificOutput`). A hook that exits 2 with its block message on stdout produces "No stderr output" in the model's view — the model sees that it was blocked but cannot see why, and cannot self-recover.
+
+```bash
+# WRONG — block message invisible to the model
+echo "BLOCKED: <reason>"
+exit 2
+
+# CORRECT — message reaches the model via stderr
+echo "BLOCKED: <reason>" >&2
+exit 2
+
+# Multi-line block — wrap in { ... } >&2 once
+{
+  echo "==="
+  echo "BLOCK REASON:"
+  echo "  - $missing_thing"
+  echo "==="
+} >&2
+exit 2
+```
+
+Internal pipe-stages (`echo "$X" | grep ...`) stay on stdout — those are inputs to other commands, not user-facing.
+
+### Exit code semantics
+
+| Exit | Meaning |
+|------|---------|
+| `0`  | Pass — tool proceeds; stderr is informational only |
+| `2`  | Block — stderr is shown to the model as the block reason; stdout is ignored |
+| Other | Treated as hook failure; behavior depends on event and CC version |
+
+### `tool_input` is authoritative — never `ls -t` disk state
+
+For PreToolUse hooks, the canonical source for "which tool call is happening" is `.tool_input.*` in the stdin envelope. Reading file state via `ls -t` / `find -newer` is racy under parallel sessions — two sessions writing to the same directory concurrently can swap which file your hook validates. Read directly from stdin:
+
+```bash
+# ExitPlanMode envelope carries both: .tool_input.plan (markdown) AND .tool_input.planFilePath (path)
+PLAN_PATH=$(echo "$INPUT" | jq -r '.tool_input.planFilePath // empty')
+if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
+    validate "$PLAN_PATH"
+else
+    # Defensive fallback only if stdin is unavailable / malformed
+    validate "$(ls -t "$DIR"/*.md | head -1)"
+fi
+```
+
+When trusting a path from stdin, validate it falls inside an expected scope (`case "$path" in "$EXPECTED"/*) ... ;; esac`) before reading.
+
+### Authoring checklist
+
+Before shipping a `PreToolUse` hook that can `exit 2`:
+
+- [ ] Block message uses `>&2`, not bare `echo`
+- [ ] `tool_input.*` consumed from stdin, not derived from disk state
+- [ ] Path inputs from stdin are scope-validated before use
+- [ ] Hook has a self-test mode (`--selftest`) or unit fixtures
+- [ ] Bypass / override mechanism documented for emergencies
+
+---
+
 ## Events by phase
 
 ### Startup
