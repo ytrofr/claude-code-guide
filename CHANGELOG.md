@@ -4,6 +4,28 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.5] - 2026-04-30
+
+Patch release: Hook authoring guidance — output channels, exit-code semantics, and `tool_input` authoritative pattern.
+
+### Added
+
+- **Chapter 03 (Hook Event Catalog)**: New "Output channels — stdout vs stderr" section covering:
+  - PreToolUse blocking hooks must write the user-visible reason to **stderr** (`>&2`) — stdout is the protocol channel and is invisible to the model on `exit 2`.
+  - Multi-line block patterns: `{ ... } >&2` wrapping idiom.
+  - Exit code semantics table (0 = pass, 2 = block, other = error).
+  - `tool_input` is authoritative over `ls -t` / `find -newer` disk state — race-safe under parallel sessions.
+  - Path scope-validation pattern (`case "$path" in "$EXPECTED"/*) ... ;; esac`).
+  - 5-item authoring checklist for any hook that can `exit 2`.
+
+### Changed
+
+- None (additive only).
+
+### Source
+
+Real-world breakage of `plan-sections-gate.sh`: an 8+ minute Write-loop in a parallel session where the hook exited 2 with the entire block message on stdout. The model saw "No stderr output" with no recovery hint and could not self-recover until the hook was invoked manually via `Bash` to read the actual error.
+
 ## [5.0.4] - 2026-04-28
 
 Patch release: CC version history catches up on releases 2.1.119, 2.1.120, and 2.1.121.
