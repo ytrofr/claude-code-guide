@@ -255,6 +255,114 @@ Each new line becomes one notification (~200 chars). Replace `alpha` and the thr
 
 ---
 
+## Same-project parallel sessions (live listen mode)
+
+Cross-project coordination (the original use-case) addresses one CC session per project. The same bus also handles **N parallel sessions in the SAME project** — useful when you have 2-5 sessions open in the same dir and want them to coordinate in real-time.
+
+### Per-session registration
+
+Add a SessionStart hook that registers each session in `~/shared/inter-agent/sessions/<session_id>.json` with auto sub-id (`s1`, `s2`, `s3`...):
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [{
+          "type": "command",
+          "command": "~/shared/inter-agent/bin/session-register.sh"
+        }]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "~/shared/inter-agent/bin/session-end.sh",
+          "async": true
+        }]
+      }
+    ]
+  }
+}
+```
+
+`resolve-identity.sh` is upgraded to look up the registry by `$PPID` — when CC's Bash tool runs `talk.sh`, talk.sh's PPID is the calling CC session's PID, which is the registry key. Each session auto-knows its own full id (`limor:s2`, `limor:s3`, etc.) without env-var setup.
+
+### Three new subcommands
+
+| Command | Effect |
+|---------|--------|
+| `talk.sh peers [--all]` | List live registered sessions. Output line 1 is `me: <full_id>`; rest are peers (sub-id, started, cwd, alive/dead). `--all` includes sessions from other projects. |
+| `talk.sh sync [topic]` | Idempotent find-or-create of a coord thread for all live peers in the same project. Deterministic id: `coord-<agent>-<sorted-subs>-<date>`. Late-joiners use subset-match: if existing thread's participants ⊆ my live set, the joiner adds itself rather than creating a new thread. Mode is `auto` so messages skip staging. |
+| `talk.sh listen <tid>` | Tails `log.jsonl` filtered by thread, emits one stdout line per peer message (self-sends filtered). Designed for the Monitor tool — each line = one notification surfaced to the model between user turns. No-arg form runs `sync` first then listens. |
+
+### Verbal interface
+
+Add phrases like *"listen to parallel sessions"*, *"coordinate with the other session(s)"*, *"we are working on the same branch and dir"* to the skill's `description` field. Triggered, the canonical 5-step flow is:
+
+1. `talk.sh peers` — discover self + peer full_ids
+2. `TID=$(talk.sh sync "topic")` — get the shared thread id
+3. `talk.sh send $TID "<id> online"` — announce
+4. Launch `Monitor(command: "talk.sh listen $TID", ...)` — peer messages arrive as notifications
+5. On each notification, decide → optionally `talk.sh send $TID "<reply>"`
+
+A statusline `bus:` field shows full identity + active peers + `●` for unread (see Part V ch.5):
+
+```
+limor-main | Opus 4.7 | ctx 41% | cb:green | ov:1 | bus:limor:s2●→s1,s3
+```
+
+### N-way + late-join
+
+Subset-match in `sync` means when a 3rd session runs `sync`, it joins the existing 2-session thread rather than splintering into a new one. All N sessions converge on one thread regardless of join order. Each opens its own Monitor — peer broadcasts reach everyone except the sender.
+
+### Conversation isolation (3+ sessions, parallel workstreams)
+
+The default behaviour above treats every same-project session as a peer. That works for 2 sessions or for N sessions doing the *same* coordinated thing. It breaks down when you have 3+ sessions in the same project doing **different** work — `peers` aggregates everyone, and `sync`'s subset-match silently merges unrelated threads. Statuslines light `●` for messages you didn't subscribe to.
+
+The fix is a per-session **conversation id**. Each session's registry file carries a `conversation_id` field (default `""` = open). All filters (`_live_peers`, `cmd_peers`, `cmd_sync` subset-match, statusline thread filter) require equality on this field. Empty matches empty, so pre-existing sessions and threads keep working unchanged.
+
+Three new subcommands:
+
+| Command | Effect |
+|---------|--------|
+| `talk.sh join <convo>` | Tag this session with `<convo>` (sanitized to `[a-z0-9-]{1,32}`). Statusline becomes `bus:limor:s2@convo`. Only same-project + same-convo sessions become peers. |
+| `talk.sh leave` | Clear the tag, return to default open mode. |
+| `talk.sh convo` | Print this session's current convo (or `(open)`). |
+
+`talk.sh peers --all` bypasses the convo filter for an admin view.
+
+**Workflow** when you have 3 sessions in the same project, 2 working on Plan X and 1 doing unrelated work:
+
+```bash
+# Sessions A and B (Plan X coordinators):
+~/shared/inter-agent/bin/talk.sh join planx
+# → joined: limor:s1@planx
+
+# A or B kicks off the thread:
+TID=$(~/shared/inter-agent/bin/talk.sh sync "auth refactor")
+# → coord-limor-planx-s1-s2-20260501
+
+# Session C (unrelated) — does nothing, stays open by default.
+# C's `peers` shows no one. A's `peers` shows only B. C will NEVER auto-join the planx thread.
+```
+
+**Back-compat**: sessions registered before this feature have no `conversation_id` field — `jq -r '.conversation_id // ""'` returns empty → treated as open → identical to legacy behavior. Threads created before the change have no `convo` field — open sessions still match them; convo'd sessions never auto-join them. No migration needed.
+
+When *not* to bother: 2-session coordination, or N sessions all doing the same thing. Convo only matters when you want strict workstream isolation across 3+ same-project sessions.
+
+### Polling vs live — when to use which
+
+| Pattern | Polling (`show`) | Live (`listen` + Monitor) |
+|---------|------------------|---------------------------|
+| Latency | Until next user turn | Real-time (between turns) |
+| Cost | None — `show` runs only when statusline `●` appears | One Monitor process per listening session |
+| Best for | Async coordination, hand-offs | Tightly-coupled live work, watching a peer's progress |
+
+---
+
 ## Commands
 
 | Slash (or alias) | Shell | Effect |
@@ -268,6 +376,14 @@ Each new line becomes one notification (~200 chars). Replace `alpha` and the thr
 | `/talk-resolve <id>` | `talk.sh resolve <id>` | Flip status; archive after 24h |
 | `/talk-history <query>` | `talk.sh history <query>` | Grep log.jsonl + rotated logs |
 | `/talk doctor` | `talk.sh doctor` | Validate JSON, permissions, identity |
+| (no slash) | `talk.sh peers [--all]` | List live registered sessions (same-project + same-convo; `--all` bypasses both filters) |
+| (no slash) | `talk.sh sync [topic]` | Find-or-create coord thread for all live peers in same project + same convo |
+| (no slash) | `talk.sh listen <tid>` | Live tail of bus filtered by thread (Monitor-friendly, self-filtered) |
+| (no slash) | `talk.sh register [sub]` | Manually register this session (for sessions started before SessionStart hook existed) |
+| (no slash) | `talk.sh join <convo>` | Tag this session with a conversation id — only same-convo sessions become peers |
+| (no slash) | `talk.sh leave` | Clear this session's convo (return to default open mode) |
+| (no slash) | `talk.sh convo` | Print this session's current convo (or `(open)`) |
+| `/talk-claim <name>` | `session-claim.sh <name>` | Rename auto-assigned sub-id (e.g. `s1` → `frontend`) |
 
 ---
 
