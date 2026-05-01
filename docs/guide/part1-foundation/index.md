@@ -17,3 +17,4 @@ Installation, CLAUDE.md, project structure, first-session orientation, setup tro
 - Project structure conventions
 - First-session walkthrough
 - Setup troubleshooting
+- Output styles
