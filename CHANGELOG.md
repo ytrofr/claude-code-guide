@@ -4,6 +4,29 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.0.6] - 2026-05-01
+
+Patch release: Inter-agent bus statusline indicator (Example 5) + conversation isolation for 3+ same-project parallel sessions.
+
+### Added
+
+- **Chapter 05 (Statusline Patterns)**: New "Example 5: Bus identity + active-peer indicator" section — full `bus_indicator` shell function (registry lookup → full_id, threads.json query, peer aggregation with cap+overflow, unread `●` glyph from last-seen files), source-and-call snippet, output-state examples table.
+- **Chapter 02 (Inter-Agent Bus)**: New "Conversation isolation (3+ sessions, parallel workstreams)" section:
+  - Per-session `conversation_id` field in registry; default empty = open (back-compat).
+  - `talk.sh join <convo>` / `leave` / `convo` subcommands.
+  - `_live_peers`, `cmd_peers`, `cmd_sync` subset-match, and statusline thread filter all gated by convo equality (empty matches empty).
+  - Statusline displays `bus:limor:s2@convo` when joined; threads filtered by matching convo.
+  - `peers --all` bypasses convo filter for admin view.
+  - Updated commands table with the three new subcommands.
+
+### Changed
+
+- None (additive — pre-existing sessions and threads continue to work unchanged).
+
+### Source
+
+Bus features live in `~/shared/inter-agent/bin/{talk,session-register}.sh`, `~/.claude/scripts/statusline-bus.sh`, `~/.claude/skills/inter-agent/SKILL.md`. Convo work has a 55-assertion test suite at `~/shared/inter-agent/bin/test-bus-convo.sh`; 112/112 tests pass across all 4 inter-agent suites.
+
 ## [5.0.5] - 2026-04-30
 
 Patch release: Hook authoring guidance — output channels, exit-code semantics, and `tool_input` authoritative pattern.

@@ -169,6 +169,90 @@ The key trick: **never compute expensive metrics in the statusline**. Run scanne
 
 ---
 
+## Example 5: Bus identity + active-peer indicator
+
+When you run multiple parallel CC sessions in the same project (see Part V ch.2 — Inter-agent bus, "Same-project parallel sessions"), the statusline can show your own session id + which peers you have active threads with + an unread (`●`) glyph:
+
+```bash
+#!/bin/bash
+# Reads stdin's session_id, looks up registry → full_id, queries threads.json.
+# The full helper lives at ~/.claude/scripts/statusline-bus.sh and exposes a
+# `bus_indicator` function the main statusline sources:
+
+bus_indicator() {
+  local ROOT="${INTER_AGENT_ROOT:-$HOME/shared/inter-agent}"
+  local SID="$1" SESS_DIR="$ROOT/sessions" THREADS="$ROOT/threads.json"
+  local LASTSEEN="$ROOT/.last-seen"
+
+  # 1. Resolve own full_id from registry (or fallback to bare agent)
+  local FULL_ID=""
+  [ -n "$SID" ] && [ -f "$SESS_DIR/$SID.json" ] \
+    && FULL_ID="$(jq -r '.full_id // empty' "$SESS_DIR/$SID.json" 2>/dev/null)"
+  [ -z "$FULL_ID" ] && FULL_ID="$(~/shared/inter-agent/bin/resolve-identity.sh 2>/dev/null)"
+  [ -z "$FULL_ID" ] && { printf '?'; return; }
+
+  # 2. Find active threads I'm in, format peer list (cap 2 + overflow)
+  [ -f "$THREADS" ] || { printf '%s' "$FULL_ID"; return; }
+  local rows
+  rows="$(jq -r --arg me "$FULL_ID" '
+    .threads // {} | to_entries
+    | map(select(.value.status == "active" and (.value.participants | index($me))))
+    | sort_by(.value.last_activity) | reverse | .[:3]
+    | .[] | [.key, (.value.participants | map(select(. != $me)) | join(",")),
+             (.value.last_activity // "")] | @tsv
+  ' "$THREADS" 2>/dev/null)"
+  [ -z "$rows" ] && { printf '%s' "$FULL_ID"; return; }
+
+  # 3. Aggregate peers + unread check (last_activity > last-seen file timestamp)
+  local peers="" unread=0 my_agent="${FULL_ID%%:*}"
+  while IFS=$'\t' read -r tid plist last; do
+    while IFS= read -r p; do
+      [ -n "$p" ] || continue
+      [[ "$p" == "${my_agent}:"* ]] && p="${p#"${my_agent}:"}"
+      peers="${peers:+${peers},}$p"
+    done <<<"$(printf '%s\n' "$plist" | tr ',' '\n')"
+    if [ "$unread" = "0" ]; then
+      local seen_file="$LASTSEEN/$FULL_ID-$tid.ts"
+      local last_e seen_iso seen_e
+      last_e="$(date -u -d "$last" +%s 2>/dev/null || echo 0)"
+      [ -f "$seen_file" ] && seen_iso="$(awk '{print $2}' "$seen_file" | head -1)"
+      seen_e="$(date -u -d "${seen_iso:-1970-01-01}" +%s 2>/dev/null || echo 0)"
+      [ "$last_e" -gt "$seen_e" ] && unread=1
+    fi
+  done <<<"$rows"
+
+  local uniq; uniq="$(printf '%s\n' "$peers" | tr ',' '\n' | awk 'NF && !seen[$0]++')"
+  local n; n="$(printf '%s\n' "$uniq" | grep -c .)"
+  local shown; shown="$(printf '%s\n' "$uniq" | head -2 | paste -sd ',' -)"
+  [ "$n" -gt 2 ] && shown="${shown}+$((n - 2))"
+  printf '%s%s→%s' "$FULL_ID" "$([ "$unread" = 1 ] && echo "●")" "$shown"
+}
+```
+
+Source it from your main statusline and invoke at the end of the field row:
+
+```bash
+sid=$(echo "$INPUT" | jq -r '.session_id // empty')
+bus=$(bus_indicator "$sid" 2>/dev/null || echo "?")
+printf '%s | %s | ctx %s | cb:%s | ov:%s | bus:%s\n' "$wt" "$model" "$ctx" "$cb" "$ov" "$bus"
+```
+
+Output examples:
+| State | Field |
+|-------|-------|
+| Idle (registered, no active threads) | `bus:limor:s2` |
+| 1 thread with peer s1 | `bus:limor:s2→s1` |
+| Same, with unread | `bus:limor:s2●→s1` |
+| 3-way thread | `bus:limor:s2●→s1,s3` |
+| Cross-agent peer | `bus:limor:s2●→smith,s1` |
+| 4+ peers | `bus:limor:s2●→smith,s1+2` |
+| Joined a convo (workstream isolation) | `bus:limor:s2@planx→s1` |
+| Bus unreachable | `bus:?` |
+
+The `●` glyph indicates an unread peer message; reading via `talk.sh show <tid>` or `talk.sh listen <tid>` updates the per-session last-seen file and clears it.
+
+---
+
 ## Performance guidelines
 
 - **Target**: < 300ms per refresh. The script runs every `refreshInterval` seconds.
