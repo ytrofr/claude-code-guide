@@ -41,6 +41,11 @@ build/
 *.min.js
 *.min.css
 
+# Jekyll local build artifacts (GH Pages builds remotely; local Gemfile.lock is per-machine)
+Gemfile.lock
+_site/
+.jekyll-cache/
+
 # IDE
 .vscode/
 .idea/
