@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns in 6 topical Parts (~42 chapters). Three install tiers. **CC 2.1.111+ compatible.**
+Production-tested Claude Code patterns in 6 topical Parts (~43 chapters). Three install tiers. **CC 2.1.121+ compatible.**
 
 **Models**: Opus 4.7 | Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **27 hook events** -- **Agent teams & task management**
 

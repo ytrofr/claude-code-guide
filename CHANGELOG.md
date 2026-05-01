@@ -4,6 +4,20 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.1.0] - 2026-05-01
+
+Minor release: New Part I chapter on output styles with BLUF as the worked example.
+
+### Added
+
+- **Chapter 06 (Output Styles)** in Part I — Foundation: covers what output styles are, how they differ from CLAUDE.md and `--append-system-prompt`, file format and frontmatter (`keep-coding-instructions`), where styles live (user vs project), how to activate via `/config` (note: no `/output-style` slash in 2.1.121), and a paste-and-go BLUF (Bottom Line Up Front) custom style with plain-language framework citations (BLUF, inverted pyramid, Microsoft Writing Style Guide). Includes 5 anti-patterns and a pre-ship checklist.
+- **Part I index**: now lists 6 chapters (added "Output styles").
+
+### Changed
+
+- **Chapter count**: 42 → 43 across `README.md`, `CITATION.cff`, `llms.txt`.
+- **CC compatibility**: README hero updated `2.1.111+` → `2.1.121+`.
+
 ## [5.0.6] - 2026-05-01
 
 Patch release: Inter-agent bus statusline indicator (Example 5) + conversation isolation for 3+ same-project parallel sessions.
