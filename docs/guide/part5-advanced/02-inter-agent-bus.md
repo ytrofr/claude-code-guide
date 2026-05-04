@@ -296,7 +296,8 @@ Add a SessionStart hook that registers each session in `~/shared/inter-agent/ses
 |---------|--------|
 | `talk.sh peers [--all]` | List live registered sessions. Output line 1 is `me: <full_id>`; rest are peers (sub-id, started, cwd, alive/dead). `--all` includes sessions from other projects. |
 | `talk.sh sync [topic]` | Idempotent find-or-create of a coord thread for all live peers in the same project. Deterministic id: `coord-<agent>-<sorted-subs>-<date>`. Late-joiners use subset-match: if existing thread's participants ⊆ my live set, the joiner adds itself rather than creating a new thread. Mode is `auto` so messages skip staging. |
-| `talk.sh listen <tid>` | Tails `log.jsonl` filtered by thread, emits one stdout line per peer message (self-sends filtered). Designed for the Monitor tool — each line = one notification surfaced to the model between user turns. No-arg form runs `sync` first then listens. |
+| `talk.sh listen-incoming` | **Canonical Monitor command.** Tails `log.jsonl` filtered by `(.to == me OR .to == base) AND .from != me AND .kind == "msg"` — multi-thread safe, self-filtered. One stdout line per incoming peer message regardless of which thread it arrived on. |
+| `talk.sh listen <tid>` | Single-thread tail. Useful for inspecting one thread interactively, but **not safe as Monitor** if the session participates in multiple threads — only the named tid wakes you, others remain blind (an N-1 blind spot for N participating threads). Self-sends filtered. |
 
 ### Verbal interface
 
@@ -305,7 +306,7 @@ Add phrases like *"listen to parallel sessions"*, *"coordinate with the other se
 1. `talk.sh peers` — discover self + peer full_ids
 2. `TID=$(talk.sh sync "topic")` — get the shared thread id
 3. `talk.sh send $TID "<id> online"` — announce
-4. Launch `Monitor(command: "talk.sh listen $TID", ...)` — peer messages arrive as notifications
+4. Launch `Monitor(command: "talk.sh listen-incoming", persistent: true, ...)` — incoming messages arrive as notifications, all threads, self-filtered
 5. On each notification, decide → optionally `talk.sh send $TID "<reply>"`
 
 A statusline `bus:` field shows full identity + active peers + `●` for unread (see Part V ch.5):
@@ -378,7 +379,8 @@ When *not* to bother: 2-session coordination, or N sessions all doing the same t
 | `/talk doctor` | `talk.sh doctor` | Validate JSON, permissions, identity |
 | (no slash) | `talk.sh peers [--all]` | List live registered sessions (same-project + same-convo; `--all` bypasses both filters) |
 | (no slash) | `talk.sh sync [topic]` | Find-or-create coord thread for all live peers in same project + same convo |
-| (no slash) | `talk.sh listen <tid>` | Live tail of bus filtered by thread (Monitor-friendly, self-filtered) |
+| (no slash) | `talk.sh listen-incoming` | Live tail of ALL threads addressed to me (Monitor-canonical, self-filtered, multi-thread safe) |
+| (no slash) | `talk.sh listen <tid>` | Live tail of one thread (interactive use; not safe as Monitor when participating in multiple threads — N-1 blind spot) |
 | (no slash) | `talk.sh register [sub]` | Manually register this session (for sessions started before SessionStart hook existed) |
 | (no slash) | `talk.sh join <convo>` | Tag this session with a conversation id — only same-convo sessions become peers |
 | (no slash) | `talk.sh leave` | Clear this session's convo (return to default open mode) |
@@ -512,6 +514,46 @@ Fork it, adapt the identity map to your project set, adjust the archive TTL, add
 
 ---
 
+## Branch-lock pre-collision detection (additive, 2026-05-02)
+
+**Problem**: parallel CC sessions on the same branch can write to overlapping module paths and clobber each other. Existing post-collision recovery (yield-to-promotion entry renumbering, surgical-commit-under-contention) is reactive — after the user has already done duplicate work.
+
+**Pattern (from claw-code's `branch_lock.rs`)**: each session declares write-lanes (branch + module globs) on the bus session JSON. A scanner walks peer session files, filters by same-branch, expands globs, and reports overlap on a probe path BEFORE the second writer commits.
+
+**Schema additive**: existing session JSON gains a `lanes: []` field. Missing field is a no-op — fully legacy-compatible.
+
+```json
+{ "lanes": [{ "lane_id": "auth-refactor", "branch": "feat/oauth",
+              "modules": ["src/auth/**", "tests/auth/**"],
+              "declared": "2026-05-02T..." }] }
+```
+
+**CLI** (additive talk.sh subcommands):
+
+```bash
+talk.sh declare-lane auth-refactor --branch feat/oauth --modules "src/auth/**,tests/auth/**"
+talk.sh check-collisions --paths src/auth/oauth.py
+talk.sh release-lane auth-refactor
+```
+
+**3-stage rollout** via `CLAUDE_BRANCH_LOCK_MODE`:
+
+| Stage | Mode | Behavior |
+|---|---|---|
+| 1 | `off` (default) | Hook short-circuits — no scanner load |
+| 2 | `telemetry` | Run scanner; log decisions; never block |
+| 3 | `enforce` | Run scanner; block on collision (exit 2). Promote ONLY after telemetry shows zero false-positive blocks across ≥10 same-branch peer events. |
+
+A PreToolUse hook on `Edit|Write|MultiEdit` is what enforces the gate. Glob semantics: parent contains child as a mutual block (`src/auth/**` vs `src/auth/oauth.py` collides both ways). Sibling files don't collide. Cross-branch never collides.
+
+**Adoption note**: the original audit of claw-code surfaced six candidate patterns; only this one survived a baseline-audit gate against historical evidence (four collision events in forty-eight hours of parallel-session work, versus zero or one events for the other five candidates). Treat external-repo pattern audits as hypotheses-until-measured.
+
+**Tests** ship RED-first per the TDD skill:
+
+- `lane-collision-scanner.sh --selftest` — 6 fixtures (no-overlap, exact-match, broader⊃narrower, sibling, different-branch, no-lanes-field)
+- `branch-lock-precheck.sh --selftest` — 5 fixtures (off-shortcircuits, telemetry-logs-no-block, enforce-blocks, enforce-clears, non-edit-skipped)
+- `test-branch-lock.sh` — 10 end-to-end (declare → scanner detects → enforce blocks → telemetry logs → off short-circuits → release clears)
+
 ## See also
 
 - [Monitor tool](04-monitor-tool.html) — streaming log.jsonl for live notifications
@@ -521,4 +563,4 @@ Fork it, adapt the identity map to your project set, adjust the archive TTL, add
 
 ---
 
-*Last updated: 2026-04-20. Compatible with Claude Code 2.1.111+.*
+*Last updated: 2026-05-02 (branch-lock additive). Compatible with Claude Code 2.1.111+.*
