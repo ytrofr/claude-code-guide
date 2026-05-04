@@ -90,17 +90,20 @@ Monitor(task_id: "xyz789")
 
 ### Inter-agent bus streaming
 
-When coordinating with another Claude session across projects (see [Inter-agent bus](02-inter-agent-bus.html)), attach Monitor to the shared event log filtered to this project:
+When coordinating with another Claude session across projects (see [Inter-agent bus](02-inter-agent-bus.html)), use the canonical wrapper. It tails the shared event log filtered by `(.to == me OR .to == base) AND .from != me AND .kind == "msg"` — multi-thread safe, self-filtered:
 
 ```
 Monitor(
-  command: 'tail -n 0 -F ~/shared/inter-agent/log.jsonl | jq --unbuffered -c --arg me "alpha" "select(.to==\$me and .kind==\"msg\")"',
-  description: "inter-agent messages to alpha",
-  timeout_ms: 900000
+  command: "$HOME/shared/inter-agent/bin/talk.sh listen-incoming",
+  description: "inter-agent bus incoming (all threads, self-filtered)",
+  persistent: true,
+  timeout_ms: 3600000
 )
 ```
 
-Each new message from the other side fires as a notification. Replace `alpha` with your agent code per invocation.
+Each new incoming message fires as a notification regardless of which thread it lands on. Self-sends are filtered out so you never wake on your own outbound. The session's identity is auto-resolved via `talk.sh`.
+
+**Don't roll your own filter** without `.from != $me` — the recipient `to == me` clause alone matches messages where you also appear in `from` (broadcast to base, self-tag, threading-system writes), causing the session to wake on its own work. Don't tail a single thread file (`coord-X-Y.md`) — that watches one thread, missing messages on other threads where you're a participant.
 
 ---
 
@@ -111,6 +114,7 @@ Each new message from the other side fires as a notification. Replace `alpha` wi
 - **Nested Monitor without exit**: if the background process is noisy (hundreds of lines/second), Monitor will flood the conversation. Filter at the source: `command | grep -E 'ERROR|WARN|COMPLETE'`.
 - **Using ScheduleWakeup to poll a live build**: wastes prompt cache windows — you'll re-read logs from scratch each wake-up.
 - **Monitor on a process writing to a file, not stdout**: Monitor only streams stdout lines. Pipe the file via `tail -F`.
+- **Trusting an indicator that the listener is alive**: Monitor's underlying bash subprocess can die silently — SIGPIPE, exit 144 from a pipeline teardown, wrapper killed mid-run. State files (e.g. an "armed" flag) and statusline indicators (e.g. an unread bullet) often reflect *that the Monitor was once armed*, not that the process is currently running. When debugging "the watcher isn't firing", verify the underlying subprocess directly: `ps -ef \| grep -E "<your filter pattern>" \| grep -v grep`. No match → re-arm. Bake liveness checks into the wake-on-event design, don't trust auxiliary indicators.
 
 ---
 
@@ -131,7 +135,7 @@ Similar pairings:
 | Pipeline | Monitor target |
 |----------|----------------|
 | Self-telemetry (this chapter) | Nothing — telemetry hooks are fire-and-forget, no polling needed |
-| Inter-agent bus | `tail -F log.jsonl \| jq filter` |
+| Inter-agent bus | `talk.sh listen-incoming` (canonical wrapper; raw `tail -F log.jsonl \| jq` only with `.from != $me`) |
 | CI/CD watch | `tail -F <pipeline-log>` or attach to deploy task |
 | Remote log tail | `ssh host 'tail -F /var/log/app.log'` |
 
