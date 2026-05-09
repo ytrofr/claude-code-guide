@@ -253,6 +253,87 @@ The `●` glyph indicates an unread peer message; reading via `talk.sh show <tid
 
 ---
 
+## Example 6: Two-line statusline + OSC-8 clickable link
+
+When you have a per-session resource (an active quest, a current ticket, a deploy URL) worth eyeballing, surface it as a **clickable hyperlink** on a second line. Modern terminals (Windows Terminal, iTerm2, kitty, recent VS Code terminal, Ghostty) honor [OSC-8 hyperlink escapes](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda); bare xterm shows the raw escapes (provide a `*_NO_OSC8=1` env var for graceful fallback).
+
+```bash
+# Helper at ~/.claude/scripts/statusline-resource.sh
+resource_indicator() {
+  local cwd="${1:-${PWD:-}}"
+  # ... your logic to compute (url, short_tag) for this session ...
+  local url="http://localhost:8770/path/to/resource"
+  local tag="my-resource-id"
+
+  if [ -n "$STATUSLINE_NO_OSC8" ]; then
+    printf '%s' "$tag"
+  else
+    # OSC-8: ESC]8;;URL ST  TAG  ESC]8;; ST   (ST = ESC \)
+    printf '\033]8;;%s\033\\%s  →  %s\033]8;;\033\\' "$url" "$tag" "$url"
+  fi
+}
+```
+
+The `→ <url>` suffix is plain text inside the OSC-8 wrapper — it makes the URL visible (and copy-pasteable) even on terminals that ignore the hyperlink escape, while keeping the whole row clickable on terminals that honor it.
+
+```bash
+# Main statusline.sh — print TWO lines
+source "$(dirname "${BASH_SOURCE[0]}")/statusline-resource.sh"
+resource=$(resource_indicator "$cwd")
+printf '%s | %s | ctx %s\nresource: %s\n' "$wt" "$model" "$ctx" "$resource"
+```
+
+Output (terminal renders second-line tag as a clickable link):
+
+```
+my-project | Opus 4.7 | ctx 14%
+resource: my-resource-id  →  http://localhost:8770/path/to/resource
+```
+
+CC 2.1.131 verified to render multi-line statusline output (newlines preserved). Each line gets full terminal width — useful for long URLs that would otherwise truncate at the right edge.
+
+### Pattern: hybrid session→resource binding
+
+For per-session resource binding, use a hybrid resolver:
+
+1. **Explicit claim** — a CLI command writes `~/.cache/<app>/session-<key>.bind` with the chosen resource id. Statusline reads it first.
+2. **Auto-detect** — fall back to deriving from `cwd` (e.g. via a path map) plus a "most-recently-touched" signal in your data.
+3. **Landing page** — when nothing matches, link to a known-good page so the link is never dead.
+
+The session key needs to be stable per CC instance and accessible from both Bash (statusline) and any CLI you write. A robust approach without depending on the inter-agent bus:
+
+```bash
+# Walk up parent processes to find the `claude` ancestor; combine its pid +
+# raw /proc/<pid>/stat field-22 starttime ticks. Deterministic per CC instance.
+session_key() {
+  local pid=$$ depth=0
+  while [ "$depth" -lt 40 ] && [ -n "$pid" ] && [ "$pid" -gt 1 ] 2>/dev/null; do
+    local comm=""
+    [ -r "/proc/$pid/comm" ] && comm=$(cat "/proc/$pid/comm" 2>/dev/null)
+    if [ "$comm" = "claude" ]; then
+      local ticks
+      ticks=$(sed 's/([^)]*)/X/' "/proc/$pid/stat" 2>/dev/null | awk '{print $22}')
+      [ -n "$ticks" ] && echo "${pid}-${ticks}"
+      return 0
+    fi
+    local ppid
+    ppid=$(sed 's/([^)]*)/X/' "/proc/$pid/stat" 2>/dev/null | awk '{print $4}')
+    [ -z "$ppid" ] || [ "$ppid" = "0" ] && return 1
+    pid="$ppid"
+    depth=$((depth + 1))
+  done
+  return 1
+}
+```
+
+Pair with a `SessionEnd` hook that removes the claim file so stale binds don't accumulate.
+
+### When to use OSC-8 vs FinalTerm escapes
+
+OSC-8 (`\e]8;;URL\e\\TEXT\e]8;;\e\\`) wraps a span of text as a hyperlink — best for "click this to open X". Don't confuse with FinalTerm escapes (`\e]133;A`) used by Ghostty / iTerm2 to mark prompt boundaries for "scroll to last command" — different problem, different escapes. Both can coexist.
+
+---
+
 ## Performance guidelines
 
 - **Target**: < 300ms per refresh. The script runs every `refreshInterval` seconds.
