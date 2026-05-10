@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "repo": "https://github.com/ytrofr/claude-code-guide",
   "raw_base": "https://raw.githubusercontent.com/ytrofr/claude-code-guide/master",
   "tiers": {
@@ -16,12 +16,23 @@
         "quality/standards.md",
         "technical/patterns.md"
       ],
-      "skills": ["verify", "session-start", "troubleshooting-decision-tree"],
-      "hooks": [
-        {"event": "SessionStart", "script": "memory-context-loader.sh"}
+      "skills": [
+        "verify",
+        "session-start",
+        "troubleshooting-decision-tree"
       ],
-      "docs": ["BEST-PRACTICES.md"],
-      "templates": ["CLAUDE.md.template"]
+      "hooks": [
+        {
+          "event": "SessionStart",
+          "script": "memory-context-loader.sh"
+        }
+      ],
+      "docs": [
+        "BEST-PRACTICES.md"
+      ],
+      "templates": [
+        "CLAUDE.md.template"
+      ]
     },
     "recommended": {
       "extends": "core",
@@ -51,20 +62,49 @@
         "documentation/versioning.md"
       ],
       "skills": [
-        "tdd", "plan-checklist", "session-end", "memory-defrag",
-        "memory-notes", "memory-search-patterns", "retrospective", "canary",
-        "mcp-usage-patterns", "doctor-workflow", "perplexity-workflow",
-        "playwright-mcp", "document"
+        "tdd",
+        "plan-checklist",
+        "session-end",
+        "memory-defrag",
+        "memory-notes",
+        "memory-search-patterns",
+        "retrospective",
+        "canary",
+        "mcp-usage-patterns",
+        "doctor-workflow",
+        "perplexity-workflow",
+        "playwright-mcp",
+        "document"
       ],
       "hooks": [
-        {"event": "PreToolUse", "script": "rule-size-gate.sh"},
-        {"event": "PreToolUse", "script": "plan-sections-gate.sh"},
-        {"event": "PostToolUse", "script": "skill-activation-logger.sh"},
-        {"event": "PreCompact", "script": "pre-compact.sh"},
-        {"event": "PreCompact", "script": "memory-pre-compact.sh"},
-        {"event": "PreToolUse", "script": "safety-gate.sh"}
+        {
+          "event": "PreToolUse",
+          "script": "rule-size-gate.sh"
+        },
+        {
+          "event": "PreToolUse",
+          "script": "plan-sections-gate.sh"
+        },
+        {
+          "event": "PostToolUse",
+          "script": "skill-activation-logger.sh"
+        },
+        {
+          "event": "PreCompact",
+          "script": "pre-compact.sh"
+        },
+        {
+          "event": "PreCompact",
+          "script": "memory-pre-compact.sh"
+        },
+        {
+          "event": "PreToolUse",
+          "script": "safety-gate.sh"
+        }
       ],
-      "mcp_config_templates": ["basic-memory.json"]
+      "mcp_config_templates": [
+        "basic-memory.json"
+      ]
     },
     "full": {
       "extends": "recommended",
@@ -106,25 +146,56 @@
         "mcp/agent-routing.md"
       ],
       "skills": [
-        "context-audit", "context-optimization", "context-governance",
-        "context-governance-rollback", "audit-stack", "skill-metrics",
-        "weekly-review", "gitignore-anchor-audit",
-        "multi-agent-patterns", "gemini-patterns", "llm-resilience-patterns",
-        "multi-model-llm-routing", "mcp-tool-evaluation",
-        "prompt-optimization-methodology", "llm-finish-reason-probe",
-        "a-b-c-variant-experiment", "anthropic-eval-best-practices",
-        "observability-first-pattern", "cron-lock-patterns",
-        "service-liveness-monitoring", "entity-resolution-pattern",
-        "god-file-extraction-methodology", "parallel-rate-limited-fetcher",
-        "signed-url-auth", "ast-contract-tests", "write-side-cascade",
-        "ai-dna", "inter-agent"
+        "context-audit",
+        "context-optimization",
+        "context-governance",
+        "context-governance-rollback",
+        "audit-stack",
+        "skill-metrics",
+        "weekly-review",
+        "gitignore-anchor-audit",
+        "multi-agent-patterns",
+        "gemini-patterns",
+        "llm-resilience-patterns",
+        "multi-model-llm-routing",
+        "mcp-tool-evaluation",
+        "prompt-optimization-methodology",
+        "llm-finish-reason-probe",
+        "a-b-c-variant-experiment",
+        "anthropic-eval-best-practices",
+        "observability-first-pattern",
+        "cron-lock-patterns",
+        "service-liveness-monitoring",
+        "entity-resolution-pattern",
+        "god-file-extraction-methodology",
+        "parallel-rate-limited-fetcher",
+        "signed-url-auth",
+        "ast-contract-tests",
+        "write-side-cascade",
+        "ai-dna",
+        "inter-agent"
       ],
       "hooks": [
-        {"event": "SessionStart", "script": "regression-session-hook.sh"},
-        {"event": "UserPromptSubmit", "script": "prompt-length-logger.sh"},
-        {"event": "SessionEnd", "script": "auto-session-summary.sh"},
-        {"event": "SubagentStart", "script": "subagent-logger.sh"},
-        {"event": "PostToolUse", "script": "tool-call-logger.sh"}
+        {
+          "event": "SessionStart",
+          "script": "regression-session-hook.sh"
+        },
+        {
+          "event": "UserPromptSubmit",
+          "script": "prompt-length-logger.sh"
+        },
+        {
+          "event": "SessionEnd",
+          "script": "auto-session-summary.sh"
+        },
+        {
+          "event": "SubagentStart",
+          "script": "subagent-logger.sh"
+        },
+        {
+          "event": "PostToolUse",
+          "script": "tool-call-logger.sh"
+        }
       ],
       "scripts": [
         "missing-refs-scanner.py",

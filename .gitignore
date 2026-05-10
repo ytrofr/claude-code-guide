@@ -60,3 +60,8 @@ coverage/
 NOTES.md
 TODO.personal.md
 .env
+
+# AI Intelligence Hub (local-only — runtime data, not source)
+# Source lives under tools/trendradar-dashboard/ but db, node_modules, .env
+# stay local. Tracking the whole dir bloats the docs repo.
+tools/trendradar-dashboard/

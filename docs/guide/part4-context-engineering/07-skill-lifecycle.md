@@ -207,6 +207,39 @@ when_to_use: "Use when deploying to GCP, running post-deploy smoke tests, or rot
 
 The `/context-audit` skill's Check 10 flags skills without trigger text. Run it as part of the monthly cadence.
 
+### When trigger text is NOT required
+
+Some skills are inherently slash-only — project-specific session helpers, dangerous-operation gates, exploratory experiments. For these, declare `disable-model-invocation: true` in the frontmatter. The skill stays user-invocable via `/skill-name` but is exempt from the auto-trigger gate.
+
+```yaml
+---
+description: "Initialize session following project conventions"
+allowed-tools: Bash, Read
+disable-model-invocation: true
+---
+```
+
+This is the honest answer when:
+
+- The skill body uses paths that exist only in some projects (`memory-bank/...`, project-specific config files)
+- The action has side effects you want gated behind explicit user invocation (deploy, force-push, mass-delete)
+- Auto-loading would silently fail or do the wrong thing in foreign contexts
+
+Without this flag, an audit will correctly flag the skill as "missing trigger". With it, the audit can skip the skill — it's not auto-invokable, so the trigger requirement doesn't apply.
+
+```bash
+# Audit only auto-invokable skills (skip slash-only ones)
+for f in ~/.claude/skills/*/SKILL.md; do
+  DMI=$(yq-md '.disable-model-invocation' "$f" 2>/dev/null)
+  [ "$DMI" = "true" ] && continue          # exempt
+  D=$(yq-md '.description' "$f" 2>/dev/null)
+  echo "$D" | grep -qiE 'use when|use for|when [^a-z]' \
+    || echo "MISSING TRIGGER: $(basename "$(dirname "$f")")"
+done
+```
+
+(`yq-md` is introduced in the **Programmatic audit** subsection below.)
+
 ### Description length
 
 - **Target**: 80-150 chars
@@ -280,6 +313,58 @@ The script generates a markdown report at `~/.claude/reports/skill-health-YYYY-M
 ### `/weekly-review` dashboard
 
 For tighter cadence, the `/weekly-review` skill includes a skill-invocation summary in its output — which skills fired this week, which haven't fired in a month, budget utilization trend.
+
+### Programmatic audit with `yq-md`
+
+For ad-hoc audits beyond the monthly cron, a small wrapper turns `yq` into a markdown-frontmatter parser. Save as `~/.claude/scripts/yq-md`:
+
+```bash
+#!/bin/bash
+# yq-md — run yq against the YAML frontmatter of a markdown file
+[ $# -lt 2 ] && { echo "usage: yq-md '<yq-path>' <file.md>" >&2; exit 1; }
+[ ! -f "$2" ] && { echo "no such file: $2" >&2; exit 1; }
+FM=$(tr -d '\r' < "$2" | awk '/^---$/{c++; if(c==2)exit; next} c==1')
+[ -z "$FM" ] && { echo "null"; exit 0; }
+printf '%s' "$FM" | yq "$1"
+```
+
+Make it executable (`chmod +x`) and symlink to `~/.local/bin/yq-md`. The `tr -d '\r'` makes it CRLF-tolerant — Windows-edited skills (which break naive `awk '/^---$/'` patterns) parse cleanly.
+
+Then audit any frontmatter property in one line:
+
+```bash
+# Skills missing description
+for f in ~/.claude/skills/*/SKILL.md; do
+  D=$(yq-md '.description' "$f")
+  [ "$D" = "null" ] && echo "MISSING: $(basename "$(dirname "$f")")"
+done
+
+# Skills with description over the 1536-char gate (the actual limit, not generic 250)
+for f in ~/.claude/skills/*/SKILL.md; do
+  D=$(yq-md '.description' "$f")
+  [ "$D" = "null" ] && continue
+  [ ${#D} -gt 1536 ] && echo "OVER: $(basename "$(dirname "$f")") (${#D} chars)"
+done
+
+# Skills exempt from trigger requirement (slash-only)
+for f in ~/.claude/skills/*/SKILL.md; do
+  yq-md '.disable-model-invocation' "$f" | grep -q true \
+    && echo "$(basename "$(dirname "$f")")"
+done
+
+# Skills with broken YAML frontmatter
+for f in ~/.claude/skills/*/SKILL.md; do
+  yq-md '.' "$f" >/dev/null 2>&1 || echo "BROKEN: $f"
+done
+```
+
+**Threshold sourcing**: when picking limits for an audit, source them from your own rule files (`~/.claude/rules/ai/knowledge-lifecycle.md` for skill gates) — not generic Anthropic guidance. Different sources cite different limits (250 vs 1536 for description). Auditing against the wrong threshold produces noise that wastes review attention.
+
+**Audit methodology pitfalls** to avoid:
+
+- **Substring grep ≠ field presence.** `grep -l 'duration_ms' *.json` matches files where the literal string appears anywhere — including inside string values. Use structural queries (`yq-md '.duration_ms' file | grep .`) for "does this field exist" semantics.
+- **Regex assumes token order.** A find-command audit using `grep 'name.*mtime'` fails when the actual code has `-mtime` first. Prefer running the actual code with `--dry-run` over regex-checking it.
+- **Verify release-note claims empirically.** Documented features sometimes ship narrower than the prose suggests (e.g., CC 2.1.119 `duration_ms` in PostToolUse hooks is present only on a narrow set of tools — MCP + EnterPlanMode + RemoteTrigger — never on Bash/Edit/Read/Agent/Glob/Grep). Probe actual stdin payloads before refactoring around documented behavior.
 
 ---
 
