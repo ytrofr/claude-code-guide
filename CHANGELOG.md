@@ -4,6 +4,19 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.2.0] - 2026-05-10
+
+Minor release: New Part V chapter on multi-tenant browser capture for cross-project UI debugging.
+
+### Added
+
+- **Chapter 08 (Browser Capture — Multi-Tenant Behavioral DNA)** in Part V — Advanced: covers a zero-dependency localhost:9876 Node.js server that collects per-project ring buffers from any project on the machine. Three event shapes coexist via a translation layer (locked / legacy OGAS / legacy plural batch). Origin-header inference lets legacy clients land in the right ring with zero edits. Hostname-gate fail-closed makes production sites unreachable by design. Includes integration patterns for static HTML / Vite / Jekyll / Python backends, an `__capture` v3 client surface, and a user-invocable `/capture` slash skill. Two production-safety gates (network + hostname) plus two gotchas (`sendBeacon` Content-Type cross-origin drop, why Origin inference matters for cross-team migrations).
+- **Part V index**: now lists 8 chapters (added "Browser Capture — Multi-Tenant Behavioral DNA").
+
+### Changed
+
+- **Chapter count**: 43 → 44 across `README.md`, `CITATION.cff`, `llms.txt`.
+
 ## [5.1.0] - 2026-05-01
 
 Minor release: New Part I chapter on output styles with BLUF as the worked example.

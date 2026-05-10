@@ -12,6 +12,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     {%- include jsonld-schema.html -%}
+
+    {%- if jekyll.environment != "production" -%}
+    <script src="http://localhost:9876/inject.js?project=claude-code-guide" defer onerror="this.remove()"></script>
+    {%- endif -%}
   </head>
   <body>
     <div class="wrapper">

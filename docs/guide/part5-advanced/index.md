@@ -19,3 +19,4 @@ AI DNA shared layer, inter-agent bus, self-telemetry, Monitor tool patterns, sta
 - Statusline patterns
 - Cross-project knowledge sharing
 - Session-end & defrag workflow
+- **Browser Capture — Multi-Tenant Behavioral DNA** (new)
