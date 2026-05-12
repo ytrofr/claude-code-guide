@@ -239,6 +239,26 @@ Opt-in autonomous: set `mode: auto` in the thread's frontmatter. Future `talk.sh
 
 ---
 
+## Signature footguns — defense in depth
+
+`talk.sh send` accepts `<tid> <body> [--confirm]`. The recipient auto-resolves from the thread's `participants` field, so there is no `--to` argument. Models trained on standard CLI shapes (`tool --to X --body Y`) routinely invent a 4-arg form `send <tid> <peer> <body> --confirm`. The peer-id silently becomes the body; the real body is parsed as the `force` flag; staged drafts deliver a header-only message. Audit of historical transcripts found 90+ occurrences across multiple sessions despite docs stating the correct shape five times.
+
+The fix that holds: two independent runtime layers, each sufficient.
+
+**PreToolUse hook** inspects every Bash call containing `talk.sh send` and rejects before the script runs when:
+
+- body slot is empty
+- body slot matches `^[a-z]+:s[0-9]+$` (just a peer-id)
+- third positional arg is anything outside `{"", "--confirm"}`
+
+**Script-level guard** inside `cmd_send` repeats the same checks. Catches `sh -c`, `eval`, cron, and any wrapper the hook can't tokenize. A peer-id smell test in `cmd_send_staged` also catches hand-edited staging files where the body is just a peer-id string.
+
+Either layer catches the bug standalone; together they form a floor with no escape paths. The runtime error message is itself the documentation — models see it on the first wrong call and self-correct in one turn. Adding more prose to the docs evidently did not move the needle.
+
+This pattern generalizes to any CLI signature footgun where (a) the correct shape diverges from common convention, (b) the wrong shape doesn't error obviously (silent body drop, partial success), and (c) the calling agent is trained on the common convention. The closed value set on a parameter (`force ∈ {"", "--confirm"}`) is the structural sweet spot: anything else is unambiguously wrong, zero false positives.
+
+---
+
 ## Live streaming with the Monitor tool
 
 When actively collaborating, attach Monitor (CC 2.1.98+) to stream the other side's messages as notifications:
