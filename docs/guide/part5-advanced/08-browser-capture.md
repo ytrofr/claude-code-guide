@@ -34,7 +34,7 @@ User's Browser (any project)           localhost:9876               Claude / cur
         │ python httpx                          │
         ▼                                       │
 ┌───────────────────────────┐                   │
-│ AgentSmith forensics_emit │ ──────────────────┘
+│ python-svc forensics_emit │ ──────────────────┘
 │ (server-side, env-gated)  │
 └───────────────────────────┘
 ```
@@ -62,7 +62,7 @@ POST /event
   "user_agent": "Mozilla/..."             // optional
 }
 
-// Shape 2: Legacy OGAS — server maps {kind, entry} → {stage, data}
+// Shape 2: Legacy single-entry — server maps {kind, entry} → {stage, data}
 POST /event { "kind": "breadcrumb", "entry": { ... } }
 
 // Shape 3: Legacy plural batch — for the existing pointer-event capturer
@@ -77,16 +77,16 @@ When `project` is omitted (typical for legacy forensics modules that predate the
 
 | Origin prefix | Project |
 |---|---|
-| `http://localhost:8000`, `http://127.0.0.1:8000` | `ogas-websites` |
-| `http://localhost:5173`, `http://127.0.0.1:5173` | `ogas-websites` |
+| `http://localhost:8000`, `http://127.0.0.1:8000` | `web-app` |
+| `http://localhost:5173`, `http://127.0.0.1:5173` | `web-app` |
 | `http://localhost:4444`, `http://127.0.0.1:4444` | `ai-intelligence-hub` |
 | `http://localhost:4000`, `http://127.0.0.1:4000` | `claude-code-guide` |
 | `http://localhost:3000`, `http://localhost:3001` | `claude-remotion-editor` |
-| `http://localhost:8001` | `agentsmith` |
+| `http://localhost:8001` | `python-svc` |
 
 Explicit `project` always wins. Unmapped Origin falls back to `_default`. The map lives at the top of `server.js` — add an entry when onboarding a new dev port.
 
-Why this matters: it lets the legacy OGAS `ForensicsModule` (which POSTs `{kind, entry}` with no `project` field) land in the `ogas-websites` ring with **zero edits** to OGAS code. The translation + inference combo means cross-team rollouts don't block on cross-team commits.
+Why this matters: it lets a legacy `ForensicsModule` (which POSTs `{kind, entry}` with no `project` field) land in the `web-app` ring with **zero edits** to that project's code. The translation + inference combo means cross-team rollouts don't block on cross-team commits.
 
 ## 5. Integrating a new project — three patterns
 
@@ -215,7 +215,7 @@ const ok =
     localStorage.getItem('capture') === '1';
 ```
 
-Verified via Playwright fresh-context probe against the production OGAS site — both `sigmafier.com` plain and `sigmafier.com?capture=1` make zero requests to `localhost:9876`. The first because the production HTML doesn't include the script tag; the second because even if it did, the hostname check fails before the IIFE runs.
+Verified via Playwright fresh-context probe against a production site — both `example.com` plain and `example.com?capture=1` make zero requests to `localhost:9876`. The first because the production HTML doesn't include the script tag; the second because even if it did, the hostname check fails before the IIFE runs.
 
 ## 9. Two gotchas worth knowing
 

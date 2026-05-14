@@ -1,7 +1,7 @@
 # Zero-Downtime PostgreSQL Upgrade in Docker (PG15 to PG17 with pgvector)
 
 **Created**: February 2026
-**Source**: Production upgrade on LimorAI Docker stack
+**Source**: Production upgrade on a real Docker-based PostgreSQL stack
 **Evidence**: ~5 seconds total downtime, zero data loss
 **Method**: Parallel-run backup/restore with volume swap
 
@@ -592,6 +592,6 @@ docker exec -i pg17-test psql -U postgres -d limor_prod -c "
 
 ---
 
-**Validated**: February 2026 -- PG15 to PG17 upgrade on LimorAI Docker stack
+**Validated**: February 2026 -- PG15 to PG17 upgrade on a production Docker stack
 **Result**: Zero data loss, ~5 seconds downtime, pgvector 0.7.4 upgraded to 0.8.0 automatically
 **Rollback tested**: Old volume preserved, one-command revert confirmed working
