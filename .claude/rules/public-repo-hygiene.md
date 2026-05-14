@@ -8,7 +8,7 @@
 ## Checklist (before every push)
 
 1. **No secrets**: `git diff --cached | grep -iE 'api.key|secret|password|token'` — must be empty
-2. **No internal paths**: `git diff --cached | grep -E '$HOME|/Users/'` — must be empty
+2. **No internal paths**: `git diff --cached | grep -E '/home/[^/]+|/Users/'` — must be empty
 3. **Version refs current**: If claiming "CC 2.1.X compatible", verify X matches latest documented
 4. **CITATION.cff synced**: Chapter count, hook count, rule count match actual `docs/guide/` contents
 5. **LICENSE present**: MIT, no modifications
