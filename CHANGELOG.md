@@ -4,6 +4,20 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.2.1] - 2026-05-15
+
+Patch release: claim registry + coord-trace observability extension to the inter-agent bus chapter (no new chapter, no counter changes).
+
+### Added
+
+- **Chapter 02 (Inter-Agent Bus) — Claim registry + Observability layer section**: documents the declarative "who is doing what right now" surface (`talk.sh claim set/get/clear/touch/status`, `talk.sh inspect [<peer>] [--json]`, `peers` LANE column, citation soft-warn gate via `--cite`/`--cite-bypass`), the `coord-trace.jsonl` event schema (11 event types: claim mutations, inspect runs, cite events, wake.predicted, participants.auto_appended, monitor lifecycle), the `bus-stats.sh coord` query CLI subcommands, anomaly cron + daily forensics reports, and kill-switch table per layer.
+- Failure mode framing: wrong-attribution chains from git-history inference propagate through coord threads. Structured `.claim` + peer `inspect` + soft-warn break the gossip chain at each hop without hard-blocking sends.
+- `wake.predicted` sender-side estimate semantics: monitor heartbeat age + armed flag captured per send, queryable via `bus-stats.sh coord wake-misses` without requiring recipient-side ack.
+
+### Changed
+
+- Chapter 02 last-updated marker: 2026-05-02 → 2026-05-15.
+
 ## [5.2.0] - 2026-05-10
 
 Minor release: New Part V chapter on multi-tenant browser capture for cross-project UI debugging.

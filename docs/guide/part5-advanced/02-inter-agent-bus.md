@@ -574,6 +574,146 @@ A PreToolUse hook on `Edit|Write|MultiEdit` is what enforces the gate. Glob sema
 - `branch-lock-precheck.sh --selftest` — 5 fixtures (off-shortcircuits, telemetry-logs-no-block, enforce-blocks, enforce-clears, non-edit-skipped)
 - `test-branch-lock.sh` — 10 end-to-end (declare → scanner detects → enforce blocks → telemetry logs → off short-circuits → release clears)
 
+## Claim registry — declarative "who is doing what right now"
+
+**Failure mode this closes**: peers infer ownership from git history → propagate wrong framing through coord threads. By the third hop the framing is detached from reality. Manual operator correction at the end.
+
+**Fix**: each session writes a structured `.claim` to its own registry entry. Peers query it directly instead of inferring.
+
+```bash
+# Declare what you're working on (idempotent replace; preserves files_writing[])
+talk.sh claim set --lane "tier-1 refactor of cache module" \
+                  --quest "myproject/cache-refactor" \
+                  --branch feat/cache-rewrite \
+                  [--source operator] [--reset-files]
+
+talk.sh claim get                  # read own claim (sectioned text)
+talk.sh claim clear                # null it out
+talk.sh claim status               # one-line summary for scripts
+talk.sh claim touch <file>         # append to files_writing[] (LRU 20, deduped)
+talk.sh claim touch --clear-files  # empty files_writing[], lane preserved
+```
+
+`talk.sh peers` gains a **LANE** column showing each peer's `lane` (36-char truncated, `(open)` when null). A passive live situation board without explicit queries.
+
+### `inspect <peer>` — read a peer's claim
+
+```bash
+talk.sh inspect peer-sub                  # full_id or short sub (resolves against your base)
+talk.sh inspect peer-sub --json           # raw .claim JSON ("null" when unclaimed)
+```
+
+Sectioned output (chat-table-context compliant — no markdown pipe-tables):
+
+```
+=== myproject:peer-sub ===
+  lane:       tier-1 refactor of cache module
+  quest:      myproject/cache-refactor
+  branch:     feat/cache-rewrite
+  files:      src/cache/store.ts
+              src/cache/api.ts
+  source:     operator
+  as_of:      2026-05-15T17:30:00Z
+  monitor_hb: 23s ago
+```
+
+### Citation soft-warn — break the gossip chain
+
+When a coord message contains ownership keywords (`owns`, `owner`, `claim`, `currently`, `tier-N`, etc.) **without a source citation**, `talk.sh send` writes a stderr warning before the message is sent. The send proceeds — this is observability, not enforcement.
+
+```bash
+# Triggers a soft warn (uncited ownership claim)
+talk.sh send <tid> "you own the cache module" --confirm
+# → stderr: [bus-cite-warn] message contains ownership claim w/o --cite. Run "talk.sh inspect <peer>" first to verify.
+
+# Cite explicitly to silence
+talk.sh send <tid> "per your claim, you have the cache module" --confirm --cite claim
+talk.sh send <tid> "operator-directed: you have the cache module" --confirm --cite operator
+talk.sh send <tid> "any text" --confirm --cite-bypass     # explicit "I know, send anyway"
+```
+
+Disable globally with `BUS_CITE_CHECK_DISABLED=1`. Skipped automatically on `[ACK]` / `[SYSTEM]` / `[heartbeat]` prefixed bodies.
+
+### `claim touch` auto-fill via PreToolUse hook
+
+A PreToolUse hook on `Edit|Write|MultiEdit` (`bus-claim-touch.sh`) calls `talk.sh claim touch <file_path>` for every edited file. The command is a no-op when no claim is set, so the hook only contributes when you've explicitly declared a lane. Lifts the "what files am I touching right now" view from manual to automatic.
+
+## Observability — coord-trace.jsonl + anomaly cron
+
+Every claim mutation, peer inspect, citation event, send wake-prediction, participant auto-append, and Monitor lifecycle event emits a structured record to `<INTER_AGENT_ROOT>/log/v2/coord-trace.jsonl`. Schema:
+
+```json
+{
+  "ts": "2026-05-15T17:30:00.123Z",
+  "ts_ms": 1778853000123,
+  "event": "claim.set",
+  "claude_pid": 12345,
+  "fields": {
+    "session": "myproject:sub",
+    "lane": "tier-1 refactor of cache module",
+    "quest": "myproject/cache-refactor",
+    "branch": "feat/cache-rewrite",
+    "source": "operator"
+  }
+}
+```
+
+**Event types** (Phase 1):
+
+| Event | Emitted by | Carries |
+|---|---|---|
+| `claim.set` / `claim.clear` / `claim.touch` | claim CRUD | lane, quest, branch, source / op, file |
+| `inspect.run` | `talk.sh inspect` | target_session, found bool |
+| `cite.warn.fired` | uncited ownership send | body_snip (≤80 chars), recipient |
+| `cite.bypass.used` | `--cite` or `--cite-bypass` | cite source, recipient |
+| `wake.predicted` | every send | recipient, monitor_age_s, monitor_armed |
+| `participants.auto_appended` | sender not yet in thread participants | thread, added |
+| `monitor.arm` / `monitor.disarm` | `listen-incoming` lifecycle | sid, pid, parent_pid / exit reason |
+| `monitor.duplicate_detected` | second listen-incoming for same session | sid |
+
+`wake.predicted` is the sender-side estimate ("recipient's Monitor heartbeat was N seconds old at send time"). Combined with the recipient-side flag-file (`bus-monitor-armed-<sid>`), it gives a forensic answer to "did this message wake them?" without requiring an ack from the recipient.
+
+### Query CLI
+
+```bash
+bus-stats.sh coord today                    # event counters last 24h
+bus-stats.sh coord chains [--since 24h]     # ownership chains: cite.warn.fired + bypass follow-ups
+bus-stats.sh coord wake-misses [--since]    # sends to peers with stale Monitor (age >180s)
+bus-stats.sh coord claim-drift              # sessions whose .claim.as_of lags heartbeat by >2h
+bus-stats.sh coord uncited [--since 24h]    # cite.warn.fired entries (operator ignored)
+bus-stats.sh coord session <full_id> [--since DUR]   # full timeline for one session
+```
+
+### Anomaly cron + daily forensics
+
+Two scripts ship as cron-ready:
+
+- `anomaly-detect.sh` — hourly scan over the last 24h trace for five confusion patterns (uncited ownership chains, wake misses, stale claims, duplicate monitors, participant drift). Writes a per-day punch-list at `~/.claude/reports/bus-anomalies-<date>.md` with recommended action per row.
+- `daily-forensics.sh` — nightly summary at `~/.claude/reports/bus-day-<date>.md`: sessions active, message counts, cite-follow-up rate, inspect run count, wake-miss rate, monitor lifecycle totals.
+
+Register in crontab when you want them auto-firing:
+
+```cron
+0 * * * * /path/to/inter-agent/bin/anomaly-detect.sh >/dev/null 2>&1
+55 23 * * * /path/to/inter-agent/bin/daily-forensics.sh >/dev/null 2>&1
+```
+
+Operator-side exclude file `~/.claude/state/bus-anomaly-exclude-patterns` accepts one regex per line; matching events are skipped in anomaly output. Useful for muting expected ownership-keyword usage in coord messages (e.g. "the runner owns the worktree" said legitimately).
+
+### Kill switches
+
+| Env / flag-file | Disables |
+|---|---|
+| `BUS_CLAIM_DISABLED=1` + `~/.claude/state/bus-claim-disabled` | claim writes (reads still work) |
+| `BUS_CITE_CHECK_DISABLED=1` | citation soft-warn |
+| `BUS_COORD_TRACE_DISABLED=1` + flag-file | coord-trace.jsonl emit |
+| `BUS_ANOMALY_CRON_DISABLED=1` + flag-file | anomaly cron |
+| `BUS_DAILY_FORENSICS_DISABLED=1` + flag-file | daily forensics |
+| `BUS_LOG_OPERATOR_PROMPTS=0` (default OFF) | UserPromptSubmit operator-prompt capture (opt-in) |
+| `BUS_CLAIM_STATUSLINE=0` (default OFF for week 1) | statusline `claim:<slug>` segment |
+
+All layers are additive. `.claim == null` is the legacy default and all readers tolerate absence (`(open)` / `(no claim)` rendering).
+
 ## See also
 
 - [Monitor tool](04-monitor-tool.html) — streaming log.jsonl for live notifications
@@ -583,4 +723,4 @@ A PreToolUse hook on `Edit|Write|MultiEdit` is what enforces the gate. Glob sema
 
 ---
 
-*Last updated: 2026-05-02 (branch-lock additive). Compatible with Claude Code 2.1.111+.*
+*Last updated: 2026-05-15 (claim registry + coord-trace observability additive). Compatible with Claude Code 2.1.111+.*

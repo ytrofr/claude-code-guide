@@ -7,8 +7,8 @@ authors:
 url: "https://github.com/ytrofr/claude-code-guide"
 repository-code: "https://github.com/ytrofr/claude-code-guide"
 license: MIT
-version: "5.2.0"
-date-released: "2026-05-10"
+version: "5.2.1"
+date-released: "2026-05-15"
 keywords:
   - claude-code
   - ai-coding-assistant
