@@ -687,18 +687,31 @@ my-skill/
 
 BLUF answers "should I keep reading?"; TL;DR answers "what now?" Together they give a scannable entry + exit anchor — essential when juggling many parallel CC sessions.
 
-### Canonical Format (Variant B — traffic-light dots)
+### Canonical Format (Variant B1 — expanded vertical)
 
 ```
+---
+
 ✨ TL;DR
-🔴 Problem  <one sentence, plain English>
-🟢 Fix      <one sentence — what happened, or what to do next>
-📊 Score    Conf 🟢 HIGH · Effort 🟢 LOW · Time ⏱ 5m · Impact 🟡 MED
+
+🔴 Problem
+<one sentence, plain English>
+
+🟢 Fix
+<one sentence — what happened, or what to do next>
+
+📊 Score
+   🟢 Conf:   HIGH  — <one-line rationale or evidence>
+   🟢 Effort: LOW   — <one-line context if useful>
+   ⏱  Time:   5m
+   🟢 Impact: MED   — <one-line rationale>
 ```
+
+**Why expanded vertical**: long Problem/Fix prose owns its own width — no narrow-terminal wrap surprises. Each Score metric reads independently — no eye-jump across `·` separators.
 
 Score dots reflect **favorability** (🟢 good · 🟡 mixed · 🔴 concerning), not the label value — so for Effort, LOW = 🟢 because lower effort is better. Time has no dot, just the ⏱ marker.
 
-Compact one-line variant for short substantive replies:
+Compact one-line variant for short substantive replies (decisions, single-action confirmations):
 
 ```
 ✨ TL;DR — 🔴 Problem. 🟢 Fix. 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED

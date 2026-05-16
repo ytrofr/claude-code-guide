@@ -4,6 +4,16 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.2.3] - 2026-05-16
+
+Patch release: TL;DR canonical format upgraded Variant B → Variant B1 (expanded vertical) — same emoji vocabulary, rearranged for vertical-scan speed across narrow terminals.
+
+### Changed
+
+- **BEST-PRACTICES.md Section 28 — Canonical format Variant B1**: Problem and Fix now sit on their own lines below labels (long prose owns its own width — no narrow-terminal wrap surprises). Score block expanded to one metric per indented line with inline rationale, so each metric reads independently. Compact one-liner variant retained for short substantive replies (decisions, single-action confirmations).
+- **Chapter 06 (Output Styles) — Same Variant B1 update**: canonical format in the "Pair BLUF with TL;DR" section now uses the expanded vertical layout. Cross-reference to Section 28 unchanged.
+- `best-practices/VERSION` bumped: 5.1.1 → 5.1.2.
+
 ## [5.2.2] - 2026-05-16
 
 Patch release: BLUF + TL;DR (Variant B traffic-light) cross-cutting update across BEST-PRACTICES.md and Chapter 06.
