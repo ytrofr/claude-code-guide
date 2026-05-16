@@ -4,6 +4,16 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.2.2] - 2026-05-16
+
+Patch release: BLUF + TL;DR (Variant B traffic-light) cross-cutting update across BEST-PRACTICES.md and Chapter 06.
+
+### Added
+
+- **BEST-PRACTICES.md Section 28 — Reply Closing Format (TL;DR)** (NEW): documents the BLUF (top-of-reply) + TL;DR (bottom-of-reply) pattern for cross-session cognitive load reduction. Canonical format uses Variant B traffic-light dots: `✨ TL;DR` header, 🔴 Problem, 🟢 Fix, 📊 Score with 🟢/🟡/🔴 prefixed Conf/Effort/Time/Impact. Score dots reflect favorability (not label value) — so Effort LOW = 🟢 because lower is better. Includes Include-When triggers (Edit/Write/MultiEdit, recommendations, plans, error blockers, multi-step reports, slash invocations), Skip-When list (tool-echo, single-fact, clarifying questions, mid-work status), scoring calibration table, subagent reformat-on-relay note, and reference soft-warn Stop hook implementation.
+- **Chapter 06 (Output Styles) — "Pair BLUF with a TL;DR Closing (Variant B)" section** (NEW): extends the BLUF Worked Example chapter with the companion exit-anchor pattern. BLUF answers "should I keep reading?"; TL;DR answers "what now?". Documents canonical + compact one-liner variants, Include-When/Skip-When triggers, optional Stop-hook soft-warn enforcement (logs to `~/.claude/logs/tldr-misses.jsonl`, never blocks; emoji-prefix-tolerant last-5-lines detection), kill switch, and the subagent reformat-on-relay path. Cross-references BEST-PRACTICES.md Section 28.
+- `best-practices/VERSION` bumped: 5.1.0 → 5.1.1 (BEST-PRACTICES package patch).
+
 ## [5.2.1] - 2026-05-15
 
 Patch release: claim registry + coord-trace observability extension to the inter-agent bus chapter (no new chapter, no counter changes).

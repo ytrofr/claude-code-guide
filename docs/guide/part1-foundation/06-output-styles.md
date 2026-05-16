@@ -202,6 +202,61 @@ Writing a style that says "never write tests" or "skip error handling" turns Cla
 
 **Fix**: shape *communication*, not *coding behavior*. If you want different coding behavior, use rules (`.claude/rules/`) or skills, not output styles.
 
+---
+
+## Pair BLUF with a TL;DR Closing (Variant B)
+
+BLUF gives the reader an **entry anchor** — Problem/Fix in the first lines. For substantive replies, a **TL;DR closing block** at the bottom gives a matching **exit anchor** with calibrated scoring. Together they turn every substantive reply into a scannable Problem → Fix → Score capsule.
+
+BLUF answers "should I keep reading?"; TL;DR answers "what now?"
+
+### Canonical Format (Variant B — traffic-light dots)
+
+```
+✨ TL;DR
+🔴 Problem  <one sentence, plain English>
+🟢 Fix      <one sentence — what happened, or what to do next>
+📊 Score    Conf 🟢 HIGH · Effort 🟢 LOW · Time ⏱ 5m · Impact 🟡 MED
+```
+
+Score dots reflect **favorability** (🟢 good · 🟡 mixed · 🔴 concerning), not the label value — so for Effort, LOW = 🟢 because lower effort is better. Time has no dot, just the ⏱ marker.
+
+Compact one-liner for short substantive replies:
+
+```
+✨ TL;DR — 🔴 Problem. 🟢 Fix. 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED
+```
+
+### When to include the block
+
+Include when the reply contains:
+
+- Code changes this turn (Edit / Write / MultiEdit fired)
+- Recommendation, decision, or option-list presented to the user
+- Plan / audit / analysis output
+- Error blocker — user must fix or decide to unblock
+- Multi-step work report (3+ distinct actions)
+- A `/<skill>` slash command invocation
+
+Skip when the reply is:
+
+- Tool-echo confirmation ("done", "committed", "file written")
+- Single-fact answer (≤2 sentences, no action implied)
+- Clarifying question back to the user (reply ends with `?`)
+- Mid-work status update ("checking X", "found Y")
+
+### Enforcement (optional soft-warn)
+
+A `Stop` event hook can log misses to `~/.claude/logs/tldr-misses.jsonl` without ever blocking. The hook scans the last 5 lines of the assistant reply for the literal string `TL;DR` (emoji-prefix tolerant) and triggers when either Edit/Write/MultiEdit fired this turn or the reply exceeded ~1500 chars. A reference implementation lives at `~/.claude/hooks/tldr-miss-logger.sh`.
+
+Soft-warn first; escalate to a blocking gate (Stop hook returning `decision="block"`) only after a 14-day eyeball confirms a high miss rate. Kill switch: `touch ~/.claude/state/tldr-miss-logger-disabled`.
+
+### Subagent path
+
+`outputStyle` does **not** propagate to subagents — they run with their own system prompt. When an orchestrator relays subagent output to the user, it must reformat the result into the BLUF + TL;DR shape itself. Encode this in your delegation rule so it isn't forgotten on long multi-agent sessions.
+
+For the full spec — Include-When triggers, Skip-When list, scoring calibration table, override grammar — see `best-practices/BEST-PRACTICES.md` **Section 28** (`Reply Closing Format (TL;DR)`).
+
 ### 4. Forgetting the restart
 
 Adding a file to `~/.claude/output-styles/` and expecting it to appear in `/config` immediately. The picker loads styles at session start.

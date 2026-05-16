@@ -681,6 +681,67 @@ my-skill/
 
 ---
 
+## 28. Reply Closing Format (TL;DR)
+
+**End substantive replies with a `TL;DR` block. Skip on trivial replies. Companion to BLUF (top-of-reply, set via `outputStyle: "bluf"` in `settings.json`).**
+
+BLUF answers "should I keep reading?"; TL;DR answers "what now?" Together they give a scannable entry + exit anchor — essential when juggling many parallel CC sessions.
+
+### Canonical Format (Variant B — traffic-light dots)
+
+```
+✨ TL;DR
+🔴 Problem  <one sentence, plain English>
+🟢 Fix      <one sentence — what happened, or what to do next>
+📊 Score    Conf 🟢 HIGH · Effort 🟢 LOW · Time ⏱ 5m · Impact 🟡 MED
+```
+
+Score dots reflect **favorability** (🟢 good · 🟡 mixed · 🔴 concerning), not the label value — so for Effort, LOW = 🟢 because lower effort is better. Time has no dot, just the ⏱ marker.
+
+Compact one-line variant for short substantive replies:
+
+```
+✨ TL;DR — 🔴 Problem. 🟢 Fix. 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED
+```
+
+### Scoring Calibration
+
+| Field | HIGH | MED | LOW |
+|-------|------|-----|-----|
+| Conf | Verified at runtime | Code reads right, not run | Guess / weak evidence |
+| Effort | <30m | 30m-2h | 2h+ |
+| Impact | Unblocks user / fixes prod | Quality win | Nice-to-have |
+
+### Include-When (any one trigger)
+
+- Code changes happened this turn (Edit / Write / MultiEdit fired)
+- Recommendation, decision, or option-list presented to the user
+- Plan / audit / analysis output
+- Error blocker — user must fix or decide to unblock
+- Multi-step work report (3+ distinct actions taken)
+- User invoked a `/<skill>` slash command
+
+### Skip-When
+
+- Tool-echo confirmation ("done", "committed", "file written")
+- Single-fact answer (≤2 sentences, no action implied)
+- Clarifying question back to user (reply ends with `?`)
+- Mid-work status update ("checking X", "found Y")
+
+### Subagent Path
+
+`outputStyle` does NOT propagate to subagents. Orchestrator reformats relayed subagent output to BLUF + TL;DR when surfacing to user.
+
+### Enforcement (Recommended Soft-Warn)
+
+Stop hook logs misses to `~/.claude/logs/tldr-misses.jsonl` — never blocks. T+14d eyeball decides retire (low miss rate) or escalate to blocking gate (high miss rate). Reference impl: `~/.claude/hooks/tldr-miss-logger.sh`. Kill switch: `touch ~/.claude/state/tldr-miss-logger-disabled`.
+
+### Override
+
+User says "add TL;DR" / "skip TL;DR" → comply for that turn. "no TL;DR for now" → suspend until user re-enables.
+
+---
+
 ## Full Guide Reference
 
 For deeper coverage of any topic, see the complete documentation:
