@@ -4,6 +4,21 @@ All notable changes to Claude Code Guide are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5.2.4] - 2026-05-17
+
+Patch release: TL;DR canonical format adds optional `💡 Recommend` + `👉 ACK to proceed` block for advisory replies.
+
+### Added
+
+- **BEST-PRACTICES.md Section 28 + Chapter 06 — Recommend/ACK block (conditional)**: when a reply is advisory (options presented, AI opinion on best path, forward-looking next-step, decision point), the canonical TL;DR includes a `💡 Recommend` line stating the AI's recommended action and a `👉 ACK to proceed, or pick another option.` prompt. Omitted on non-advisory replies (completion reports, single-fact answers, orthogonal options, clarifying questions). Same conditional logic as the TL;DR block itself — present when it adds signal, absent when noise.
+- Compact one-line variant updated to include `💡 Recommend. 👉 ACK?` markers when advisory.
+- `best-practices/VERSION` bumped: 5.1.2 → 5.1.3.
+
+### Changed
+
+- Section heading updated: "Variant B1 — expanded vertical" → "Variant B1 — expanded vertical + Recommend/ACK".
+- Reference Stop-hook detection window grown: scans last 5 lines → last 30 lines (covers full B1 + Recommend + ACK + Score block; without this, the longer Mockup A format would push the `✨ TL;DR` header past the prior 5-line window and produce false-negative misses).
+
 ## [5.2.3] - 2026-05-16
 
 Patch release: TL;DR canonical format upgraded Variant B → Variant B1 (expanded vertical) — same emoji vocabulary, rearranged for vertical-scan speed across narrow terminals.

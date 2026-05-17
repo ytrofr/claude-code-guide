@@ -210,7 +210,7 @@ BLUF gives the reader an **entry anchor** — Problem/Fix in the first lines. Fo
 
 BLUF answers "should I keep reading?"; TL;DR answers "what now?"
 
-### Canonical Format (Variant B1 — expanded vertical)
+### Canonical Format (Variant B1 — expanded vertical + Recommend/ACK)
 
 ```
 ---
@@ -221,7 +221,12 @@ BLUF answers "should I keep reading?"; TL;DR answers "what now?"
 <one sentence, plain English>
 
 🟢 Fix
-<one sentence — what happened, or what to do next>
+<one sentence — what happened, or what's available>
+
+💡 Recommend
+<AI's recommended next action — one sentence>
+
+👉 ACK to proceed, or pick another option.
 
 📊 Score
    🟢 Conf:   HIGH  — <one-line rationale or evidence>
@@ -234,10 +239,16 @@ BLUF answers "should I keep reading?"; TL;DR answers "what now?"
 
 Score dots reflect **favorability** (🟢 good · 🟡 mixed · 🔴 concerning), not the label value — so for Effort, LOW = 🟢 because lower effort is better. Time has no dot, just the ⏱ marker.
 
+**Recommend + ACK block — when to include**:
+
+Include `💡 Recommend` + `👉 ACK to proceed` when the reply is **advisory**: multiple options presented, AI has formed an opinion on the best path, forward-looking next-step suggestion, or decision point reached where user input is needed.
+
+Omit when the reply is **non-advisory**: pure completion / status report ("shipped X — done"), single-fact answer, AI has no strong preference (truly orthogonal options), or clarifying question back to the user (the question itself is the ACK prompt). Same conditional logic as the TL;DR block itself — present when it adds signal, absent when it would be noise.
+
 Compact one-liner for short substantive replies (decisions, single-action confirmations):
 
 ```
-✨ TL;DR — 🔴 Problem. 🟢 Fix. 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED
+✨ TL;DR — 🔴 Problem. 🟢 Fix. 💡 Recommend. 👉 ACK? 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED
 ```
 
 ### When to include the block
@@ -260,7 +271,7 @@ Skip when the reply is:
 
 ### Enforcement (optional soft-warn)
 
-A `Stop` event hook can log misses to `~/.claude/logs/tldr-misses.jsonl` without ever blocking. The hook scans the last 5 lines of the assistant reply for the literal string `TL;DR` (emoji-prefix tolerant) and triggers when either Edit/Write/MultiEdit fired this turn or the reply exceeded ~1500 chars. A reference implementation lives at `~/.claude/hooks/tldr-miss-logger.sh`.
+A `Stop` event hook can log misses to `~/.claude/logs/tldr-misses.jsonl` without ever blocking. The hook scans the last 30 lines of the assistant reply for the literal string `TL;DR` (window sized to cover the full B1 + Recommend + ACK + Score block; emoji-prefix tolerant) and triggers when either Edit/Write/MultiEdit fired this turn or the reply exceeded ~1500 chars. A reference implementation lives at `~/.claude/hooks/tldr-miss-logger.sh`.
 
 Soft-warn first; escalate to a blocking gate (Stop hook returning `decision="block"`) only after a 14-day eyeball confirms a high miss rate. Kill switch: `touch ~/.claude/state/tldr-miss-logger-disabled`.
 

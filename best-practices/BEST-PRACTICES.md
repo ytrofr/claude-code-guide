@@ -687,7 +687,7 @@ my-skill/
 
 BLUF answers "should I keep reading?"; TL;DR answers "what now?" Together they give a scannable entry + exit anchor — essential when juggling many parallel CC sessions.
 
-### Canonical Format (Variant B1 — expanded vertical)
+### Canonical Format (Variant B1 — expanded vertical + Recommend/ACK)
 
 ```
 ---
@@ -698,7 +698,12 @@ BLUF answers "should I keep reading?"; TL;DR answers "what now?" Together they g
 <one sentence, plain English>
 
 🟢 Fix
-<one sentence — what happened, or what to do next>
+<one sentence — what happened, or what's available>
+
+💡 Recommend
+<AI's recommended next action — one sentence>
+
+👉 ACK to proceed, or pick another option.
 
 📊 Score
    🟢 Conf:   HIGH  — <one-line rationale or evidence>
@@ -711,10 +716,16 @@ BLUF answers "should I keep reading?"; TL;DR answers "what now?" Together they g
 
 Score dots reflect **favorability** (🟢 good · 🟡 mixed · 🔴 concerning), not the label value — so for Effort, LOW = 🟢 because lower effort is better. Time has no dot, just the ⏱ marker.
 
+**Recommend + ACK block — when to include**:
+
+Include `💡 Recommend` + `👉 ACK to proceed` when reply is **advisory**: multiple options presented, AI has formed an opinion on best path, forward-looking next-step suggestion, or decision point reached where user input is needed.
+
+Omit when reply is **non-advisory**: pure completion / status report ("shipped X — done"), single-fact answer, AI has no strong preference (truly orthogonal options), or clarifying question back to user (the question itself is the ACK prompt). Same conditional logic as the TL;DR block itself.
+
 Compact one-line variant for short substantive replies (decisions, single-action confirmations):
 
 ```
-✨ TL;DR — 🔴 Problem. 🟢 Fix. 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED
+✨ TL;DR — 🔴 Problem. 🟢 Fix. 💡 Recommend. 👉 ACK? 🟢HIGH · 🟢LOW · ⏱5m · 🟡MED
 ```
 
 ### Scoring Calibration
