@@ -71,7 +71,20 @@ Over time, memory files accumulate. Daily notes pile up. The same fact gets writ
 2. **Identify problems** — from the checklist below.
 3. **Plan changes** — write a short `Defrag Plan` with bullet items.
 4. **Execute one at a time** — split, merge, prune, restructure.
-5. **Verify & log** — ensure nothing was lost; record what was done in today's daily note.
+5. **Verify & log** — confirm nothing was lost (see methodology below); record what was done in today's daily note.
+
+### Verifying nothing was lost (cross-grep, not re-read)
+
+Visual review of the consolidated result confirms what *did* survive — it tells you nothing about what dropped. The honest check is empirical: cross-grep the underlying note files for any *unique* facts that lived in the index before consolidation.
+
+For every section you merged:
+
+1. Re-read the original index lines you replaced.
+2. Identify the unique facts — operator quotes ("if I had to keep one thing..."), first-activation outcome tags, specific file/feature counts, single-occurrence narrative phrasing.
+3. For each, `grep -r "<phrase>" memory/` on the source notes.
+4. If a fact returns zero hits anywhere on disk *and* is no longer in the index, it was silently lost. Restore it before declaring done.
+
+The vectors that drop most often: operator judgment quotes, first-activation outcome tags, counts collapsed into round numbers, narrative phrasing that existed only in the index summary. Underlying note files usually preserve the long form via frontmatter `description:` — when grep returns hits there, the index is allowed to be terser.
 
 ### Common issues to fix
 
@@ -145,6 +158,7 @@ The scripts surface *what* needs attention. The skills do the thinking. The huma
 - **Defragging every week.** `/memory-defrag` is meant to be monthly. More frequent = churn, not maintenance. You'll rewrite notes that were fine.
 - **Letting `ai-dna/*` grow unchecked.** The 60-day SLA exists for a reason. AI infrastructure changes fast; a 6-month-old pattern may be obsolete.
 - **Deleting raw daily notes during defrag.** Daily notes are the audit trail. Consolidate insights into topic files, but don't destroy the originals.
+- **Verifying defrag by re-reading the consolidated index.** Visual review confirms what *did* survive, never what dropped. Use empirical cross-grep against source notes for any unique facts (operator quotes, narrative tags, specific counts) that lived only in the index. Without this, a section consolidation can silently drop the most informative content because the result still "reads fine".
 - **Skipping the commit/checkpoint step at session-end.** Uncommitted WIP across sessions is how you lose a day of work to a tab crash.
 - **Writing session-end notes that say "worked on X, made progress".** Worthless. If the note doesn't capture a *specific* insight, don't write it.
 
