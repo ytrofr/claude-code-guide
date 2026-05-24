@@ -46,6 +46,30 @@ npx --version           # Ships with Node
 
 If `claude` is missing, install Claude Code via the official instructions at [claude.com/claude-code](https://claude.com/claude-code) first. If `jq` is missing: `sudo apt install jq` on Debian/Ubuntu/WSL2, `brew install jq` on macOS.
 
+### Recommended companion CLI tools (optional)
+
+Not required by Claude Code, but they sharpen everyday work — readable diffs, JSON wrangling, fast Python/Node tooling, disk inspection. Install only what you'll use.
+
+```bash
+# Debian / Ubuntu / WSL2
+sudo apt install -y git-delta shfmt ncdu redis-tools gron
+curl -LsSf https://astral.sh/uv/install.sh | sh   # uv — fast Python package/venv manager
+sudo corepack enable                              # pnpm / yarn shims (ships with Node 18+)
+git config --global core.pager delta && git config --global delta.side-by-side true
+```
+
+| Tool | What it gives you |
+|---|---|
+| `git-delta` | Syntax-highlighted, side-by-side `git diff` — invaluable when reviewing agent-generated changes |
+| `uv` | 10–100× faster Python dependency installs and venv management |
+| `corepack`/`pnpm` | Activates the project-pinned Node package manager without a global install |
+| `shfmt` | Formats shell scripts (pairs with `shellcheck` for hook/script authoring) |
+| `ncdu` | Interactive disk-usage explorer — fast way to find what's bloating a WSL2 disk |
+| `redis-tools` | `redis-cli` for inspecting a local Redis instance |
+| `gron` | Flattens JSON to greppable `path = value` lines (great with cloud-log debugging) |
+
+> **WSL2/Ubuntu gotcha:** `fd` and `bat` install under renamed binaries `fdfind` and `batcat`. Add aliases so tools can call them by their canonical names: `echo 'alias fd=fdfind; alias bat=batcat' >> ~/.bashrc`.
+
 ---
 
 ## Three Tiers at a Glance
