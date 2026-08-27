@@ -29,7 +29,7 @@ Beyond template realignment:
 Before each B-phase commit:
 1. `bundle exec jekyll build` — builds clean
 2. Hero metrics in touched chapters verified or removed (no unsourced claims)
-3. CC version references match 2.1.111+ (or explicit "as of CC 2.1.X" for version-tied content)
+3. CC version references match 2.1.247+ (or explicit "as of CC 2.1.X" for version-tied content)
 4. No internal absolute paths (user home dirs, user emails) in committed chapter text
 5. No project-specific references (real internal project names) in committed chapter text
 6. `redirect_from:` added to rewritten chapters per `docs/guide/_redirect-plan.md`

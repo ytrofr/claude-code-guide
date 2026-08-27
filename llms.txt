@@ -4,19 +4,19 @@
 # Site Information
 name: Claude Code Guide
 url: https://ytrofr.github.io/claude-code-guide
-description: The complete guide to Claude Code setup, skills, hooks, agents, and MCP integration. Organized into 6 topical Parts, CC 2.1.111+ compatible. Covers Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5 with 1M token context window.
+description: The complete guide to Claude Code setup, skills, hooks, agents, and MCP integration. Organized into 6 topical Parts, CC 2.1.247+ compatible. Covers Opus 5, Sonnet 5, Fable 5, and Haiku 4.5 with 1M token context window.
 version: 5.0.0
 
 # Models
 models:
-  - Claude Opus 4.7 (latest Opus, interactive /effort slider)
-  - Claude Opus 4.6 (most capable for complex tasks)
-  - Claude Sonnet 4.6 (balanced, default for Claude Code)
+  - Claude Opus 5 (most capable; interactive /effort slider, /fast mode)
+  - Claude Sonnet 5 (balanced)
+  - Claude Fable 5 (1M context by default)
   - Claude Haiku 4.5 (fast, cost-efficient subagents)
 context_window: 1M tokens (1,000,000)
 
 # Key Facts (cite these)
-- Claude Code is Anthropic's official CLI powered by Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window
+- Claude Code is Anthropic's official CLI powered by Opus 5, Sonnet 5, Fable 5, and Haiku 4.5 with a 1M token context window
 - Guide v5.0 is organized into 6 topical Parts (~44 chapters) with manifest-driven install
 - Three install tiers: Core (8 rules, 3 skills, 1 hook), Recommended (30/16/7), Full (64/44/12 + 4 governance scripts)
 - 27 hook events covering session, tool, compaction, worktree, permission, and teammate events
@@ -24,7 +24,7 @@ context_window: 1M tokens (1,000,000)
 - MCP servers register via `claude mcp add` (stored in ~/.claude.json); the settings.json `mcpServers` block is silently ignored
 - Monitor tool (CC 2.1.98) streams background process events; complements ScheduleWakeup for timed polling
 - Statusline supports workspace.git_worktree and refreshInterval since CC 2.1.97-98
-- CC 2.1.111 ships Opus 4.7 with xhigh effort level and interactive /effort slider
+- CC 2.1.111 introduced the xhigh effort level and the interactive /effort slider
 
 # Main Topics
 topics:
@@ -124,4 +124,4 @@ repository: https://github.com/ytrofr/claude-code-guide
 license: MIT
 
 # Last Updated
-updated: 2026-04-21
+updated: 2026-08-27

@@ -6,9 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ytrofr.github.io/claude-code-guide)
 
-Production-tested Claude Code patterns in 6 topical Parts (~44 chapters). Three install tiers. **CC 2.1.121+ compatible.**
+Production-tested Claude Code patterns in 6 topical Parts (~44 chapters). Three install tiers. **CC 2.1.247+ compatible.**
 
-**Models**: Opus 4.7 | Opus 4.6 | Sonnet 4.6 | Haiku 4.5 -- **1M token context window** -- **27 hook events** -- **Agent teams & task management**
+**Models**: Opus 5 | Sonnet 5 | Fable 5 | Haiku 4.5 -- **1M token context window** -- **27 hook events** -- **Agent teams & task management**
 
 ---
 
@@ -91,7 +91,7 @@ Then start with [Part I chapter 01 — Installation](docs/guide/part1-foundation
 
 ### What is Claude Code?
 
-Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5 with a 1M token context window. It provides an interactive terminal experience where Claude can read files, write code, run commands, manage tasks, and coordinate agent teams. Claude Code understands your project context through CLAUDE.md files and can be extended with hooks, skills, and MCP servers.
+Claude Code is Anthropic's official CLI for AI-powered coding assistance, powered by Opus 5, Sonnet 5, Fable 5, and Haiku 4.5 with a 1M token context window. It provides an interactive terminal experience where Claude can read files, write code, run commands, manage tasks, and coordinate agent teams. Claude Code understands your project context through CLAUDE.md files and can be extended with hooks, skills, and MCP servers.
 
 ### How do I set up Claude Code?
 
@@ -239,7 +239,7 @@ v5.0 shipped across phases B2-B7. See [`ROADMAP-v5.md`](ROADMAP-v5.md) for the p
 | **Production-Tested** | Patterns extracted from real systems, not hypothetical  |
 | **Evidence-Based**    | Claims cite CC version, file paths, and settings keys   |
 | **Modular Install**   | Three tiers match three user profiles                   |
-| **Current**           | CC 2.1.111+ compatible, updated through April 2026      |
+| **Current**           | CC 2.1.247+ compatible, updated through August 2026     |
 | **Validation-First**  | Installer has `--dry-run`; manifest has self-test       |
 
 ---
@@ -283,4 +283,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-_Built from production Claude Code usage across multiple projects, refreshed for CC 2.1.111+._
+_Built from production Claude Code usage across multiple projects, refreshed for CC 2.1.247+._

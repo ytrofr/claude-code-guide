@@ -1,8 +1,8 @@
 # Claude Code Implementation Guide - Project Status
 
 **Created**: 2025-12-14
-**Updated**: 2026-04-21
-**Status**: v5.0.0 released — 6 topical Parts, manifest-driven install, CC 2.1.111+ compatible
+**Updated**: 2026-08-27
+**Status**: v5.0.0 released — 6 topical Parts, manifest-driven install, CC 2.1.247+ compatible
 **Progress**: v5.0 content work complete; template/ realignment tracked as next workstream
 
 ---
