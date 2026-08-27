@@ -240,13 +240,13 @@ printf '%s | %s | ctx %s | cb:%s | ov:%s | bus:%s\n' "$wt" "$model" "$ctx" "$cb"
 Output examples:
 | State | Field |
 |-------|-------|
-| Idle (registered, no active threads) | `bus:limor:s2` |
-| 1 thread with peer s1 | `bus:limor:s2→s1` |
-| Same, with unread | `bus:limor:s2●→s1` |
-| 3-way thread | `bus:limor:s2●→s1,s3` |
-| Cross-agent peer | `bus:limor:s2●→smith,s1` |
-| 4+ peers | `bus:limor:s2●→smith,s1+2` |
-| Joined a convo (workstream isolation) | `bus:limor:s2@planx→s1` |
+| Idle (registered, no active threads) | `bus:project-d:s2` |
+| 1 thread with peer s1 | `bus:project-d:s2→s1` |
+| Same, with unread | `bus:project-d:s2●→s1` |
+| 3-way thread | `bus:project-d:s2●→s1,s3` |
+| Cross-agent peer | `bus:project-d:s2●→smith,s1` |
+| 4+ peers | `bus:project-d:s2●→smith,s1+2` |
+| Joined a convo (workstream isolation) | `bus:project-d:s2@planx→s1` |
 | Bus unreachable | `bus:?` |
 
 The `●` glyph indicates an unread peer message; reading via `talk.sh show <tid>` or `talk.sh listen <tid>` updates the per-session last-seen file and clears it.

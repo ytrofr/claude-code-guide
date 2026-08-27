@@ -91,7 +91,7 @@ Patch release: Inter-agent bus statusline indicator (Example 5) + conversation i
   - Per-session `conversation_id` field in registry; default empty = open (back-compat).
   - `talk.sh join <convo>` / `leave` / `convo` subcommands.
   - `_live_peers`, `cmd_peers`, `cmd_sync` subset-match, and statusline thread filter all gated by convo equality (empty matches empty).
-  - Statusline displays `bus:limor:s2@convo` when joined; threads filtered by matching convo.
+  - Statusline displays `bus:project-d:s2@convo` when joined; threads filtered by matching convo.
   - `peers --all` bypasses convo filter for admin view.
   - Updated commands table with the three new subcommands.
 

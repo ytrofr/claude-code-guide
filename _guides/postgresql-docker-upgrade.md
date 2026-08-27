@@ -36,7 +36,7 @@ Before touching anything, understand what you have.
 ### Check Current Version and Extensions
 
 ```bash
-docker exec -i limor-postgres psql -U postgres -c "SELECT version();"
+docker exec -i project-d-postgres psql -U postgres -c "SELECT version();"
 ```
 
 ```
@@ -46,7 +46,7 @@ docker exec -i limor-postgres psql -U postgres -c "SELECT version();"
 ```
 
 ```bash
-docker exec -i limor-postgres psql -U postgres -c "SELECT * FROM pg_extension;"
+docker exec -i project-d-postgres psql -U postgres -c "SELECT * FROM pg_extension;"
 ```
 
 ```
@@ -59,7 +59,7 @@ docker exec -i limor-postgres psql -U postgres -c "SELECT * FROM pg_extension;"
 ### Check Database Sizes
 
 ```bash
-docker exec -i limor-postgres psql -U postgres -c "
+docker exec -i project-d-postgres psql -U postgres -c "
   SELECT datname, pg_size_pretty(pg_database_size(datname))
   FROM pg_database WHERE datistemplate = false;
 "
@@ -69,14 +69,14 @@ docker exec -i limor-postgres psql -U postgres -c "
    datname   | pg_size_pretty
 -------------+----------------
  postgres    | 8553 kB
- limor_prod  | 157 MB
- limor_dev   | 89 MB
+ project-d_prod  | 157 MB
+ project-d_dev   | 89 MB
 ```
 
 ### Record Table Row Counts (for verification later)
 
 ```bash
-docker exec -i limor-postgres psql -U postgres -d limor_prod -c "
+docker exec -i project-d-postgres psql -U postgres -d project-d_prod -c "
   SELECT schemaname, relname, n_live_tup
   FROM pg_stat_user_tables
   ORDER BY n_live_tup DESC;
@@ -110,7 +110,7 @@ All of the following steps happen while your production database is still runnin
 `pg_dumpall` captures every database, role, and permission in a single file:
 
 ```bash
-docker exec -i limor-postgres pg_dumpall -U postgres > ~/pg15_full_backup.sql
+docker exec -i project-d-postgres pg_dumpall -U postgres > ~/pg15_full_backup.sql
 ```
 
 Verify the backup is complete and not truncated:
@@ -137,7 +137,7 @@ The last lines should end with PostgreSQL disconnect statements, not mid-query. 
 Never reuse the old volume. Create a fresh one for PG17:
 
 ```bash
-docker volume create limor-pg17-data
+docker volume create project-d-pg17-data
 ```
 
 ### Step 3: Start PG17 on an Alternate Port
@@ -150,7 +150,7 @@ docker run -d \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=your_password_here \
   -p 5433:5432 \
-  -v limor-pg17-data:/var/lib/postgresql/data \
+  -v project-d-pg17-data:/var/lib/postgresql/data \
   pgvector/pgvector:pg17
 ```
 
@@ -210,12 +210,12 @@ docker exec -i pg17-test psql -U postgres -c "SELECT version();"
 docker exec -i pg17-test psql -U postgres -c "\l"
 ```
 
-Confirm all your databases appear: `postgres`, `limor_prod`, `limor_dev`, etc.
+Confirm all your databases appear: `postgres`, `project-d_prod`, `project-d_dev`, etc.
 
 #### Check extensions
 
 ```bash
-docker exec -i pg17-test psql -U postgres -d limor_prod -c "SELECT * FROM pg_extension;"
+docker exec -i pg17-test psql -U postgres -d project-d_prod -c "SELECT * FROM pg_extension;"
 ```
 
 ```
@@ -230,7 +230,7 @@ Note: pgvector version may upgrade automatically (0.7.4 to 0.8.0). This is expec
 #### Compare row counts
 
 ```bash
-docker exec -i pg17-test psql -U postgres -d limor_prod -c "
+docker exec -i pg17-test psql -U postgres -d project-d_prod -c "
   SELECT schemaname, relname, n_live_tup
   FROM pg_stat_user_tables
   ORDER BY n_live_tup DESC;
@@ -244,7 +244,7 @@ Compare this output against the row counts you recorded in Phase 1. Every table 
 Run an actual vector similarity query to confirm pgvector works correctly on PG17:
 
 ```bash
-docker exec -i pg17-test psql -U postgres -d limor_prod -c "
+docker exec -i pg17-test psql -U postgres -d project-d_prod -c "
   SELECT id, name, embedding <-> '[0.1,0.2,0.3]'::vector AS distance
   FROM your_vector_table
   ORDER BY distance
@@ -292,7 +292,7 @@ Change the PostgreSQL service to use PG17 and the new volume:
 services:
   postgres:
     image: pgvector/pgvector:pg15
-    container_name: limor-postgres
+    container_name: project-d-postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -303,18 +303,18 @@ volumes:
 services:
   postgres:
     image: pgvector/pgvector:pg17
-    container_name: limor-postgres
+    container_name: project-d-postgres
     volumes:
-      - limor-pg17-data:/var/lib/postgresql/data
+      - project-d-pg17-data:/var/lib/postgresql/data
 
 volumes:
-  limor-pg17-data:
+  project-d-pg17-data:
     external: true
 ```
 
 Key changes:
 - `image`: `pgvector/pgvector:pg15` changed to `pgvector/pgvector:pg17`
-- `volumes`: Points to the new `limor-pg17-data` volume (marked `external: true` because we already created it)
+- `volumes`: Points to the new `project-d-pg17-data` volume (marked `external: true` because we already created it)
 
 ### Step 4: Stop the Old Stack and Start the New One
 
@@ -332,29 +332,29 @@ docker compose ps
 
 ```
 NAME              IMAGE                      STATUS          PORTS
-limor-postgres    pgvector/pgvector:pg17     Up 3 seconds    0.0.0.0:5432->5432/tcp
-limor-redis       redis:7-alpine             Up 3 seconds    0.0.0.0:6379->6379/tcp
+project-d-postgres    pgvector/pgvector:pg17     Up 3 seconds    0.0.0.0:5432->5432/tcp
+project-d-redis       redis:7-alpine             Up 3 seconds    0.0.0.0:6379->6379/tcp
 ```
 
 Run the same verification checks from Phase 2:
 
 ```bash
 # Version
-docker exec -i limor-postgres psql -U postgres -c "SELECT version();"
+docker exec -i project-d-postgres psql -U postgres -c "SELECT version();"
 
 # Databases
-docker exec -i limor-postgres psql -U postgres -c "\l"
+docker exec -i project-d-postgres psql -U postgres -c "\l"
 
 # Extensions
-docker exec -i limor-postgres psql -U postgres -d limor_prod -c "SELECT extname, extversion FROM pg_extension;"
+docker exec -i project-d-postgres psql -U postgres -d project-d_prod -c "SELECT extname, extversion FROM pg_extension;"
 
 # Row counts
-docker exec -i limor-postgres psql -U postgres -d limor_prod -c "
+docker exec -i project-d-postgres psql -U postgres -d project-d_prod -c "
   SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY n_live_tup DESC;
 "
 
 # pgvector query
-docker exec -i limor-postgres psql -U postgres -d limor_prod -c "
+docker exec -i project-d-postgres psql -U postgres -d project-d_prod -c "
   SELECT count(*) FROM your_vector_table;
 "
 ```
@@ -463,7 +463,7 @@ PRE-UPGRADE
 PREPARE (while DB is running)
   [ ] Full backup: pg_dumpall > ~/pg15_full_backup.sql
   [ ] Verify backup file (tail, file size)
-  [ ] Create new volume: docker volume create limor-pg17-data
+  [ ] Create new volume: docker volume create project-d-pg17-data
   [ ] Start PG17 on port 5433
   [ ] Restore backup into PG17
   [ ] Verify: version, databases, extensions, row counts, pgvector queries
@@ -548,10 +548,10 @@ docker run -d --name pg17-test ... pgvector/pgvector:pg17
 docker compose ps
 
 # Check port mapping
-docker port limor-postgres
+docker port project-d-postgres
 
 # Check PostgreSQL is accepting connections
-docker exec -i limor-postgres pg_isready -U postgres
+docker exec -i project-d-postgres pg_isready -U postgres
 ```
 
 If `pg_isready` reports "accepting connections," the issue is in the application config, not PostgreSQL.
@@ -563,13 +563,13 @@ If `pg_isready` reports "accepting connections," the issue is in the application
 **Note**: `n_live_tup` is an estimate updated by autovacuum/analyze. After a fresh restore, run:
 
 ```bash
-docker exec -i pg17-test psql -U postgres -d limor_prod -c "ANALYZE;"
+docker exec -i pg17-test psql -U postgres -d project-d_prod -c "ANALYZE;"
 ```
 
 Then re-check the counts. For exact counts, use:
 
 ```bash
-docker exec -i pg17-test psql -U postgres -d limor_prod -c "
+docker exec -i pg17-test psql -U postgres -d project-d_prod -c "
   SELECT 'table_name' AS tbl, count(*) FROM table_name;
 "
 ```

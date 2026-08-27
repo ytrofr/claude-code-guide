@@ -308,7 +308,7 @@ Add a SessionStart hook that registers each session in `~/shared/inter-agent/ses
 }
 ```
 
-`resolve-identity.sh` is upgraded to look up the registry by `$PPID` — when CC's Bash tool runs `talk.sh`, talk.sh's PPID is the calling CC session's PID, which is the registry key. Each session auto-knows its own full id (`limor:s2`, `limor:s3`, etc.) without env-var setup.
+`resolve-identity.sh` is upgraded to look up the registry by `$PPID` — when CC's Bash tool runs `talk.sh`, talk.sh's PPID is the calling CC session's PID, which is the registry key. Each session auto-knows its own full id (`project-d:s2`, `project-d:s3`, etc.) without env-var setup.
 
 ### Three new subcommands
 
@@ -332,7 +332,7 @@ Add phrases like *"listen to parallel sessions"*, *"coordinate with the other se
 A statusline `bus:` field shows full identity + active peers + `●` for unread (see Part V ch.5):
 
 ```
-limor-main | Opus 4.7 | ctx 41% | cb:green | ov:1 | bus:limor:s2●→s1,s3
+project-d-main | Opus 4.7 | ctx 41% | cb:green | ov:1 | bus:project-d:s2●→s1,s3
 ```
 
 ### N-way + late-join
@@ -349,7 +349,7 @@ Three new subcommands:
 
 | Command | Effect |
 |---------|--------|
-| `talk.sh join <convo>` | Tag this session with `<convo>` (sanitized to `[a-z0-9-]{1,32}`). Statusline becomes `bus:limor:s2@convo`. Only same-project + same-convo sessions become peers. |
+| `talk.sh join <convo>` | Tag this session with `<convo>` (sanitized to `[a-z0-9-]{1,32}`). Statusline becomes `bus:project-d:s2@convo`. Only same-project + same-convo sessions become peers. |
 | `talk.sh leave` | Clear the tag, return to default open mode. |
 | `talk.sh convo` | Print this session's current convo (or `(open)`). |
 
@@ -360,11 +360,11 @@ Three new subcommands:
 ```bash
 # Sessions A and B (Plan X coordinators):
 ~/shared/inter-agent/bin/talk.sh join planx
-# → joined: limor:s1@planx
+# → joined: project-d:s1@planx
 
 # A or B kicks off the thread:
 TID=$(~/shared/inter-agent/bin/talk.sh sync "auth refactor")
-# → coord-limor-planx-s1-s2-20260501
+# → coord-project-d-planx-s1-s2-20260501
 
 # Session C (unrelated) — does nothing, stays open by default.
 # C's `peers` shows no one. A's `peers` shows only B. C will NEVER auto-join the planx thread.

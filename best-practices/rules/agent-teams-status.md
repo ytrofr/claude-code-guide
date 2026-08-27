@@ -36,7 +36,7 @@ At the time of initial investigation (v2.1.77), the feature was not discoverable
 
 **Parallel baselines (D1-D5)**: Use `run_in_background: true` with sequential batches. Do NOT attempt to run multiple Claude sessions against the same working directory.
 
-**Multi-branch work**: Use `--worktree` to work on dev-Limor-routing-cleanup while main session stays on dev-Limor. Configured in settings via `worktree.sparsePaths`.
+**Multi-branch work**: Use `--worktree` to work on dev-ProjectD-routing-cleanup while main session stays on dev-ProjectD. Configured in settings via `worktree.sparsePaths`.
 
 **Complex multi-file tasks**: Use `Task()` delegation per `delegation-rule.md` (3+ tasks touching different files/domains).
 
