@@ -40,7 +40,7 @@ Skip plan mode for trivial single-file edits, doc typos, or fixes where the root
 
 ## The 15 Mandatory Sections
 
-Every plan contains these sections, in this order, with no placeholders. Section 0 (the verbatim user prompt) is the frozen record of what was asked — written first, never edited. Section 0.1 runs next because everything downstream depends on what the pre-validation probe discovers. Section 12 (TL;DR) is written **last** but always appears as the final content section, immediately before Section 13.
+Every plan contains these sections, in this order, with no placeholders. Section 0 (the verbatim user prompt) is the frozen record of what was asked — written first, never edited. Section 0.1 runs next because everything downstream depends on what the pre-validation probe discovers. Section 12 (TL;DR) is written **last** and sits **physically last** in the file, after Sections 13-15 and immediately above the closing `/goal` line, so the summary is where the reader lands.
 
 | # | Section | Purpose | Blocking? |
 |---|---------|---------|-----------|
@@ -221,7 +221,7 @@ The reviewer instantly sees what's broken and what the fix achieves without read
 
 ## Section 12 — TL;DR with KPI Dashboard
 
-Section 12 is written **last** and always appears as the final content section, immediately before Section 13. It has five mandatory sub-sections:
+Section 12 is written **last** and sits **physically last** in the file, after Sections 13-15 and immediately above the closing `/goal` line. It opens with a plain-English Simple Version and a three-column task table (`| # | Task | Status |`, one row per Section 13 checkbox, under 60 characters wide), then these mandatory sub-sections:
 
 ### 12a. Problem / Solution
 
