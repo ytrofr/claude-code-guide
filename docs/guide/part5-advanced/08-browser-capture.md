@@ -104,7 +104,7 @@ Pick the pattern that fits the surface. All three target the same `localhost:987
 
 ### Jekyll
 
-Same `<script>` tag inside a `{% if jekyll.environment != "production" %}` guard in `_layouts/default.html`. Belt-and-suspenders — the production hostname-gate fail-closes regardless, but the guard keeps production HTML clean.
+Same `<script>` tag inside a `{% raw %}{% if jekyll.environment != "production" %}{% endraw %}` guard in `_layouts/default.html`. Belt-and-suspenders - the production hostname-gate fail-closes regardless, but the guard keeps production HTML clean.
 
 ### Python / Node server-side
 
