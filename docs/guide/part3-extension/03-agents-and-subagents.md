@@ -229,22 +229,22 @@ This parent can only spawn those two subagents. Useful for coordinator agents th
 
 ## Delegation Patterns
 
-When executing a plan with 3+ tasks that touch different files or domains, delegate each to a fresh subagent and keep the main context as a lean orchestrator.
+When executing a plan with 3+ tasks, delegate a task to a fresh subagent only when it is sizeable and independent, and do the rest inline. A subagent re-establishes context, re-explores and reports back, and the orchestrator then re-reads its report, so a small task costs more delegated than done. Claude Opus 5 and later models already reach for subagents readily - guidance that pushes delegation, written for earlier models that under-delegated, now multiplies cost and latency.
 
 ### When to delegate
 
 | Condition | Action |
 |---|---|
-| Plan has 3+ tasks across different files | Delegate each task |
-| Tasks span different domains (DB + API + UI) | Delegate per domain |
+| A sizeable task in another domain (DB vs API vs UI) | Delegate that task |
 | A single task involves >100 lines of changes | Delegate that task |
-| Main context approaching 50% | Delegate remaining tasks |
+| A wide multi-file investigation would flood the main context | Delegate it |
+| Main context approaching 50% | Delegate the remaining sizeable tasks |
 
 ### When to stay inline
 
 | Condition | Action |
 |---|---|
-| 1-2 small tasks | Inline |
+| Work you could finish in a handful of tool calls | Inline |
 | Tasks share the same file | Inline (avoid merge conflicts) |
 | Each task is <50 lines | Inline |
 | Tight dependency chain | Inline sequentially |
@@ -252,18 +252,14 @@ When executing a plan with 3+ tasks that touch different files or domains, deleg
 
 ### The lean orchestrator
 
-The orchestrator should:
+When the orchestrator does delegate, it should:
 
 1. Read the plan
-2. Dispatch each task via `Task` — passing **file paths**, not file contents
+2. Dispatch the task via `Task` - passing **file paths**, not file contents
 3. Collect results and verify on the filesystem (`git log`, file existence, grep)
 4. Move to the next task
 
-The orchestrator should NOT:
-
-- Read source files itself
-- Write code directly
-- Accumulate task outputs in its own context
+It should not accumulate subagent outputs in its own context: keep the summary, not the implementation.
 
 Target: orchestrator stays under 20% context. Each subagent gets a fresh window.
 
