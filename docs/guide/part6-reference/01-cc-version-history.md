@@ -292,7 +292,7 @@ For the definitive changelog, run `/release-notes` inside CC or see `claude upda
 ### 2.1.89
 
 - **Autocompact thrash guard**: after 3 consecutive compact-refill cycles, CC halts with an actionable error instead of looping.
-- Hook stdout/stderr over 50K chars saves to disk; context gets a file path and 2KB preview.
+- Hook output over 10,000 characters saves to disk; context gets a file path and a 2,000-character preview.
 - Edit tool works on files previously viewed via Bash `cat`/`sed`/`head`/`tail` without a prior Read call.
 - PreToolUse hooks can return `{"defer": true}` to pause headless `-p` sessions for later resume.
 - New settings: `sandbox.failIfUnavailable`, `managed-settings.d/` drop-in directory, `disableDeepLinkRegistration`, `showThinkingSummaries` (now OFF by default).
