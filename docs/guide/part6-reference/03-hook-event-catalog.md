@@ -421,7 +421,7 @@ Hooks are declared per event, with an optional `matcher` and one or more `comman
 - **Inline hooks still need stdin**: a one-liner `"command"` in `settings.json` must still read stdin via `$(cat)`. Putting data in the command string doesn't work.
 - **`PermissionRequest` output format**: the response MUST be `{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}`. Wrong shape (e.g. `{"decision":"approve"}`) fails silently — the prompt still appears.
 - **`permissions.deny` beats PreToolUse "ask"** (2.1.99): explicit denies in settings take precedence.
-- **Output cap**: hook output over 50K chars is saved to disk with a file path + preview (2.1.89). Don't stream logs through stdout.
+- **Output cap**: hook output over 10,000 characters is saved to a file, and Claude gets the file path plus a preview of up to the first 2,000 characters (2.1.89; PreCompact stdout too since 2.1.314). Each `additionalContext` / `systemMessage` string and plain stdout is measured on its own. Claude is not asked to read the file, so keep anything Claude must see under the cap, and don't stream logs through stdout.
 - **CC 2.1.99 settings resilience**: unrecognized event names no longer nuke the whole `hooks` block — only the unknown entry is ignored. Before 2.1.99, a typo disabled all hooks.
 - **Subagent inheritance** (2.1.99): subagents now inherit parent MCP config and can Read/Edit worktree paths.
 - **Timeout by event**: `SessionEnd` has a 3000ms budget by default (extend via `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`). Other events default to longer budgets; keep hooks fast.
